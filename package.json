@@ -1,0 +1,39 @@
+{
+  "name": "@fullbrains/stem",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./nuxt": "./src/module.ts",
+    "./theme": "./src/theme/index.ts"
+  },
+  "main": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@fullbrains/vimana": "^1.1.1",
+    "@iconify-json/ph": "^1.2.2"
+  },
+  "devDependencies": {
+    "@fullbrains/vimana": "^1.1.1",
+    "@iconify-json/lucide": "^1.2.96",
+    "@iconify-json/ph": "^1.2.2",
+    "@nuxt/eslint": "1.15.2",
+    "@nuxt/kit": "^4",
+    "@nuxt/ui": "^4",
+    "nuxt": "^4",
+    "tailwindcss": "^4",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "peerDependencies": {
+    "@nuxt/ui": "^4"
+  }
+}

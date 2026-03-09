@@ -1,0 +1,10 @@
+node_modules
+dist
+.nuxt
+.output
+.env
+.npmrc
+.idea/
+.claude/
+*.log
+.DS_Store

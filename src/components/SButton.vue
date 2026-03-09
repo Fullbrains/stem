@@ -1,0 +1,73 @@
+<script setup lang="ts">
+import {useConfirmDialog} from '../composables/useConfirmDialog'
+
+const props = defineProps<{
+  icon?: string
+  label?: string
+  trailingIcon?: string
+  caret?: boolean
+  rounded?: boolean
+  loading?: boolean
+  destructive?: boolean
+  confirmTitle?: string
+  confirmMessage?: string
+  confirmIcon?: string
+  confirmLabel?: string
+  onConfirm?: () => Promise<void> | void
+}>()
+
+
+const emit = defineEmits<{
+  click: [e: MouseEvent]
+}>()
+
+const {confirm} = useConfirmDialog()
+
+const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
+
+const resolvedTrailingIcon = computed(() => {
+  if (props.caret) return 'i-ph-caret-down'
+  return props.trailingIcon
+})
+
+function handleClick(e: MouseEvent) {
+  if (props.loading) return
+  if (props.onConfirm) {
+    e.stopPropagation()
+    confirm({
+      title: props.confirmTitle,
+      message: props.confirmMessage,
+      label: props.confirmLabel || props.label,
+      icon: props.confirmIcon,
+      destructive: props.destructive,
+      onConfirm: props.onConfirm,
+    })
+  } else {
+    emit('click', e)
+  }
+}
+</script>
+
+<template>
+  <UButton
+      :class="rounded && 'rounded-full!'"
+      :label="label"
+      :trailing-icon="resolvedTrailingIcon"
+      :color="resolvedColor"
+      :disabled="loading || $attrs.disabled as boolean"
+      @click="handleClick"
+  >
+    <template #leading>
+      <span
+          class="inline-flex overflow-hidden transition-all duration-300 ease-out"
+          :class="loading || icon ? 'max-w-[1em] opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
+      >
+        <SSpinner v-if="loading" size="1em"/>
+        <UIcon v-else-if="icon" :name="icon" class="size-[1em] shrink-0"/>
+      </span>
+    </template>
+    <template v-if="$slots.default" #default>
+      <slot/>
+    </template>
+  </UButton>
+</template>

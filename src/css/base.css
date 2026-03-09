@@ -1,0 +1,14 @@
+@import "@fullbrains/vimana";
+@import "./animations.css";
+
+:root {
+    --font-sans: vimana;
+}
+
+:root:not(.dark) {
+    --ui-text: var(--color-slate-900);
+}
+
+.s-overlay {
+    background: rgba(0, 0, 0, 0.85);
+}
