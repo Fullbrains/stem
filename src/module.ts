@@ -10,8 +10,17 @@ export default defineNuxtModule({
   setup(_options, nuxt) {
     const {resolve} = createResolver(import.meta.url)
 
-    // Inject Stem theme as defaults (app.config.ts merges on top via defu)
-    nuxt.options.appConfig = defu(nuxt.options.appConfig, stemAppConfig)
+    // Inject Stem theme on top of Nuxt UI defaults.
+    // At runtime, Nuxt re-applies the user's app.config.ts via defuFn(userConfig, inlineConfig),
+    // so user overrides always win.
+    nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
+    for (const [key, value] of Object.entries(stemAppConfig.ui)) {
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        nuxt.options.appConfig.ui[key] = defu(value, nuxt.options.appConfig.ui[key] || {})
+      } else {
+        nuxt.options.appConfig.ui[key] = value
+      }
+    }
 
     addComponentsDir({
       path: resolve('./components'),
@@ -19,16 +28,49 @@ export default defineNuxtModule({
 
     addImportsDir(resolve('./composables'))
 
+    // Allow Vite to serve Stem's source files (needed for linked/local installs)
+    const stemRoot = resolve('./')
+    nuxt.hook('vite:extendConfig', (config) => {
+      // @ts-expect-error -- vite config typing marks server as readonly but it's mutable here
+      config.server = config.server || {}
+      config.server.fs = config.server.fs || {}
+      config.server.fs.allow = config.server.fs.allow || []
+      config.server.fs.allow.push(stemRoot)
+    })
+
     // Inject Stem's CSS (before app CSS so app can override)
     nuxt.options.css.unshift(resolve('./css/base.css'))
 
-    // Tell Tailwind to scan Stem's source files
-    const stemSource = resolve('./')
-    const tpl = addTemplate({
-      filename: 'stem-source.css',
+    // Collect all CSS classes from stem theme so Tailwind can generate them.
+    // Stem classes are injected via appConfig (not in any scanned source file),
+    // so we write them into a file inside .nuxt/ and add it to Nuxt UI's @source list.
+    function collectStrings(obj: any): string[] {
+      if (typeof obj === 'string') return [obj]
+      if (Array.isArray(obj)) return obj.flatMap(collectStrings)
+      if (obj && typeof obj === 'object') return Object.values(obj).flatMap(collectStrings)
+      return []
+    }
+    const blob = collectStrings(stemAppConfig.ui).join(' ').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
+
+    const classesFile = addTemplate({
+      filename: 'stem-classes.html',
       write: true,
-      getContents: () => `@source "${stemSource}";`,
+      getContents: () => `<div class="${blob}"></div>`,
     })
-    nuxt.options.css.push(tpl.dst)
+
+    // Append @source to the Nuxt UI generated ui.css so Tailwind picks up stem classes
+    const stemComponents = resolve('./components')
+    nuxt.hook('build:before', async () => {
+      const {join} = await import('pathe')
+      const {promises: fs} = await import('fs')
+      const uiCss = join(nuxt.options.buildDir, 'ui.css')
+      try {
+        const content = await fs.readFile(uiCss, 'utf-8')
+        const sources = `\n/* Stem */\n@source "${stemComponents}";\n@source "./${classesFile.filename}";\n`
+        if (!content.includes('/* Stem */')) {
+          await fs.writeFile(uiCss, sources + content, 'utf-8')
+        }
+      } catch {}
+    })
   },
 })

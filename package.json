@@ -1,6 +1,6 @@
 {
   "name": "@fullbrains/stem",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@fullbrains/vimana": "^1.1.1",
-    "@iconify-json/ph": "^1.2.2"
+    "@iconify-json/ph": "^1.2.2",
+    "defu": "^6"
   },
   "devDependencies": {
     "@fullbrains/vimana": "^1.1.1",
