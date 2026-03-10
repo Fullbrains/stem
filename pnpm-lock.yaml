@@ -11,13 +11,13 @@ importers:
       '@fullbrains/vimana':
         specifier: ^1.1.1
         version: 1.1.1
-    devDependencies:
-      '@iconify-json/lucide':
-        specifier: ^1.2.96
-        version: 1.2.96
       '@iconify-json/ph':
         specifier: ^1.2.2
         version: 1.2.2
+      defu:
+        specifier: ^6
+        version: 6.1.4
+    devDependencies:
       '@nuxt/eslint':
         specifier: 1.15.2
         version: 1.15.2(@typescript-eslint/utils@8.56.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.29)(eslint@9.39.4(jiti@2.6.1))(magicast@0.5.2)(typescript@5.9.3)(vite@7.3.1(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.2))
@@ -471,9 +471,6 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
-
-  '@iconify-json/lucide@1.2.96':
-    resolution: {integrity: sha512-EICTusj67lvSmEaH/Lhe68ZyzcgfcPNpY00exAOkoo+z2fnLeNy31mdE3E/4/q8WjzZrICAZDxY3d6j7LzkgNA==}
 
   '@iconify-json/ph@1.2.2':
     resolution: {integrity: sha512-PgkEZNtqa8hBGjHXQa4pMwZa93hmfu8FUSjs/nv4oUU6yLsgv+gh9nu28Kqi8Fz9CCVu4hj1MZs9/60J57IzFw==}
@@ -5345,10 +5342,6 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
-
-  '@iconify-json/lucide@1.2.96':
-    dependencies:
-      '@iconify/types': 2.0.0
 
   '@iconify-json/ph@1.2.2':
     dependencies:

@@ -46,7 +46,7 @@ export const baseCompoundVariants = [
     variant: 'outline',
     class: {
       base: `${outlineCommons}
-        border-slate-500/30 hover:not-disabled:border-slate-500/50`,
+        border-slate-500/30 hover:not-focus:not-disabled:border-slate-500/50`,
     },
   },
   {
@@ -54,7 +54,7 @@ export const baseCompoundVariants = [
     variant: 'outline',
     class: {
       base: `${outlineCommons}
-        border-rose-500/30 hover:not-disabled:border-rose-500/50`,
+        border-rose-500/30 hover:not-focus:not-disabled:border-rose-500/50`,
     },
   },
   {
@@ -62,7 +62,7 @@ export const baseCompoundVariants = [
     variant: 'outline',
     class: {
       base: `${outlineCommons}
-        border-emerald-500/30 hover:not-disabled:border-emerald-500/50`,
+        border-emerald-500/30 hover:not-focus:not-disabled:border-emerald-500/50`,
     },
   },
   // soft
@@ -94,7 +94,7 @@ export const baseCompoundVariants = [
     class: {
       base: `${outlineCommons}
         bg-slate-500/5 hover:not-disabled:bg-slate-500/10 focus-visible:bg-slate-500/5
-        border-slate-500/30 hover:not-disabled:border-slate-500/50`,
+        border-slate-500/30 hover:not-focus:not-disabled:border-slate-500/50`,
     },
   },
   {
@@ -103,7 +103,7 @@ export const baseCompoundVariants = [
     class: {
       base: `${outlineCommons}
         bg-rose-500/5 hover:not-disabled:bg-rose-500/10 focus-visible:bg-rose-500/5
-        border-rose-500/30 hover:not-disabled:border-rose-500/50`,
+        border-rose-500/30 hover:not-focus:not-disabled:border-rose-500/50`,
     },
   },
   {
@@ -112,7 +112,7 @@ export const baseCompoundVariants = [
     class: {
       base: `${outlineCommons}
         bg-emerald-500/5 hover:not-disabled:bg-emerald-500/10 focus-visible:bg-emerald-500/5
-        border-emerald-500/30 hover:not-disabled:border-emerald-500/50`,
+        border-emerald-500/30 hover:not-focus:not-disabled:border-emerald-500/50`,
     },
   },
   // ghost
@@ -144,17 +144,17 @@ export const inputFocusRing = [
   {
     color: 'primary',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus-visible:border-slate-500/80 focus-visible:shadow-slate-500/20'},
+    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-slate-500/80 focus-visible:shadow-slate-500/20'},
   },
   {
     color: 'error',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus-visible:border-rose-500/80 focus-visible:shadow-rose-500/20'},
+    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-rose-500/80 focus-visible:shadow-rose-500/20'},
   },
   {
     color: 'success',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus-visible:border-emerald-500/80 focus-visible:shadow-emerald-500/20'},
+    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-emerald-500/80 focus-visible:shadow-emerald-500/20'},
   },
 ]
 
