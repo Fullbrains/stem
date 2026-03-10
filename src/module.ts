@@ -1,6 +1,6 @@
 import {defineNuxtModule, addComponentsDir, addImportsDir, addTemplate, createResolver} from '@nuxt/kit'
-import {defu} from 'defu'
 import {stemIcons, stemColors} from './config'
+import {stem} from './theme'
 
 export default defineNuxtModule({
   meta: {
@@ -16,12 +16,13 @@ export default defineNuxtModule({
 
     addImportsDir(resolve('./composables'))
 
-    // Inject Stem colors & icons (overrides Nuxt UI defaults, app.config.ts merges on top)
+    // Inject Stem theme, colors & icons (overrides Nuxt UI defaults, app.config.ts merges on top)
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
     nuxt.options.appConfig.ui.colors = nuxt.options.appConfig.ui.colors || {}
     nuxt.options.appConfig.ui.icons = nuxt.options.appConfig.ui.icons || {}
     Object.assign(nuxt.options.appConfig.ui.colors, stemColors)
     Object.assign(nuxt.options.appConfig.ui.icons, stemIcons)
+    Object.assign(nuxt.options.appConfig.ui, stem)
 
     // Inject Stem's CSS
     nuxt.options.css.push(resolve('./css/base.css'))
