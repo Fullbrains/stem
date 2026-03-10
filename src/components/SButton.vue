@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {computed} from 'vue'
 import {useConfirmDialog} from '../composables/useConfirmDialog'
 
 const props = defineProps<{
