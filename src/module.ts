@@ -1,4 +1,6 @@
 import {defineNuxtModule, addComponentsDir, addImportsDir, addTemplate, createResolver} from '@nuxt/kit'
+import {defu} from 'defu'
+import {stemAppConfig} from './stem-config'
 
 export default defineNuxtModule({
   meta: {
@@ -8,14 +10,8 @@ export default defineNuxtModule({
   setup(_options, nuxt) {
     const {resolve} = createResolver(import.meta.url)
 
-    // Register stem as a layer (injects app.config.ts with theme, colors, icons)
-    nuxt.options._layers.push({
-      cwd: resolve('./'),
-      config: {
-        rootDir: resolve('./'),
-        srcDir: resolve('./'),
-      },
-    })
+    // Inject Stem theme as defaults (app.config.ts merges on top via defu)
+    nuxt.options.appConfig = defu(nuxt.options.appConfig, stemAppConfig)
 
     addComponentsDir({
       path: resolve('./components'),
