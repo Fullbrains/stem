@@ -59,7 +59,9 @@ function handleClick(e: MouseEvent) {
       @click="handleClick"
   >
     <template #leading>
+      <slot v-if="$slots.leading" name="leading"/>
       <span
+          v-else
           class="inline-flex overflow-hidden transition-all duration-300 ease-out"
           :class="loading || icon ? 'max-w-[1em] opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
       >
