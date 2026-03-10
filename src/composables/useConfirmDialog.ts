@@ -1,5 +1,7 @@
 import {useOverlay} from '#imports'
-import SConfirmDialog from '../components/SConfirmDialog.vue'
+import {defineAsyncComponent} from 'vue'
+
+const SConfirmDialog = defineAsyncComponent(() => import('../components/SConfirmDialog.vue'))
 
 export function useConfirmDialog() {
   const overlay = useOverlay()
