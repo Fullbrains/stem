@@ -6,6 +6,7 @@ import selectMenu from './select-menu'
 import inputMenu from './input-menu'
 import slideover from './slideover'
 import dropdownMenu from './dropdown-menu'
+import formField from './form-field'
 
 export const stem = {
   button,
@@ -16,4 +17,5 @@ export const stem = {
   inputMenu,
   slideover,
   dropdownMenu,
+  formField,
 }
