@@ -24,8 +24,8 @@ export default defineNuxtModule({
     Object.assign(nuxt.options.appConfig.ui.icons, stemIcons)
     Object.assign(nuxt.options.appConfig.ui, stem)
 
-    // Inject Stem's CSS
-    nuxt.options.css.push(resolve('./css/base.css'))
+    // Inject Stem's CSS (before app CSS so app can override)
+    nuxt.options.css.unshift(resolve('./css/base.css'))
 
     // Tell Tailwind to scan Stem's source files
     const stemSource = resolve('./')

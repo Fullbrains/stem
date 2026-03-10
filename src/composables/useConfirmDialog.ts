@@ -1,3 +1,4 @@
+import {useOverlay} from '#imports'
 import SConfirmDialog from '../components/SConfirmDialog.vue'
 
 export function useConfirmDialog() {
