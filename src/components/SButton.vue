@@ -51,10 +51,10 @@ function handleClick(e: MouseEvent) {
 
 <template>
   <UButton
-      :class="rounded && 'rounded-full!'"
       :label="label"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
+      :ui="rounded ? { base: 'rounded-full' } : undefined"
       :disabled="loading || $attrs.disabled as boolean"
       @click="handleClick"
   >

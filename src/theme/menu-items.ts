@@ -1,13 +1,14 @@
 export const menuItemSlots = {
-  content: 'shadow-lg',
-  item: 'text-highlighted cursor-pointer items-center! data-highlighted:not-data-disabled:before:bg-elevated!',
+  content: 'shadow-lg shadow-black/5 rounded-lg',
+  group: 'p-1',
+  item: 'text-highlighted cursor-pointer items-center font-normal data-highlighted:not-data-disabled:before:bg-elevated',
   itemLeadingIcon: 'text-highlighted',
 }
 
 export const menuItemSizes = {
-  xs: {item: 'p-1 text-xs! gap-1', itemLeadingIcon: 'size-3!', itemTrailingIcon: 'size-3!'},
-  sm: {item: 'p-1.5 text-sm! gap-1.5', itemLeadingIcon: 'size-3.5!', itemTrailingIcon: 'size-3.5!'},
-  md: {item: 'p-1.5 text-base! gap-1.5', itemLeadingIcon: 'size-4!', itemTrailingIcon: 'size-4!'},
-  lg: {item: 'p-2 text-lg! gap-2', itemLeadingIcon: 'size-4.5!', itemTrailingIcon: 'size-4.5!'},
-  xl: {item: 'p-2 text-xl! gap-2', itemLeadingIcon: 'size-5!', itemTrailingIcon: 'size-5!'},
+  xs: {item: 'p-[0.5em] text-xs gap-[0.5em]', itemLeadingIcon: 'size-3.5', itemTrailingIcon: 'size-3.5'},
+  sm: {item: 'p-[0.5em] text-sm gap-[0.5em]', itemLeadingIcon: 'size-4', itemTrailingIcon: 'size-4'},
+  md: {item: 'p-[0.5em] text-base gap-[0.5em]', itemLeadingIcon: 'size-4.5', itemTrailingIcon: 'size-4.5'},
+  lg: {item: 'p-[0.5em] text-lg gap-[0.5em]', itemLeadingIcon: 'size-5', itemTrailingIcon: 'size-5'},
+  xl: {item: 'p-[0.5em] text-xl gap-[0.5em]', itemLeadingIcon: 'size-5.5', itemTrailingIcon: 'size-5.5'},
 }

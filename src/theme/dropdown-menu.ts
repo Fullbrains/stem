@@ -1,5 +1,8 @@
+import {menuItemSlots, menuItemSizes} from './menu-items'
+
 export default {
   slots: {
+    ...menuItemSlots,
     itemLeadingIcon: 'shrink-0 text-default',
   },
   variants: {
@@ -14,5 +17,6 @@ export default {
         itemLeadingIcon: 'text-default',
       },
     },
+    size: menuItemSizes,
   },
 }

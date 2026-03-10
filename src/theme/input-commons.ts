@@ -158,7 +158,16 @@ export const inputFocusRing = [
   },
 ]
 
-export const inputCompoundVariants = [...baseCompoundVariants, ...inputFocusRing]
+// Neutralize Nuxt UI's default `fixed: false` compoundVariants that add
+// responsive `md:text-*` classes and override our size variants on desktop.
+const fixedSizeOverrides = [
+  {fixed: false, size: 'xs', class: 'md:text-xs'},
+  {fixed: false, size: 'sm', class: 'md:text-sm'},
+  {fixed: false, size: 'md', class: 'md:text-base'},
+  {fixed: false, size: 'lg', class: 'md:text-lg'},
+]
+
+export const inputCompoundVariants = [...baseCompoundVariants, ...inputFocusRing, ...fixedSizeOverrides]
 
 export const inputVariants = {
   leading: {
