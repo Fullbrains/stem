@@ -88,7 +88,11 @@ function handleClose() {
           :closeable="closeable"
           :disabled="disabled"
           @close="handleClose"
-      />
+      >
+        <template v-if="$slots.title" #title>
+          <slot name="title"/>
+        </template>
+      </SModalHeader>
       <slot name="after-header"/>
       <div class="w-full h-px bg-border" v-if="headerSeparator"/>
     </template>

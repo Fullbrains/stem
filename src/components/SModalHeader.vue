@@ -13,6 +13,10 @@ withDefaults(defineProps<{
 defineEmits<{
   close: []
 }>()
+
+const slots = defineSlots<{
+  title?: () => unknown
+}>()
 </script>
 
 <template>
@@ -29,10 +33,10 @@ defineEmits<{
           class="size-10"
       />
       <div
-          v-if="title"
+          v-if="title || slots.title"
           class="text-2xl leading-tight block truncate"
       >
-        {{ title }}
+        <slot name="title">{{ title }}</slot>
       </div>
       <div
           v-if="description"
