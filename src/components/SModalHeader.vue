@@ -44,9 +44,9 @@ defineEmits<{
         {{ description }}
       </div>
     </div>
-    <UButton
+    <SButton
         v-if="closeable"
-        class="rounded-full! shrink-0 absolute py-1.5! px-[0.6em]! top-3 right-3 transition duration-200"
+        class="rounded-full! shrink-0 absolute min-h-none py-[0.2em]! px-[0.6em]! top-3 right-3 transition duration-200"
         :class="[
         disabled
           ? 'cursor-not-allowed opacity-50'
