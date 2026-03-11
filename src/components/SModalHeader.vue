@@ -3,11 +3,9 @@ withDefaults(defineProps<{
   title?: string
   description?: string
   icon?: string
-  separator?: boolean
   closeable?: boolean
   disabled?: boolean
 }>(), {
-  separator: false,
   closeable: true,
   disabled: false,
 })
@@ -22,7 +20,6 @@ defineEmits<{
       class="p-6 flex relative shrink-0 w-full"
       :class="[
       description ? 'items-start' : 'items-center',
-      separator ? 'border-b border-(--ui-border)' : '',
     ]"
   >
     <div class="pr-8 flex flex-col truncate text-base gap-[1em]">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DropdownMenuItem } from '@nuxt/ui'
+import type {DropdownMenuItem} from '@nuxt/ui'
 
 defineProps<{
   title?: string
@@ -13,10 +13,10 @@ const emit = defineEmits<{
 }>()
 
 const dropdownItems: DropdownMenuItem[] = [
-  { label: 'Edit', icon: 'i-lucide-pencil' },
-  { label: 'Duplicate', icon: 'i-lucide-copy' },
-  { type: 'separator' },
-  { label: 'Delete', icon: 'i-lucide-trash' },
+  {label: 'Edit', icon: 'i-lucide-pencil'},
+  {label: 'Duplicate', icon: 'i-lucide-copy'},
+  {type: 'separator'},
+  {label: 'Delete', icon: 'i-lucide-trash'},
 ]
 
 const overlay = useOverlay()
@@ -30,17 +30,21 @@ const nestedOpen = ref(false)
       :size="size"
       :side="side"
       @close="emit('close')"
+      header-separator
   >
+    <template #after-header>
+      Ciao After
+    </template>
     <template #body>
       <div class="p-6 space-y-4">
         <p>Modal body content goes here.</p>
 
         <div class="flex flex-wrap items-center gap-3">
           <UDropdownMenu :items="dropdownItems">
-            <SButton label="Dropdown" icon="i-lucide-chevron-down" variant="soft" />
+            <SButton label="Dropdown" icon="i-lucide-chevron-down" variant="soft"/>
           </UDropdownMenu>
 
-          <SButton label="Open nested modal" icon="i-lucide-layers" variant="soft" @click="nestedOpen = true" />
+          <SButton label="Open nested modal" icon="i-lucide-layers" variant="soft" @click="nestedOpen = true"/>
         </div>
 
         <SModal
@@ -55,7 +59,7 @@ const nestedOpen = ref(false)
             </div>
           </template>
           <template #footer>
-            <UButton label="Close" variant="soft" @click="nestedOpen = false" />
+            <UButton label="Close" variant="soft" @click="nestedOpen = false"/>
           </template>
         </SModal>
       </div>
