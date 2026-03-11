@@ -18,17 +18,14 @@ export function useConfirmDialog() {
       destroyOnClose: true,
     })
 
-    const confirmed = await modal.open({
+    await modal.open({
       title: options.title,
       message: options.message,
       label: options.label,
       icon: options.icon,
       destructive: options.destructive,
+      onConfirm: options.onConfirm,
     })
-
-    if (confirmed) {
-      await options.onConfirm()
-    }
   }
 
   return { confirm }

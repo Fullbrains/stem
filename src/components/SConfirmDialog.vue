@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   title?: string
   message?: string
   label?: string
   icon?: string
   destructive?: boolean
+  onConfirm?: () => Promise<void> | void
 }>(), {
   title: 'Confirm',
   message: 'Are you sure?',
@@ -18,6 +19,18 @@ const emit = defineEmits<{
 }>()
 
 const loading = ref(false)
+
+async function handleConfirm() {
+  if (props.onConfirm) {
+    loading.value = true
+    try {
+      await props.onConfirm()
+    } finally {
+      loading.value = false
+    }
+  }
+  emit('close', true)
+}
 </script>
 
 <template>
@@ -33,7 +46,7 @@ const loading = ref(false)
           :label="label"
           :destructive="destructive"
           :loading="loading"
-          @click="emit('close', true)"
+          @click="handleConfirm"
       />
       <SButton
           label="Cancel"
