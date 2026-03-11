@@ -26,6 +26,13 @@ const {confirm} = useConfirmDialog()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
+const resolvedUi = computed(() => {
+  const ui: Record<string, string> = {}
+  if (props.rounded) ui.base = 'rounded-full'
+  if (props.caret) ui.trailingIcon = 'ml-auto'
+  return Object.keys(ui).length ? ui : undefined
+})
+
 const resolvedTrailingIcon = computed(() => {
   if (props.caret) return 'i-ph-caret-down'
   return props.trailingIcon
@@ -54,7 +61,7 @@ function handleClick(e: MouseEvent) {
       :label="label"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
-      :ui="rounded ? { base: 'rounded-full' } : undefined"
+      :ui="resolvedUi"
       :disabled="loading || $attrs.disabled as boolean"
       @click="handleClick"
   >
