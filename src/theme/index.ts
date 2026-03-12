@@ -7,6 +7,8 @@ import inputMenu from './input-menu'
 import slideover from './slideover'
 import dropdownMenu from './dropdown-menu'
 import formField from './form-field'
+import tabs from './tabs'
+import inputTags from './input-tags'
 
 export const stem = {
   button,
@@ -15,7 +17,9 @@ export const stem = {
   select,
   selectMenu,
   inputMenu,
+  inputTags,
   slideover,
   dropdownMenu,
   formField,
+  tabs,
 }

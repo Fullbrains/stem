@@ -46,6 +46,8 @@ const sections = [
   {id: 'buttons', label: 'Buttons'},
   {id: 'inputs', label: 'Inputs'},
   {id: 'dropdown-menu', label: 'DropdownMenu'},
+  {id: 'input-tags', label: 'InputTags'},
+  {id: 'tabs', label: 'Tabs'},
   {id: 'badges', label: 'Badges'},
   {id: 'alerts', label: 'Alerts'},
   {id: 'cards', label: 'Cards'},
@@ -78,6 +80,15 @@ const inputVariants = useCookie<string[]>('stem-input-variants', {default: () =>
 const inputSize = useCookie('stem-input-size', {default: () => 'md'})
 const inputIcon = useCookie('stem-input-icon', {default: () => true})
 const inputDisabled = useCookie('stem-input-disabled', {default: () => false})
+
+const tabItems = [
+  {label: 'Account', icon: 'i-lucide-user'},
+  {label: 'Password', icon: 'i-lucide-lock'},
+  {label: 'Notifications', icon: 'i-lucide-bell'},
+]
+const tabVariants = ['pill', 'link'] as const
+
+const inputTagsValue = ref(['Vue', 'Nuxt'])
 
 const activeSection = ref('buttons')
 const checkerboard = ref(false)
@@ -340,6 +351,48 @@ onMounted(() => {
               <UDropdownMenu v-for="size in sizes" :key="size" :items="dropdownItems" :size="size">
                 <SButton :label="size.toUpperCase()" variant="subtle" :size="size" icon="i-lucide-chevron-down"/>
               </UDropdownMenu>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- InputTags                                 -->
+        <!-- ======================================== -->
+        <section id="input-tags" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            InputTags
+          </h2>
+
+          <div v-for="variant in inputVariants" :key="`inputtags-${variant}`" class="mb-4">
+            <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <UInputTags v-for="color in inputColors" :key="color" v-model="inputTagsValue"
+                          :placeholder="color" :color="color" :variant="variant" :size="inputSize"
+                          :icon="inputIcon ? 'i-lucide-tags' : undefined" :disabled="inputDisabled"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Tabs                                      -->
+        <!-- ======================================== -->
+        <section id="tabs" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Tabs
+          </h2>
+
+          <div v-for="variant in tabVariants" :key="variant">
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h3>
+            <div class="space-y-4">
+              <UTabs :items="tabItems" :variant="variant" />
+            </div>
+          </div>
+
+          <!-- Sizes -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
+            <div class="space-y-4">
+              <UTabs v-for="size in sizes" :key="size" :items="tabItems" :size="size" variant="pill" />
             </div>
           </div>
         </section>
