@@ -1,9 +1,11 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
   size?: string
+  stroke?: number
   grow?: boolean
 }>(), {
   size: '1em',
+  stroke: 2,
   grow: false,
 })
 </script>
@@ -19,7 +21,7 @@ withDefaults(defineProps<{
         fill="none"
     >
       <circle class="animate-[s-spinner-dash_1.4s_linear_infinite]" cx="12" cy="12" r="10" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" pathLength="100"/>
+              :stroke-width="stroke" stroke-linecap="round" pathLength="100"/>
     </svg>
   </span>
   <svg
@@ -31,6 +33,6 @@ withDefaults(defineProps<{
       fill="none"
   >
     <circle class="animate-[s-spinner-dash_1.4s_linear_infinite]" cx="12" cy="12" r="10" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" pathLength="100"/>
+            :stroke-width="stroke" stroke-linecap="round" pathLength="100"/>
   </svg>
 </template>

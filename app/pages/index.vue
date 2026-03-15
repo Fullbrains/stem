@@ -52,6 +52,7 @@ const sections = [
   {id: 'alerts', label: 'Alerts'},
   {id: 'cards', label: 'Cards'},
   {id: 'modal', label: 'Modal'},
+  {id: 'spinner', label: 'Spinner'},
 ]
 
 const overlay = useOverlay()
@@ -539,6 +540,55 @@ onMounted(() => {
                   confirm-icon="i-ph-arrow-counter-clockwise"
                   :on-confirm="() => new Promise(r => setTimeout(r, 1000))"
               />
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Spinner                                   -->
+        <!-- ======================================== -->
+        <section id="spinner" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Spinner
+          </h2>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes (rem)</h3>
+            <div class="flex flex-wrap items-end gap-6">
+              <div v-for="s in ['0.75rem', '1rem', '1.5rem', '2rem', '3rem', '4rem']" :key="s" class="flex flex-col items-center gap-2">
+                <SSpinner :size="s" />
+                <span class="text-xs text-neutral-500">{{ s }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes (px)</h3>
+            <div class="flex flex-wrap items-end gap-6">
+              <div v-for="s in ['12px', '16px', '24px', '32px', '48px', '64px']" :key="s" class="flex flex-col items-center gap-2">
+                <SSpinner :size="s" />
+                <span class="text-xs text-neutral-500">{{ s }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Stroke</h3>
+            <div class="flex flex-wrap items-end gap-6">
+              <div v-for="sw in [1, 2, 3, 4]" :key="sw" class="flex flex-col items-center gap-2">
+                <SSpinner size="2.5rem" :stroke="sw" />
+                <span class="text-xs text-neutral-500">stroke={{ sw }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Grow animation</h3>
+            <div class="flex flex-wrap items-end gap-6">
+              <div v-for="s in ['1rem', '2rem', '3rem']" :key="s" class="flex flex-col items-center gap-2">
+                <SSpinner :size="s" grow />
+                <span class="text-xs text-neutral-500">{{ s }} grow</span>
+              </div>
             </div>
           </div>
         </section>
