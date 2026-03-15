@@ -5,6 +5,7 @@ const props = withDefaults(defineProps<{
   title?: string
   message?: string
   label?: string
+  cancelLabel?: string
   icon?: string
   destructive?: boolean
   onConfirm?: () => Promise<void> | void
@@ -12,6 +13,7 @@ const props = withDefaults(defineProps<{
   title: 'Confirm',
   message: 'Are you sure?',
   label: 'Confirm',
+  cancelLabel: 'Cancel',
 })
 
 const emit = defineEmits<{
@@ -49,7 +51,7 @@ async function handleConfirm() {
           @click="handleConfirm"
       />
       <SButton
-          label="Cancel"
+          :label="cancelLabel"
           variant="soft"
           :disabled="loading"
           @click="emit('close', false)"

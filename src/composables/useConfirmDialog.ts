@@ -10,6 +10,7 @@ export function useConfirmDialog() {
     title?: string
     message?: string
     label?: string
+    cancelLabel?: string
     icon?: string
     destructive?: boolean
     onConfirm: () => Promise<void> | void
@@ -22,6 +23,7 @@ export function useConfirmDialog() {
       title: options.title,
       message: options.message,
       label: options.label,
+      cancelLabel: options.cancelLabel,
       icon: options.icon,
       destructive: options.destructive,
       onConfirm: options.onConfirm,
