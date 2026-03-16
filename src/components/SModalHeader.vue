@@ -41,9 +41,7 @@ const slots = defineSlots<{
       <div
           v-if="description"
           class="text-base block whitespace-normal sm:whitespace-pre-line"
-      >
-        {{ description }}
-      </div>
+          v-html="description"/>
     </div>
     <SButton
         v-if="closeable"
