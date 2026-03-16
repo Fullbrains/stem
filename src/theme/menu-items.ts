@@ -1,7 +1,7 @@
 export const menuItemSlots = {
-  content: 'shadow-lg shadow-black/5 rounded-lg',
+  content: 's-floating-menu rounded-lg',
   group: 'p-1',
-  item: 'text-highlighted cursor-pointer items-center font-normal data-highlighted:not-data-disabled:before:bg-elevated',
+  item: 'text-highlighted cursor-pointer items-center font-normal data-highlighted:not-data-disabled:before:bg-elevated data-disabled:opacity-50',
   itemLeadingIcon: 'text-highlighted',
 }
 

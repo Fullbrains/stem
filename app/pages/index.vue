@@ -12,7 +12,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
 const dropdownItems: DropdownMenuItem[] = [
   {label: 'Profile', icon: 'i-lucide-user'},
-  {label: 'Settings', icon: 'i-lucide-cog'},
+  {label: 'Settings', icon: 'i-lucide-cog', disabled: true},
   {type: 'separator'},
   {label: 'Logout', icon: 'i-lucide-log-out'},
 ]
@@ -20,7 +20,7 @@ const dropdownItems: DropdownMenuItem[] = [
 const selectItems = [
   {label: 'Backlog', value: 'backlog', icon: 'i-lucide-circle-dashed'},
   {label: 'Todo', value: 'todo', icon: 'i-lucide-circle'},
-  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader'},
+  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader', disabled: true},
   {label: 'Done', value: 'done', icon: 'i-lucide-circle-check'},
 ]
 const selectValue = ref('todo')
@@ -28,7 +28,7 @@ const selectValue = ref('todo')
 const selectMenuItems = [
   {label: 'Backlog', value: 'backlog', icon: 'i-lucide-circle-dashed'},
   {label: 'Todo', value: 'todo', icon: 'i-lucide-circle'},
-  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader'},
+  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader', disabled: true},
   {label: 'Done', value: 'done', icon: 'i-lucide-circle-check'},
 ]
 const selectMenuValue = ref('todo')
@@ -36,7 +36,7 @@ const selectMenuValue = ref('todo')
 const inputMenuItems = [
   {label: 'Apple', icon: 'i-lucide-apple'},
   {label: 'Banana', icon: 'i-lucide-banana'},
-  {label: 'Cherry', icon: 'i-lucide-cherry'},
+  {label: 'Cherry', icon: 'i-lucide-cherry', disabled: true},
   {label: 'Grape', icon: 'i-lucide-grape'},
   {label: 'Lemon', icon: 'i-lucide-citrus'},
 ]
