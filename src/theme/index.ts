@@ -9,6 +9,9 @@ import dropdownMenu from './dropdown-menu'
 import formField from './form-field'
 import tabs from './tabs'
 import inputTags from './input-tags'
+import badge from './badge'
+import alert from './alert'
+import popover from './popover'
 
 export const stem = {
   button,
@@ -22,4 +25,7 @@ export const stem = {
   dropdownMenu,
   formField,
   tabs,
+  badge,
+  alert,
+  popover,
 }

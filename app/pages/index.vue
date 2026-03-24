@@ -50,6 +50,7 @@ const sections = [
   {id: 'tabs', label: 'Tabs'},
   {id: 'badges', label: 'Badges'},
   {id: 'alerts', label: 'Alerts'},
+  {id: 'popover', label: 'Popover'},
   {id: 'cards', label: 'Cards'},
   {id: 'modal', label: 'Modal'},
   {id: 'spinner', label: 'Spinner'},
@@ -439,6 +440,88 @@ onMounted(() => {
               <UAlert v-for="color in allColors" :key="color" :title="color"
                       :description="`${variant} alert with ${color} color.`" :color="color" :variant="variant"
                       icon="i-lucide-info"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Popover                                  -->
+        <!-- ======================================== -->
+        <section id="popover" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Popover
+          </h2>
+
+          <!-- Basic -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Basic (click)</h3>
+            <div class="flex flex-wrap gap-3">
+              <UPopover>
+                <SButton label="Click me" variant="subtle" />
+                <template #content>
+                  <div class="p-4 space-y-2 w-64">
+                    <h4 class="font-semibold text-sm">Popover title</h4>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">This is a basic popover with some content inside.</p>
+                  </div>
+                </template>
+              </UPopover>
+
+              <UPopover>
+                <SButton label="With form" icon="i-lucide-settings" variant="soft" />
+                <template #content>
+                  <div class="p-4 space-y-3 w-72">
+                    <h4 class="font-semibold text-sm">Settings</h4>
+                    <UInput placeholder="Name" size="sm" />
+                    <UInput placeholder="Email" size="sm" />
+                    <SButton label="Save" size="sm" block />
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+          </div>
+
+          <!-- Hover -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Hover</h3>
+            <div class="flex flex-wrap gap-3">
+              <UPopover mode="hover">
+                <SButton label="Hover me" variant="subtle" icon="i-lucide-info" />
+                <template #content>
+                  <div class="p-4 w-64">
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">This popover opens on hover.</p>
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">With arrow</h3>
+            <div class="flex flex-wrap gap-3">
+              <UPopover arrow>
+                <SButton label="With arrow" variant="soft" />
+                <template #content>
+                  <div class="p-4 w-64">
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Popover with an arrow indicator.</p>
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+          </div>
+
+          <!-- Placement -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Placement</h3>
+            <div class="flex flex-wrap gap-3">
+              <UPopover v-for="side in (['top', 'right', 'bottom', 'left'] as const)" :key="side" :content="{ side }">
+                <SButton :label="side" variant="subtle" size="sm" />
+                <template #content>
+                  <div class="p-3">
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ side }} popover</p>
+                  </div>
+                </template>
+              </UPopover>
             </div>
           </div>
         </section>

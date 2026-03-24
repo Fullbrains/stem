@@ -49,6 +49,8 @@ export default {
     leading: 'ml-[0.1em]!',
     trailing: 'mr-[0.1em]!',
     trailingIcon: 'text-(--ui-text)!',
+    item: 'rounded-full ring-0 pl-[0.6em] leading-none pr-[3px] py-0.5 gap-[0.25em] font-normal bg-slate-400/20 text-gray-800 dark:text-gray-200',
+    itemDelete: 'rounded-full cursor-pointer hover:bg-slate-400/30 text-gray-800 dark:text-gray-200 p-0.5',
   },
   compoundVariants: [...remappedBase, ...inputTagsFocusRing, ...fixedSizeOverrides],
   variants: {
@@ -58,6 +60,12 @@ export default {
     trailing: {
       false: {base: 'pr-2.5!'},
     },
-    size: sizes,
+    size: {
+      xs: {...sizes.xs, item: 'text-xs', itemDeleteIcon: 'size-3'},
+      sm: {...sizes.sm, item: 'text-sm', itemDeleteIcon: 'size-3.5'},
+      md: {...sizes.md, item: 'text-base', itemDeleteIcon: 'size-4'},
+      lg: {...sizes.lg, item: 'text-lg', itemDeleteIcon: 'size-4.5'},
+      xl: {...sizes.xl, item: 'text-xl', itemDeleteIcon: 'size-5'},
+    },
   },
 }
