@@ -241,6 +241,19 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- Disc -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Disc</h3>
+            <div class="flex flex-wrap items-center gap-3">
+              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-lucide-plus" :size="size" />
+              <SButton disc icon="i-lucide-x" variant="soft" />
+              <SButton disc icon="i-lucide-heart" variant="subtle" />
+              <SButton disc icon="i-lucide-trash-2" variant="soft" color="error" />
+              <SButton disc icon="i-lucide-check" variant="solid" />
+              <SButton disc icon="i-lucide-star" loading />
+            </div>
+          </div>
+
         </section>
 
         <!-- ======================================== -->

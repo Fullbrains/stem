@@ -8,6 +8,7 @@ const props = defineProps<{
   trailingIcon?: string
   caret?: boolean
   rounded?: boolean
+  disc?: boolean
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -28,7 +29,8 @@ const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
-  if (props.rounded) ui.base = 'rounded-full'
+  if (props.rounded || props.disc) ui.base = 'rounded-full'
+  if (props.disc) ui.base = (ui.base || '') + ' min-h-0! p-[0.3em]!'
   if (props.caret) ui.trailingIcon = 'ml-auto'
   return Object.keys(ui).length ? ui : undefined
 })
@@ -58,8 +60,8 @@ function handleClick(e: MouseEvent) {
 
 <template>
   <UButton
-      :label="label"
-      :trailing-icon="resolvedTrailingIcon"
+      :label="disc ? undefined : label"
+      :trailing-icon="disc ? undefined : resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"
       :disabled="loading || $attrs.disabled as boolean"
