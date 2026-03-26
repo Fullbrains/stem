@@ -1,33 +1,33 @@
 export default {
   slots: {
-    base: 'rounded-full',
+    base: 'rounded-full font-normal',
   },
   variants: {
     size: {
       xs: {
         base: 'rounded-full text-xs px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-3',
-        trailingIcon: 'size-3',
+        leadingIcon: 'size-3 shrink-0',
+        trailingIcon: 'size-3 shrink-0',
       },
       sm: {
         base: 'rounded-full text-sm px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-3.5',
-        trailingIcon: 'size-3.5',
+        leadingIcon: 'size-3.5 shrink-0',
+        trailingIcon: 'size-3.5 shrink-0',
       },
       md: {
         base: 'rounded-full text-base px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-4',
-        trailingIcon: 'size-4',
+        leadingIcon: 'size-4 shrink-0',
+        trailingIcon: 'size-4 shrink-0',
       },
       lg: {
         base: 'rounded-full text-lg px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-4.5',
-        trailingIcon: 'size-4.5',
+        leadingIcon: 'size-4.5 shrink-0',
+        trailingIcon: 'size-4.5 shrink-0',
       },
       xl: {
         base: 'rounded-full text-xl px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-5',
-        trailingIcon: 'size-5',
+        leadingIcon: 'size-5 shrink-0',
+        trailingIcon: 'size-5 shrink-0',
       },
     },
   },
