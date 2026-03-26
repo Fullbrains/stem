@@ -51,6 +51,10 @@ export default {
 </script>
 
 <style>
+.s-icon {
+  display: flex;
+}
+
 .s-icon svg *[fill='black'],
 .s-icon svg *[fill='#000'],
 .s-icon svg *[fill='#000000'] {
