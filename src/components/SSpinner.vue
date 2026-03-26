@@ -36,3 +36,55 @@ withDefaults(defineProps<{
             :stroke-width="stroke" stroke-linecap="round" pathLength="100"/>
   </svg>
 </template>
+
+<style>
+@keyframes s-spinner-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes s-spinner-dash {
+  0% {
+    stroke-dasharray: 1, 100;
+    stroke-dashoffset: 0;
+  }
+  40% {
+    stroke-dasharray: 99, 100;
+    stroke-dashoffset: -20;
+  }
+  65% {
+    stroke-dasharray: 99, 100;
+    stroke-dashoffset: -60;
+  }
+  100% {
+    stroke-dasharray: 1, 100;
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes s-spinner-grow-in {
+  0% {
+    max-width: 0;
+    opacity: 0;
+  }
+  100% {
+    max-width: 2em;
+    opacity: 1;
+  }
+}
+
+@keyframes s-spinner-shrink {
+  0% {
+    max-width: 2em;
+    opacity: 1;
+  }
+  100% {
+    max-width: 0;
+    opacity: 0;
+  }
+}
+</style>

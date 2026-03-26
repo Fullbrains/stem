@@ -9,6 +9,7 @@ export { default as SModalFooter } from './components/SModalFooter.vue'
 export { default as SButton } from './components/SButton.vue'
 export { default as SConfirmDialog } from './components/SConfirmDialog.vue'
 export { default as SSpinner } from './components/SSpinner.vue'
+export { default as SIcon } from './components/SIcon.vue'
 
 // Composables
 export { useConfirmDialog } from './composables/useConfirmDialog'
