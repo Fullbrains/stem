@@ -11,34 +11,34 @@ const alertVariants = ['solid', 'outline', 'soft', 'subtle'] as const
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
 const dropdownItems: DropdownMenuItem[] = [
-  {label: 'Profile', icon: 'i-lucide-user'},
-  {label: 'Settings', icon: 'i-lucide-cog', disabled: true},
+  {label: 'Profile', icon: 'i-ph-user'},
+  {label: 'Settings', icon: 'i-ph-gear', disabled: true},
   {type: 'separator'},
-  {label: 'Logout', icon: 'i-lucide-log-out'},
+  {label: 'Logout', icon: 'i-ph-sign-out'},
 ]
 
 const selectItems = [
-  {label: 'Backlog', value: 'backlog', icon: 'i-lucide-circle-dashed'},
-  {label: 'Todo', value: 'todo', icon: 'i-lucide-circle'},
-  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader', disabled: true},
-  {label: 'Done', value: 'done', icon: 'i-lucide-circle-check'},
+  {label: 'Backlog', value: 'backlog', icon: 'i-ph-circle-dashed'},
+  {label: 'Todo', value: 'todo', icon: 'i-ph-circle'},
+  {label: 'In Progress', value: 'in_progress', icon: 'i-ph-spinner', disabled: true},
+  {label: 'Done', value: 'done', icon: 'i-ph-check-circle'},
 ]
 const selectValue = ref('todo')
 
 const selectMenuItems = [
-  {label: 'Backlog', value: 'backlog', icon: 'i-lucide-circle-dashed'},
-  {label: 'Todo', value: 'todo', icon: 'i-lucide-circle'},
-  {label: 'In Progress', value: 'in_progress', icon: 'i-lucide-loader', disabled: true},
-  {label: 'Done', value: 'done', icon: 'i-lucide-circle-check'},
+  {label: 'Backlog', value: 'backlog', icon: 'i-ph-circle-dashed'},
+  {label: 'Todo', value: 'todo', icon: 'i-ph-circle'},
+  {label: 'In Progress', value: 'in_progress', icon: 'i-ph-spinner', disabled: true},
+  {label: 'Done', value: 'done', icon: 'i-ph-check-circle'},
 ]
 const selectMenuValue = ref('todo')
 
 const inputMenuItems = [
-  {label: 'Apple', icon: 'i-lucide-apple'},
-  {label: 'Banana', icon: 'i-lucide-banana'},
-  {label: 'Cherry', icon: 'i-lucide-cherry', disabled: true},
-  {label: 'Grape', icon: 'i-lucide-grape'},
-  {label: 'Lemon', icon: 'i-lucide-citrus'},
+  {label: 'Apple', icon: 'i-ph-apple-logo'},
+  {label: 'Banana', icon: 'i-ph-orange-slice'},
+  {label: 'Cherry', icon: 'i-ph-flower-tulip', disabled: true},
+  {label: 'Grape', icon: 'i-ph-wine'},
+  {label: 'Lemon', icon: 'i-ph-lemon'},
 ]
 const inputMenuValue = ref('')
 
@@ -84,9 +84,9 @@ const inputIcon = useCookie('stem-input-icon', {default: () => true})
 const inputDisabled = useCookie('stem-input-disabled', {default: () => false})
 
 const tabItems = [
-  {label: 'Account', icon: 'i-lucide-user'},
-  {label: 'Password', icon: 'i-lucide-lock'},
-  {label: 'Notifications', icon: 'i-lucide-bell'},
+  {label: 'Account', icon: 'i-ph-user'},
+  {label: 'Password', icon: 'i-ph-lock'},
+  {label: 'Notifications', icon: 'i-ph-bell'},
 ]
 const tabVariants = ['pill', 'link'] as const
 
@@ -231,8 +231,8 @@ onMounted(() => {
                   :color="color"
                   :variant="variant"
                   :size="btnSize"
-                  :icon="btnIcon ? 'i-lucide-star' : undefined"
-                  :trailing-icon="btnTrailingIcon ? 'i-lucide-arrow-right' : undefined"
+                  :icon="btnIcon ? 'i-ph-star' : undefined"
+                  :trailing-icon="btnTrailingIcon ? 'i-ph-arrow-right' : undefined"
                   :loading="btnLoading"
                   :caret="btnCaret"
                   :disabled="btnDisabled"
@@ -245,12 +245,12 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Disc</h3>
             <div class="flex flex-wrap items-center gap-3">
-              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-lucide-plus" :size="size" />
-              <SButton disc icon="i-lucide-x" variant="soft" />
-              <SButton disc icon="i-lucide-heart" variant="subtle" />
-              <SButton disc icon="i-lucide-trash-2" variant="soft" color="error" />
-              <SButton disc icon="i-lucide-check" variant="solid" />
-              <SButton disc icon="i-lucide-star" loading />
+              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size" />
+              <SButton disc icon="i-ph-x" variant="soft" />
+              <SButton disc icon="i-ph-heart" variant="subtle" />
+              <SButton disc icon="i-ph-trash" variant="soft" color="error" />
+              <SButton disc icon="i-ph-check" variant="solid" />
+              <SButton disc icon="i-ph-star" loading />
             </div>
           </div>
 
@@ -293,7 +293,7 @@ onMounted(() => {
               <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <UInput v-for="color in inputColors" :key="color" :placeholder="color" :color="color" :variant="variant"
-                        :size="inputSize" :icon="inputIcon ? 'i-lucide-search' : undefined" :disabled="inputDisabled"/>
+                        :size="inputSize" :icon="inputIcon ? 'i-ph-magnifying-glass' : undefined" :disabled="inputDisabled"/>
               </div>
             </div>
           </div>
@@ -318,7 +318,7 @@ onMounted(() => {
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <USelect v-for="color in inputColors" :key="color" v-model="selectValue" :items="selectItems"
                          :placeholder="color" :color="color" :variant="variant" :size="inputSize"
-                         :icon="inputIcon ? 'i-lucide-list' : undefined" :disabled="inputDisabled"/>
+                         :icon="inputIcon ? 'i-ph-list' : undefined" :disabled="inputDisabled"/>
               </div>
             </div>
           </div>
@@ -331,7 +331,7 @@ onMounted(() => {
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <USelectMenu v-for="color in inputColors" :key="color" v-model="selectMenuValue" :items="selectMenuItems"
                              :placeholder="color" :color="color" :variant="variant" :size="inputSize"
-                             :icon="inputIcon ? 'i-lucide-list' : undefined" :disabled="inputDisabled"/>
+                             :icon="inputIcon ? 'i-ph-list' : undefined" :disabled="inputDisabled"/>
               </div>
             </div>
           </div>
@@ -344,7 +344,7 @@ onMounted(() => {
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <UInputMenu v-for="color in inputColors" :key="color" v-model="inputMenuValue" :items="inputMenuItems"
                             :placeholder="color" :color="color" :variant="variant" :size="inputSize"
-                            :icon="inputIcon ? 'i-lucide-apple' : undefined" :disabled="inputDisabled"/>
+                            :icon="inputIcon ? 'i-ph-apple-logo' : undefined" :disabled="inputDisabled"/>
               </div>
             </div>
           </div>
@@ -364,7 +364,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
             <div class="flex flex-wrap items-center gap-3">
               <UDropdownMenu v-for="size in sizes" :key="size" :items="dropdownItems" :size="size">
-                <SButton :label="size.toUpperCase()" variant="subtle" :size="size" icon="i-lucide-chevron-down"/>
+                <SButton :label="size.toUpperCase()" variant="subtle" :size="size" icon="i-ph-caret-down"/>
               </UDropdownMenu>
             </div>
           </div>
@@ -383,7 +383,7 @@ onMounted(() => {
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <UInputTags v-for="color in inputColors" :key="color" v-model="inputTagsValue"
                           :placeholder="color" :color="color" :variant="variant" :size="inputSize"
-                          :icon="inputIcon ? 'i-lucide-tags' : undefined" :disabled="inputDisabled"/>
+                          :icon="inputIcon ? 'i-ph-tag' : undefined" :disabled="inputDisabled"/>
             </div>
           </div>
         </section>
@@ -425,7 +425,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h3>
             <div class="flex flex-wrap gap-3">
               <UBadge v-for="color in allColors" :key="color" :label="color" :color="color" :variant="variant"
-                      icon="i-lucide-tag" trailing-icon="i-lucide-x"/>
+                      icon="i-ph-tag" trailing-icon="i-ph-x"/>
             </div>
           </div>
 
@@ -452,7 +452,7 @@ onMounted(() => {
             <div class="space-y-3">
               <UAlert v-for="color in allColors" :key="color" :title="color"
                       :description="`${variant} alert with ${color} color.`" :color="color" :variant="variant"
-                      icon="i-lucide-info"/>
+                      icon="i-ph-info"/>
             </div>
           </div>
         </section>
@@ -480,7 +480,7 @@ onMounted(() => {
               </UPopover>
 
               <UPopover>
-                <SButton label="With form" icon="i-lucide-settings" variant="soft" />
+                <SButton label="With form" icon="i-ph-gear" variant="soft" />
                 <template #content>
                   <div class="p-4 space-y-3 w-72">
                     <h4 class="font-semibold text-sm">Settings</h4>
@@ -498,7 +498,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Hover</h3>
             <div class="flex flex-wrap gap-3">
               <UPopover mode="hover">
-                <SButton label="Hover me" variant="subtle" icon="i-lucide-info" />
+                <SButton label="Hover me" variant="subtle" icon="i-ph-info" />
                 <template #content>
                   <div class="p-4 w-64">
                     <p class="text-sm text-neutral-500 dark:text-neutral-400">This popover opens on hover.</p>

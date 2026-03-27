@@ -9,6 +9,7 @@ const props = defineProps<{
   caret?: boolean
   rounded?: boolean
   disc?: boolean
+  compact?: boolean
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -31,6 +32,7 @@ const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.rounded || props.disc) ui.base = 'rounded-full'
   if (props.disc) ui.base = (ui.base || '') + ' min-h-0! p-[0.3em]!'
+  if (props.compact) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-0!'
   if (props.caret) ui.trailingIcon = 'ml-auto'
   return Object.keys(ui).length ? ui : undefined
 })
