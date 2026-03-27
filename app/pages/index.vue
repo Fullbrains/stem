@@ -75,6 +75,7 @@ const btnLoading = ref(false)
 const btnCaret = useCookie('stem-btn-caret', {default: () => false})
 const btnDisabled = useCookie('stem-btn-disabled', {default: () => false})
 const btnRounded = useCookie('stem-btn-rounded', {default: () => false})
+const btnCompact = useCookie('stem-btn-compact', {default: () => false})
 
 // Input configurator (persisted)
 const inputColors = useCookie<string[]>('stem-input-colors', {default: () => [...allInputColors]})
@@ -218,6 +219,9 @@ onMounted(() => {
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
               <USwitch v-model="btnRounded" size="xs" /> Rounded
             </label>
+            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
+              <USwitch v-model="btnCompact" size="xs" /> Compact
+            </label>
           </div>
 
           <!-- Combinazioni -->
@@ -237,6 +241,7 @@ onMounted(() => {
                   :caret="btnCaret"
                   :disabled="btnDisabled"
                   :rounded="btnRounded"
+                  :compact="btnCompact"
               />
             </div>
           </div>
