@@ -12,6 +12,7 @@ import inputTags from './input-tags'
 import badge from './badge'
 import alert from './alert'
 import popover from './popover'
+import _switch from './switch'
 
 export const stem = {
   button,
@@ -28,4 +29,5 @@ export const stem = {
   badge,
   alert,
   popover,
+  switch: _switch,
 }
