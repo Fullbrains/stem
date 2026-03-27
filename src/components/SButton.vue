@@ -74,10 +74,10 @@ function handleClick(e: MouseEvent) {
       <span
           v-else
           class="inline-flex overflow-hidden transition-all duration-300 ease-out"
-          :class="loading || icon ? 'max-w-[1em] opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
+          :class="loading || icon ? 'max-w-[1.125em] opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
       >
-        <SSpinner v-if="loading" size="1em"/>
-        <UIcon v-else-if="icon" :name="icon" class="size-[1em] shrink-0"/>
+        <SSpinner v-if="loading" size="1.125em"/>
+        <UIcon v-else-if="icon" :name="icon" class="size-[1.125em] shrink-0"/>
       </span>
     </template>
     <template v-if="$slots.default" #default>
