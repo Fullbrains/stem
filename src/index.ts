@@ -14,6 +14,7 @@ export { default as SSearchBar } from './components/SSearchBar.vue'
 export { default as SSearchChip } from './components/SSearchChip.vue'
 export { default as SSearchFilter } from './components/SSearchFilter.vue'
 export { default as SSearchOrder } from './components/SSearchOrder.vue'
+export { default as SEmpty } from './components/SEmpty.vue'
 
 // Types
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'

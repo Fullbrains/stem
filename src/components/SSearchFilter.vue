@@ -224,7 +224,7 @@ const items = computed(() => {
   >
     <UDropdownMenu
         v-model:open="open"
-        :items="items"
+        :items="(items as any)"
         :content="{align: 'start' as const, sideOffset: 3}"
         :ui="{
         content: contentClass,

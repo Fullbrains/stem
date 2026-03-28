@@ -55,6 +55,7 @@ const sections = [
   {id: 'cards', label: 'Cards'},
   {id: 'modal', label: 'Modal'},
   {id: 'spinner', label: 'Spinner'},
+  {id: 'empty', label: 'Empty'},
 ]
 
 const overlay = useOverlay()
@@ -295,6 +296,7 @@ onMounted(() => {
               <SButton disc icon="i-ph-star" loading :compact="resolvedBtnCompact"/>
             </div>
           </div>
+
 
         </section>
 
@@ -833,6 +835,52 @@ onMounted(() => {
                 <SSpinner :size="s" grow/>
                 <span class="text-xs text-neutral-500">{{ s }} grow</span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Empty                                     -->
+        <!-- ======================================== -->
+        <section id="empty" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Empty
+          </h2>
+
+          <!-- Vertical (default) -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Vertical (default)</h3>
+            <div class="flex flex-wrap items-start gap-8">
+              <SEmpty label="No results found" />
+              <SEmpty label="Nothing here yet" icon="i-ph-folder-open">
+                <template #after>
+                  <SButton label="Create new" size="sm" variant="soft" icon="i-ph-plus" />
+                </template>
+              </SEmpty>
+              <SEmpty icon="i-ph-magnifying-glass">
+                <span>Custom <strong>slot</strong> text</span>
+              </SEmpty>
+            </div>
+          </div>
+
+          <!-- Horizontal -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Horizontal</h3>
+            <div class="space-y-3">
+              <SEmpty label="No items available" orientation="horizontal" />
+              <SEmpty label="Empty list" orientation="horizontal" icon="i-ph-list-dashes">
+                <template #after>
+                  <SButton label="Add item" size="sm" variant="soft" icon="i-ph-plus" />
+                </template>
+              </SEmpty>
+            </div>
+          </div>
+
+          <!-- Sizes -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
+            <div class="flex flex-wrap items-start gap-8">
+              <SEmpty v-for="size in sizes" :key="size" :label="size.toUpperCase()" :size="size" />
             </div>
           </div>
         </section>
