@@ -16,6 +16,7 @@ defineEmits<{
 
 const slots = defineSlots<{
   title?: () => unknown
+  description?: () => unknown
 }>()
 </script>
 
@@ -23,7 +24,7 @@ const slots = defineSlots<{
   <header
       class="p-6 flex relative shrink-0 w-full"
       :class="[
-      description ? 'items-start' : 'items-center',
+      (description || slots.description) ? 'items-start' : 'items-center',
     ]"
   >
     <div class="pr-8 flex flex-col truncate text-base gap-[1em]">
@@ -39,9 +40,11 @@ const slots = defineSlots<{
         <slot name="title">{{ title }}</slot>
       </div>
       <div
-          v-if="description"
+          v-if="description || slots.description"
           class="text-base block whitespace-normal sm:whitespace-pre-line"
-          v-html="description"/>
+      >
+        <slot name="description"><span v-html="description"/></slot>
+      </div>
     </div>
     <SButton
         v-if="closeable"

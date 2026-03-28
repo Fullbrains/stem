@@ -92,6 +92,9 @@ function handleClose() {
         <template v-if="$slots.title" #title>
           <slot name="title"/>
         </template>
+        <template v-if="$slots.description" #description>
+          <slot name="description"/>
+        </template>
       </SModalHeader>
       <slot name="after-header"/>
       <div class="w-full h-px bg-border" v-if="headerSeparator"/>
