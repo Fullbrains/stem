@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {computed} from 'vue'
+
 type Orientation = 'vertical' | 'horizontal'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
