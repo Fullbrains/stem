@@ -1,0 +1,191 @@
+<script setup lang="ts">
+import {ref, computed, watch, nextTick, onMounted, onUnmounted} from 'vue'
+
+const modelValue = defineModel<string>({default: ''})
+
+const props = withDefaults(defineProps<{
+  placeholder?: string
+  minInputWidth?: number
+}>(), {
+  minInputWidth: 280,
+})
+
+const slots = useSlots()
+const hasFilters = computed(() => !!slots.filters)
+const hasMore = computed(() => !!slots.more)
+
+const collapsed = ref(false)
+const mobileExpanded = ref(false)
+const rowEl = ref<HTMLElement>()
+const inputWrapperEl = ref<HTMLElement>()
+const filtersEl = ref<HTMLElement>()
+const mobileFiltersEl = ref<HTMLElement>()
+const inputFocus = ref(false)
+
+let lastFiltersWidth = 0
+let observer: ResizeObserver | null = null
+
+function getFixedWidth() {
+  const row = rowEl.value
+  if (!row) return 0
+  let fixed = 0
+  const style = getComputedStyle(row)
+  fixed += parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+  const gap = parseFloat(style.gap) || 0
+  let visibleCount = 1 // always count inputWrapper
+  for (const child of row.children) {
+    const el = child as HTMLElement
+    if (el === inputWrapperEl.value || el === filtersEl.value) continue
+    if (el.offsetWidth > 0) {
+      fixed += el.offsetWidth
+      visibleCount++
+    }
+  }
+  // Add filters as a visible item (for gap calculation)
+  visibleCount++
+  if (visibleCount > 1) fixed += gap * (visibleCount - 1)
+  return fixed
+}
+
+function onRowResize() {
+  const w = rowEl.value?.offsetWidth ?? 0
+  if (w === 0 || !hasFilters.value) return
+
+  if (!collapsed.value) {
+    if (filtersEl.value) lastFiltersWidth = filtersEl.value.offsetWidth
+    const inputSpace = w - lastFiltersWidth - getFixedWidth()
+    if (inputSpace < props.minInputWidth && lastFiltersWidth > 0) {
+      collapsed.value = true
+    }
+  } else {
+    // Use lastFiltersWidth (measured before collapse) to estimate if there's room
+    const inputSpace = w - lastFiltersWidth - getFixedWidth()
+    if (inputSpace >= props.minInputWidth) {
+      collapsed.value = false
+    }
+  }
+}
+
+onMounted(() => {
+  if (rowEl.value) {
+    observer = new ResizeObserver(onRowResize)
+    observer.observe(rowEl.value)
+  }
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
+
+watch(collapsed, async (val) => {
+  if (!val) {
+    mobileExpanded.value = false
+    await nextTick()
+    if (filtersEl.value) lastFiltersWidth = filtersEl.value.offsetWidth
+  }
+})
+
+const showFunnel = computed(() => collapsed.value || hasMore.value)
+
+const mobileHeight = ref(0)
+
+watch(mobileExpanded, async (val) => {
+  if (val) {
+    await nextTick()
+    mobileHeight.value = mobileFiltersEl.value?.scrollHeight ?? 0
+  } else {
+    mobileHeight.value = 0
+  }
+})
+
+function clear() {
+  modelValue.value = ''
+}
+</script>
+
+<template>
+  <div
+    class="s-outline s-outline-focus-within flex flex-col overflow-hidden relative rounded-[20px]! bg-(--ui-bg-muted)"
+    :class="inputFocus ? 'bg-(--ui-bg)' : ''"
+  >
+    <div
+      ref="rowEl"
+      class="flex items-center h-10 px-1.5 gap-1"
+    >
+      <div
+        ref="inputWrapperEl"
+        class="flex items-center gap-3 pl-2 pr-1 flex-1 min-w-0"
+      >
+        <UIcon
+          name="i-ph-magnifying-glass"
+          class="size-5 text-(--ui-text-dimmed) shrink-0"
+        />
+        <input
+          v-model="modelValue"
+          type="text"
+          :placeholder="placeholder ?? 'Search...'"
+          class="bg-transparent border-none outline-none placeholder:text-(--ui-text-dimmed) text-base flex-1 min-w-0"
+          @focus="inputFocus = true"
+          @blur="inputFocus = false"
+        >
+
+        <SButton
+          v-if="modelValue?.length"
+          color="neutral"
+          variant="link"
+          aria-label="Clear search"
+          class="shrink-0 min-h-0 p-1!"
+          @click="clear"
+        >
+          <template #leading>
+            <UIcon
+              name="i-ph-backspace-fill"
+              class="size-6"
+            />
+          </template>
+        </SButton>
+      </div>
+
+      <div
+        v-if="hasFilters && !collapsed"
+        ref="filtersEl"
+        class="flex items-center gap-1 shrink-0"
+      >
+        <slot name="filters"/>
+      </div>
+
+      <div
+        v-if="$slots.trailing"
+        class="flex items-center gap-1 shrink-0"
+      >
+        <slot name="trailing"/>
+      </div>
+
+      <button
+        v-if="showFunnel"
+        class="rounded-full h-7.5 min-h-none flex items-center justify-center px-3 cursor-pointer select-none transition! duration-200!"
+        :class="mobileExpanded
+          ? 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-slate-300 dark:text-slate-900'
+          : 'hover:bg-slate-400/30 bg-slate-400/20'"
+        @click="mobileExpanded = !mobileExpanded"
+      >
+        <UIcon
+          name="i-ph-funnel-simple"
+          class="size-5 transition! duration-200!"
+        />
+      </button>
+    </div>
+
+    <div
+      v-if="showFunnel"
+      ref="mobileFiltersEl"
+      class="overflow-hidden transition-[height] duration-200 ease-in-out"
+      :style="{height: `${mobileHeight}px`}"
+    >
+      <div class="flex flex-wrap justify-end gap-1 pt-1.5 pb-2 border-t border-(--ui-border) mr-1.5">
+        <slot v-if="collapsed" name="filters"/>
+        <slot name="more"/>
+      </div>
+    </div>
+  </div>
+</template>

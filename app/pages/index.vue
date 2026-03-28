@@ -51,6 +51,7 @@ const sections = [
   {id: 'badges', label: 'Badges'},
   {id: 'alerts', label: 'Alerts'},
   {id: 'popover', label: 'Popover'},
+  {id: 'search', label: 'Search'},
   {id: 'cards', label: 'Cards'},
   {id: 'modal', label: 'Modal'},
   {id: 'spinner', label: 'Spinner'},
@@ -98,6 +99,29 @@ const tabItems = [
 const tabVariants = ['pill', 'link'] as const
 
 const inputTagsValue = ref(['Vue', 'Nuxt'])
+
+// Search demo data
+const searchQuery = ref('')
+const searchStatusFilter = ref(new Set<string>())
+const searchCategoryFilter = ref(new Set<string>())
+const searchOrder = ref('newest')
+
+const statusOptions = [
+  {value: 'active', label: 'Active', icon: 'i-ph-check-circle'},
+  {value: 'pending', label: 'Pending', icon: 'i-ph-clock'},
+  {value: 'archived', label: 'Archived', icon: 'i-ph-archive'},
+]
+const categoryOptions = [
+  {value: 'design', label: 'Design', icon: 'i-ph-palette'},
+  {value: 'development', label: 'Development', icon: 'i-ph-code'},
+  {value: 'marketing', label: 'Marketing', icon: 'i-ph-megaphone'},
+  {value: 'support', label: 'Support', icon: 'i-ph-headset'},
+]
+const orderOptions = [
+  {value: 'newest', label: 'Newest first'},
+  {value: 'oldest', label: 'Oldest first'},
+  {value: 'name', label: 'Name A–Z'},
+]
 
 const activeSection = ref('buttons')
 const checkerboard = ref(false)
@@ -560,6 +584,99 @@ onMounted(() => {
                 </template>
               </UPopover>
             </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Search                                    -->
+        <!-- ======================================== -->
+        <section id="search" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Search
+          </h2>
+
+          <!-- SearchBar basic -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar</h3>
+            <SSearchBar v-model="searchQuery" placeholder="Search projects..."/>
+          </div>
+
+          <!-- SearchBar with filters -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters</h3>
+            <SSearchBar v-model="searchQuery" placeholder="Search projects...">
+              <template #filters>
+                <SSearchFilter
+                  v-model="searchStatusFilter"
+                  :options="statusOptions"
+                  label="Status"
+                />
+                <SSearchFilter
+                  v-model="searchCategoryFilter"
+                  :options="categoryOptions"
+                  label="Category"
+                />
+              </template>
+              <template #trailing>
+                <SSearchOrder v-model="searchOrder" :options="orderOptions"/>
+              </template>
+            </SSearchBar>
+          </div>
+
+          <!-- SearchBar with more -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters + More</h3>
+            <SSearchBar v-model="searchQuery" placeholder="Search projects...">
+              <template #filters>
+                <SSearchFilter
+                  v-model="searchStatusFilter"
+                  :options="statusOptions"
+                  label="Status"
+                />
+              </template>
+              <template #more>
+                <SSearchFilter
+                  v-model="searchCategoryFilter"
+                  :options="categoryOptions"
+                  label="Category"
+                />
+                <SSearchOrder v-model="searchOrder" :options="orderOptions"/>
+              </template>
+            </SSearchBar>
+          </div>
+
+          <!-- Standalone chips -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchChip</h3>
+            <div class="flex flex-wrap gap-2">
+              <SSearchChip>Plain chip</SSearchChip>
+              <SSearchChip leading-icon="i-ph-tag">With icon</SSearchChip>
+              <SSearchChip label="Status" :selected-values="['Active', 'Pending']" :count="3"/>
+              <SSearchChip label="All" :selected-values="['a','b','c']" :count="3"/>
+            </div>
+          </div>
+
+          <!-- Standalone filter -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchFilter</h3>
+            <div class="flex flex-wrap gap-2">
+              <SSearchFilter
+                v-model="searchStatusFilter"
+                :options="statusOptions"
+                label="Status"
+              />
+              <SSearchFilter
+                v-model="searchCategoryFilter"
+                :options="categoryOptions"
+                label="Category"
+              />
+            </div>
+          </div>
+
+          <!-- Standalone order -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchOrder</h3>
+            <SSearchOrder v-model="searchOrder" :options="orderOptions"/>
           </div>
         </section>
 
