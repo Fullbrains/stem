@@ -9,7 +9,7 @@ const props = defineProps<{
   caret?: boolean
   rounded?: boolean
   disc?: boolean
-  compact?: boolean
+  compact?: boolean | 'x' | 'y'
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -31,8 +31,16 @@ const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.rounded || props.disc) ui.base = 'rounded-full'
-  if (props.disc) ui.base = (ui.base || '') + ' min-h-0! p-[0.3em]!'
-  if (props.compact) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-0!'
+  if (props.disc) ui.base = (ui.base || '') + ' aspect-square justify-center p-0!'
+  if (props.compact) {
+    if (props.disc) {
+      ui.base = (ui.base || '') + ' min-h-0! p-[0.3em]!'
+    } else {
+      const axis = props.compact === 'x' ? 'x' : props.compact === 'y' ? 'y' : 'xy'
+      if (axis.includes('y')) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-0!'
+      if (axis.includes('x')) ui.base = (ui.base || '') + ' px-[0.65em]!'
+    }
+  }
   if (props.caret) ui.trailingIcon = 'ml-auto'
   return Object.keys(ui).length ? ui : undefined
 })

@@ -75,7 +75,13 @@ const btnLoading = ref(false)
 const btnCaret = useCookie('stem-btn-caret', {default: () => false})
 const btnDisabled = useCookie('stem-btn-disabled', {default: () => false})
 const btnRounded = useCookie('stem-btn-rounded', {default: () => false})
-const btnCompact = useCookie('stem-btn-compact', {default: () => false})
+const btnCompact = useCookie<string>('stem-btn-compact', {default: () => 'false'})
+const compactOptions = ['false', 'true', 'x', 'y'] as const
+const resolvedBtnCompact = computed(() => {
+  if (btnCompact.value === 'true') return true
+  if (btnCompact.value === 'x' || btnCompact.value === 'y') return btnCompact.value
+  return false
+})
 
 // Input configurator (persisted)
 const inputColors = useCookie<string[]>('stem-input-colors', {default: () => [...allInputColors]})
@@ -225,10 +231,10 @@ onMounted(() => {
               <USwitch v-model="btnRounded" size="xs"/>
               Rounded
             </label>
-            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnCompact" size="xs"/>
-              Compact
-            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium uppercase text-neutral-500">Compact</span>
+              <USelectMenu v-model="btnCompact" :items="[...compactOptions]" class="w-20" size="xs"/>
+            </div>
           </div>
 
           <!-- Combinazioni -->
@@ -248,7 +254,7 @@ onMounted(() => {
                   :caret="btnCaret"
                   :disabled="btnDisabled"
                   :rounded="btnRounded"
-                  :compact="btnCompact"
+                  :compact="resolvedBtnCompact"
               />
             </div>
           </div>
@@ -257,12 +263,12 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Disc</h3>
             <div class="flex flex-wrap items-center gap-3">
-              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size"/>
-              <SButton disc icon="i-ph-x" variant="soft"/>
-              <SButton disc icon="i-ph-heart" variant="subtle"/>
-              <SButton disc icon="i-ph-trash" variant="soft" color="error"/>
-              <SButton disc icon="i-ph-check" variant="solid"/>
-              <SButton disc icon="i-ph-star" loading/>
+              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size" :compact="resolvedBtnCompact"/>
+              <SButton disc icon="i-ph-x" variant="soft" :compact="resolvedBtnCompact"/>
+              <SButton disc icon="i-ph-heart" variant="subtle" :compact="resolvedBtnCompact"/>
+              <SButton disc icon="i-ph-trash" variant="soft" color="error" :compact="resolvedBtnCompact"/>
+              <SButton disc icon="i-ph-check" variant="solid" :compact="resolvedBtnCompact"/>
+              <SButton disc icon="i-ph-star" loading :compact="resolvedBtnCompact"/>
             </div>
           </div>
 
