@@ -35,7 +35,7 @@ const resolvedUi = computed(() => {
   if (props.disc) ui.base = (ui.base || '') + ' aspect-square justify-center p-0!'
   if (props.compact) {
     if (props.disc) {
-      ui.base = (ui.base || '') + ' min-h-0! p-[0.3em]!'
+      ui.base = (ui.base || '') + ' min-h-0! p-[0.4em]!'
     } else {
       const axis = props.compact === 'x' ? 'x' : props.compact === 'y' ? 'y' : 'xy'
       if (axis.includes('y')) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-0!'
