@@ -6,8 +6,10 @@ const modelValue = defineModel<string>({default: ''})
 const props = withDefaults(defineProps<{
   placeholder?: string
   minInputWidth?: number
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost'
 }>(), {
   minInputWidth: 280,
+  variant: 'outline',
 })
 
 const slots = useSlots()
@@ -21,6 +23,38 @@ const inputWrapperEl = ref<HTMLElement>()
 const filtersEl = ref<HTMLElement>()
 const mobileFiltersEl = ref<HTMLElement>()
 const inputFocus = ref(false)
+
+const variantClasses = computed(() => {
+  const base = 'rounded-[20px]! transition duration-200 ring-0!'
+  const focused = inputFocus.value
+  switch (props.variant) {
+    case 'soft':
+      return [
+        `${base} bg-slate-500/10`,
+        focused ? 'bg-slate-500/15!' : 'hover:bg-slate-500/15',
+      ]
+    case 'subtle':
+      return [
+        `${base} border border-slate-500/30 bg-slate-500/5`,
+        focused
+          ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+          : 'hover:border-slate-500/50 hover:bg-slate-500/10',
+      ]
+    case 'ghost':
+      return [
+        `${base} bg-transparent`,
+        focused ? 'bg-slate-500/10!' : 'hover:bg-slate-500/10',
+      ]
+    case 'outline':
+    default:
+      return [
+        `${base} border border-slate-500/30`,
+        focused
+          ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+          : 'hover:border-slate-500/50',
+      ]
+  }
+})
 
 let lastFiltersWidth = 0
 let observer: ResizeObserver | null = null
@@ -105,8 +139,8 @@ function clear() {
 
 <template>
   <div
-    class="s-outline s-outline-focus-within flex flex-col overflow-hidden relative rounded-[20px]! bg-(--ui-bg-muted)"
-    :class="inputFocus ? 'bg-(--ui-bg)' : ''"
+    class="flex flex-col relative"
+    :class="variantClasses"
   >
     <div
       ref="rowEl"
@@ -118,13 +152,13 @@ function clear() {
       >
         <UIcon
           name="i-ph-magnifying-glass"
-          class="size-5 text-(--ui-text-dimmed) shrink-0"
+          class="size-5 text-slate-500/80 shrink-0"
         />
         <input
           v-model="modelValue"
           type="text"
           :placeholder="placeholder ?? 'Search...'"
-          class="bg-transparent border-none outline-none placeholder:text-(--ui-text-dimmed) text-base flex-1 min-w-0"
+          class="bg-transparent border-none outline-none placeholder:text-slate-500/80 text-base flex-1 min-w-0"
           @focus="inputFocus = true"
           @blur="inputFocus = false"
         >

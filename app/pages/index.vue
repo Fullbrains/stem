@@ -595,10 +595,15 @@ onMounted(() => {
             Search
           </h2>
 
-          <!-- SearchBar basic -->
+          <!-- SearchBar variants -->
           <div>
-            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar</h3>
-            <SSearchBar v-model="searchQuery" placeholder="Search projects..."/>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar Variants</h3>
+            <div class="space-y-3">
+              <SSearchBar v-model="searchQuery" placeholder="outline (default)"/>
+              <SSearchBar v-model="searchQuery" variant="soft" placeholder="soft"/>
+              <SSearchBar v-model="searchQuery" variant="subtle" placeholder="subtle"/>
+              <SSearchBar v-model="searchQuery" variant="ghost" placeholder="ghost"/>
+            </div>
           </div>
 
           <!-- SearchBar with filters -->
