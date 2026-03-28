@@ -83,5 +83,8 @@ function handleClick(e: MouseEvent) {
     <template v-if="$slots.default" #default>
       <slot/>
     </template>
+    <template v-if="$slots.trailing" #trailing>
+      <slot name="trailing"/>
+    </template>
   </UButton>
 </template>
