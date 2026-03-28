@@ -15,7 +15,11 @@ export default defineNuxtModule({
     // so user overrides always win.
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
     for (const [key, value] of Object.entries(stemAppConfig.ui)) {
-      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      if (key === 'colors') {
+        // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'slate').
+        // Using Object.assign ensures Stem values win over getDefaultConfig() values.
+        nuxt.options.appConfig.ui[key] = Object.assign(nuxt.options.appConfig.ui[key] || {}, value)
+      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         nuxt.options.appConfig.ui[key] = defu(value, nuxt.options.appConfig.ui[key] || {})
       } else {
         nuxt.options.appConfig.ui[key] = value

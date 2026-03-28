@@ -30,8 +30,20 @@ export default {
       `,
     },
     {
-      color: ['primary', 'neutral'],
-      variant: ['soft', 'subtle'],
+      color: 'secondary',
+      variant: 'solid',
+      class: `
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+        hover:bg-slate-50 dark:hover:bg-slate-700
+        active:bg-white dark:active:bg-slate-800
+        disabled:bg-white dark:disabled:bg-slate-800
+        focus-visible:outline-slate-400
+      `,
+    },
+    {
+      color: ['primary', 'neutral', 'secondary'],
+      variant: 'soft',
       class: `
         text-gray-800 dark:text-gray-200
         bg-slate-400/20
@@ -43,7 +55,22 @@ export default {
       color: ['primary', 'neutral'],
       variant: 'subtle',
       class: `
+        text-gray-800 dark:text-gray-200
+        bg-slate-400/20
+        hover:bg-slate-400/30
+        active:bg-slate-400/20
         ring-gray-500/30 dark:ring-gray-300/20
+      `
+    },
+    {
+      color: 'secondary',
+      variant: 'subtle',
+      class: `
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+        hover:bg-slate-50 dark:hover:bg-slate-700
+        active:bg-white dark:active:bg-slate-800
+        ring-inset ring-(--ui-border)
       `
     }
   ],

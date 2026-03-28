@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type {DropdownMenuItem} from '@nuxt/ui'
 
-const allColors = ['primary', 'neutral', 'error', 'success'] as const
-const allButtonColors = ['primary', 'neutral', 'error'] as const
+const allColors = ['primary', 'secondary', 'neutral', 'error', 'success'] as const
+const allButtonColors = ['primary', 'secondary', 'neutral', 'error'] as const
 const allButtonVariants = ['solid', 'soft', 'subtle'] as const
 const allInputColors = ['primary', 'error', 'success'] as const
 const allInputVariants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
@@ -168,10 +168,10 @@ onMounted(() => {
             </h1>
             <div class="flex items-center gap-3">
               <label class="flex cursor-pointer items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
-                <USwitch v-model="checkerboard" size="sm" />
+                <USwitch v-model="checkerboard" size="sm"/>
                 Checkerboard
               </label>
-              <UColorModeSwitch />
+              <UColorModeSwitch/>
             </div>
           </div>
           <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">
@@ -191,36 +191,43 @@ onMounted(() => {
           <div class="flex flex-wrap items-center gap-4 rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4">
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Colors</span>
-              <USelectMenu v-model="btnColors" :items="[...allButtonColors]" multiple class="w-44" size="xs" />
+              <USelectMenu v-model="btnColors" :items="[...allButtonColors]" multiple class="w-44" size="xs"/>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Variants</span>
-              <USelectMenu v-model="btnVariants" :items="[...allButtonVariants]" multiple class="w-44" size="xs" />
+              <USelectMenu v-model="btnVariants" :items="[...allButtonVariants]" multiple class="w-44" size="xs"/>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Size</span>
-              <USelectMenu v-model="btnSize" :items="[...sizes]" class="w-20" size="xs" />
+              <USelectMenu v-model="btnSize" :items="[...sizes]" class="w-20" size="xs"/>
             </div>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnIcon" size="xs" /> Icon
+              <USwitch v-model="btnIcon" size="xs"/>
+              Icon
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnTrailingIcon" size="xs" /> Trailing
+              <USwitch v-model="btnTrailingIcon" size="xs"/>
+              Trailing
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnLoading" size="xs" /> Loading
+              <USwitch v-model="btnLoading" size="xs"/>
+              Loading
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnCaret" size="xs" /> Caret
+              <USwitch v-model="btnCaret" size="xs"/>
+              Caret
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnDisabled" size="xs" /> Disabled
+              <USwitch v-model="btnDisabled" size="xs"/>
+              Disabled
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnRounded" size="xs" /> Rounded
+              <USwitch v-model="btnRounded" size="xs"/>
+              Rounded
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="btnCompact" size="xs" /> Compact
+              <USwitch v-model="btnCompact" size="xs"/>
+              Compact
             </label>
           </div>
 
@@ -235,7 +242,7 @@ onMounted(() => {
                   :color="color"
                   :variant="variant"
                   :size="btnSize"
-                  :icon="btnIcon ? 'i-ph-star' : undefined"
+                  :icon="btnIcon ? 'i-ph-folder-open' : undefined"
                   :trailing-icon="btnTrailingIcon ? 'i-ph-arrow-right' : undefined"
                   :loading="btnLoading"
                   :caret="btnCaret"
@@ -250,12 +257,12 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Disc</h3>
             <div class="flex flex-wrap items-center gap-3">
-              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size" />
-              <SButton disc icon="i-ph-x" variant="soft" />
-              <SButton disc icon="i-ph-heart" variant="subtle" />
-              <SButton disc icon="i-ph-trash" variant="soft" color="error" />
-              <SButton disc icon="i-ph-check" variant="solid" />
-              <SButton disc icon="i-ph-star" loading />
+              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size"/>
+              <SButton disc icon="i-ph-x" variant="soft"/>
+              <SButton disc icon="i-ph-heart" variant="subtle"/>
+              <SButton disc icon="i-ph-trash" variant="soft" color="error"/>
+              <SButton disc icon="i-ph-check" variant="solid"/>
+              <SButton disc icon="i-ph-star" loading/>
             </div>
           </div>
 
@@ -273,21 +280,23 @@ onMounted(() => {
           <div class="flex flex-wrap items-center gap-4 rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4">
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Colors</span>
-              <USelectMenu v-model="inputColors" :items="[...allInputColors]" multiple class="w-44" size="xs" />
+              <USelectMenu v-model="inputColors" :items="[...allInputColors]" multiple class="w-44" size="xs"/>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Variants</span>
-              <USelectMenu v-model="inputVariants" :items="[...allInputVariants]" multiple class="w-44" size="xs" />
+              <USelectMenu v-model="inputVariants" :items="[...allInputVariants]" multiple class="w-44" size="xs"/>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs font-medium uppercase text-neutral-500">Size</span>
-              <USelectMenu v-model="inputSize" :items="[...sizes]" class="w-20" size="xs" />
+              <USelectMenu v-model="inputSize" :items="[...sizes]" class="w-20" size="xs"/>
             </div>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="inputIcon" size="xs" /> Icon
+              <USwitch v-model="inputIcon" size="xs"/>
+              Icon
             </label>
             <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
-              <USwitch v-model="inputDisabled" size="xs" /> Disabled
+              <USwitch v-model="inputDisabled" size="xs"/>
+              Disabled
             </label>
           </div>
 
@@ -298,7 +307,8 @@ onMounted(() => {
               <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <UInput v-for="color in inputColors" :key="color" :placeholder="color" :color="color" :variant="variant"
-                        :size="inputSize" :icon="inputIcon ? 'i-ph-magnifying-glass' : undefined" :disabled="inputDisabled"/>
+                        :size="inputSize" :icon="inputIcon ? 'i-ph-magnifying-glass' : undefined"
+                        :disabled="inputDisabled"/>
               </div>
             </div>
           </div>
@@ -309,7 +319,8 @@ onMounted(() => {
             <div v-for="variant in inputVariants" :key="`textarea-${variant}`" class="mb-4">
               <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <UTextarea v-for="color in inputColors" :key="color" :placeholder="color" :color="color" :variant="variant"
+                <UTextarea v-for="color in inputColors" :key="color" :placeholder="color" :color="color"
+                           :variant="variant"
                            :size="inputSize" :rows="2" :disabled="inputDisabled"/>
               </div>
             </div>
@@ -334,7 +345,8 @@ onMounted(() => {
             <div v-for="variant in inputVariants" :key="`selectmenu-${variant}`" class="mb-4">
               <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <USelectMenu v-for="color in inputColors" :key="color" v-model="selectMenuValue" :items="selectMenuItems"
+                <USelectMenu v-for="color in inputColors" :key="color" v-model="selectMenuValue"
+                             :items="selectMenuItems"
                              :placeholder="color" :color="color" :variant="variant" :size="inputSize"
                              :icon="inputIcon ? 'i-ph-list' : undefined" :disabled="inputDisabled"/>
               </div>
@@ -404,7 +416,7 @@ onMounted(() => {
           <div v-for="variant in tabVariants" :key="variant">
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h3>
             <div class="space-y-4">
-              <UTabs :items="tabItems" :variant="variant" />
+              <UTabs :items="tabItems" :variant="variant"/>
             </div>
           </div>
 
@@ -412,7 +424,7 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
             <div class="space-y-4">
-              <UTabs v-for="size in sizes" :key="size" :items="tabItems" :size="size" variant="pill" />
+              <UTabs v-for="size in sizes" :key="size" :items="tabItems" :size="size" variant="pill"/>
             </div>
           </div>
         </section>
@@ -475,23 +487,24 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Basic (click)</h3>
             <div class="flex flex-wrap gap-3">
               <UPopover>
-                <SButton label="Click me" variant="subtle" />
+                <SButton label="Click me" variant="subtle"/>
                 <template #content>
                   <div class="p-4 space-y-2 w-64">
                     <h4 class="font-semibold text-sm">Popover title</h4>
-                    <p class="text-sm text-neutral-500 dark:text-neutral-400">This is a basic popover with some content inside.</p>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">This is a basic popover with some content
+                      inside.</p>
                   </div>
                 </template>
               </UPopover>
 
               <UPopover>
-                <SButton label="With form" icon="i-ph-gear" variant="soft" />
+                <SButton label="With form" icon="i-ph-gear" variant="soft"/>
                 <template #content>
                   <div class="p-4 space-y-3 w-72">
                     <h4 class="font-semibold text-sm">Settings</h4>
-                    <UInput placeholder="Name" size="sm" />
-                    <UInput placeholder="Email" size="sm" />
-                    <SButton label="Save" size="sm" block />
+                    <UInput placeholder="Name" size="sm"/>
+                    <UInput placeholder="Email" size="sm"/>
+                    <SButton label="Save" size="sm" block/>
                   </div>
                 </template>
               </UPopover>
@@ -503,7 +516,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Hover</h3>
             <div class="flex flex-wrap gap-3">
               <UPopover mode="hover">
-                <SButton label="Hover me" variant="subtle" icon="i-ph-info" />
+                <SButton label="Hover me" variant="subtle" icon="i-ph-info"/>
                 <template #content>
                   <div class="p-4 w-64">
                     <p class="text-sm text-neutral-500 dark:text-neutral-400">This popover opens on hover.</p>
@@ -518,7 +531,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">With arrow</h3>
             <div class="flex flex-wrap gap-3">
               <UPopover arrow>
-                <SButton label="With arrow" variant="soft" />
+                <SButton label="With arrow" variant="soft"/>
                 <template #content>
                   <div class="p-4 w-64">
                     <p class="text-sm text-neutral-500 dark:text-neutral-400">Popover with an arrow indicator.</p>
@@ -533,7 +546,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Placement</h3>
             <div class="flex flex-wrap gap-3">
               <UPopover v-for="side in (['top', 'right', 'bottom', 'left'] as const)" :key="side" :content="{ side }">
-                <SButton :label="side" variant="subtle" size="sm" />
+                <SButton :label="side" variant="subtle" size="sm"/>
                 <template #content>
                   <div class="p-3">
                     <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ side }} popover</p>
@@ -656,8 +669,9 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes (rem)</h3>
             <div class="flex flex-wrap items-end gap-6">
-              <div v-for="s in ['0.75rem', '1rem', '1.5rem', '2rem', '3rem', '4rem']" :key="s" class="flex flex-col items-center gap-2">
-                <SSpinner :size="s" />
+              <div v-for="s in ['0.75rem', '1rem', '1.5rem', '2rem', '3rem', '4rem']" :key="s"
+                   class="flex flex-col items-center gap-2">
+                <SSpinner :size="s"/>
                 <span class="text-xs text-neutral-500">{{ s }}</span>
               </div>
             </div>
@@ -666,8 +680,9 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes (px)</h3>
             <div class="flex flex-wrap items-end gap-6">
-              <div v-for="s in ['12px', '16px', '24px', '32px', '48px', '64px']" :key="s" class="flex flex-col items-center gap-2">
-                <SSpinner :size="s" />
+              <div v-for="s in ['12px', '16px', '24px', '32px', '48px', '64px']" :key="s"
+                   class="flex flex-col items-center gap-2">
+                <SSpinner :size="s"/>
                 <span class="text-xs text-neutral-500">{{ s }}</span>
               </div>
             </div>
@@ -677,7 +692,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Stroke</h3>
             <div class="flex flex-wrap items-end gap-6">
               <div v-for="sw in [1, 2, 3, 4]" :key="sw" class="flex flex-col items-center gap-2">
-                <SSpinner size="2.5rem" :stroke="sw" />
+                <SSpinner size="2.5rem" :stroke="sw"/>
                 <span class="text-xs text-neutral-500">stroke={{ sw }}</span>
               </div>
             </div>
@@ -687,7 +702,7 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Grow animation</h3>
             <div class="flex flex-wrap items-end gap-6">
               <div v-for="s in ['1rem', '2rem', '3rem']" :key="s" class="flex flex-col items-center gap-2">
-                <SSpinner :size="s" grow />
+                <SSpinner :size="s" grow/>
                 <span class="text-xs text-neutral-500">{{ s }} grow</span>
               </div>
             </div>

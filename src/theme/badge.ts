@@ -65,7 +65,15 @@ export default {
       `,
     },
     {
-      color: ['primary', 'neutral'],
+      color: 'secondary',
+      variant: 'solid',
+      class: `
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+      `,
+    },
+    {
+      color: ['primary', 'neutral', 'secondary'],
       variant: 'soft',
       class: `
         text-gray-800 dark:text-gray-200
@@ -79,6 +87,15 @@ export default {
         text-gray-800 dark:text-gray-200
         bg-slate-400/20
         ring-gray-500/30 dark:ring-gray-300/20
+      `,
+    },
+    {
+      color: 'secondary',
+      variant: 'subtle',
+      class: `
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+        ring-inset ring-(--ui-border)
       `,
     },
   ],
