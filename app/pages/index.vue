@@ -124,6 +124,13 @@ const orderOptions = [
   {value: 'name', label: 'Name A–Z'},
 ]
 
+const searchActiveFilterCount = computed(() => {
+  let count = 0
+  if (searchStatusFilter.value.size > 0) count++
+  if (searchCategoryFilter.value.size > 0) count++
+  return count
+})
+
 const activeSection = ref('buttons')
 const checkerboard = ref(false)
 
@@ -611,7 +618,7 @@ onMounted(() => {
           <!-- SearchBar with filters -->
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters</h3>
-            <SSearchBar v-model="searchQuery" placeholder="Search projects...">
+            <SSearchBar v-model="searchQuery" placeholder="Search projects..." :active-filter-count="searchActiveFilterCount">
               <template #filters>
                 <SSearchFilter
                   v-model="searchStatusFilter"
@@ -633,7 +640,7 @@ onMounted(() => {
           <!-- SearchBar with more -->
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters + More</h3>
-            <SSearchBar v-model="searchQuery" placeholder="Search projects...">
+            <SSearchBar v-model="searchQuery" placeholder="Search projects..." :active-filter-count="searchActiveFilterCount">
               <template #filters>
                 <SSearchFilter
                   v-model="searchStatusFilter"

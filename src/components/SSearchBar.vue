@@ -7,9 +7,11 @@ const props = withDefaults(defineProps<{
   placeholder?: string
   minInputWidth?: number
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost'
+  activeFilterCount?: number
 }>(), {
   minInputWidth: 280,
   variant: 'outline',
+  activeFilterCount: 0,
 })
 
 const slots = useSlots()
@@ -195,19 +197,17 @@ function clear() {
         <slot name="trailing"/>
       </div>
 
-      <button
+      <SButton
         v-if="showFunnel"
-        class="rounded-full h-7.5 min-h-none flex items-center justify-center px-3 cursor-pointer select-none transition! duration-200!"
-        :class="mobileExpanded
-          ? 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-slate-300 dark:text-slate-900'
-          : 'hover:bg-slate-400/30 bg-slate-400/20'"
+        icon="i-ph-funnel-simple"
+        :label="activeFilterCount > 0 ? String(activeFilterCount) : undefined"
+        :variant="mobileExpanded ? 'solid' : 'soft'"
+        size="sm"
+        rounded
+        compact
+        class="select-none"
         @click="mobileExpanded = !mobileExpanded"
-      >
-        <UIcon
-          name="i-ph-funnel-simple"
-          class="size-5 transition! duration-200!"
-        />
-      </button>
+      />
     </div>
 
     <div
@@ -216,7 +216,7 @@ function clear() {
       class="overflow-hidden transition-[height] duration-200 ease-in-out"
       :style="{height: `${mobileHeight}px`}"
     >
-      <div class="flex flex-wrap justify-end gap-1 pt-1.5 pb-2 border-t border-(--ui-border) mr-1.5">
+      <div class="flex flex-wrap gap-1 pt-1.5 pb-2 border-t border-(--ui-border) mx-1.5">
         <slot v-if="collapsed" name="filters"/>
         <slot name="more"/>
       </div>

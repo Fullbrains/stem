@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<{
   chipClass?: string
   threshold?: number
   contentClass?: string
+  alignEnd?: boolean
 }>(), {
   allLabel: 'All',
   nullable: false,
@@ -227,7 +228,7 @@ const items = computed(() => {
     <UDropdownMenu
         v-model:open="open"
         :items="(items as any)"
-        :content="{align: 'start' as const, sideOffset: 3}"
+        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3}"
         :ui="{
         content: contentClass,
         item: 'px-3! min-h-7 py-1! text-sm',
