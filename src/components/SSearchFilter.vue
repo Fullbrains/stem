@@ -246,15 +246,15 @@ const items = computed(() => {
           :class="showReset ? 'pr-1!' : ''"
       />
 
-      <template #filter-all="{item}">
+      <template #filter-all="{item: _item}">
         <div class="flex items-center gap-2 w-full py-[0.2em]">
-          <span class="truncate mr-auto h-5">{{ item.label }}</span>
+          <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
           <span
-              v-if="item.count != null"
+              v-if="(_item as any).count != null"
               class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
-          >{{ item.count }}</span>
+          >{{ (_item as any).count }}</span>
           <UIcon
-              v-if="item.checked"
+              v-if="(_item as any).checked"
               name="i-ph-check"
               class="size-4"
           />
@@ -262,38 +262,38 @@ const items = computed(() => {
         </div>
       </template>
 
-      <template #group-header="{item}">
+      <template #group-header="{item: _item}">
         <div class="flex items-center gap-2 w-full cursor-pointer py-[0.2em]">
           <span class="text-(--ui-text-highlighted) normal-case! flex-1 text-left">
-            {{ item.label }}
+            {{ (_item as any).label }}
           </span>
           <UIcon
-              v-if="item.checked"
+              v-if="(_item as any).checked"
               name="i-ph-check"
               class="size-4"
           />
         </div>
       </template>
 
-      <template #filter-item="{item}">
+      <template #filter-item="{item: _item}">
         <div
             class="flex items-center gap-2 w-full py-[0.2em]"
-            :class="item.iconClass"
+            :class="(_item as any).iconClass"
         >
-          <slot name="leading" :option="item">
+          <slot name="leading" :option="_item">
             <UIcon
-                v-if="item.icon"
-                :name="item.icon"
+                v-if="(_item as any).icon"
+                :name="(_item as any).icon"
                 class="size-5 shrink-0"
             />
           </slot>
-          <span class="truncate mr-auto h-5">{{ item.label }}</span>
+          <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
           <span
-              v-if="item.count != null"
+              v-if="(_item as any).count != null"
               class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
-          >{{ item.count }}</span>
+          >{{ (_item as any).count }}</span>
           <UIcon
-              v-if="item.checked"
+              v-if="(_item as any).checked"
               name="i-ph-check"
               class="size-4"
           />
