@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {computed} from 'vue'
+
 const model = defineModel<string>({required: true})
 const open = defineModel<boolean>('open', {default: false})
 

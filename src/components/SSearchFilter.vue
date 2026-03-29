@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {computed} from 'vue'
+
 export interface SSearchFilterOption {
   readonly value: string
   readonly label: string
