@@ -56,6 +56,7 @@ const sections = [
   {id: 'modal', label: 'Modal'},
   {id: 'spinner', label: 'Spinner'},
   {id: 'empty', label: 'Empty'},
+  {id: 'color-picker', label: 'ColorPicker'},
 ]
 
 const overlay = useOverlay()
@@ -130,6 +131,11 @@ const searchActiveFilterCount = computed(() => {
   if (searchCategoryFilter.value.size > 0) count++
   return count
 })
+
+// ColorPicker demo
+const colorValue = ref('#3b82f6')
+const colorWithDefault = ref('#ef4444')
+const colorEmpty = ref('')
 
 const activeSection = ref('buttons')
 const checkerboard = ref(false)
@@ -888,6 +894,55 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
             <div class="flex flex-wrap items-start gap-8">
               <SEmpty v-for="size in sizes" :key="size" :label="size.toUpperCase()" :size="size" />
+            </div>
+          </div>
+        </section>
+        <!-- ======================================== -->
+        <!-- ColorPicker                               -->
+        <!-- ======================================== -->
+        <section id="color-picker" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            ColorPicker
+          </h2>
+
+          <!-- Sizes -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <SColorPicker v-for="size in sizes" :key="size" v-model="colorValue" :size="size" :placeholder="size.toUpperCase()"/>
+            </div>
+          </div>
+
+          <!-- Variants -->
+          <div v-for="variant in inputVariants" :key="`colorpicker-${variant}`" class="mb-4">
+            <h4 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">{{ variant }}</h4>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <SColorPicker
+                  v-for="color in inputColors"
+                  :key="color"
+                  v-model="colorValue"
+                  :variant="variant"
+                  :color="color"
+                  :size="inputSize"
+                  :placeholder="color"
+                  :disabled="inputDisabled"
+              />
+            </div>
+          </div>
+
+          <!-- With default (reset) -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">With default (reset)</h3>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <SColorPicker v-model="colorWithDefault" default-value="#3b82f6" placeholder="#hex" :size="inputSize"/>
+            </div>
+          </div>
+
+          <!-- Allow empty -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Allow empty</h3>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <SColorPicker v-model="colorEmpty" allow-empty placeholder="Optional color" :size="inputSize"/>
             </div>
           </div>
         </section>
