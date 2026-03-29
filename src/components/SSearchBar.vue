@@ -39,8 +39,8 @@ const variantClasses = computed(() => {
       return [
         `${base} border border-slate-500/30 bg-slate-500/5`,
         focused
-          ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
-          : 'hover:border-slate-500/50 hover:bg-slate-500/10',
+            ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+            : 'hover:border-slate-500/50 hover:bg-slate-500/10',
       ]
     case 'ghost':
       return [
@@ -52,8 +52,8 @@ const variantClasses = computed(() => {
       return [
         `${base} border border-slate-500/30`,
         focused
-          ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
-          : 'hover:border-slate-500/50',
+            ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+            : 'hover:border-slate-500/50',
       ]
   }
 })
@@ -141,82 +141,82 @@ function clear() {
 
 <template>
   <div
-    class="flex flex-col relative"
-    :class="variantClasses"
+      class="flex flex-col relative"
+      :class="variantClasses"
   >
     <div
-      ref="rowEl"
-      class="flex items-center h-10 px-1.5 gap-1"
+        ref="rowEl"
+        class="flex items-center h-10 px-1.5 gap-1"
     >
       <div
-        ref="inputWrapperEl"
-        class="flex items-center gap-3 pl-2 pr-1 flex-1 min-w-0"
+          ref="inputWrapperEl"
+          class="flex items-center gap-3 pl-2 pr-1 flex-1 min-w-0"
       >
         <UIcon
-          name="i-ph-magnifying-glass"
-          class="size-5 text-slate-500/80 shrink-0"
+            name="i-ph-magnifying-glass"
+            class="size-5 text-slate-500/80 shrink-0"
         />
         <input
-          v-model="modelValue"
-          type="text"
-          :placeholder="placeholder ?? 'Search...'"
-          class="bg-transparent border-none outline-none placeholder:text-slate-500/80 text-base flex-1 min-w-0"
-          @focus="inputFocus = true"
-          @blur="inputFocus = false"
+            v-model="modelValue"
+            type="text"
+            :placeholder="placeholder ?? 'Search...'"
+            class="bg-transparent border-none outline-none placeholder:text-slate-500/80 text-base flex-1 min-w-0"
+            @focus="inputFocus = true"
+            @blur="inputFocus = false"
         >
 
         <SButton
-          v-if="modelValue?.length"
-          color="neutral"
-          variant="link"
-          aria-label="Clear search"
-          class="shrink-0 min-h-0 p-1!"
-          @click="clear"
+            v-if="modelValue?.length"
+            color="neutral"
+            variant="link"
+            aria-label="Clear search"
+            class="shrink-0 min-h-0 p-1!"
+            @click="clear"
         >
           <template #leading>
             <UIcon
-              name="i-ph-backspace-fill"
-              class="size-6"
+                name="i-ph-backspace-fill"
+                class="size-6"
             />
           </template>
         </SButton>
       </div>
 
       <div
-        v-if="hasFilters && !collapsed"
-        ref="filtersEl"
-        class="flex items-center gap-1 shrink-0"
+          v-if="hasFilters && !collapsed"
+          ref="filtersEl"
+          class="flex items-center gap-1 shrink-0"
       >
         <slot name="filters"/>
       </div>
 
       <div
-        v-if="$slots.trailing"
-        class="flex items-center gap-1 shrink-0"
+          v-if="$slots.trailing"
+          class="flex items-center gap-1 shrink-0"
       >
         <slot name="trailing"/>
       </div>
 
       <SButton
-        v-if="showFunnel"
-        icon="i-ph-funnel-simple"
-        :label="activeFilterCount > 0 ? String(activeFilterCount) : undefined"
-        :variant="mobileExpanded ? 'solid' : 'soft'"
-        size="sm"
-        rounded
-        compact
-        class="select-none"
-        @click="mobileExpanded = !mobileExpanded"
+          v-if="showFunnel"
+          icon="i-ph-funnel-simple"
+          :label="activeFilterCount && activeFilterCount > 0 ? String(activeFilterCount) : undefined"
+          :variant="mobileExpanded ? 'solid' : 'soft'"
+          size="sm"
+          rounded
+          compact
+          class="select-none"
+          @click="mobileExpanded = !mobileExpanded"
       />
     </div>
 
     <div
-      v-if="showFunnel"
-      ref="mobileFiltersEl"
-      class="overflow-hidden transition-[height] duration-200 ease-in-out"
-      :style="{height: `${mobileHeight}px`}"
+        v-if="showFunnel"
+        ref="mobileFiltersEl"
+        class="overflow-hidden transition-[height] duration-200 ease-in-out"
+        :style="{height: `${mobileHeight}px`}"
     >
-      <div class="flex flex-wrap gap-1 pt-1.5 pb-2 border-t border-(--ui-border) mx-1.5">
+      <div class="flex flex-wrap gap-1 pt-2 pb-2 border-t pl-0.5 border-(--ui-border) mx-1.5">
         <slot v-if="collapsed" name="filters"/>
         <slot name="more"/>
       </div>

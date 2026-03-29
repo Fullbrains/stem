@@ -53,8 +53,9 @@ const textSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <UIcon :name="resolvedIcon" :class="iconSize[orientation][size]" class="text-(--ui-text-muted) shrink-0"/>
-    <div v-if="label || $slots.default" :class="textSize[size]" class="text-(--ui-text-muted)">
+    <UIcon :name="resolvedIcon" :class="orientation && size && iconSize[orientation][size]"
+           class="text-(--ui-text-muted) shrink-0"/>
+    <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
       <slot>{{ label }}</slot>
     </div>
     <slot name="after"/>
