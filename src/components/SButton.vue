@@ -38,7 +38,7 @@ const resolvedUi = computed(() => {
       ui.base = (ui.base || '') + ' min-h-0! p-[0.4em]!'
     } else {
       const axis = props.compact === 'x' ? 'x' : props.compact === 'y' ? 'y' : 'xy'
-      if (axis.includes('y')) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-0!'
+      if (axis.includes('y')) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-[calc(1lh+0.5em)]!'
       if (axis.includes('x')) ui.base = (ui.base || '') + ' px-[0.65em]!'
     }
   }
