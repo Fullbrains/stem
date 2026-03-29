@@ -181,7 +181,8 @@ const popoverContentStyle = computed(() => {
         <button
             v-if="canReset && !disabled"
             type="button"
-            class="flex items-center cursor-pointer text-(--ui-text-muted) hover:text-(--ui-text) transition-colors duration-200"
+            class="flex items-center cursor-pointer hover:text-(--ui-text) transition-colors duration-200"
+            :class="iconColor"
             @mousedown.prevent.stop
             @click.stop="resetToDefault"
         >
