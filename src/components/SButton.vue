@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, useSlots} from 'vue'
+import {computed} from 'vue'
 import {useConfirmDialog} from '../composables/useConfirmDialog'
 
 const props = defineProps<{
@@ -29,15 +29,10 @@ const {confirm} = useConfirmDialog()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
-const slots = useSlots()
-
-const isIconOnly = computed(() => !props.label && !slots.default && !props.disc)
-
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.rounded || props.disc) ui.base = 'rounded-full'
   if (props.disc) ui.base = (ui.base || '') + ' aspect-square justify-center p-0!'
-  if (isIconOnly.value) ui.base = (ui.base || '') + ' aspect-square justify-center'
   if (props.compact) {
     if (props.disc) {
       ui.base = (ui.base || '') + ' min-h-0! p-[0.4em]!'
