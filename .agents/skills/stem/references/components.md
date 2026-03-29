@@ -542,6 +542,52 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 <SEmpty label="Empty list" orientation="horizontal" />
 ```
 
+## SColorPicker
+
+Hex color input with inline swatch, text input, and popover `UColorPicker`. Supports the same `variant`, `color`, `size`, and `disabled` props as Stem inputs via shared `input-container.ts`.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string` | — | Hex color value (v-model) |
+| `placeholder` | `string` | — | Input placeholder text |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Size following golden rule |
+| `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'none'` | `'outline'` | Visual variant matching Stem inputs |
+| `color` | `'primary' \| 'error' \| 'success'` | `'primary'` | Semantic color |
+| `disabled` | `boolean` | `false` | Disable interaction |
+| `defaultValue` | `string` | — | Default hex value. When set, shows a reset button if current value differs |
+| `allowEmpty` | `boolean` | `false` | Allow empty string as valid value |
+
+### Behavior
+
+- **Swatch**: colored circle on the left, clickable to open color picker popover
+- **Text input**: editable hex value, validates on blur/enter. Auto-prepends `#` if missing
+- **Caret**: dropdown toggle button on the right, color follows semantic color (primary=slate, error=rose, success=emerald)
+- **Reset button**: appears when `defaultValue` is set and current value differs; neutral color (not themed)
+- **Popover**: anchored to the full container (`align: 'start'`), width matches input width
+- **Error state**: red border + swatch outline when invalid hex is entered
+- **Variant/color classes**: imported from `src/theme/input-container.ts` (shared lookup, no duplication)
+
+### Usage
+
+```vue
+<!-- Basic -->
+<SColorPicker v-model="color" placeholder="#hex" />
+
+<!-- With variant, color, size -->
+<SColorPicker v-model="color" variant="soft" color="error" size="lg" />
+
+<!-- With default value (shows reset button) -->
+<SColorPicker v-model="color" default-value="#3b82f6" />
+
+<!-- Allow empty -->
+<SColorPicker v-model="color" allow-empty placeholder="Optional" />
+
+<!-- Disabled -->
+<SColorPicker v-model="color" disabled />
+```
+
 ## Package Exports
 
 ```ts
@@ -549,7 +595,7 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 export { stem } from './theme'              // Theme objects
 export { stemIcons, stemColors } from './config' // Config
 export { SModal, SModalHeader, SModalFooter, SButton, SConfirmDialog, SSpinner, SIcon } from './components'
-export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty } from './components'
+export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker } from './components'
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
 export { useConfirmDialog } from './composables'
 
