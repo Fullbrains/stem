@@ -1,8 +1,8 @@
 export const menuItemSlots = {
   content: 's-floating-menu rounded-lg',
   group: 'p-1',
-  item: 'text-highlighted cursor-pointer items-center font-normal data-highlighted:not-data-disabled:before:bg-elevated data-disabled:opacity-50 before:transition-none',
-  itemLeadingIcon: 'text-highlighted',
+  item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
+  itemLeadingIcon: '',
 }
 
 export const menuItemSizes = {

@@ -14,7 +14,7 @@ const dropdownItems: DropdownMenuItem[] = [
   {label: 'Profile', icon: 'i-ph-user'},
   {label: 'Settings', icon: 'i-ph-gear', disabled: true},
   {type: 'separator'},
-  {label: 'Logout', icon: 'i-ph-sign-out'},
+  {label: 'Logout', icon: 'i-ph-sign-out', color: 'error'},
 ]
 
 const selectItems = [
@@ -301,7 +301,8 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Disc</h3>
             <div class="flex flex-wrap items-center gap-3">
-              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size" :compact="resolvedBtnCompact"/>
+              <SButton v-for="size in sizes" :key="`disc-${size}`" disc icon="i-ph-plus" :size="size"
+                       :compact="resolvedBtnCompact"/>
               <SButton disc icon="i-ph-x" variant="soft" :compact="resolvedBtnCompact"/>
               <SButton disc icon="i-ph-heart" variant="subtle" :compact="resolvedBtnCompact"/>
               <SButton disc icon="i-ph-trash" variant="soft" color="error" :compact="resolvedBtnCompact"/>
@@ -624,17 +625,18 @@ onMounted(() => {
           <!-- SearchBar with filters -->
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters</h3>
-            <SSearchBar v-model="searchQuery" placeholder="Search projects..." :active-filter-count="searchActiveFilterCount">
+            <SSearchBar v-model="searchQuery" placeholder="Search projects..."
+                        :active-filter-count="searchActiveFilterCount">
               <template #filters>
                 <SSearchFilter
-                  v-model="searchStatusFilter"
-                  :options="statusOptions"
-                  label="Status"
+                    v-model="searchStatusFilter"
+                    :options="statusOptions"
+                    label="Status"
                 />
                 <SSearchFilter
-                  v-model="searchCategoryFilter"
-                  :options="categoryOptions"
-                  label="Category"
+                    v-model="searchCategoryFilter"
+                    :options="categoryOptions"
+                    label="Category"
                 />
               </template>
               <template #trailing>
@@ -645,20 +647,22 @@ onMounted(() => {
 
           <!-- SearchBar with more -->
           <div>
-            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters + More</h3>
-            <SSearchBar v-model="searchQuery" placeholder="Search projects..." :active-filter-count="searchActiveFilterCount">
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchBar + Filters +
+              More</h3>
+            <SSearchBar v-model="searchQuery" placeholder="Search projects..."
+                        :active-filter-count="searchActiveFilterCount">
               <template #filters>
                 <SSearchFilter
-                  v-model="searchStatusFilter"
-                  :options="statusOptions"
-                  label="Status"
+                    v-model="searchStatusFilter"
+                    :options="statusOptions"
+                    label="Status"
                 />
               </template>
               <template #more>
                 <SSearchFilter
-                  v-model="searchCategoryFilter"
-                  :options="categoryOptions"
-                  label="Category"
+                    v-model="searchCategoryFilter"
+                    :options="categoryOptions"
+                    label="Category"
                 />
                 <SSearchOrder v-model="searchOrder" :options="orderOptions"/>
               </template>
@@ -681,14 +685,14 @@ onMounted(() => {
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchFilter</h3>
             <div class="flex flex-wrap gap-2">
               <SSearchFilter
-                v-model="searchStatusFilter"
-                :options="statusOptions"
-                label="Status"
+                  v-model="searchStatusFilter"
+                  :options="statusOptions"
+                  label="Status"
               />
               <SSearchFilter
-                v-model="searchCategoryFilter"
-                :options="categoryOptions"
-                label="Category"
+                  v-model="searchCategoryFilter"
+                  :options="categoryOptions"
+                  label="Category"
               />
             </div>
           </div>
@@ -864,10 +868,10 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Vertical (default)</h3>
             <div class="flex flex-wrap items-start gap-8">
-              <SEmpty label="No results found" />
+              <SEmpty label="No results found"/>
               <SEmpty label="Nothing here yet" icon="i-ph-folder-open">
                 <template #after>
-                  <SButton label="Create new" size="sm" variant="soft" icon="i-ph-plus" />
+                  <SButton label="Create new" size="sm" variant="soft" icon="i-ph-plus"/>
                 </template>
               </SEmpty>
               <SEmpty icon="i-ph-magnifying-glass">
@@ -880,10 +884,10 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Horizontal</h3>
             <div class="space-y-3">
-              <SEmpty label="No items available" orientation="horizontal" />
+              <SEmpty label="No items available" orientation="horizontal"/>
               <SEmpty label="Empty list" orientation="horizontal" icon="i-ph-list-dashes">
                 <template #after>
-                  <SButton label="Add item" size="sm" variant="soft" icon="i-ph-plus" />
+                  <SButton label="Add item" size="sm" variant="soft" icon="i-ph-plus"/>
                 </template>
               </SEmpty>
             </div>
@@ -893,7 +897,7 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
             <div class="flex flex-wrap items-start gap-8">
-              <SEmpty v-for="size in sizes" :key="size" :label="size.toUpperCase()" :size="size" />
+              <SEmpty v-for="size in sizes" :key="size" :label="size.toUpperCase()" :size="size"/>
             </div>
           </div>
         </section>
@@ -909,7 +913,8 @@ onMounted(() => {
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <SColorPicker v-for="size in sizes" :key="size" v-model="colorValue" :size="size" :placeholder="size.toUpperCase()"/>
+              <SColorPicker v-for="size in sizes" :key="size" v-model="colorValue" :size="size"
+                            :placeholder="size.toUpperCase()"/>
             </div>
           </div>
 
