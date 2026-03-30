@@ -16,6 +16,7 @@ export { default as SSearchFilter } from './components/SSearchFilter.vue'
 export { default as SSearchOrder } from './components/SSearchOrder.vue'
 export { default as SEmpty } from './components/SEmpty.vue'
 export { default as SColorPicker } from './components/SColorPicker.vue'
+export { default as SScrollArea } from './components/SScrollArea.vue'
 
 // Types
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'

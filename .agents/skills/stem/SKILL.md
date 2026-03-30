@@ -62,6 +62,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters, multi-select, sort order |
 | empty state placeholder | `SEmpty` | Icon + label + action slot, vertical/horizontal orientation, golden rule sizes |
 | `UColorPicker` (inline) | `SColorPicker` | Hex input + swatch + popover picker, variant/color/size/disabled matching Stem inputs |
+| `UScrollArea` | `SScrollArea` | Gradient fade overlays at scroll edges, auto dark mode, doesn't cover scrollbar |
 
 Stem components wrap and extend their Nuxt UI counterparts — all original props/attrs are passed through.
 
@@ -370,6 +371,29 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 **Props:** `modelValue` (string, v-model), `placeholder`, `size` (xs/sm/md/lg/xl, default: sm), `variant` ('outline' | 'soft' | 'subtle' | 'ghost' | 'none', default: 'outline'), `color` ('primary' | 'error' | 'success', default: 'primary'), `disabled`, `defaultValue` (shows reset button when value differs), `allowEmpty` (permits empty string)
 
 Variant/color classes come from shared `input-container.ts` (same visual appearance as UInput). The swatch opens the popover on click; the caret toggles it. Focus ring, placeholder color, and icon colors all follow the semantic color.
+
+### SScrollArea
+
+Wraps `UScrollArea` with gradient fade overlays at top/bottom edges. Fades appear/disappear based on scroll position with a 300ms transition. Uses `position: sticky` inside the viewport so the gradient doesn't cover the scrollbar.
+
+```vue
+<!-- Basic: give it a fixed height -->
+<SScrollArea class="h-64">
+  <div v-for="item in items" :key="item.id">{{ item.name }}</div>
+</SScrollArea>
+
+<!-- Custom fade size and color -->
+<SScrollArea class="h-48" fade-size="3rem" fade-color="var(--color-neutral-100)">
+  <slot />
+</SScrollArea>
+
+<!-- Disable fade -->
+<SScrollArea class="h-48" :fade="false">
+  <slot />
+</SScrollArea>
+```
+
+**Props:** `fade` (boolean, default: true), `fadeSize` (string, default: '1.5rem'), `fadeColor` (string, default: 'var(--ui-bg)' — auto dark mode). All other props/attrs forwarded to `UScrollArea` (supports `items`, `virtualize`, `orientation`, `ui`).
 
 ### useConfirmDialog
 

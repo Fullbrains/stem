@@ -347,6 +347,53 @@ await confirm({
 
 Uses `useOverlay()` from Nuxt UI to create and open an `SConfirmDialog` instance with `destroyOnClose: true`.
 
+## SScrollArea
+
+Wraps Nuxt UI's `UScrollArea` with gradient fade overlays at top/bottom edges when content overflows. Gradient appears/disappears based on scroll position with a 300ms opacity transition. Uses `position: sticky` inside the scroll viewport so the gradient does not cover the scrollbar.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `fade` | `boolean` | `true` | Enable/disable the gradient fades |
+| `fadeSize` | `string` | `'1.5rem'` | Height of the gradient overlay |
+| `fadeColor` | `string` | `'var(--ui-bg)'` | Gradient color (defaults to page background, auto dark mode) |
+
+All other props/attrs are forwarded to `UScrollArea` (e.g., `items`, `virtualize`, `orientation`, `ui`, `class`).
+
+### Usage
+
+```vue
+<!-- Basic: give it a fixed height, gradient fades appear automatically -->
+<SScrollArea class="h-64">
+  <div v-for="item in items" :key="item.id">{{ item.name }}</div>
+</SScrollArea>
+
+<!-- Custom fade size -->
+<SScrollArea class="h-48" fade-size="3rem">
+  <slot />
+</SScrollArea>
+
+<!-- On a colored background: override fade color -->
+<div class="bg-neutral-100 dark:bg-neutral-900">
+  <SScrollArea class="h-40" fade-color="var(--color-neutral-100)">
+    <slot />
+  </SScrollArea>
+</div>
+
+<!-- Disable fade -->
+<SScrollArea class="h-48" :fade="false">
+  <slot />
+</SScrollArea>
+
+<!-- With UScrollArea virtualization -->
+<SScrollArea class="h-96" :items="bigList" virtualize>
+  <template #default="{ item }">
+    <div>{{ item.name }}</div>
+  </template>
+</SScrollArea>
+```
+
 ## SSearchBar
 
 Responsive search bar with collapsible inline filters. Uses `ResizeObserver` to monitor row width and collapse filters into a funnel dropdown when the input area falls below `minInputWidth`.

@@ -57,6 +57,7 @@ const sections = [
   {id: 'spinner', label: 'Spinner'},
   {id: 'empty', label: 'Empty'},
   {id: 'color-picker', label: 'ColorPicker'},
+  {id: 'scroll-area', label: 'ScrollArea'},
 ]
 
 const overlay = useOverlay()
@@ -949,6 +950,76 @@ onMounted(() => {
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <SColorPicker v-model="colorEmpty" allow-empty placeholder="Optional color" :size="inputSize"/>
             </div>
+          </div>
+        </section>
+        <!-- ======================================== -->
+        <!-- ScrollArea                                -->
+        <!-- ======================================== -->
+        <section id="scroll-area" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            ScrollArea
+          </h2>
+
+          <!-- Basic -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Basic (fixed height)</h3>
+            <SScrollArea class="h-48 rounded-lg border border-neutral-200 dark:border-neutral-800">
+              <div class="space-y-3 p-4">
+                <div v-for="i in 20" :key="i" class="rounded-md bg-neutral-100 dark:bg-neutral-900 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                  Item {{ i }}
+                </div>
+              </div>
+            </SScrollArea>
+          </div>
+
+          <!-- Custom fade size -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Fade size: 3rem</h3>
+            <SScrollArea class="h-48 rounded-lg border border-neutral-200 dark:border-neutral-800" fade-size="3rem">
+              <div class="space-y-3 p-4">
+                <div v-for="i in 20" :key="i" class="rounded-md bg-neutral-100 dark:bg-neutral-900 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                  Item {{ i }}
+                </div>
+              </div>
+            </SScrollArea>
+          </div>
+
+          <!-- On colored background -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Custom fade color (on colored bg)</h3>
+            <div class="rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4">
+              <SScrollArea class="h-40" fade-color="var(--color-neutral-100)" :style="{ '--fade-dark': 'var(--color-neutral-900)' }">
+                <div class="space-y-3">
+                  <div v-for="i in 15" :key="i" class="rounded-md bg-white dark:bg-neutral-800 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                    Nested item {{ i }}
+                  </div>
+                </div>
+              </SScrollArea>
+            </div>
+          </div>
+
+          <!-- Fade disabled -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Fade disabled</h3>
+            <SScrollArea class="h-48 rounded-lg border border-neutral-200 dark:border-neutral-800" :fade="false">
+              <div class="space-y-3 p-4">
+                <div v-for="i in 20" :key="i" class="rounded-md bg-neutral-100 dark:bg-neutral-900 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                  Item {{ i }}
+                </div>
+              </div>
+            </SScrollArea>
+          </div>
+
+          <!-- No overflow (no fade shown) -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">No overflow (no fade)</h3>
+            <SScrollArea class="h-48 rounded-lg border border-neutral-200 dark:border-neutral-800">
+              <div class="space-y-3 p-4">
+                <div v-for="i in 3" :key="i" class="rounded-md bg-neutral-100 dark:bg-neutral-900 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                  Item {{ i }}
+                </div>
+              </div>
+            </SScrollArea>
           </div>
         </section>
       </div>

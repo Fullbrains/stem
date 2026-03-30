@@ -1,0 +1,111 @@
+<script lang="ts">
+export default {
+  inheritAttrs: false,
+}
+</script>
+
+<script setup lang="ts">
+import {ref, computed, onMounted, onUnmounted, watch, nextTick, useAttrs} from 'vue'
+
+const props = withDefaults(defineProps<{
+  fade?: boolean
+  fadeSize?: string
+  fadeColor?: string
+}>(), {
+  fade: true,
+  fadeSize: '1.5rem',
+})
+
+const attrs = useAttrs()
+
+const scrollRef = ref<InstanceType<typeof import('#components').UScrollArea> | null>(null)
+
+const scrollTop = ref(0)
+const scrollHeight = ref(0)
+const clientHeight = ref(0)
+
+const hasOverflow = computed(() => scrollHeight.value > clientHeight.value)
+const showTop = computed(() => hasOverflow.value && scrollTop.value > 1)
+const showBottom = computed(() => hasOverflow.value && scrollTop.value < scrollHeight.value - clientHeight.value - 1)
+
+const fadeColorValue = computed(() => props.fadeColor ?? 'var(--ui-bg)')
+
+function getScrollElement(): HTMLElement | null {
+  if (!scrollRef.value?.$el) return null
+  return scrollRef.value.$el as HTMLElement
+}
+
+function updateScrollState() {
+  const el = getScrollElement()
+  if (!el) return
+  scrollTop.value = el.scrollTop
+  scrollHeight.value = el.scrollHeight
+  clientHeight.value = el.clientHeight
+}
+
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  const el = getScrollElement()
+  if (!el) return
+
+  el.addEventListener('scroll', updateScrollState, {passive: true})
+
+  resizeObserver = new ResizeObserver(() => updateScrollState())
+  resizeObserver.observe(el)
+  for (const child of el.children) {
+    resizeObserver.observe(child)
+  }
+
+  updateScrollState()
+})
+
+onUnmounted(() => {
+  const el = getScrollElement()
+  if (el) el.removeEventListener('scroll', updateScrollState)
+  resizeObserver?.disconnect()
+})
+
+watch(() => scrollRef.value, async () => {
+  await nextTick()
+  updateScrollState()
+})
+</script>
+
+<template>
+  <UScrollArea
+      ref="scrollRef"
+      v-bind="attrs"
+      :style="{
+        '--s-fade-size': fadeSize,
+        '--s-fade-color': fadeColorValue,
+      }"
+  >
+    <template v-if="fade">
+      <div
+          class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          :class="showTop && 'opacity-100'"
+          :style="{ marginBottom: `calc(-1 * ${fadeSize})` }"
+      />
+    </template>
+    <slot/>
+    <template v-if="fade">
+      <div
+          class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          :class="showBottom && 'opacity-100'"
+          :style="{ marginTop: `calc(-1 * ${fadeSize})` }"
+      />
+    </template>
+  </UScrollArea>
+</template>
+
+<style scoped>
+.s-scroll-fade {
+  height: var(--s-fade-size);
+  background: linear-gradient(to bottom, var(--s-fade-color), transparent);
+}
+
+.s-scroll-fade--bottom {
+  background: linear-gradient(to top, var(--s-fade-color), transparent);
+}
+</style>
