@@ -554,6 +554,7 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 |------|------|---------|-------------|
 | `icon` | `string` | `i-ph-empty-light` (vertical) / `i-ph-empty` (horizontal) | Icon name |
 | `label` | `string` | — | Text label |
+| `loading` | `boolean` | `false` | Show SSpinner instead of icon (same size) |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Text and icon size (follows golden rule) |
 
@@ -587,6 +588,9 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 
 <!-- Horizontal -->
 <SEmpty label="Empty list" orientation="horizontal" />
+
+<!-- Loading state -->
+<SEmpty loading label="Loading..." />
 ```
 
 ## SColorPicker

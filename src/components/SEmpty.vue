@@ -54,7 +54,7 @@ const textSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <SSpinner v-if="loading" :class="iconSize[orientation][size]" class="text-(--ui-text-muted) shrink-0"/>
+    <SSpinner v-if="loading" :class="iconSize[orientation][size]" :stroke="1" class="text-(--ui-text-muted) shrink-0"/>
     <UIcon v-else :name="resolvedIcon" :class="iconSize[orientation][size]"
            class="text-(--ui-text-muted) shrink-0"/>
     <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
