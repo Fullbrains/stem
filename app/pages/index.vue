@@ -984,11 +984,11 @@ onMounted(() => {
             </SScrollArea>
           </div>
 
-          <!-- On colored background -->
+          <!-- On colored background (auto-detected) -->
           <div>
-            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Custom fade color (on colored bg)</h3>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">On colored bg (auto-detected)</h3>
             <div class="rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4">
-              <SScrollArea class="h-40" fade-color="var(--color-neutral-100)" :style="{ '--fade-dark': 'var(--color-neutral-900)' }">
+              <SScrollArea class="h-40">
                 <div class="space-y-3">
                   <div v-for="i in 15" :key="i" class="rounded-md bg-white dark:bg-neutral-800 p-3 text-sm text-neutral-600 dark:text-neutral-400">
                     Nested item {{ i }}

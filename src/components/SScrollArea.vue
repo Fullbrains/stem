@@ -23,16 +23,46 @@ const scrollRef = ref<InstanceType<typeof import('#components').UScrollArea> | n
 const scrollTop = ref(0)
 const scrollHeight = ref(0)
 const clientHeight = ref(0)
+const paddingTop = ref(0)
+const paddingBottom = ref(0)
+const resolvedBgColor = ref('')
 
 const hasOverflow = computed(() => scrollHeight.value > clientHeight.value)
 const showTop = computed(() => hasOverflow.value && scrollTop.value > 1)
 const showBottom = computed(() => hasOverflow.value && scrollTop.value < scrollHeight.value - clientHeight.value - 1)
 
-const fadeColorValue = computed(() => props.fadeColor ?? 'var(--ui-bg)')
+const fadeColorValue = computed(() => props.fadeColor ?? (resolvedBgColor.value || 'var(--ui-bg)'))
 
 function getScrollElement(): HTMLElement | null {
   if (!scrollRef.value?.$el) return null
   return scrollRef.value.$el as HTMLElement
+}
+
+function getContentElement(): HTMLElement | null {
+  const root = getScrollElement()
+  if (!root) return null
+  const viewport = root.firstElementChild
+  if (!viewport) return null
+  for (const child of viewport.children) {
+    if (!(child as HTMLElement).classList?.contains('s-scroll-fade')) {
+      return child as HTMLElement
+    }
+  }
+  return null
+}
+
+function isTransparent(color: string): boolean {
+  return !color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)'
+}
+
+function resolveBackgroundColor(el: HTMLElement): string {
+  let current: HTMLElement | null = el
+  while (current) {
+    const bg = window.getComputedStyle(current).backgroundColor
+    if (!isTransparent(bg)) return bg
+    current = current.parentElement
+  }
+  return ''
 }
 
 function updateScrollState() {
@@ -41,6 +71,17 @@ function updateScrollState() {
   scrollTop.value = el.scrollTop
   scrollHeight.value = el.scrollHeight
   clientHeight.value = el.clientHeight
+
+  const content = getContentElement()
+  if (content) {
+    const styles = window.getComputedStyle(content)
+    paddingTop.value = parseFloat(styles.paddingTop) || 0
+    paddingBottom.value = parseFloat(styles.paddingBottom) || 0
+  }
+
+  if (!props.fadeColor) {
+    resolvedBgColor.value = resolveBackgroundColor(el)
+  }
 }
 
 let resizeObserver: ResizeObserver | null = null
@@ -83,17 +124,23 @@ watch(() => scrollRef.value, async () => {
   >
     <template v-if="fade">
       <div
-          class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          class="s-scroll-fade sticky inset-x-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
-          :style="{ marginBottom: `calc(-1 * ${fadeSize})` }"
+          :style="{
+            top: `${paddingTop}px`,
+            marginBottom: `calc(-1 * var(--s-fade-size))`,
+          }"
       />
     </template>
     <slot/>
     <template v-if="fade">
       <div
-          class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"
-          :style="{ marginTop: `calc(-1 * ${fadeSize})` }"
+          :style="{
+            bottom: `${paddingBottom}px`,
+            marginTop: `calc(-1 * var(--s-fade-size))`,
+          }"
       />
     </template>
   </UScrollArea>
