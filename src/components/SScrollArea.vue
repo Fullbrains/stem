@@ -149,10 +149,20 @@ watch(() => scrollRef.value, async () => {
 <style scoped>
 .s-scroll-fade {
   height: var(--s-fade-size);
-  background: linear-gradient(to bottom, var(--s-fade-color), transparent);
+  background: linear-gradient(to bottom,
+    var(--s-fade-color) 0%,
+    color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
+    color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+    transparent 100%
+  );
 }
 
 .s-scroll-fade--bottom {
-  background: linear-gradient(to top, var(--s-fade-color), transparent);
+  background: linear-gradient(to top,
+    var(--s-fade-color) 0%,
+    color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
+    color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+    transparent 100%
+  );
 }
 </style>
