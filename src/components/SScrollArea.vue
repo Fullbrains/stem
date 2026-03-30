@@ -38,19 +38,6 @@ function getScrollElement(): HTMLElement | null {
   return scrollRef.value.$el as HTMLElement
 }
 
-function getContentElement(): HTMLElement | null {
-  const root = getScrollElement()
-  if (!root) return null
-  const viewport = root.firstElementChild
-  if (!viewport) return null
-  for (const child of viewport.children) {
-    if (!(child as HTMLElement).classList?.contains('s-scroll-fade')) {
-      return child as HTMLElement
-    }
-  }
-  return null
-}
-
 function isTransparent(color: string): boolean {
   return !color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)'
 }
@@ -72,12 +59,9 @@ function updateScrollState() {
   scrollHeight.value = el.scrollHeight
   clientHeight.value = el.clientHeight
 
-  const content = getContentElement()
-  if (content) {
-    const styles = window.getComputedStyle(content)
-    paddingTop.value = parseFloat(styles.paddingTop) || 0
-    paddingBottom.value = parseFloat(styles.paddingBottom) || 0
-  }
+  const styles = window.getComputedStyle(el)
+  paddingTop.value = parseFloat(styles.paddingTop) || 0
+  paddingBottom.value = parseFloat(styles.paddingBottom) || 0
 
   if (!props.fadeColor) {
     resolvedBgColor.value = resolveBackgroundColor(el)
