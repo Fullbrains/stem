@@ -7,6 +7,7 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 const props = withDefaults(defineProps<{
   label?: string
   icon?: string
+  loading?: boolean
   orientation?: Orientation
   size?: Size
 }>(), {
@@ -53,7 +54,8 @@ const textSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <UIcon :name="resolvedIcon" :class="orientation && size && iconSize[orientation][size]"
+    <SSpinner v-if="loading" :class="iconSize[orientation][size]" class="text-(--ui-text-muted) shrink-0"/>
+    <UIcon v-else :name="resolvedIcon" :class="iconSize[orientation][size]"
            class="text-(--ui-text-muted) shrink-0"/>
     <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
       <slot>{{ label }}</slot>
