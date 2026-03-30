@@ -124,10 +124,10 @@ watch(() => scrollRef.value, async () => {
   >
     <template v-if="fade">
       <div
-          class="s-scroll-fade sticky inset-x-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
           :style="{
-            top: `${paddingTop}px`,
+            marginTop: `${-paddingTop}px`,
             marginBottom: `calc(-1 * var(--s-fade-size))`,
           }"
       />
@@ -135,11 +135,11 @@ watch(() => scrollRef.value, async () => {
     <slot/>
     <template v-if="fade">
       <div
-          class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"
           :style="{
-            bottom: `${paddingBottom}px`,
             marginTop: `calc(-1 * var(--s-fade-size))`,
+            marginBottom: `${-paddingBottom}px`,
           }"
       />
     </template>
