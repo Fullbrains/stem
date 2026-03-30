@@ -58,7 +58,6 @@ function updateScrollState() {
   scrollTop.value = el.scrollTop
   scrollHeight.value = el.scrollHeight
   clientHeight.value = el.clientHeight
-
   const styles = window.getComputedStyle(el)
   paddingTop.value = parseFloat(styles.paddingTop) || 0
   paddingBottom.value = parseFloat(styles.paddingBottom) || 0
@@ -111,8 +110,8 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
           :style="{
-            marginTop: `${-paddingTop}px`,
-            marginBottom: `calc(-1 * var(--s-fade-size))`,
+            transform: `translateY(${-paddingTop}px)`,
+            marginBottom: `calc(-1 * var(--s-fade-size) - ${paddingTop}px)`,
           }"
       />
     </template>
@@ -122,8 +121,8 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"
           :style="{
-            marginTop: `calc(-1 * var(--s-fade-size))`,
-            marginBottom: `${-paddingBottom}px`,
+            transform: `translateY(${paddingBottom}px)`,
+            marginTop: `calc(-1 * var(--s-fade-size) - ${paddingBottom}px)`,
           }"
       />
     </template>

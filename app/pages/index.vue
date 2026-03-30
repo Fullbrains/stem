@@ -1010,6 +1010,16 @@ onMounted(() => {
             </SScrollArea>
           </div>
 
+          <!-- With padding on SScrollArea -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">With padding (p-4 on SScrollArea)</h3>
+            <SScrollArea class="h-48 rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 flex flex-col gap-3">
+              <div v-for="i in 20" :key="i" class="rounded-md bg-neutral-100 dark:bg-neutral-900 p-3 text-sm text-neutral-600 dark:text-neutral-400">
+                Item {{ i }}
+              </div>
+            </SScrollArea>
+          </div>
+
           <!-- No overflow (no fade shown) -->
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">No overflow (no fade)</h3>
