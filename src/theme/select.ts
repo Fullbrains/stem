@@ -11,6 +11,11 @@ export default {
   compoundVariants: [...inputCompoundVariants, ...selectOutlineHover, ...selectOpenRing],
   variants: {
     ...inputVariants,
+    active: {
+      false: {
+        item: 'before:transition-none',
+      },
+    },
     size: selectSizes,
   },
 }

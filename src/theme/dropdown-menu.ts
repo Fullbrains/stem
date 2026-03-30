@@ -8,6 +8,7 @@ export default {
   variants: {
     active: {
       false: {
+        item: 'before:transition-none',
         itemLeadingIcon: [
           'text-default group-data-highlighted:text-default group-data-[state=open]:text-default',
           'transition-colors',
