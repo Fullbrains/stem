@@ -5,7 +5,7 @@ withDefaults(defineProps<{
   grow?: boolean
 }>(), {
   size: '1em',
-  stroke: 2,
+  stroke: 1,
   grow: false,
 })
 </script>
