@@ -268,7 +268,6 @@ const items = computed(() => {
       }"
     >
       <SSearchChip
-          trailing-icon="i-ph-caret-down"
           :active="open"
           :label="label"
           :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"

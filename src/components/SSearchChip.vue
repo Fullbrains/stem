@@ -28,14 +28,14 @@ const displayValue = computed(() => {
 
 <template>
   <SButton
-    :icon="leadingIcon"
-    :trailing-icon="trailingIcon"
-    variant="soft"
-    size="sm"
-    rounded
-    compact
-    class="select-none"
-    :class="[active ? 'bg-slate-400/30!' : '']"
+      :icon="leadingIcon"
+      caret
+      variant="soft"
+      size="sm"
+      rounded
+      compact
+      class="select-none"
+      :class="[active ? 'bg-slate-400/30!' : '']"
   >
     <template v-if="label && displayValue !== null">
       <span class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
