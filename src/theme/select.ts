@@ -13,7 +13,7 @@ export default {
     ...inputVariants,
     active: {
       false: {
-        item: 'before:transition-none',
+        item: 'data-highlighted:not-data-disabled:before:bg-elevated before:transition-none',
       },
     },
     size: selectSizes,

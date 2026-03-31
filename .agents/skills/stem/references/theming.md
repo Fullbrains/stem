@@ -257,7 +257,7 @@ Focus ring uses `has-focus-visible:` instead of `focus-visible:` since focus is 
 const menuItemSlots = {
   content: 's-floating-menu rounded-lg',
   group: 'p-1',
-  item: 'text-highlighted cursor-pointer items-center font-normal data-highlighted:not-data-disabled:before:bg-elevated data-disabled:opacity-50 before:transition-none',
+  item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
   itemLeadingIcon: 'text-highlighted',
 }
 
@@ -271,6 +271,10 @@ const menuItemSizes = {
 ```
 
 Note: menu item icons are one step larger than button icons at the same size (e.g., md = size-4.5 vs size-4 for buttons).
+
+**Highlight background** is NOT in menuItemSlots (to avoid CSS specificity conflicts with Nuxt UI compound variants for colored items like `color: 'error'`). Instead, each component adds it in its own `active: false` variant:
+- **dropdownMenu**: `data-highlighted:before:bg-elevated` (same selector as Nuxt UI compound variants, so `bg-error/10` wins)
+- **select, selectMenu, inputMenu**: `data-highlighted:not-data-disabled:before:bg-elevated`
 
 ## Select Commons
 
