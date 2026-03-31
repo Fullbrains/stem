@@ -460,16 +460,18 @@ Filter chip that wraps `SButton` (variant="soft", size="sm", rounded, compact). 
 
 ## SSearchFilter
 
-Multi-select dropdown filter with `SSearchChip` trigger, optional groups, nullable option, counts, and animated reset button.
+Dropdown filter with `SSearchChip` trigger, optional groups, nullable option, counts, and animated reset button. Supports multi-select (default) and single-select modes.
 
 ### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `modelValue` | `Set<string>` | (required) | Selected values (v-model). Empty Set = all selected |
+| `modelValue` | `Set<string>` | (required) | Selected values (v-model). Empty Set = all selected (multi) or none (single) |
 | `options` | `SSearchFilterOption[]` | (required) | Available options |
 | `label` | `string` | (required) | Filter label |
-| `allLabel` | `string` | `'All'` | Label for "select all" |
+| `multiple` | `boolean` | `true` | Multi-select mode. When `false`: single select, no checkbox, no "All", no reset button, dropdown closes on select |
+| `placeholder` | `string` | `'None selected'` | Placeholder shown in single mode when nothing is selected |
+| `allLabel` | `string` | `'All'` | Label for "select all" (multi mode only) |
 | `groups` | `SSearchFilterGroup[]` | — | Option groups |
 | `nullable` | `boolean` | `false` | Show a "null" option |
 | `nullLabel` | `string` | `'Not Contacted'` | Null option label |
@@ -514,10 +516,8 @@ interface SSearchFilterGroup {
 
 ### Behavior
 
-- Empty `Set` = all selected (convention)
-- When all options are toggled on, resets to empty Set
-- Groups: clicking a group header toggles all options in that group
-- Reset button (×) animates in/out; clicking it selects all
+- **Multi mode** (default): Empty `Set` = all selected. When all options toggled on, resets to empty Set. Groups: clicking header toggles all in group. Reset button (×) animates in/out.
+- **Single mode** (`multiple=false`): No checkbox, no "All" option, no reset button. Dropdown closes on selection. Chip shows selected label or placeholder.
 
 ## SSearchOrder
 

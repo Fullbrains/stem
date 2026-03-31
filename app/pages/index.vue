@@ -107,6 +107,7 @@ const inputTagsValue = ref(['Vue', 'Nuxt'])
 const searchQuery = ref('')
 const searchStatusFilter = ref(new Set<string>())
 const searchCategoryFilter = ref(new Set<string>())
+const searchSingleFilter = ref(new Set<string>())
 const searchOrder = ref('newest')
 
 const statusOptions = [
@@ -694,6 +695,19 @@ onMounted(() => {
                   v-model="searchCategoryFilter"
                   :options="categoryOptions"
                   label="Category"
+              />
+            </div>
+          </div>
+
+          <!-- Single mode filter -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">SearchFilter (single mode)</h3>
+            <div class="flex flex-wrap gap-2">
+              <SSearchFilter
+                  v-model="searchSingleFilter"
+                  :options="statusOptions"
+                  :multiple="false"
+                  label="Status"
               />
             </div>
           </div>

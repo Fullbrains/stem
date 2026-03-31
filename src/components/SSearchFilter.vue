@@ -20,6 +20,8 @@ const props = withDefaults(defineProps<{
   modelValue: Set<string>
   options: readonly SSearchFilterOption[]
   label: string
+  multiple?: boolean
+  placeholder?: string
   allLabel?: string
   groups?: readonly SSearchFilterGroup[]
   nullable?: boolean
@@ -33,6 +35,8 @@ const props = withDefaults(defineProps<{
   contentClass?: string
   alignEnd?: boolean
 }>(), {
+  multiple: true,
+  placeholder: 'None selected',
   allLabel: 'All',
   nullable: false,
   nullLabel: 'Not Contacted',
@@ -50,8 +54,8 @@ const emit = defineEmits<{
 const selectedSet = computed(() => props.modelValue)
 
 const totalOptions = computed(() => props.options.length + (props.nullable ? 1 : 0))
-const isAllSelected = computed(() => props.modelValue.size === 0 || props.modelValue.size >= totalOptions.value)
-const showReset = computed(() => !isAllSelected.value)
+const isAllSelected = computed(() => props.multiple && (props.modelValue.size === 0 || props.modelValue.size >= totalOptions.value))
+const showReset = computed(() => props.multiple && !isAllSelected.value)
 
 function emitOrReset(newSet: Set<string>) {
   if (newSet.size === 0 || newSet.size >= totalOptions.value) {
@@ -65,7 +69,16 @@ function selectAll() {
   emit('update:modelValue', new Set())
 }
 
+function selectSingle(value: string) {
+  emit('update:modelValue', new Set([value]))
+  open.value = false
+}
+
 function toggle(value: string) {
+  if (!props.multiple) {
+    selectSingle(value)
+    return
+  }
   if (isAllSelected.value) {
     emit('update:modelValue', new Set([value]))
     return
@@ -108,6 +121,13 @@ const selectedGroups = computed(() => {
   return result
 })
 
+const singleLabel = computed(() => {
+  if (props.modelValue.size === 0) return null
+  const value = [...props.modelValue][0]
+  if (props.nullable && value === props.nullValue) return props.nullLabel
+  return props.options.find(o => o.value === value)?.label ?? value
+})
+
 const selectedLabels = computed(() => {
   if (isAllSelected.value) {
     return Array.from({length: totalOptions.value}, (_, i) => String(i))
@@ -139,21 +159,24 @@ const preventDefault = (e: Event) => e.preventDefault()
 const items = computed(() => {
   const selected = selectedSet.value
   const allSelected = isAllSelected.value
+  const multi = props.multiple
   const result: Record<string, unknown>[][] = []
 
-  const totalCount = props.counts
-      ? Object.values(props.counts).reduce((sum, n) => sum + n, 0)
-      : undefined
+  if (multi) {
+    const totalCount = props.counts
+        ? Object.values(props.counts).reduce((sum, n) => sum + n, 0)
+        : undefined
 
-  result.push([
-    {
-      slot: 'filter-all' as const,
-      label: props.allLabel,
-      checked: allSelected,
-      count: totalCount,
-      onSelect: () => selectAll(),
-    },
-  ])
+    result.push([
+      {
+        slot: 'filter-all' as const,
+        label: props.allLabel,
+        checked: allSelected,
+        count: totalCount,
+        onSelect: () => selectAll(),
+      },
+    ])
+  }
 
   if (props.nullable) {
     result.push([
@@ -163,11 +186,12 @@ const items = computed(() => {
         icon: props.nullIcon,
         iconClass: props.nullIconClass,
         label: props.nullLabel,
-        type: 'checkbox' as const,
-        checked: !allSelected && selected.has(props.nullValue!),
+        ...(multi ? {type: 'checkbox' as const} : {}),
+        checked: multi ? !allSelected && selected.has(props.nullValue!) : selected.has(props.nullValue!),
         count: props.counts?.[props.nullValue!],
-        onUpdateChecked: () => toggle(props.nullValue!),
-        onSelect: preventDefault,
+        ...(multi
+            ? {onUpdateChecked: () => toggle(props.nullValue!), onSelect: preventDefault}
+            : {onSelect: () => selectSingle(props.nullValue!)}),
       },
     ])
   }
@@ -177,25 +201,32 @@ const items = computed(() => {
     for (const group of props.groups) {
       const groupOptions = props.options.filter(o => o.group === group.value)
       result.push([
-        {
-          slot: 'group-header' as const,
-          label: group.label,
-          type: 'checkbox' as const,
-          checked: !allSelected && selectedGroupsSet.has(group.value),
-          onUpdateChecked: () => toggleGroup(group.value),
-          onSelect: preventDefault,
-        },
+        ...(multi
+            ? [{
+              slot: 'group-header' as const,
+              label: group.label,
+              type: 'checkbox' as const,
+              checked: !allSelected && selectedGroupsSet.has(group.value),
+              onUpdateChecked: () => toggleGroup(group.value),
+              onSelect: preventDefault,
+            }]
+            : [{
+              slot: 'group-header' as const,
+              label: group.label,
+              disabled: true,
+            }]),
         ...groupOptions.map(o => ({
           slot: 'filter-item' as const,
           value: o.value,
           icon: o.icon,
           iconClass: o.iconClass,
           label: o.label,
-          type: 'checkbox' as const,
-          checked: !allSelected && selected.has(o.value),
+          ...(multi ? {type: 'checkbox' as const} : {}),
+          checked: multi ? !allSelected && selected.has(o.value) : selected.has(o.value),
           count: props.counts?.[o.value],
-          onUpdateChecked: () => toggle(o.value),
-          onSelect: preventDefault,
+          ...(multi
+              ? {onUpdateChecked: () => toggle(o.value), onSelect: preventDefault}
+              : {onSelect: () => selectSingle(o.value)}),
         })),
       ])
     }
@@ -207,11 +238,12 @@ const items = computed(() => {
           icon: o.icon,
           iconClass: o.iconClass,
           label: o.label,
-          type: 'checkbox' as const,
-          checked: !allSelected && selected.has(o.value),
+          ...(multi ? {type: 'checkbox' as const} : {}),
+          checked: multi ? !allSelected && selected.has(o.value) : selected.has(o.value),
           count: props.counts?.[o.value],
-          onUpdateChecked: () => toggle(o.value),
-          onSelect: preventDefault,
+          ...(multi
+              ? {onUpdateChecked: () => toggle(o.value), onSelect: preventDefault}
+              : {onSelect: () => selectSingle(o.value)}),
         })),
     )
   }
@@ -239,8 +271,8 @@ const items = computed(() => {
           trailing-icon="i-ph-caret-down"
           :active="open"
           :label="label"
-          :selected-values="selectedLabels"
-          :count="totalOptions"
+          :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
+          :count="multiple ? totalOptions : Infinity"
           :threshold="threshold"
           class="flex-1 min-w-0 rounded-r-none!"
           :class="showReset ? 'pr-1!' : ''"
