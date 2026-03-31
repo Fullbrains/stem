@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<{
   label?: string
   icon?: string
   loading?: boolean
+  stroke?: number
   orientation?: Orientation
   size?: Size
 }>(), {
@@ -54,7 +55,7 @@ const textSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <SSpinner v-if="loading" :class="iconSize[orientation][size]" :stroke="orientation === 'vertical' ? 1.5 : undefined" class="text-(--ui-text-muted) shrink-0"/>
+    <SSpinner v-if="loading" :class="iconSize[orientation][size]" :stroke="stroke ?? (orientation === 'vertical' ? 1.5 : undefined)" class="text-(--ui-text-muted) shrink-0"/>
     <UIcon v-else :name="resolvedIcon" :class="iconSize[orientation][size]"
            class="text-(--ui-text-muted) shrink-0"/>
     <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
