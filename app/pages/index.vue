@@ -816,6 +816,17 @@ onMounted(() => {
                   confirm-icon="i-ph-arrow-counter-clockwise"
                   :on-confirm="() => new Promise(r => setTimeout(r, 1000))"
               />
+              <SButton
+                  label="Delete bot"
+                  icon="i-ph-robot"
+                  destructive
+                  confirm-title="Delete Bot?"
+                  confirm-message="This action is irreversible. Type <b>My Bot</b> to confirm."
+                  confirm-icon="i-ph-warning-circle"
+                  confirm-match="My Bot"
+                  confirm-placeholder="Type the bot name"
+                  :on-confirm="() => new Promise(r => setTimeout(r, 1500))"
+              />
             </div>
           </div>
         </section>
