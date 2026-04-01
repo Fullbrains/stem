@@ -13,8 +13,10 @@ import badge from './badge'
 import alert from './alert'
 import popover from './popover'
 import _switch from './switch'
+import avatar from './avatar'
 
 export const stem = {
+  avatar,
   button,
   input,
   textarea,

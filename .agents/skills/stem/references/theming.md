@@ -17,6 +17,20 @@ export const stemColors = {
 
 Stem bypasses Nuxt UI's CSS-variable-based semantic colors with hardcoded Tailwind classes. This ensures that `primary` always renders as slate-900/slate-100 regardless of Nuxt UI's internal color resolution.
 
+## Avatar Theme
+
+```ts
+// src/theme/avatar.ts
+{
+  slots: {
+    root: 'bg-slate-500/10',
+    fallback: 'leading-normal',
+  },
+}
+```
+
+Overrides Nuxt UI's default `leading-none` on the fallback text slot, and adds a subtle slate background to the root.
+
 ## Icon Mappings
 
 ```ts

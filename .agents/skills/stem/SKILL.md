@@ -415,6 +415,7 @@ await confirm({
 
 Stem overrides these Nuxt UI component themes via `app.config.ui`:
 
+- **avatar** — Custom bg (bg-slate-500/10), fallback text with leading-normal instead of leading-none
 - **button** — Hardcoded slate primary/secondary/neutral colors, em-based sizing, rounded-[8px], cursor-pointer, smooth transitions
 - **input / textarea** — Custom placeholder colors, rounded-[6px], shadow-based focus rings (not outline), border-based outline variant
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
