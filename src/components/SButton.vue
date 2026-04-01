@@ -17,6 +17,8 @@ const props = defineProps<{
   confirmIcon?: string
   confirmLabel?: string
   confirmCancelLabel?: string
+  confirmMatch?: string
+  confirmPlaceholder?: string
   onConfirm?: () => Promise<void> | void
 }>()
 
@@ -62,6 +64,8 @@ function handleClick(e: MouseEvent) {
       cancelLabel: props.confirmCancelLabel,
       icon: props.confirmIcon,
       destructive: props.destructive,
+      confirmMatch: props.confirmMatch,
+      confirmPlaceholder: props.confirmPlaceholder,
       onConfirm: props.onConfirm,
     })
   } else {

@@ -178,7 +178,7 @@ Enhanced button wrapping `UButton`. Adds confirm dialogs, loading states with an
 <SButton label="Tag" rounded />
 ```
 
-**Props:** `icon`, `label`, `trailingIcon`, `caret`, `rounded`, `disc`, `compact` (boolean | 'x' | 'y'), `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `onConfirm`
+**Props:** `icon`, `label`, `trailingIcon`, `caret`, `rounded`, `disc`, `compact` (boolean | 'x' | 'y'), `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`
 
 The `compact` prop reduces padding and removes min-height. It accepts:
 - `true` — reduces both axes (`py-[0.25em]`, `px-[0.65em]`, `min-h-0`)
@@ -408,6 +408,17 @@ await confirm({
   label: 'Delete',
   destructive: true,
   onConfirm: () => api.delete(id),
+})
+
+// Type-to-confirm pattern (user must type exact string to enable confirm button)
+await confirm({
+  title: 'Delete Bot',
+  message: 'This action is irreversible. Type <b>My Bot</b> to confirm.',
+  label: 'Delete',
+  destructive: true,
+  confirmMatch: 'My Bot',
+  confirmPlaceholder: 'Type the bot name',
+  onConfirm: () => deleteBot(id),
 })
 ```
 

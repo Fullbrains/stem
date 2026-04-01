@@ -13,6 +13,8 @@ export function useConfirmDialog() {
     cancelLabel?: string
     icon?: string
     destructive?: boolean
+    confirmMatch?: string
+    confirmPlaceholder?: string
     onConfirm: () => Promise<void> | void
   }) {
     const modal = overlay.create(SConfirmDialog, {
@@ -26,6 +28,8 @@ export function useConfirmDialog() {
       cancelLabel: options.cancelLabel,
       icon: options.icon,
       destructive: options.destructive,
+      confirmMatch: options.confirmMatch,
+      confirmPlaceholder: options.confirmPlaceholder,
       onConfirm: options.onConfirm,
     })
   }

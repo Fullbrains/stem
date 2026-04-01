@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -8,6 +8,8 @@ const props = withDefaults(defineProps<{
   cancelLabel?: string
   icon?: string
   destructive?: boolean
+  confirmMatch?: string
+  confirmPlaceholder?: string
   onConfirm?: () => Promise<void> | void
 }>(), {
   title: 'Confirm',
@@ -21,6 +23,11 @@ const emit = defineEmits<{
 }>()
 
 const loading = ref(false)
+const inputValue = ref('')
+
+const confirmDisabled = computed(() =>
+  loading.value || (props.confirmMatch != null && inputValue.value !== props.confirmMatch),
+)
 
 async function handleConfirm() {
   if (props.onConfirm) {
@@ -43,11 +50,22 @@ async function handleConfirm() {
       :disabled="loading"
       @close="emit('close', false)"
   >
+    <template v-if="confirmMatch != null" #body>
+      <div class="px-5 pb-4">
+        <UInput
+            v-model="inputValue"
+            :placeholder="confirmPlaceholder"
+            autofocus
+            @keydown.enter="!confirmDisabled && handleConfirm()"
+        />
+      </div>
+    </template>
     <template #footer>
       <SButton
           :label="label"
           :destructive="destructive"
           :loading="loading"
+          :disabled="confirmDisabled"
           @click="handleConfirm"
       />
       <SButton

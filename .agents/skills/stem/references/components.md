@@ -23,6 +23,8 @@ Enhanced button wrapping Nuxt UI's `UButton`. Provides loading states with anima
 | `confirmMessage` | `string` | — | Message for confirmation dialog |
 | `confirmIcon` | `string` | — | Icon for confirmation dialog |
 | `confirmLabel` | `string` | — | Confirm button label (falls back to `label`) |
+| `confirmMatch` | `string` | — | Exact string user must type to enable confirm (type-to-confirm pattern) |
+| `confirmPlaceholder` | `string` | — | Placeholder for the type-to-confirm input |
 | `onConfirm` | `() => Promise<void> \| void` | — | Callback when confirmed. When provided, clicking the button opens a confirmation dialog instead of emitting `click` |
 
 ### Emits
@@ -231,6 +233,8 @@ Confirmation dialog used internally by `SButton` when `onConfirm` is provided. C
 | `cancelLabel` | `string` | `'Cancel'` | Cancel button label |
 | `icon` | `string` | — | Dialog icon |
 | `destructive` | `boolean` | `false` | Use error color for confirm button |
+| `confirmMatch` | `string` | — | Exact string the user must type to enable the confirm button |
+| `confirmPlaceholder` | `string` | — | Placeholder for the type-to-confirm input |
 | `onConfirm` | `() => Promise<void> \| void` | — | Async callback executed on confirm |
 
 ### Behavior
@@ -238,6 +242,7 @@ Confirmation dialog used internally by `SButton` when `onConfirm` is provided. C
 - While `onConfirm` runs, a loading state prevents closing the dialog
 - On confirm success, emits `close(true)`
 - On cancel or close, emits `close(false)`
+- When `confirmMatch` is provided, a `UInput` appears between the description and footer. The confirm button stays disabled until the typed value matches exactly (case-sensitive). Enter key submits when match is valid.
 
 ## SSpinner
 
@@ -341,6 +346,8 @@ await confirm({
 | `cancelLabel` | `string` | No | Cancel button label |
 | `icon` | `string` | No | Dialog icon |
 | `destructive` | `boolean` | No | Error color for confirm button |
+| `confirmMatch` | `string` | No | Exact string user must type to enable confirm button |
+| `confirmPlaceholder` | `string` | No | Placeholder for the type-to-confirm input |
 | `onConfirm` | `() => Promise<void> \| void` | Yes | Action to execute on confirmation |
 
 ### Implementation
