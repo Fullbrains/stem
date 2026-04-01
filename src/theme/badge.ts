@@ -73,6 +73,13 @@ export default {
       `,
     },
     {
+      color: 'error',
+      variant: 'solid',
+      class: `
+        bg-rose-600 dark:bg-rose-600
+      `,
+    },
+    {
       color: ['primary', 'neutral', 'secondary'],
       variant: 'soft',
       class: `

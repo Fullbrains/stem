@@ -111,6 +111,8 @@ export const sizes = {
     { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-slate-600 dark:bg-slate-600 hover:bg-gray-500 dark:hover:bg-gray-200 active:bg-gray-600 dark:active:bg-gray-300 disabled:bg-gray-600 dark:disabled:bg-gray-300 focus-visible:outline-gray-400' },
     // secondary solid (inverse of primary: white bg in light, dark bg in dark)
     { color: 'secondary', variant: 'solid', class: 'text-(--ui-text) dark:text-slate-100 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 active:bg-white dark:active:bg-slate-800 disabled:bg-white dark:disabled:bg-slate-800 focus-visible:outline-slate-400' },
+    // error solid (bg-rose-600 instead of Nuxt UI default)
+    { color: 'error', variant: 'solid', class: 'bg-rose-600 dark:bg-rose-600 hover:bg-rose-700 dark:hover:bg-rose-500 active:bg-rose-600 dark:active:bg-rose-600' },
     // soft (shared — transparent for all three)
     { color: ['primary', 'neutral', 'secondary'], variant: 'soft', class: 'text-gray-800 dark:text-gray-200 bg-slate-400/20 hover:bg-slate-400/30 active:bg-slate-400/20' },
     // subtle primary/neutral (transparent)
@@ -180,6 +182,7 @@ Neutralizes Nuxt UI's responsive `md:text-*` classes that would override the gol
     { color: 'primary', variant: 'solid', class: 'text-white dark:text-slate-900 bg-slate-900 dark:bg-slate-100' },
     { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-slate-600 dark:bg-slate-600' },
     { color: 'secondary', variant: 'solid', class: 'text-(--ui-text) dark:text-slate-100 bg-white dark:bg-slate-800' },
+    { color: 'error', variant: 'solid', class: 'bg-rose-600 dark:bg-rose-600' },
     { color: 'primary', variant: 'outline', class: 'text-slate-900 dark:text-slate-100 ring-slate-900/50 dark:ring-slate-100/50' },
     { color: 'neutral', variant: 'outline', class: 'text-slate-600 dark:text-slate-400 ring-slate-500/30 dark:ring-slate-400/30' },
     // secondary outline: no override — uses Nuxt UI default with slate palette
