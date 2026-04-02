@@ -307,29 +307,31 @@ const items = computed(() => {
       </template>
 
       <template #filter-item="{item: _item}">
-        <div
-            class="flex items-center gap-2 w-full py-[0.2em]"
-            :class="(_item as any).iconClass"
-        >
-          <slot name="leading" :option="_item">
+        <slot name="item" :option="(_item as any)" :checked="(_item as any).checked">
+          <div
+              class="flex items-center gap-2 w-full py-[0.2em]"
+              :class="(_item as any).iconClass"
+          >
+            <slot name="leading" :option="_item">
+              <UIcon
+                  v-if="(_item as any).icon"
+                  :name="(_item as any).icon"
+                  class="size-5 shrink-0"
+              />
+            </slot>
+            <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
+            <span
+                v-if="(_item as any).count != null"
+                class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
+            >{{ (_item as any).count }}</span>
             <UIcon
-                v-if="(_item as any).icon"
-                :name="(_item as any).icon"
-                class="size-5 shrink-0"
+                v-if="(_item as any).checked"
+                name="i-ph-check"
+                class="size-4"
             />
-          </slot>
-          <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
-          <span
-              v-if="(_item as any).count != null"
-              class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
-          >{{ (_item as any).count }}</span>
-          <UIcon
-              v-if="(_item as any).checked"
-              name="i-ph-check"
-              class="size-4"
-          />
-          <div v-else class="w-4"/>
-        </div>
+            <div v-else class="w-4"/>
+          </div>
+        </slot>
       </template>
     </UDropdownMenu>
     <div

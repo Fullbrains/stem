@@ -519,7 +519,8 @@ interface SSearchFilterGroup {
 
 | Slot | Props | Description |
 |------|-------|-------------|
-| `leading` | `{ option }` | Custom leading content for filter items |
+| `item` | `{ option, checked }` | Replace the entire menu item content |
+| `leading` | `{ option }` | Custom leading content for filter items (inside default item layout) |
 
 ### Behavior
 
