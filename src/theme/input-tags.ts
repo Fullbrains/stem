@@ -6,7 +6,7 @@ const inputTagsFocusRing = [
   {
     color: 'primary',
     variant: ['outline', 'subtle'],
-    class: {base: 'has-focus-visible:shadow-[0_0_0_3.5px]! has-focus:border-slate-500/80 has-focus-visible:shadow-slate-500/20'},
+    class: {base: 'has-focus-visible:shadow-[0_0_0_3.5px]! has-focus:border-smut-500/80 has-focus-visible:shadow-smut-500/20'},
   },
   {
     color: 'error',
@@ -49,8 +49,8 @@ export default {
     leading: 'ml-[0.1em]!',
     trailing: 'mr-[0.1em]!',
     trailingIcon: 'text-(--ui-text)!',
-    item: 'rounded-full ring-0 pl-[0.6em] leading-none pr-[3px] py-0.5 gap-[0.25em] font-normal bg-slate-400/20 text-gray-800 dark:text-gray-200',
-    itemDelete: 'rounded-full cursor-pointer hover:bg-slate-400/30 text-gray-800 dark:text-gray-200 p-0.5',
+    item: 'rounded-full ring-0 pl-[0.6em] leading-none pr-[3px] py-0.5 gap-[0.25em] font-normal bg-smut-400/20 text-gray-800 dark:text-gray-200',
+    itemDelete: 'rounded-full cursor-pointer hover:bg-smut-400/30 text-gray-800 dark:text-gray-200 p-0.5',
   },
   compoundVariants: [...remappedBase, ...inputTagsFocusRing, ...fixedSizeOverrides],
   variants: {

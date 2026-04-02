@@ -110,7 +110,7 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
           :style="{
-            transform: `translateY(${-paddingTop}px)`,
+            transform: `transmutY(${-paddingTop}px)`,
             marginBottom: `calc(-1 * var(--s-fade-size) - ${paddingTop}px)`,
           }"
       />
@@ -121,7 +121,7 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"
           :style="{
-            transform: `translateY(${paddingBottom}px)`,
+            transform: `transmutY(${paddingBottom}px)`,
             marginTop: `calc(-1 * var(--s-fade-size) - ${paddingBottom}px)`,
           }"
       />
@@ -133,19 +133,19 @@ watch(() => scrollRef.value, async () => {
 .s-scroll-fade {
   height: var(--s-fade-size);
   background: linear-gradient(to bottom,
-    var(--s-fade-color) 0%,
-    color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
-    color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
-    transparent 100%
+  var(--s-fade-color) 0%,
+  color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
+  color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+  transparent 100%
   );
 }
 
 .s-scroll-fade--bottom {
   background: linear-gradient(to top,
-    var(--s-fade-color) 0%,
-    color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
-    color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
-    transparent 100%
+  var(--s-fade-color) 0%,
+  color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
+  color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+  transparent 100%
   );
 }
 </style>

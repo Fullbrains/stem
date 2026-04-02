@@ -36,8 +36,8 @@ export default {
       color: 'primary',
       variant: 'solid',
       class: `
-        text-white dark:text-slate-900
-        bg-slate-900 dark:bg-slate-100
+        text-white dark:text-smut-900
+        bg-smut-900 dark:bg-smut-100
       `,
     },
     {
@@ -45,31 +45,31 @@ export default {
       variant: 'solid',
       class: `
         text-white dark:text-white
-        bg-slate-600 dark:bg-slate-600
+        bg-smut-600 dark:bg-smut-600
       `,
     },
     {
       color: 'primary',
       variant: 'outline',
       class: `
-        text-slate-900 dark:text-slate-100
-        ring-slate-900/50 dark:ring-slate-100/50
+        text-smut-900 dark:text-smut-100
+        ring-smut-900/50 dark:ring-smut-100/50
       `,
     },
     {
       color: 'neutral',
       variant: 'outline',
       class: `
-        text-slate-600 dark:text-slate-400
-        ring-slate-500/30 dark:ring-slate-400/30
+        text-smut-600 dark:text-smut-400
+        ring-smut-500/30 dark:ring-smut-400/30
       `,
     },
     {
       color: 'secondary',
       variant: 'solid',
       class: `
-        text-(--ui-text) dark:text-slate-100
-        bg-white dark:bg-slate-800
+        text-(--ui-text) dark:text-smut-100
+        bg-white dark:bg-smut-800
       `,
     },
     {
@@ -84,7 +84,7 @@ export default {
       variant: 'soft',
       class: `
         text-gray-800 dark:text-gray-200
-        bg-slate-400/20
+        bg-smut-400/20
       `,
     },
     {
@@ -92,7 +92,7 @@ export default {
       variant: 'subtle',
       class: `
         text-gray-800 dark:text-gray-200
-        bg-slate-400/20
+        bg-smut-400/20
         ring-gray-500/30 dark:ring-gray-300/20
       `,
     },
@@ -100,8 +100,8 @@ export default {
       color: 'secondary',
       variant: 'subtle',
       class: `
-        text-(--ui-text) dark:text-slate-100
-        bg-white dark:bg-slate-800
+        text-(--ui-text) dark:text-smut-100
+        bg-white dark:bg-smut-800
         ring-inset ring-(--ui-border)
       `,
     },

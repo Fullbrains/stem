@@ -26,7 +26,7 @@ const loading = ref(false)
 const inputValue = ref('')
 
 const confirmDisabled = computed(() =>
-  loading.value || (props.confirmMatch != null && inputValue.value !== props.confirmMatch),
+    loading.value || (props.confirmMatch != null && inputValue.value !== props.confirmMatch),
 )
 
 async function handleConfirm() {
@@ -51,11 +51,13 @@ async function handleConfirm() {
       @close="emit('close', false)"
   >
     <template v-if="confirmMatch != null" #body>
-      <div class="px-5 pb-4">
+      <div class="p-6">
         <UInput
             v-model="inputValue"
             :placeholder="confirmPlaceholder"
             autofocus
+            size="sm"
+            class="w-full max-w-100"
             @keydown.enter="!confirmDisabled && handleConfirm()"
         />
       </div>
