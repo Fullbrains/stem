@@ -45,7 +45,8 @@
 }
 
 .s-outline-focus,
-.s-outline-focus-within:focus-within {
+.s-outline-focus-within:focus-within,
+.s-outline-hover:hover {
     border: 1px solid color-mix(in oklch, var(--color-slate-500) 80%, transparent);
     box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--color-slate-500) 20%, transparent);
 }
