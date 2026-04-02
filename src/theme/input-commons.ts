@@ -1,6 +1,6 @@
 import {sizes} from './sizes'
 
-export const inputBase = 'placeholder:text-smut-500/80 placeholder:select-none rounded-[6px] py-[0.5em]! transition duration-200'
+export const inputBase = 'placeholder:text-slate-500/80 placeholder:select-none rounded-[6px] py-[0.5em]! transition duration-200'
 
 export const inputSlots = {
   base: inputBase,
@@ -20,8 +20,8 @@ export const baseCompoundVariants = [
   {
     color: 'primary',
     class: {
-      base: 'placeholder:text-smut-500/80',
-      leadingIcon: 'text-smut-500/80',
+      base: 'placeholder:text-slate-500/80',
+      leadingIcon: 'text-slate-500/80',
     },
   },
   {
@@ -46,7 +46,7 @@ export const baseCompoundVariants = [
     variant: 'outline',
     class: {
       base: `${outlineCommons}
-        border-smut-500/30 hover:not-focus:not-disabled:border-smut-500/50`,
+        border-slate-500/30 hover:not-focus:not-disabled:border-slate-500/50`,
     },
   },
   {
@@ -70,7 +70,7 @@ export const baseCompoundVariants = [
     color: 'primary',
     variant: 'soft',
     class: {
-      base: 'bg-smut-500/10 hover:not-disabled:bg-smut-500/15 focus-visible:bg-smut-500/15',
+      base: 'bg-slate-500/10 hover:not-disabled:bg-slate-500/15 focus-visible:bg-slate-500/15',
     },
   },
   {
@@ -93,8 +93,8 @@ export const baseCompoundVariants = [
     variant: 'subtle',
     class: {
       base: `${outlineCommons}
-        bg-smut-500/5 hover:not-disabled:bg-smut-500/10 focus-visible:bg-smut-500/5
-        border-smut-500/30 hover:not-focus:not-disabled:border-smut-500/50`,
+        bg-slate-500/5 hover:not-disabled:bg-slate-500/10 focus-visible:bg-slate-500/5
+        border-slate-500/30 hover:not-focus:not-disabled:border-slate-500/50`,
     },
   },
   {
@@ -120,7 +120,7 @@ export const baseCompoundVariants = [
     color: 'primary',
     variant: 'ghost',
     class: {
-      base: 'bg-transparent hover:not-disabled:bg-smut-500/10 focus-visible:bg-smut-500/10',
+      base: 'bg-transparent hover:not-disabled:bg-slate-500/10 focus-visible:bg-slate-500/10',
     },
   },
   {
@@ -144,7 +144,7 @@ export const inputFocusRing = [
   {
     color: 'primary',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-smut-500/80 focus-visible:shadow-smut-500/20'},
+    class: {base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-slate-500/80 focus-visible:shadow-slate-500/20'},
   },
   {
     color: 'error',

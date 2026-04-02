@@ -339,7 +339,7 @@ const items = computed(() => {
         :class="showReset ? 'w-6.5' : 'w-0'"
     >
       <button
-          class="grow w-6.5 flex items-center justify-start rounded-r-full bg-smut-400/20 cursor-pointer hover:bg-smut-400/30 transition duration-150"
+          class="grow w-6.5 flex items-center justify-start rounded-r-full bg-slate-400/20 cursor-pointer hover:bg-slate-400/30 transition duration-150"
           :tabindex="showReset ? 0 : -1"
           @click.stop.prevent="selectAll()"
       >

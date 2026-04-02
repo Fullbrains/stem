@@ -16,7 +16,7 @@ export default defineNuxtModule({
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
     for (const [key, value] of Object.entries(stemAppConfig.ui)) {
       if (key === 'colors') {
-        // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'smut').
+        // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'slate').
         // Using Object.assign ensures Stem values win over getDefaultConfig() values.
         nuxt.options.appConfig.ui[key] = Object.assign(nuxt.options.appConfig.ui[key] || {}, value)
       } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {

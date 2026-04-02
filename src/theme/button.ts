@@ -9,12 +9,12 @@ export default {
       color: 'primary',
       variant: 'solid',
       class: `
-        text-white dark:text-smut-900
-        bg-smut-900 dark:bg-smut-100
-        hover:bg-smut-800 dark:hover:bg-smut-300
-        active:bg-smut-900 dark:active:bg-smut-100
-        disabled:bg-smut-900 dark:disabled:bg-smut-100
-        focus-visible:outline-smut-500
+        text-white dark:text-slate-900
+        bg-slate-900 dark:bg-slate-100
+        hover:bg-slate-800 dark:hover:bg-slate-300
+        active:bg-slate-900 dark:active:bg-slate-100
+        disabled:bg-slate-900 dark:disabled:bg-slate-100
+        focus-visible:outline-slate-500
       `,
     },
     {
@@ -22,7 +22,7 @@ export default {
       variant: 'solid',
       class: `
         text-white dark:text-white
-        bg-smut-600 dark:bg-smut-600
+        bg-slate-600 dark:bg-slate-600
         hover:bg-gray-500 dark:hover:bg-gray-200
         active:bg-gray-600 dark:active:bg-gray-300
         disabled:bg-gray-600 dark:disabled:bg-gray-300
@@ -33,12 +33,12 @@ export default {
       color: 'secondary',
       variant: 'solid',
       class: `
-        text-(--ui-text) dark:text-smut-100
-        bg-white dark:bg-smut-800
-        hover:bg-smut-50 dark:hover:bg-smut-700
-        active:bg-white dark:active:bg-smut-800
-        disabled:bg-white dark:disabled:bg-smut-800
-        focus-visible:outline-smut-400
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+        hover:bg-slate-50 dark:hover:bg-slate-700
+        active:bg-white dark:active:bg-slate-800
+        disabled:bg-white dark:disabled:bg-slate-800
+        focus-visible:outline-slate-400
       `,
     },
     {
@@ -55,9 +55,9 @@ export default {
       variant: 'soft',
       class: `
         text-gray-800 dark:text-gray-200
-        bg-smut-400/20
-        hover:bg-smut-400/30
-        active:bg-smut-400/20
+        bg-slate-400/20
+        hover:bg-slate-400/30
+        active:bg-slate-400/20
       `
     },
     {
@@ -65,9 +65,9 @@ export default {
       variant: 'subtle',
       class: `
         text-gray-800 dark:text-gray-200
-        bg-smut-400/20
-        hover:bg-smut-400/30
-        active:bg-smut-400/20
+        bg-slate-400/20
+        hover:bg-slate-400/30
+        active:bg-slate-400/20
         ring-gray-500/30 dark:ring-gray-300/20
       `
     },
@@ -75,10 +75,10 @@ export default {
       color: 'secondary',
       variant: 'subtle',
       class: `
-        text-(--ui-text) dark:text-smut-100
-        bg-white dark:bg-smut-800
-        hover:bg-smut-50 dark:hover:bg-smut-700
-        active:bg-white dark:active:bg-smut-800
+        text-(--ui-text) dark:text-slate-100
+        bg-white dark:bg-slate-800
+        hover:bg-slate-50 dark:hover:bg-slate-700
+        active:bg-white dark:active:bg-slate-800
         ring-inset ring-(--ui-border)
       `
     }

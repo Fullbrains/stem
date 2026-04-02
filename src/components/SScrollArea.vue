@@ -110,7 +110,7 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
           :style="{
-            transform: `transmutY(${-paddingTop}px)`,
+            transform: `translateY(${-paddingTop}px)`,
             marginBottom: `calc(-1 * var(--s-fade-size) - ${paddingTop}px)`,
           }"
       />
@@ -121,7 +121,7 @@ watch(() => scrollRef.value, async () => {
           class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"
           :style="{
-            transform: `transmutY(${paddingBottom}px)`,
+            transform: `translateY(${paddingBottom}px)`,
             marginTop: `calc(-1 * var(--s-fade-size) - ${paddingBottom}px)`,
           }"
       />

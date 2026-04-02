@@ -1,6 +1,6 @@
 export default {
   slots: {
-    root: 'bg-smut-500/10',
+    root: 'bg-slate-500/10',
     fallback: 'leading-normal',
   },
 }

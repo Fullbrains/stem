@@ -32,28 +32,28 @@ const variantClasses = computed(() => {
   switch (props.variant) {
     case 'soft':
       return [
-        `${base} bg-smut-500/10`,
-        focused ? 'bg-smut-500/15!' : 'hover:bg-smut-500/15',
+        `${base} bg-slate-500/10`,
+        focused ? 'bg-slate-500/15!' : 'hover:bg-slate-500/15',
       ]
     case 'subtle':
       return [
-        `${base} border border-smut-500/30 bg-smut-500/5`,
+        `${base} border border-slate-500/30 bg-slate-500/5`,
         focused
-            ? 'border-smut-500/80! shadow-[0_0_0_3.5px] shadow-smut-500/20'
-            : 'hover:border-smut-500/50 hover:bg-smut-500/10',
+            ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+            : 'hover:border-slate-500/50 hover:bg-slate-500/10',
       ]
     case 'ghost':
       return [
         `${base} bg-transparent`,
-        focused ? 'bg-smut-500/10!' : 'hover:bg-smut-500/10',
+        focused ? 'bg-slate-500/10!' : 'hover:bg-slate-500/10',
       ]
     case 'outline':
     default:
       return [
-        `${base} border border-smut-500/30`,
+        `${base} border border-slate-500/30`,
         focused
-            ? 'border-smut-500/80! shadow-[0_0_0_3.5px] shadow-smut-500/20'
-            : 'hover:border-smut-500/50',
+            ? 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20'
+            : 'hover:border-slate-500/50',
       ]
   }
 })
@@ -154,13 +154,13 @@ function clear() {
       >
         <UIcon
             name="i-ph-magnifying-glass"
-            class="size-5 text-smut-500/80 shrink-0"
+            class="size-5 text-slate-500/80 shrink-0"
         />
         <input
             v-model="modelValue"
             type="text"
             :placeholder="placeholder ?? 'Search...'"
-            class="bg-transparent border-none outline-none placeholder:text-smut-500/80 text-base flex-1 min-w-0"
+            class="bg-transparent border-none outline-none placeholder:text-slate-500/80 text-base flex-1 min-w-0"
             @focus="inputFocus = true"
             @blur="inputFocus = false"
         >

@@ -5,8 +5,8 @@ export default {
       variant: 'solid',
       class: {
         root: `
-          text-white dark:text-smut-900
-          bg-smut-900 dark:bg-smut-100
+          text-white dark:text-slate-900
+          bg-slate-900 dark:bg-slate-100
         `,
       },
     },
@@ -16,7 +16,7 @@ export default {
       class: {
         root: `
           text-white dark:text-white
-          bg-smut-600 dark:bg-smut-600
+          bg-slate-600 dark:bg-slate-600
         `,
       },
     },
@@ -25,8 +25,8 @@ export default {
       variant: 'outline',
       class: {
         root: `
-          text-smut-900 dark:text-smut-100
-          ring-smut-900/25 dark:ring-smut-100/25
+          text-slate-900 dark:text-slate-100
+          ring-slate-900/25 dark:ring-slate-100/25
         `,
       },
     },
@@ -35,8 +35,8 @@ export default {
       variant: 'outline',
       class: {
         root: `
-          text-smut-600 dark:text-smut-400
-          ring-smut-500/25 dark:ring-smut-400/25
+          text-slate-600 dark:text-slate-400
+          ring-slate-500/25 dark:ring-slate-400/25
         `,
       },
     },
@@ -46,7 +46,7 @@ export default {
       class: {
         root: `
           text-gray-800 dark:text-gray-200
-          bg-smut-400/20
+          bg-slate-400/20
         `,
       },
     },
@@ -56,7 +56,7 @@ export default {
       class: {
         root: `
           text-gray-800 dark:text-gray-200
-          bg-smut-400/10
+          bg-slate-400/10
         `,
       },
     },
@@ -66,7 +66,7 @@ export default {
       class: {
         root: `
           text-gray-800 dark:text-gray-200
-          bg-smut-400/20
+          bg-slate-400/20
           ring-gray-500/30 dark:ring-gray-300/20
         `,
       },
@@ -77,7 +77,7 @@ export default {
       class: {
         root: `
           text-gray-800 dark:text-gray-200
-          bg-smut-400/10
+          bg-slate-400/10
           ring-gray-500/20 dark:ring-gray-300/15
         `,
       },
