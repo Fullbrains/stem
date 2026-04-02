@@ -46,7 +46,7 @@ export const stemIcons = {
 export const stemColors = {
   primary: 'smut',
   secondary: 'smut',
-  neutral: 'smut',
+  neutral: 'zinc',
   success: 'emerald',
   error: 'rose',
 }
