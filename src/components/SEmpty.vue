@@ -48,7 +48,7 @@ const textSize: Record<Size, string> = {
 
 <template>
   <div
-      class="s-empty gap-3"
+      class="s-empty gap-3 select-none"
       :class="[
       orientation === 'vertical'
         ? 'flex flex-col items-center text-center'
