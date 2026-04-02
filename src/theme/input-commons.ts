@@ -1,6 +1,6 @@
 import {sizes} from './sizes'
 
-export const inputBase = 'placeholder:text-slate-500/80 rounded-[6px] py-[0.5em]! transition duration-200'
+export const inputBase = 'placeholder:text-slate-500/80 placeholder:select-none rounded-[6px] py-[0.5em]! transition duration-200'
 
 export const inputSlots = {
   base: inputBase,
