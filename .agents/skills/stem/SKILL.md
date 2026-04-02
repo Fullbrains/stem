@@ -128,6 +128,7 @@ Stem exports utility CSS classes in `base.css` for building custom containers th
 | `.s-outline` | Resting input border (slate-500/30, hover: slate-500/50, rounded 6px, 200ms transition) |
 | `.s-outline-focus` | Focused input border + glow (slate-500/80 border, 3.5px slate-500/20 shadow) |
 | `.s-outline-focus-within` | Same as `.s-outline-focus` but triggers on `:focus-within` (for containers with inner inputs) |
+| `.s-outline-hover` | Same as `.s-outline-focus` but triggers on `:hover` (for clickable containers) |
 
 Compose them to create custom containers that look like Stem inputs:
 
