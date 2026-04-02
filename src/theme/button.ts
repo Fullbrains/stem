@@ -2,7 +2,7 @@ import {sizes} from './sizes'
 
 export default {
   slots: {
-    base: 'cursor-pointer rounded-[8px] transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
+    base: 'cursor-pointer select-none rounded-[8px] transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
   },
   compoundVariants: [
     {
