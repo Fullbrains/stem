@@ -44,6 +44,10 @@
     border-color: color-mix(in oklch, var(--color-slate-500) 50%, transparent);
 }
 
+.s-outline-hover {
+    transition: border-color 200ms, box-shadow 200ms;
+}
+
 .s-outline-focus,
 .s-outline-focus-within:focus-within,
 .s-outline-hover:hover {
