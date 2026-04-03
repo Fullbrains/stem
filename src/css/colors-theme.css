@@ -1,0 +1,41 @@
+/* Stem color palettes — @theme static registration for Tailwind CSS v4 */
+@theme static {
+    /* stem — light: tar */
+    --color-stem-50: oklch(0.957 0.003 244);
+    --color-stem-100: oklch(0.913 0.004 244);
+    --color-stem-200: oklch(0.826 0.006 244);
+    --color-stem-300: oklch(0.739 0.008 244);
+    --color-stem-400: oklch(0.651 0.010 244);
+    --color-stem-500: oklch(0.564 0.012 244);
+    --color-stem-600: oklch(0.477 0.013 244);
+    --color-stem-700: oklch(0.389 0.015 244);
+    --color-stem-800: oklch(0.302 0.017 244);
+    --color-stem-900: oklch(0.215 0.019 244);
+    --color-stem-950: oklch(0.171 0.020 244);
+
+    /* iron — light: slate */
+    --color-iron-50: oklch(98.4% 0.003 247.858);
+    --color-iron-100: oklch(96.8% 0.007 247.896);
+    --color-iron-200: oklch(92.9% 0.013 255.508);
+    --color-iron-300: oklch(86.9% 0.022 252.894);
+    --color-iron-400: oklch(70.4% 0.04 256.788);
+    --color-iron-500: oklch(55.4% 0.046 257.417);
+    --color-iron-600: oklch(44.6% 0.043 257.281);
+    --color-iron-700: oklch(37.2% 0.044 257.287);
+    --color-iron-800: oklch(27.9% 0.041 260.031);
+    --color-iron-900: oklch(20.8% 0.042 265.755);
+    --color-iron-950: oklch(12.9% 0.042 264.695);
+
+    /* muto — light: gray */
+    --color-muto-50: oklch(98.5% 0.002 247.839);
+    --color-muto-100: oklch(96.7% 0.003 264.542);
+    --color-muto-200: oklch(92.8% 0.006 264.531);
+    --color-muto-300: oklch(87.2% 0.01 258.338);
+    --color-muto-400: oklch(70.7% 0.022 261.325);
+    --color-muto-500: oklch(55.1% 0.027 264.364);
+    --color-muto-600: oklch(44.6% 0.03 256.802);
+    --color-muto-700: oklch(37.3% 0.034 259.733);
+    --color-muto-800: oklch(27.8% 0.033 256.848);
+    --color-muto-900: oklch(21% 0.034 264.665);
+    --color-muto-950: oklch(13% 0.028 261.692);
+}

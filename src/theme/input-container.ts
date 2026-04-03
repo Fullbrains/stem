@@ -14,7 +14,7 @@ export interface ContainerClasses {
 
 // Icon colors per semantic color (matches leadingIcon/trailingIcon from input-commons.ts)
 export const inputIconColors: Record<InputColor, string> = {
-  primary: 'text-slate-500/80',
+  primary: 'text-iron-500/80',
   error: 'text-rose-500/80',
   success: 'text-emerald-500/80',
 }
@@ -24,30 +24,30 @@ const common = 'ring-0 rounded-[6px] transition duration-200'
 export const inputContainerClasses: Record<InputColor, Record<InputVariant, ContainerClasses>> = {
   primary: {
     outline: {
-      base: `${common} bg-default border border-slate-500/30`,
-      hover: 'hover:border-slate-500/50',
-      focus: 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20',
-      placeholder: 'placeholder:text-slate-500/80',
+      base: `${common} bg-default border border-iron-500/30`,
+      hover: 'hover:border-iron-500/50',
+      focus: 'border-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20',
+      placeholder: 'placeholder:text-iron-500/80',
     },
     soft: {
-      base: `${common} bg-slate-500/10`,
-      hover: 'hover:bg-slate-500/15',
-      focus: 'bg-slate-500/15',
-      placeholder: 'placeholder:text-slate-500/80',
+      base: `${common} bg-iron-500/10`,
+      hover: 'hover:bg-iron-500/15',
+      focus: 'bg-iron-500/15',
+      placeholder: 'placeholder:text-iron-500/80',
     },
     subtle: {
-      base: `${common} border bg-slate-500/5 border-slate-500/30`,
-      hover: 'hover:bg-slate-500/10 hover:border-slate-500/50',
-      focus: 'border-slate-500/80! shadow-[0_0_0_3.5px] shadow-slate-500/20 bg-slate-500/5!',
-      placeholder: 'placeholder:text-slate-500/80',
+      base: `${common} border bg-iron-500/5 border-iron-500/30`,
+      hover: 'hover:bg-iron-500/10 hover:border-iron-500/50',
+      focus: 'border-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20 bg-iron-500/5!',
+      placeholder: 'placeholder:text-iron-500/80',
     },
     ghost: {
       base: `${common} bg-transparent`,
-      hover: 'hover:bg-slate-500/10',
-      focus: 'bg-slate-500/10',
-      placeholder: 'placeholder:text-slate-500/80',
+      hover: 'hover:bg-iron-500/10',
+      focus: 'bg-iron-500/10',
+      placeholder: 'placeholder:text-iron-500/80',
     },
-    none: {base: '', hover: '', focus: '', placeholder: 'placeholder:text-slate-500/80'},
+    none: {base: '', hover: '', focus: '', placeholder: 'placeholder:text-iron-500/80'},
   },
   error: {
     outline: {

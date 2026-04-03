@@ -35,7 +35,7 @@ const displayValue = computed(() => {
       rounded
       compact
       class="select-none"
-      :class="[active ? 'bg-slate-400/30!' : '']"
+      :class="[active ? 'bg-iron-400/30!' : '']"
   >
     <template v-if="label && displayValue !== null">
       <span class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>

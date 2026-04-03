@@ -23,16 +23,16 @@ export default {
       color: 'primary',
       variant: 'pill',
       class: {
-        indicator: 'bg-slate-900 dark:bg-slate-100',
-        trigger: 'data-[state=active]:text-white dark:data-[state=active]:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500',
+        indicator: 'bg-stem-900 dark:bg-stem-100',
+        trigger: 'data-[state=active]:text-white dark:data-[state=active]:text-stem-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-iron-500',
       },
     },
     {
       color: 'primary',
       variant: 'link',
       class: {
-        indicator: 'bg-slate-900 dark:bg-slate-100',
-        trigger: 'data-[state=active]:text-slate-900 dark:data-[state=active]:text-slate-100 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-500',
+        indicator: 'bg-stem-900 dark:bg-stem-100',
+        trigger: 'data-[state=active]:text-stem-900 dark:data-[state=active]:text-stem-100 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-iron-500',
       },
     },
   ],

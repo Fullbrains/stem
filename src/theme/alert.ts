@@ -5,8 +5,8 @@ export default {
       variant: 'solid',
       class: {
         root: `
-          text-white dark:text-slate-900
-          bg-slate-900 dark:bg-slate-100
+          text-white dark:text-stem-900
+          bg-stem-900 dark:bg-stem-100
         `,
       },
     },
@@ -16,7 +16,7 @@ export default {
       class: {
         root: `
           text-white dark:text-white
-          bg-slate-600 dark:bg-slate-600
+          bg-stem-600 dark:bg-stem-600
         `,
       },
     },
@@ -25,8 +25,8 @@ export default {
       variant: 'outline',
       class: {
         root: `
-          text-slate-900 dark:text-slate-100
-          ring-slate-900/25 dark:ring-slate-100/25
+          text-stem-900 dark:text-stem-100
+          ring-stem-900/25 dark:ring-stem-100/25
         `,
       },
     },
@@ -35,8 +35,8 @@ export default {
       variant: 'outline',
       class: {
         root: `
-          text-slate-600 dark:text-slate-400
-          ring-slate-500/25 dark:ring-slate-400/25
+          text-stem-600 dark:text-stem-400
+          ring-iron-500/25 dark:ring-iron-400/25
         `,
       },
     },
@@ -45,8 +45,8 @@ export default {
       variant: 'soft',
       class: {
         root: `
-          text-gray-800 dark:text-gray-200
-          bg-slate-400/20
+          text-muto-800 dark:text-muto-200
+          bg-iron-400/20
         `,
       },
     },
@@ -55,8 +55,8 @@ export default {
       variant: 'soft',
       class: {
         root: `
-          text-gray-800 dark:text-gray-200
-          bg-slate-400/10
+          text-muto-800 dark:text-muto-200
+          bg-iron-400/10
         `,
       },
     },
@@ -65,9 +65,9 @@ export default {
       variant: 'subtle',
       class: {
         root: `
-          text-gray-800 dark:text-gray-200
-          bg-slate-400/20
-          ring-gray-500/30 dark:ring-gray-300/20
+          text-muto-800 dark:text-muto-200
+          bg-iron-400/20
+          ring-muto-500/30 dark:ring-muto-300/20
         `,
       },
     },
@@ -76,9 +76,9 @@ export default {
       variant: 'subtle',
       class: {
         root: `
-          text-gray-800 dark:text-gray-200
-          bg-slate-400/10
-          ring-gray-500/20 dark:ring-gray-300/15
+          text-muto-800 dark:text-muto-200
+          bg-iron-400/10
+          ring-muto-500/20 dark:ring-muto-300/15
         `,
       },
     },

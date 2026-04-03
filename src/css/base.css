@@ -1,5 +1,6 @@
 @import "@fullbrains/vimana";
 @import "./animations.css";
+@import "./colors.css";
 
 :root {
     --font-sans: vimana;
@@ -14,11 +15,11 @@
 }
 
 :root {
-    --ui-border: color-mix(in oklch, var(--color-slate-500) 20%, transparent);
+    --ui-border: color-mix(in oklch, var(--color-iron-500) 20%, transparent);
 }
 
 :root:not(.dark) {
-    --ui-text: var(--color-slate-900);
+    --ui-text: var(--color-stem-900);
 }
 
 .s-overlay {
@@ -35,13 +36,13 @@
 }
 
 .s-outline {
-    border: 1px solid color-mix(in oklch, var(--color-slate-500) 30%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-iron-500) 30%, transparent);
     border-radius: 6px;
     transition: border-color 200ms, box-shadow 200ms;
 }
 
 .s-outline:hover {
-    border-color: color-mix(in oklch, var(--color-slate-500) 50%, transparent);
+    border-color: color-mix(in oklch, var(--color-iron-500) 50%, transparent);
 }
 
 .s-outline-hover {
@@ -51,6 +52,6 @@
 .s-outline-focus,
 .s-outline-focus-within:focus-within,
 .s-outline-hover:hover {
-    border: 1px solid color-mix(in oklch, var(--color-slate-500) 80%, transparent);
-    box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--color-slate-500) 20%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-iron-500) 80%, transparent);
+    box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--color-iron-500) 20%, transparent);
 }

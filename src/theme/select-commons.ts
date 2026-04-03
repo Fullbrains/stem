@@ -2,7 +2,7 @@ import {sizes} from './sizes'
 import {menuItemSizes} from './menu-items'
 
 export const selectOutlineHover = [
-  {color: 'primary', variant: 'outline', class: {base: 'hover:bg-slate-500/5'}},
+  {color: 'primary', variant: 'outline', class: {base: 'hover:bg-iron-500/5'}},
   {color: 'error', variant: 'outline', class: {base: 'hover:bg-rose-500/5'}},
   {color: 'success', variant: 'outline', class: {base: 'hover:bg-emerald-500/5'}},
 ]
@@ -18,9 +18,9 @@ export const selectOpenRing = [
     variant: ['outline', 'subtle'],
     class: {
       base: `
-      focus:border-slate-500/80! data-[state=open]:border-slate-500/80!
+      focus:border-iron-500/80! data-[state=open]:border-iron-500/80!
       ${openRingShadow}
-      focus:shadow-slate-500/20! data-[state=open]:shadow-slate-500/20!
+      focus:shadow-iron-500/20! data-[state=open]:shadow-iron-500/20!
     `
     },
   },

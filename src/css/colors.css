@@ -1,0 +1,50 @@
+/*
+ * Stem custom color palettes — dark mode overrides (runtime CSS)
+ * The @theme static block (palette registration) is injected into ui.css
+ * by the Stem Nuxt module at build time (see src/module.ts).
+ *
+ * stem  → primary   (light: tar,   dark: zinc)
+ * iron  → secondary (light: slate, dark: gray)
+ * muto  → neutral   (light: gray,  dark: gray)
+ */
+
+.dark {
+    /* stem — dark: zinc */
+    --color-stem-50: oklch(98.5% 0 0);
+    --color-stem-100: oklch(96.7% 0.001 286.375);
+    --color-stem-200: oklch(92% 0.004 286.32);
+    --color-stem-300: oklch(87.1% 0.006 286.286);
+    --color-stem-400: oklch(70.5% 0.015 286.067);
+    --color-stem-500: oklch(55.2% 0.016 285.938);
+    --color-stem-600: oklch(44.2% 0.017 285.786);
+    --color-stem-700: oklch(37% 0.013 285.805);
+    --color-stem-800: oklch(27.4% 0.006 286.033);
+    --color-stem-900: oklch(21% 0.006 285.885);
+    --color-stem-950: oklch(14.1% 0.005 285.823);
+
+    /* iron — dark: gray */
+    --color-iron-50: oklch(98.5% 0 0);
+    --color-iron-100: oklch(96.7% 0.001 286.375);
+    --color-iron-200: oklch(92% 0.004 286.32);
+    --color-iron-300: oklch(87.1% 0.006 286.286);
+    --color-iron-400: oklch(70.5% 0.015 286.067);
+    --color-iron-500: oklch(55.2% 0.016 285.938);
+    --color-iron-600: oklch(44.2% 0.017 285.786);
+    --color-iron-700: oklch(37% 0.013 285.805);
+    --color-iron-800: oklch(27.4% 0.006 286.033);
+    --color-iron-900: oklch(21% 0.006 285.885);
+    --color-iron-950: oklch(14.1% 0.005 285.823);
+
+    /* muto — dark: gray (same as light) */
+    --color-muto-50: oklch(98.5% 0 0);
+    --color-muto-100: oklch(96.7% 0.001 286.375);
+    --color-muto-200: oklch(92% 0.004 286.32);
+    --color-muto-300: oklch(87.1% 0.006 286.286);
+    --color-muto-400: oklch(70.5% 0.015 286.067);
+    --color-muto-500: oklch(55.2% 0.016 285.938);
+    --color-muto-600: oklch(44.2% 0.017 285.786);
+    --color-muto-700: oklch(37% 0.013 285.805);
+    --color-muto-800: oklch(27.4% 0.006 286.033);
+    --color-muto-900: oklch(21% 0.006 285.885);
+    --color-muto-950: oklch(14.1% 0.005 285.823);
+}

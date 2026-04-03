@@ -16,7 +16,7 @@ export default defineNuxtModule({
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
     for (const [key, value] of Object.entries(stemAppConfig.ui)) {
       if (key === 'colors') {
-        // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'slate').
+        // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'iron').
         // Using Object.assign ensures Stem values win over getDefaultConfig() values.
         nuxt.options.appConfig.ui[key] = Object.assign(nuxt.options.appConfig.ui[key] || {}, value)
       } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
@@ -63,17 +63,19 @@ export default defineNuxtModule({
       getContents: () => `<div class="${blob}"></div>`,
     })
 
-    // Append @source to the Nuxt UI generated ui.css so Tailwind picks up stem classes
+    // Append @source and @theme (color palettes) to the Nuxt UI generated ui.css
     const stemComponents = resolve('./components')
+    const colorsThemeCss = resolve('./css/colors-theme.css')
     nuxt.hook('build:before', async () => {
       const {join} = await import('pathe')
       const {promises: fs} = await import('fs')
       const uiCss = join(nuxt.options.buildDir, 'ui.css')
       try {
         const content = await fs.readFile(uiCss, 'utf-8')
-        const sources = `\n/* Stem */\n@source "${stemComponents}";\n@source "./${classesFile.filename}";\n`
         if (!content.includes('/* Stem */')) {
-          await fs.writeFile(uiCss, sources + content, 'utf-8')
+          const colorsTheme = await fs.readFile(colorsThemeCss, 'utf-8')
+          const injection = `\n/* Stem */\n@source "${stemComponents}";\n@source "./${classesFile.filename}";\n${colorsTheme}\n`
+          await fs.writeFile(uiCss, injection + content, 'utf-8')
         }
       } catch {
       }
