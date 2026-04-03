@@ -22,9 +22,9 @@ export default {
       variant: 'solid',
       class: `
         text-white dark:text-white
-        bg-stem-600 dark:bg-stem-600
-        hover:bg-muto-500 dark:hover:bg-muto-200
-        active:bg-muto-600 dark:active:bg-muto-300
+        bg-muto-600 dark:bg-muto-600
+        hover:bg-muto-500 dark:hover:bg-muto-700
+        active:bg-muto-600 dark:active:bg-muto-600
         disabled:bg-muto-600 dark:disabled:bg-muto-300
         focus-visible:outline-muto-400
       `,
