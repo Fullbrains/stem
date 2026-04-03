@@ -114,7 +114,7 @@ export const sizes = {
     // primary solid
     { color: 'primary', variant: 'solid', class: 'text-white dark:text-stem-900 bg-stem-900 dark:bg-stem-100 hover:bg-stem-800 dark:hover:bg-stem-300 active:bg-stem-900 dark:active:bg-stem-100 disabled:bg-stem-900 dark:disabled:bg-stem-100 focus-visible:outline-iron-500' },
     // neutral solid
-    { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-stem-600 dark:bg-stem-600 hover:bg-muto-500 dark:hover:bg-muto-200 active:bg-muto-600 dark:active:bg-muto-300 disabled:bg-muto-600 dark:disabled:bg-muto-300 focus-visible:outline-muto-400' },
+    { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-muto-600 dark:bg-muto-600 hover:bg-muto-500 dark:hover:bg-muto-700 active:bg-muto-600 dark:active:bg-muto-600 disabled:bg-muto-600 dark:disabled:bg-muto-300 focus-visible:outline-muto-400' },
     // secondary solid (inverse of primary: white bg in light, dark bg in dark)
     { color: 'secondary', variant: 'solid', class: 'text-(--ui-text) dark:text-iron-100 bg-white dark:bg-iron-800 hover:bg-iron-50 dark:hover:bg-iron-700 active:bg-white dark:active:bg-iron-800 disabled:bg-white dark:disabled:bg-iron-800 focus-visible:outline-iron-400' },
     // error solid
