@@ -134,8 +134,11 @@ watch(() => scrollRef.value, async () => {
   height: var(--s-fade-size);
   background: linear-gradient(to bottom,
   var(--s-fade-color) 0%,
-  color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
-  color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+  color-mix(in oklab, var(--s-fade-color) 85%, transparent) 10%,
+  color-mix(in oklab, var(--s-fade-color) 65%, transparent) 25%,
+  color-mix(in oklab, var(--s-fade-color) 40%, transparent) 45%,
+  color-mix(in oklab, var(--s-fade-color) 20%, transparent) 65%,
+  color-mix(in oklab, var(--s-fade-color) 7%, transparent) 82%,
   transparent 100%
   );
 }
@@ -143,8 +146,11 @@ watch(() => scrollRef.value, async () => {
 .s-scroll-fade--bottom {
   background: linear-gradient(to top,
   var(--s-fade-color) 0%,
-  color-mix(in oklab, var(--s-fade-color) 55%, transparent) 40%,
-  color-mix(in oklab, var(--s-fade-color) 15%, transparent) 70%,
+  color-mix(in oklab, var(--s-fade-color) 85%, transparent) 10%,
+  color-mix(in oklab, var(--s-fade-color) 65%, transparent) 25%,
+  color-mix(in oklab, var(--s-fade-color) 40%, transparent) 45%,
+  color-mix(in oklab, var(--s-fade-color) 20%, transparent) 65%,
+  color-mix(in oklab, var(--s-fade-color) 7%, transparent) 82%,
   transparent 100%
   );
 }
