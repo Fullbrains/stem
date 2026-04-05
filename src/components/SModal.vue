@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<{
   defaultOpen?: boolean
 }>(), {
   side: 'top',
-  size: 'md',
+  size: 'xl',
   header: true,
   closeable: true,
   footer: true,
