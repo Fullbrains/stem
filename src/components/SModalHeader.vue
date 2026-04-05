@@ -25,7 +25,7 @@ const slots = defineSlots<{
   <header
       class="px-6 flex relative shrink-0 w-full"
       :class="[
-      compact ? 'py-3' : 'py-6',
+      compact ? 'py-4' : 'py-6',
       (description || slots.description) ? 'items-start' : 'items-center',
     ]"
   >
@@ -37,13 +37,13 @@ const slots = defineSlots<{
       />
       <div
           v-if="title || slots.title"
-          class="leading-tight block truncate flex items-center gap-[0.4em]"
+          class="leading-tight block truncate flex items-center gap-[0.5em]"
           :class="compact ? 'text-lg' : 'text-2xl'"
       >
         <UIcon
             v-if="icon && compact"
             :name="icon"
-            class="size-[1em] shrink-0"
+            class="size-[1.25em] shrink-0"
         />
         <slot name="title">{{ title }}</slot>
       </div>
