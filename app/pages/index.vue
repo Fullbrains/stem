@@ -501,6 +501,17 @@ onMounted(() => {
               <UBadge v-for="size in sizes" :key="size" :label="size.toUpperCase()" :size="size"/>
             </div>
           </div>
+
+          <!-- Compact -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Compact (SBadge)</h3>
+            <div class="flex flex-wrap items-center gap-3">
+              <SBadge label="Normal" icon="i-ph-tag"/>
+              <SBadge label="Compact" icon="i-ph-tag" compact/>
+              <SBadge label="Compact X" icon="i-ph-tag" compact="x"/>
+              <SBadge label="Compact Y" icon="i-ph-tag" compact="y"/>
+            </div>
+          </div>
         </section>
 
         <!-- ======================================== -->

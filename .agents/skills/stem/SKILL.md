@@ -55,6 +55,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 
 | Instead of... | Use...       | Why |
 |---------------|--------------|-----|
+| `UBadge`      | `SBadge`     | Compact mode for reduced padding |
 | `UButton`     | `SButton`    | Loading spinner, confirm dialogs, disc/rounded/caret modes |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
 | custom spinner | `SSpinner`  | Consistent animated spinner, em-scaled, grow animation |
@@ -72,7 +73,7 @@ Stem components wrap and extend their Nuxt UI counterparts — all original prop
 
 ```ts
 import { SIcon, SSpinner } from '@fullbrains/stem'
-``` For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UBadge`, `UAlert`), use the Nuxt UI component directly — Stem's theme overrides are applied automatically via `app.config.ui`.
+``` For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAlert`), use the Nuxt UI component directly — Stem's theme overrides are applied automatically via `app.config.ui`.
 
 ## Design Conventions
 
@@ -147,6 +148,33 @@ When combining `.s-outline` with `.s-outline-focus-within`, the focus state auto
 Stem uses Phosphor Icons (`@iconify-json/ph`) as its icon set, mapped via `stemIcons` in the config. Format: `i-ph-{name}`.
 
 ## Components
+
+### SBadge
+
+Enhanced badge wrapping `UBadge`. Adds compact mode for reduced padding.
+
+```vue
+<!-- Normal badge -->
+<SBadge label="Status" icon="i-ph-tag" />
+
+<!-- Compact: reduced both axes -->
+<SBadge label="Status" compact />
+
+<!-- Compact X only: reduced horizontal padding -->
+<SBadge label="Status" compact="x" />
+
+<!-- Compact Y only: reduced vertical padding -->
+<SBadge label="Status" compact="y" />
+```
+
+**Props:** `compact` (boolean | 'x' | 'y')
+
+The `compact` prop reduces padding:
+- `true` — reduces both axes (`py-[0.15em]`, `px-[0.5em]`)
+- `"x"` — reduces only horizontal padding (`px-[0.5em]`)
+- `"y"` — reduces only vertical padding (`py-[0.15em]`)
+
+All `UBadge` props are passed through via `$attrs` (e.g., `label`, `icon`, `variant`, `size`, `color`).
 
 ### SButton
 

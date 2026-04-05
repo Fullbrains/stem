@@ -2,6 +2,53 @@
 
 Detailed API for all custom components provided by `@fullbrains/stem`.
 
+## SBadge
+
+Enhanced badge wrapping Nuxt UI's `UBadge`. Adds compact mode for reduced padding.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `compact` | `boolean \| 'x' \| 'y'` | `false` | Reduce padding. `true` = both axes, `'x'` = horizontal only, `'y'` = vertical only |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `leading` | Custom leading content |
+| `default` | Custom badge content |
+| `trailing` | Custom trailing content |
+
+### Inherited
+
+All `UBadge` props are passed through via `$attrs` (e.g., `label`, `icon`, `variant`, `size`, `color`, `avatar`, `leadingIcon`, `trailingIcon`).
+
+### Compact Details
+
+- `compact` or `compact="true"` — `py-[0.15em]! px-[0.5em]!`
+- `compact="x"` — `px-[0.5em]!`
+- `compact="y"` — `py-[0.15em]!`
+
+### Examples
+
+```vue
+<!-- Normal -->
+<SBadge label="Status" icon="i-ph-tag" />
+
+<!-- Compact both axes -->
+<SBadge label="Compact" icon="i-ph-tag" compact />
+
+<!-- Compact horizontal only -->
+<SBadge label="Compact X" compact="x" />
+
+<!-- Compact vertical only -->
+<SBadge label="Compact Y" compact="y" />
+
+<!-- All UBadge props work -->
+<SBadge label="Error" color="error" variant="soft" size="lg" compact />
+```
+
 ## SButton
 
 Enhanced button wrapping Nuxt UI's `UButton`. Provides loading states with animated spinner, confirmation dialogs, disc mode, caret mode, and rounded mode.
@@ -653,7 +700,7 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 // Main entry (@fullbrains/stem)
 export { stem } from './theme'              // Theme objects
 export { stemIcons, stemColors } from './config' // Config
-export { SModal, SModalHeader, SModalFooter, SButton, SConfirmDialog, SSpinner, SIcon } from './components'
+export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmDialog, SSpinner, SIcon } from './components'
 export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker } from './components'
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
 export { useConfirmDialog } from './composables'
