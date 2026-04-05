@@ -799,6 +799,25 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- Compact Header -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Compact Header</h3>
+            <div class="flex flex-wrap gap-3">
+              <SButton
+                  label="Compact"
+                  icon="i-ph-arrows-in"
+                  variant="soft"
+                  @click="openModal({ headerCompact: true, title: 'Compact Header', icon: 'i-ph-gear' })"
+              />
+              <SButton
+                  label="Normal"
+                  icon="i-ph-arrows-out"
+                  variant="soft"
+                  @click="openModal({ title: 'Normal Header', icon: 'i-ph-gear' })"
+              />
+            </div>
+          </div>
+
           <!-- Confirm dialogs -->
           <div>
             <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Confirm dialogs</h3>

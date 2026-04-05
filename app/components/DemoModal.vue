@@ -6,6 +6,7 @@ defineProps<{
   description?: string
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   side?: 'top' | 'right' | 'bottom' | 'left'
+  headerCompact?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -29,6 +30,7 @@ const nestedOpen = ref(false)
       :description="description ?? 'This is a basic SModal powered by USlideover.'"
       :size="size"
       :side="side"
+      :header-compact="headerCompact"
       @close="emit('close')"
       header-separator
   >
