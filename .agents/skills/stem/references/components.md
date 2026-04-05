@@ -150,7 +150,7 @@ Slide-over modal built on Nuxt UI's `USlideover`. Provides a structured layout w
 | `description` | `string` | — | Description text below title |
 | `icon` | `string` | — | Icon displayed above title |
 | `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Slide direction |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full' \| number` | `'md'` | Modal width. Number = exact pixels |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl' \| '5xl' \| '6xl' \| '7xl' \| 'full' \| number` | `'md'` | Modal width. Number = exact pixels |
 | `header` | `boolean` | `true` | Show header section |
 | `closeable` | `boolean` | `true` | Show close button |
 | `footer` | `boolean` | `true` | Show footer section |
@@ -162,14 +162,20 @@ Slide-over modal built on Nuxt UI's `USlideover`. Provides a structured layout w
 
 ### Size Map
 
-| Size | CSS Class |
-|------|-----------|
-| `sm` | `max-w-md` |
-| `md` | `max-w-xl` |
-| `lg` | `max-w-4xl` |
-| `xl` | `max-w-6xl` |
-| `full` | `w-full max-w-full` |
-| number | `width: {n}px` (inline style) |
+| Size | CSS Class | Width |
+|------|-----------|-------|
+| `sm` | `max-w-sm` | 24rem (384px) |
+| `md` | `max-w-md` | 28rem (448px) |
+| `lg` | `max-w-lg` | 32rem (512px) |
+| `xl` | `max-w-xl` | 36rem (576px) |
+| `2xl` | `max-w-2xl` | 42rem (672px) |
+| `3xl` | `max-w-3xl` | 48rem (768px) |
+| `4xl` | `max-w-4xl` | 56rem (896px) |
+| `5xl` | `max-w-5xl` | 64rem (1024px) |
+| `6xl` | `max-w-6xl` | 72rem (1152px) |
+| `7xl` | `max-w-7xl` | 80rem (1280px) |
+| `full` | `w-full max-w-full` | 100% |
+| number | `width: {n}px` | exact pixels |
 
 ### Emits
 
