@@ -1,8 +1,9 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   title?: string
   description?: string
   icon?: string
+  compact?: boolean
   closeable?: boolean
   disabled?: boolean
 }>(), {
@@ -22,21 +23,28 @@ const slots = defineSlots<{
 
 <template>
   <header
-      class="p-6 flex relative shrink-0 w-full"
+      class="px-6 flex relative shrink-0 w-full"
       :class="[
+      compact ? 'py-3' : 'py-6',
       (description || slots.description) ? 'items-start' : 'items-center',
     ]"
   >
     <div class="pr-8 flex flex-col truncate text-base gap-[1em]">
       <UIcon
-          v-if="icon"
+          v-if="icon && !compact"
           :name="icon"
           class="size-10"
       />
       <div
           v-if="title || slots.title"
-          class="text-2xl leading-tight block truncate"
+          class="leading-tight block truncate flex items-center gap-[0.4em]"
+          :class="compact ? 'text-lg' : 'text-2xl'"
       >
+        <UIcon
+            v-if="icon && compact"
+            :name="icon"
+            class="size-[1em] shrink-0"
+        />
         <slot name="title">{{ title }}</slot>
       </div>
       <div

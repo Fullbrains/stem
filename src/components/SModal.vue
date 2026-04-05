@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
   header?: boolean
   closeable?: boolean
   footer?: boolean
+  headerCompact?: boolean
   headerSeparator?: boolean
   footerSeparator?: boolean
   disabled?: boolean
@@ -90,6 +91,7 @@ function handleClose() {
           :title="title"
           :description="description"
           :icon="icon"
+          :compact="headerCompact"
           :separator="headerSeparator"
           :closeable="closeable"
           :disabled="disabled"

@@ -152,6 +152,7 @@ Slide-over modal built on Nuxt UI's `USlideover`. Provides a structured layout w
 | `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Slide direction |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl' \| '5xl' \| '6xl' \| '7xl' \| 'full' \| number` | `'xl'` | Modal width. Number = exact pixels |
 | `header` | `boolean` | `true` | Show header section |
+| `headerCompact` | `boolean` | `false` | Compact header: reduced padding (py-3), smaller title (text-lg), icon inline beside title at 1em |
 | `closeable` | `boolean` | `true` | Show close button |
 | `footer` | `boolean` | `true` | Show footer section |
 | `headerSeparator` | `boolean` | `undefined` | Show separator line below header |
@@ -248,6 +249,7 @@ Internal component used by `SModal`. Renders title, description, icon, and close
 | `title` | `string` | — | Header title |
 | `description` | `string` | — | Description (rendered as HTML) |
 | `icon` | `string` | — | Large icon (size-10) above title |
+| `compact` | `boolean` | `false` | Compact mode: py-3 instead of py-6, text-lg instead of text-2xl, icon inline beside title at size-[1em] |
 | `closeable` | `boolean` | `true` | Show close button |
 | `disabled` | `boolean` | `false` | Disable close button |
 
