@@ -1,12 +1,14 @@
 export default {
   slots: {
     base: 'cursor-pointer',
+    label: 'cursor-pointer',
   },
   compoundVariants: [
     {
       color: 'primary',
       class: {
-        base: 'data-[state=checked]:bg-stem-900 dark:data-[state=checked]:bg-stem-100 focus-visible:outline-iron-500',
+        indicator: 'bg-stem-900 dark:bg-stem-100',
+        base: 'focus-visible:outline-iron-500',
       },
     },
   ],

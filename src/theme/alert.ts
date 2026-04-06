@@ -21,6 +21,16 @@ export default {
       },
     },
     {
+      color: 'secondary',
+      variant: 'solid',
+      class: {
+        root: `
+          text-(--ui-text) dark:text-iron-100
+          bg-white dark:bg-iron-800
+        `,
+      },
+    },
+    {
       color: 'primary',
       variant: 'outline',
       class: {

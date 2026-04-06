@@ -1,6 +1,6 @@
 ---
 name: stem
-description: This skill should be used when the user works with @fullbrains/stem, a Nuxt module that extends Nuxt UI v4 with opinionated theming, custom components (SButton, SModal, SSpinner), and design conventions. Use when adding stem to a project, configuring its theme, using SButton/SModal/SConfirmDialog, customizing Stem's Tailwind Variants overrides, or following Stem's sizing and color conventions.
+description: This skill should be used when the user works with @fullbrains/stem, a Nuxt module that extends Nuxt UI v4 with opinionated theming, custom components (SButton, SModal, SSpinner), and design conventions. Use when adding stem to a project, configuring its theme, using SButton/SModal/SConfirmModal, customizing Stem's Tailwind Variants overrides, or following Stem's sizing and color conventions.
 ---
 
 # @fullbrains/stem
@@ -245,9 +245,21 @@ Slide-over modal built on `USlideover` with header/footer structure.
 
 **Slots:** `title`, `after-header`, `body`, `footer`
 
-### SConfirmDialog
+### SConfirmModal
 
-Used internally by `SButton` via `useConfirmDialog()`. Renders an `SModal` with confirm/cancel buttons.
+Used internally by `SButton` via `useConfirmModal()`. Renders an `SModal` with confirm/cancel buttons.
+
+### SAlertModal
+
+Simple message modal with a single OK button. Used programmatically via `useAlertModal()`.
+
+```ts
+const { alert } = useAlertModal()
+await alert('Operation completed')
+await alert({ title: 'Error', message: 'Something went wrong', icon: 'i-ph-warning', confirmColor: 'error' })
+```
+
+**Props:** `title` (default: 'Info'), `message`, `icon`, `confirmLabel` (default: 'OK'), `confirmColor`
 
 ### SSpinner
 
@@ -424,12 +436,12 @@ Wraps `UScrollArea` with gradient fade overlays at top/bottom edges. Fades appea
 
 **Props:** `fade` (boolean, default: true), `fadeSize` (string, default: '1.5rem'), `fadeColor` (string, default: 'var(--ui-bg)' — auto dark mode). All other props/attrs forwarded to `UScrollArea` (supports `items`, `virtualize`, `orientation`, `ui`).
 
-### useConfirmDialog
+### useConfirmModal
 
 Composable for programmatic confirmation dialogs.
 
 ```ts
-const { confirm } = useConfirmDialog()
+const { confirm } = useConfirmModal()
 
 await confirm({
   title: 'Delete item?',
@@ -451,12 +463,24 @@ await confirm({
 })
 ```
 
+### useAlertModal
+
+Composable for programmatic alert/message modals.
+
+```ts
+const { alert } = useAlertModal()
+
+await alert('Simple message')
+await alert({ title: 'Error', message: 'Something went wrong', icon: 'i-ph-warning', confirmColor: 'error' })
+```
+
 ## Theme Overrides
 
 Stem overrides these Nuxt UI component themes via `app.config.ui`:
 
 - **avatar** — Custom bg (bg-slate-500/10), fallback text with leading-normal instead of leading-none
 - **button** — Hardcoded slate primary/secondary/neutral colors, em-based sizing, rounded-[8px], cursor-pointer, smooth transitions
+- **checkbox** — Primary indicator uses stem-900/stem-100 to match button solid colors
 - **input / textarea** — Custom placeholder colors, rounded-[6px], shadow-based focus rings (not outline), border-based outline variant
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
 - **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), proportional delete button

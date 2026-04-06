@@ -102,6 +102,23 @@ export const sizes = {
 }
 ```
 
+## Checkbox Theme
+
+```ts
+// src/theme/checkbox.ts
+{
+  compoundVariants: [
+    {
+      color: 'primary',
+      class: {
+        indicator: 'bg-stem-900 dark:bg-stem-100',
+        base: 'focus-visible:outline-iron-500',
+      },
+    },
+  ],
+}
+```
+
 ## Button Theme
 
 ```ts

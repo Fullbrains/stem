@@ -95,7 +95,7 @@ All `UButton` props are passed through via `$attrs` (e.g., `variant`, `size`, `c
 
 - **Loading**: When `loading` is true, the icon slot shows an `SSpinner` with a smooth grow-in animation. Click events are suppressed.
 - **Icon animation**: The leading icon/spinner container uses `max-w` transition. When no icon and not loading, it collapses to `max-w-0` with negative margin to eliminate gap.
-- **Confirm flow**: When `onConfirm` is provided, click is intercepted with `stopPropagation()`, and `useConfirmDialog()` opens a modal. The `click` event is NOT emitted.
+- **Confirm flow**: When `onConfirm` is provided, click is intercepted with `stopPropagation()`, and `useConfirmModal()` opens a modal. The `click` event is NOT emitted.
 - **Disc mode**: Sets `rounded-full`, `min-h-0!`, `p-[0.3em]!`. Label and trailing icon are not passed to `UButton`.
 
 ### Examples
@@ -274,9 +274,9 @@ Internal component used by `SModal`. Renders footer with responsive button layou
 - Mobile: buttons are full-width, stacked vertically
 - Desktop (sm+): buttons are inline, auto-width, with horizontal padding `1.5em`
 
-## SConfirmDialog
+## SConfirmModal
 
-Confirmation dialog used internally by `SButton` when `onConfirm` is provided. Can also be used programmatically via `useConfirmDialog()`.
+Confirmation dialog used internally by `SButton` when `onConfirm` is provided. Can also be used programmatically via `useConfirmModal()`.
 
 ### Props
 
@@ -298,6 +298,62 @@ Confirmation dialog used internally by `SButton` when `onConfirm` is provided. C
 - On confirm success, emits `close(true)`
 - On cancel or close, emits `close(false)`
 - When `confirmMatch` is provided, a `UInput` appears between the description and footer. The confirm button stays disabled until the typed value matches exactly (case-sensitive). Enter key submits when match is valid.
+
+## SAlertModal
+
+Simple message modal with a single OK button. Used programmatically via `useAlertModal()`.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | `'Info'` | Modal title |
+| `message` | `string` | — | Message body |
+| `icon` | `string` | — | Modal icon |
+| `confirmLabel` | `string` | `'OK'` | Button label |
+| `confirmColor` | `string` | — | Button color |
+
+### Behavior
+
+- Emits `close` when the user clicks OK or closes the modal
+- No loading state, no cancel button — purely informational
+
+## useAlertModal
+
+Composable for programmatic alert/message modals via Nuxt UI's overlay system.
+
+### Usage
+
+```ts
+const { alert } = useAlertModal()
+
+// Simple string message
+await alert('Operation completed')
+
+// Full options
+await alert({
+  title: 'Error',
+  message: 'Something went wrong.',
+  icon: 'i-ph-warning',
+  confirmColor: 'error',
+})
+```
+
+### Options
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `title` | `string` | No | Modal title |
+| `message` | `string` | No | Message body |
+| `icon` | `string` | No | Modal icon |
+| `confirmLabel` | `string` | No | Button label (default: 'OK') |
+| `confirmColor` | `string` | No | Button color |
+
+When called with a string, it is used as the `message`.
+
+### Implementation
+
+Uses `useOverlay()` from Nuxt UI to create and open an `SAlertModal` instance with `destroyOnClose: true`.
 
 ## SSpinner
 
@@ -369,14 +425,14 @@ import { SIcon } from '@fullbrains/stem'
 
 No CSS import needed. Works in any Vue/Nuxt project as long as SVGs are in `assets/icons/`.
 
-## useConfirmDialog
+## useConfirmModal
 
 Composable for programmatic confirmation dialogs via Nuxt UI's overlay system.
 
 ### Usage
 
 ```ts
-const { confirm } = useConfirmDialog()
+const { confirm } = useConfirmModal()
 
 // In an event handler or function:
 await confirm({
@@ -407,7 +463,7 @@ await confirm({
 
 ### Implementation
 
-Uses `useOverlay()` from Nuxt UI to create and open an `SConfirmDialog` instance with `destroyOnClose: true`.
+Uses `useOverlay()` from Nuxt UI to create and open an `SConfirmModal` instance with `destroyOnClose: true`.
 
 ## SScrollArea
 
@@ -708,10 +764,11 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 // Main entry (@fullbrains/stem)
 export { stem } from './theme'              // Theme objects
 export { stemIcons, stemColors } from './config' // Config
-export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmDialog, SSpinner, SIcon } from './components'
+export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmModal, SAlertModal, SSpinner, SIcon } from './components'
 export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker } from './components'
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
-export { useConfirmDialog } from './composables'
+export { useConfirmModal } from './composables'
+export { useAlertModal } from './composables'
 
 // Nuxt module (@fullbrains/stem/nuxt)
 // Auto-registers everything above

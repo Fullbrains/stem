@@ -1,9 +1,9 @@
 import {useOverlay} from '#imports'
 import {defineAsyncComponent} from 'vue'
 
-const SConfirmDialog = defineAsyncComponent(() => import('../components/SConfirmDialog.vue'))
+const SConfirmModal = defineAsyncComponent(() => import('../components/SConfirmModal.vue'))
 
-export function useConfirmDialog() {
+export function useConfirmModal() {
   const overlay = useOverlay()
 
   async function confirm(options: {
@@ -17,7 +17,7 @@ export function useConfirmDialog() {
     confirmPlaceholder?: string
     onConfirm: () => Promise<void> | void
   }) {
-    const modal = overlay.create(SConfirmDialog, {
+    const modal = overlay.create(SConfirmModal, {
       destroyOnClose: true,
     })
 

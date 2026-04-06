@@ -43,6 +43,7 @@ const inputMenuItems = [
 const inputMenuValue = ref('')
 
 const sections = [
+  {id: 'checkbox', label: 'Checkbox & Switch'},
   {id: 'buttons', label: 'Buttons'},
   {id: 'inputs', label: 'Inputs'},
   {id: 'dropdown-menu', label: 'DropdownMenu'},
@@ -61,6 +62,7 @@ const sections = [
 ]
 
 const overlay = useOverlay()
+const {alert} = useAlertModal()
 
 function openModal(props?: Record<string, any>) {
   const modal = overlay.create(resolveComponent('DemoModal'), {
@@ -224,6 +226,28 @@ onMounted(() => {
             Component showcase — Nuxt UI v4 themed with @fullbrains/stem
           </p>
         </header>
+
+        <!-- ======================================== -->
+        <!-- Checkbox & Switch                        -->
+        <!-- ======================================== -->
+        <section id="checkbox" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Checkbox & Switch
+          </h2>
+          <div class="flex flex-wrap items-center gap-8">
+            <div class="flex items-center gap-4">
+              <UCheckbox label="Primary" default-value />
+              <UCheckbox label="Unchecked" />
+              <UCheckbox label="Disabled" disabled default-value />
+            </div>
+            <div class="flex items-center gap-4">
+              <USwitch label="Primary" default-value size="sm" />
+              <USwitch label="Off" size="sm" />
+              <USwitch label="Disabled" disabled default-value size="sm" />
+            </div>
+            <SButton label="Button (color reference)" size="sm" />
+          </div>
+        </section>
 
         <!-- ======================================== -->
         <!-- Buttons                                  -->
@@ -818,9 +842,35 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- Alert modals -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Alert modals</h3>
+            <div class="flex flex-wrap gap-3">
+              <SButton
+                  label="Simple alert"
+                  icon="i-ph-info"
+                  variant="soft"
+                  @click="alert('Operation completed successfully.')"
+              />
+              <SButton
+                  label="Error alert"
+                  icon="i-ph-warning-circle"
+                  variant="soft"
+                  color="error"
+                  @click="alert({ title: 'Error', message: 'Something went wrong. Please try again.', icon: 'i-ph-warning-circle', confirmColor: 'error' })"
+              />
+              <SButton
+                  label="Custom title"
+                  icon="i-ph-chat-circle-text"
+                  variant="soft"
+                  @click="alert({ title: 'Welcome!', message: 'Thanks for trying out Stem.', icon: 'i-ph-hand-waving' })"
+              />
+            </div>
+          </div>
+
           <!-- Confirm dialogs -->
           <div>
-            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Confirm dialogs</h3>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Confirm modals</h3>
             <div class="flex flex-wrap gap-3">
               <SButton
                   label="Delete item"

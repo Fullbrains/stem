@@ -14,9 +14,11 @@ import alert from './alert'
 import popover from './popover'
 import _switch from './switch'
 import avatar from './avatar'
+import checkbox from './checkbox'
 
 export const stem = {
   avatar,
+  checkbox,
   button,
   input,
   textarea,

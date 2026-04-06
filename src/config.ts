@@ -4,7 +4,7 @@ export const stemIcons = {
   arrowRight: 'i-ph-arrow-right',
   arrowUp: 'i-ph-arrow-up',
   caution: 'i-ph-warning-circle',
-  check: 'i-ph-check',
+  check: 'i-ph-check-bold',
   chevronDoubleLeft: 'i-ph-caret-double-left',
   chevronDoubleRight: 'i-ph-caret-double-right',
   chevronDown: 'i-ph-caret-down',

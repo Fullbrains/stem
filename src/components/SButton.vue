@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {useConfirmDialog} from '../composables/useConfirmDialog'
+import {useConfirmModal} from '../composables/useConfirmModal'
 
 const props = defineProps<{
   icon?: string
@@ -27,7 +27,7 @@ const emit = defineEmits<{
   click: [e: MouseEvent]
 }>()
 
-const {confirm} = useConfirmDialog()
+const {confirm} = useConfirmModal()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
