@@ -30,5 +30,3 @@ export type StemIconLoader = (name: string) => Promise<string | null> | string |
  * ```
  */
 export const STEM_ICON_LOADER: InjectionKey<StemIconLoader> = Symbol('stem:icon-loader')
-</content>
-</invoke>
