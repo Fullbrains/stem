@@ -375,7 +375,9 @@ SVG-based animated loading spinner. Uses CSS keyframe animations for rotation an
 
 ## SIcon
 
-Loads local SVG files from the project's `assets/icons/` directory and renders them inline. SVG fills/strokes set to `black`/`#000`/`#000000` are automatically remapped to `currentColor`.
+Renders a local SVG file inline, inheriting `currentColor`. Fills/strokes set to `black`/`#000`/`#000000` are automatically remapped to `currentColor`.
+
+SIcon does not bundle any icons and does not read from any fixed directory. The host application provides a `StemIconLoader` via the `STEM_ICON_LOADER` Vue injection key. SIcon calls that loader with the `name` prop and renders whatever SVG string it returns.
 
 Does not depend on Nuxt UI or the Stem module — can be imported standalone in any Vue/Nuxt project.
 
@@ -383,7 +385,7 @@ Does not depend on Nuxt UI or the Stem module — can be imported standalone in 
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | (required) | Path relative to `assets/icons/`, without `.svg` extension. Supports subdirectories (e.g., `brand/logo`) |
+| `name` | `string` | (required) | Icon identifier passed to the injected loader. Typically a path relative to `assets/icons/` without the `.svg` extension, including subdirectories (e.g., `brand/logo`) |
 | `proportional` | `boolean` | `false` | SVG fills its container (width: 100%, height: 100%) |
 | `constrained` | `boolean` | `false` | Prevents SVG expansion in flex containers (Safari fix — sets width: auto) |
 
@@ -395,7 +397,29 @@ Does not depend on Nuxt UI or the Stem module — can be imported standalone in 
 
 ### How it works
 
-Uses `import.meta.glob('assets/icons/**/**.svg', { query: '?raw' })` to lazy-load SVGs at build time. The glob is resolved in the consuming project's context, so SVG files must live in the consumer's `assets/icons/` directory.
+`SIcon` injects a loader function from the Vue context using the `STEM_ICON_LOADER` key exported by `@fullbrains/stem/icon-loader`. When `name` changes, SIcon awaits `loader(name)` and inlines the returned SVG string. If no loader is provided, SIcon renders nothing and still emits `ready`.
+
+This indirection lets the host project own the icon folder and its Vite glob, so SVGs are resolved relative to the consumer (not to the Stem package).
+
+### Providing a loader (Nuxt example)
+
+```ts
+// app/plugins/stem-icons.ts
+import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
+
+const icons = import.meta.glob('~/assets/icons/**/*.svg', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const loader: StemIconLoader = async (name) => {
+    const match = Object.entries(icons).find(([path]) => path.endsWith(`/${name}.svg`))
+    return match ? await match[1]() : null
+  }
+  nuxtApp.vueApp.provide(STEM_ICON_LOADER, loader)
+})
+```
 
 ### Examples
 
@@ -420,10 +444,11 @@ Uses `import.meta.glob('assets/icons/**/**.svg', { query: '?raw' })` to lazy-loa
 ### Standalone usage
 
 ```ts
-import { SIcon } from '@fullbrains/stem'
+import SIcon from '@fullbrains/stem/components/SIcon'
+import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
 ```
 
-No CSS import needed. Works in any Vue/Nuxt project as long as SVGs are in `assets/icons/`.
+No CSS import needed. Works in any Vue/Nuxt project once a loader is provided via `STEM_ICON_LOADER`.
 
 ## useConfirmModal
 
@@ -765,14 +790,22 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 export { stem } from './theme'              // Theme objects
 export { stemIcons, stemColors } from './config' // Config
 export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmModal, SAlertModal, SSpinner, SIcon } from './components'
-export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker } from './components'
+export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker, SScrollArea } from './components'
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
 export { useConfirmModal } from './composables'
 export { useAlertModal } from './composables'
+export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
 
 // Nuxt module (@fullbrains/stem/nuxt)
 // Auto-registers everything above
 
 // Theme only (@fullbrains/stem/theme)
 export { stem } from './theme'
+
+// Icon loader only (@fullbrains/stem/icon-loader)
+export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
+
+// Standalone components (no Nuxt module required)
+import SIcon from '@fullbrains/stem/components/SIcon'
+import SSpinner from '@fullbrains/stem/components/SSpinner'
 ```

@@ -1,11 +1,14 @@
 {
   "name": "@fullbrains/stem",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./nuxt": "./src/module.ts",
-    "./theme": "./src/theme/index.ts"
+    "./theme": "./src/theme/index.ts",
+    "./icon-loader": "./src/icon-loader.ts",
+    "./components/SIcon": "./src/components/SIcon.vue",
+    "./components/SSpinner": "./src/components/SSpinner.vue"
   },
   "main": "./src/index.ts",
   "files": [

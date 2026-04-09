@@ -1,54 +1,52 @@
-<template>
-  <span
-      :class="{ 's-icon--prop': proportional, 's-icon--constrained': constrained }"
-      class="s-icon"
-      v-html="source"
-  />
-</template>
+<script setup lang="ts">
+import { inject, nextTick, onMounted, ref, watch } from 'vue'
+import { STEM_ICON_LOADER, type StemIconLoader } from '../icon-loader'
 
-<script>
-export default {
-  props: {
-    name: {type: String, required: true},
-    proportional: {type: Boolean, default: false},
-    constrained: {type: Boolean, default: false}
-  },
-  emits: ['ready'],
-  data() {
-    return {
-      source: ''
+const props = withDefaults(defineProps<{
+  name: string
+  proportional?: boolean
+  constrained?: boolean
+}>(), {
+  proportional: false,
+  constrained: false,
+})
+
+const emit = defineEmits<{
+  ready: []
+}>()
+
+const source = ref('')
+
+const injectedLoader = inject<StemIconLoader | null>(STEM_ICON_LOADER, null)
+
+async function load() {
+  try {
+    if (injectedLoader) {
+      const svg = await injectedLoader(props.name)
+      source.value = svg ?? ''
     }
-  },
-  watch: {
-    name() {
-      this.load()
+    else {
+      source.value = ''
     }
-  },
-  mounted() {
-    this.load()
-  },
-  methods: {
-    async load() {
-      try {
-        const iconsImport = import.meta.glob('assets/icons/**/**.svg', {
-          query: '?raw',
-          import: 'default',
-          eager: false
-        })
-        const loader = iconsImport[`/assets/icons/${this.name}.svg`]
-        if (loader) {
-          this.source = await loader()
-        }
-        this.$nextTick(() => {
-          this.$emit('ready')
-        })
-      } catch {
-        this.$emit('ready') // Emetti comunque per non bloccare
-      }
-    }
+    await nextTick()
+    emit('ready')
+  }
+  catch {
+    emit('ready')
   }
 }
+
+watch(() => props.name, load)
+onMounted(load)
 </script>
+
+<template>
+  <span
+    :class="{ 's-icon--prop': proportional, 's-icon--constrained': constrained }"
+    class="s-icon"
+    v-html="source"
+  />
+</template>
 
 <style>
 .s-icon {

@@ -59,7 +59,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `UButton`     | `SButton`    | Loading spinner, confirm dialogs, disc/rounded/caret modes |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
 | custom spinner | `SSpinner`  | Consistent animated spinner, em-scaled, grow animation |
-| `UIcon` (for local SVGs) | `SIcon` | Loads SVGs from `assets/icons/`, inherits currentColor, proportional mode |
+| `UIcon` (for local SVGs) | `SIcon` | Inline SVG rendering with currentColor, proportional mode, loader provided by the consumer app |
 | custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters, multi-select, sort order |
 | empty state placeholder | `SEmpty` | Icon + label + action slot, vertical/horizontal orientation, golden rule sizes |
 | `UColorPicker` (inline) | `SColorPicker` | Hex input + swatch + popover picker, variant/color/size/disabled matching Stem inputs |
@@ -69,11 +69,35 @@ Stem components wrap and extend their Nuxt UI counterparts — all original prop
 
 ### Standalone usage (without Stem module)
 
-`SIcon` and `SSpinner` can be imported directly without registering the Stem Nuxt module. Both are fully self-contained with no external CSS dependencies:
+`SIcon` and `SSpinner` can be imported directly without registering the Stem Nuxt module. Dedicated subpath exports let consumers import only what they need:
 
 ```ts
-import { SIcon, SSpinner } from '@fullbrains/stem'
-``` For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAlert`), use the Nuxt UI component directly — Stem's theme overrides are applied automatically via `app.config.ui`.
+import SIcon from '@fullbrains/stem/components/SIcon'
+import SSpinner from '@fullbrains/stem/components/SSpinner'
+import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
+```
+
+`SSpinner` is fully self-contained. `SIcon` needs a loader provided by the consumer — the icons live in the host project, not in Stem. Typical Nuxt setup via a plugin:
+
+```ts
+// app/plugins/stem-icons.ts
+import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
+
+const icons = import.meta.glob('~/assets/icons/**/*.svg', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const loader: StemIconLoader = async (name) => {
+    const match = Object.entries(icons).find(([path]) => path.endsWith(`/${name}.svg`))
+    return match ? await match[1]() : null
+  }
+  nuxtApp.vueApp.provide(STEM_ICON_LOADER, loader)
+})
+```
+
+For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAlert`), use the Nuxt UI component directly — Stem's theme overrides are applied automatically via `app.config.ui`.
 
 ## Design Conventions
 
@@ -273,12 +297,12 @@ SVG-based animated spinner. Scales with `em` units by default.
 
 ### SIcon
 
-Loads local SVG icons from the project's `assets/icons/` directory. Renders them inline so they inherit `currentColor`. Does not require Stem as a Nuxt module — can be imported standalone in any Vue/Nuxt project.
+Renders a local SVG icon inline so it inherits `currentColor`. SIcon does not bundle any icons — it resolves them through a `StemIconLoader` provided by the host app via `STEM_ICON_LOADER` (see *Standalone usage*). Does not require Stem as a Nuxt module.
 
 ```vue
 <!-- Standalone import (no Stem module needed) -->
 <script setup>
-import { SIcon } from '@fullbrains/stem'
+import SIcon from '@fullbrains/stem/components/SIcon'
 </script>
 
 <!-- Auto-registered when Stem module is active -->
@@ -287,7 +311,7 @@ import { SIcon } from '@fullbrains/stem'
 <SIcon name="ui/arrow" proportional constrained />
 ```
 
-**Props:** `name` (required — path relative to `assets/icons/`, without `.svg`), `proportional` (SVG fills container), `constrained` (prevents SVG expansion in flex — Safari fix)
+**Props:** `name` (required — icon identifier resolved by the injected loader, typically a path relative to `assets/icons/` without `.svg`), `proportional` (SVG fills container), `constrained` (prevents SVG expansion in flex — Safari fix)
 
 **Emits:** `ready` — emitted after SVG loads (or on error, to avoid blocking)
 

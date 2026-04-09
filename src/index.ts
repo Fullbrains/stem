@@ -26,3 +26,6 @@ export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSear
 // Composables
 export { useConfirmModal } from './composables/useConfirmModal'
 export { useAlertModal } from './composables/useAlertModal'
+
+// Icon loader (used by SIcon via provide/inject)
+export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
