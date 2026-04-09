@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { inject, nextTick, onMounted, ref, watch } from 'vue'
-import { STEM_ICON_LOADER, type StemIconLoader } from '../icon-loader'
+import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
 
 const props = withDefaults(defineProps<{
   name: string
