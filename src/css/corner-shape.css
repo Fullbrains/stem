@@ -1,0 +1,114 @@
+/* s-rounded-* — border-radius with superellipse corner-shape.
+   Each class sets a base radius; when corner-shape is supported,
+   superellipse(1.5) is applied with a ×1.5 radius compensation. */
+
+.s-rounded-sm {
+    border-radius: 6px;
+}
+
+.s-rounded-md {
+    border-radius: 8px;
+}
+
+.s-rounded-lg {
+    border-radius: 10px;
+}
+
+.s-rounded-xl {
+    border-radius: 12px;
+}
+
+.s-rounded-2xl {
+    border-radius: 16px;
+}
+
+.s-rounded-pill {
+    border-radius: 20px;
+}
+
+@supports (corner-shape: squircle) {
+    .s-rounded-sm {
+        border-radius: 9px;
+        corner-shape: superellipse(1.5);
+    }
+
+    .s-rounded-md {
+        border-radius: 12px;
+        corner-shape: superellipse(1.5);
+    }
+
+    .s-rounded-lg {
+        border-radius: 15px;
+        corner-shape: superellipse(1.5);
+    }
+
+    .s-rounded-xl {
+        border-radius: 18px;
+        corner-shape: superellipse(1.5);
+    }
+
+    .s-rounded-2xl {
+        border-radius: 24px;
+        corner-shape: superellipse(1.5);
+    }
+
+    .s-rounded-pill {
+        border-radius: 30px;
+        corner-shape: superellipse(1.5);
+    }
+
+    /* Reset: rounded-full must never have corner-shape */
+    .rounded-full {
+        border-radius: 9999px !important;
+        corner-shape: initial;
+    }
+
+    /* Standalone corner-shape utilities */
+    .s-corner-squircle {
+        corner-shape: squircle;
+    }
+
+    .s-corner-bevel {
+        corner-shape: bevel;
+    }
+
+    .s-corner-scoop {
+        corner-shape: scoop;
+    }
+
+    .s-corner-notch {
+        corner-shape: notch;
+    }
+
+    .s-corner-round {
+        corner-shape: round;
+    }
+
+    .s-corner-superellipse-2 {
+        corner-shape: superellipse(2);
+    }
+
+    .s-corner-superellipse-3 {
+        corner-shape: superellipse(3);
+    }
+
+    .s-corner-superellipse-4 {
+        corner-shape: superellipse(4);
+    }
+
+    .s-corner-superellipse-5 {
+        corner-shape: superellipse(5);
+    }
+
+    .s-corner-superellipse-6 {
+        corner-shape: superellipse(6);
+    }
+
+    .s-corner-superellipse-8 {
+        corner-shape: superellipse(8);
+    }
+
+    .s-corner-superellipse-10 {
+        corner-shape: superellipse(10);
+    }
+}

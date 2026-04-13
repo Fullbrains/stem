@@ -1,6 +1,7 @@
 @import "@fullbrains/vimana";
 @import "./animations.css";
 @import "./colors.css";
+@import "./corner-shape.css";
 
 :root {
     --font-sans: vimana;
@@ -39,6 +40,13 @@
     border: 1px solid color-mix(in oklch, var(--color-iron-500) 30%, transparent);
     border-radius: 6px;
     transition: border-color 200ms, box-shadow 200ms;
+}
+
+@supports (corner-shape: squircle) {
+    .s-outline {
+        border-radius: 9px;
+        corner-shape: superellipse(1.5);
+    }
 }
 
 .s-outline:hover {

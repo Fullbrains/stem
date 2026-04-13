@@ -125,7 +125,7 @@ export const sizes = {
 // src/theme/button.ts
 {
   slots: {
-    base: 'cursor-pointer select-none rounded-[8px] transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
+    base: 'cursor-pointer select-none s-rounded-md transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
   },
   compoundVariants: [
     // primary solid
@@ -152,7 +152,7 @@ export const sizes = {
 
 ```ts
 // src/theme/input-commons.ts
-const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none rounded-[6px] py-[0.5em]! transition duration-200'
+const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-rounded-sm py-[0.5em]! transition duration-200'
 
 const inputSlots = {
   base: inputBase,
@@ -291,7 +291,7 @@ Focus ring uses `has-focus-visible:` instead of `focus-visible:` since focus is 
 ```ts
 // src/theme/menu-items.ts
 const menuItemSlots = {
-  content: 's-floating-menu rounded-lg',
+  content: 's-floating-menu s-rounded-lg',
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
   itemLeadingIcon: 'text-highlighted',
@@ -338,7 +338,7 @@ Select and SelectMenu add on top of input commons:
 ```ts
 // src/theme/popover.ts
 {
-  slots: { content: 's-floating-menu rounded-lg ring-0' },
+  slots: { content: 's-floating-menu s-rounded-lg ring-0' },
 }
 ```
 
@@ -349,7 +349,7 @@ Select and SelectMenu add on top of input commons:
 {
   slots: {
     overlay: 'fixed inset-0 bg-neutral-800/90 backdrop-blur-sm',
-    content: 'p-0 divide-y-0 !rounded-xl',
+    content: 'p-0 divide-y-0 s-rounded-xl',
     body: '!p-0',
     header: 'flex-shrink-0',
     footer: 'flex-shrink-0',
@@ -363,12 +363,30 @@ Select and SelectMenu add on top of input commons:
 }
 ```
 
+## Corner Shape — superellipse utilities
+
+`src/css/corner-shape.css` provides `s-rounded-*` classes that combine `border-radius` with `corner-shape: superellipse(1.5)` via `@supports (corner-shape: squircle)`. The @supports radius is ×1.5 the base to compensate for superellipse's tighter visual curve.
+
+| Class | Base radius | @supports radius |
+|-------|-------------|-----------------|
+| `s-rounded-sm` | 6px | 9px |
+| `s-rounded-md` | 8px | 12px |
+| `s-rounded-lg` | 10px | 15px |
+| `s-rounded-xl` | 12px | 18px |
+| `s-rounded-2xl` | 16px | 24px |
+| `s-rounded-pill` | 20px | 30px |
+
+**Important:** `.rounded-full` is explicitly reset inside `@supports` (`border-radius: 9999px !important; corner-shape: initial`) so circles/pills (badges, disc buttons, rounded buttons, tags) are never affected.
+
+Standalone `s-corner-*` utilities are also available: `s-corner-squircle`, `s-corner-bevel`, `s-corner-scoop`, `s-corner-notch`, `s-corner-round`, `s-corner-superellipse-{2..10}`.
+
 ## CSS: base.css
 
 ```css
 @import "@fullbrains/vimana";       /* Font theme */
 @import "./animations.css";          /* Modal animations */
 @import "./colors.css";              /* Dark mode palette overrides */
+@import "./corner-shape.css";        /* s-rounded-* + s-corner-* utilities */
 
 :root { --font-sans: vimana; }
 

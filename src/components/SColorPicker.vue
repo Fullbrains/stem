@@ -142,7 +142,7 @@ const popoverContentStyle = computed(() => {
         sideOffset: 6,
       }"
       :ui="{
-        content: 's-floating-menu rounded-[8px] ring-0',
+        content: 's-floating-menu s-rounded-md ring-0',
       }"
   >
     <div

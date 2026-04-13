@@ -1,7 +1,7 @@
 export default {
   slots: {
     overlay: 'fixed inset-0 bg-neutral-800/90 backdrop-blur-sm',
-    content: 'p-0 divide-y-0 !rounded-xl',
+    content: 'p-0 divide-y-0 s-rounded-xl',
     body: '!p-0',
     header: 'flex-shrink-0',
     footer: 'flex-shrink-0',
