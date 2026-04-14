@@ -1,5 +1,5 @@
 export default {
   slots: {
-    content: 's-floating-menu s-rounded-lg ring-0',
+    content: 's-floating-menu s-corner [--s-radius:10px] ring-0',
   },
 }

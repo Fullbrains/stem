@@ -15,10 +15,12 @@ import popover from './popover'
 import _switch from './switch'
 import avatar from './avatar'
 import checkbox from './checkbox'
+import fieldGroup from './field-group'
 
 export const stem = {
   avatar,
   checkbox,
+  fieldGroup,
   button,
   input,
   textarea,

@@ -1,69 +1,45 @@
-/* s-rounded-* — border-radius with superellipse corner-shape.
-   Each class sets a base radius; when corner-shape is supported,
-   superellipse(1.5) is applied with a ×1.5 radius compensation. */
+/* s-corner — superellipse corner-shape with automatic radius compensation.
+   Set --s-radius on the element (e.g. [--s-radius:8px]) and add class s-corner.
+   Base: border-radius = var(--s-radius).
+   @supports: border-radius = var(--s-radius) * 1.5, corner-shape = superellipse(1.5). */
 
-.s-rounded-sm {
-    border-radius: 6px;
-}
-
-.s-rounded-md {
-    border-radius: 8px;
-}
-
-.s-rounded-lg {
-    border-radius: 10px;
-}
-
-.s-rounded-xl {
-    border-radius: 12px;
-}
-
-.s-rounded-2xl {
-    border-radius: 16px;
-}
-
-.s-rounded-pill {
-    border-radius: 20px;
+.s-corner {
+    border-radius: var(--s-radius);
 }
 
 @supports (corner-shape: squircle) {
-    .s-rounded-sm {
-        border-radius: 9px;
+    .s-corner {
+        border-radius: calc(var(--s-radius) * 1.5);
         corner-shape: superellipse(1.5);
     }
 
-    .s-rounded-md {
-        border-radius: 12px;
-        corner-shape: superellipse(1.5);
+    /* s-field-group: reset inner corners for grouped elements */
+    .s-field-group > :not(:only-child):first-child .s-corner,
+    .s-field-group > :not(:only-child):first-child.s-corner {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
     }
 
-    .s-rounded-lg {
-        border-radius: 15px;
-        corner-shape: superellipse(1.5);
+    .s-field-group > :not(:only-child):last-child .s-corner,
+    .s-field-group > :not(:only-child):last-child.s-corner {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
     }
 
-    .s-rounded-xl {
-        border-radius: 18px;
-        corner-shape: superellipse(1.5);
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .s-corner,
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child).s-corner {
+        border-radius: 0;
     }
 
-    .s-rounded-2xl {
-        border-radius: 24px;
-        corner-shape: superellipse(1.5);
-    }
-
-    .s-rounded-pill {
-        border-radius: 30px;
-        corner-shape: superellipse(1.5);
-    }
-
-    /* Reset: rounded-full must never have corner-shape */
+    /* rounded-full must never have corner-shape */
     .rounded-full {
         border-radius: 9999px !important;
-        corner-shape: initial;
+        corner-shape: initial !important;
     }
+}
 
-    /* Standalone corner-shape utilities */
+/* Standalone corner-shape utilities */
+@supports (corner-shape: squircle) {
     .s-corner-squircle {
         corner-shape: squircle;
     }

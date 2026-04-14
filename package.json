@@ -1,6 +1,6 @@
 {
   "name": "@fullbrains/stem",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -15,7 +15,7 @@
     "src"
   ],
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "rm -rf .nuxt node_modules/.cache node_modules/.vite && nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview"

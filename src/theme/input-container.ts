@@ -19,7 +19,7 @@ export const inputIconColors: Record<InputColor, string> = {
   success: 'text-emerald-500/80',
 }
 
-const common = 'ring-0 s-rounded-sm transition duration-200'
+const common = 'ring-0 s-corner [--s-radius:6px] transition duration-200'
 
 export const inputContainerClasses: Record<InputColor, Record<InputVariant, ContainerClasses>> = {
   primary: {

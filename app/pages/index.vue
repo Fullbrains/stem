@@ -337,6 +337,33 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- FieldGroup -->
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">FieldGroup</h3>
+            <div class="flex flex-wrap items-center gap-6">
+              <UFieldGroup>
+                <SButton label="Saved" variant="solid"/>
+                <SButton icon="i-ph-caret-down" variant="solid"/>
+              </UFieldGroup>
+
+              <UFieldGroup>
+                <SButton label="Edit" icon="i-ph-pencil" variant="soft"/>
+                <SButton label="Delete" icon="i-ph-trash" variant="soft" color="error"/>
+              </UFieldGroup>
+
+              <UFieldGroup>
+                <SButton label="Left" variant="subtle"/>
+                <SButton label="Center" variant="subtle"/>
+                <SButton label="Right" variant="subtle"/>
+              </UFieldGroup>
+
+              <UFieldGroup>
+                <UInput placeholder="Search..." variant="outline" color="primary"/>
+                <SButton icon="i-ph-magnifying-glass" variant="solid"/>
+              </UFieldGroup>
+            </div>
+          </div>
+
 
         </section>
 

@@ -1,5 +1,5 @@
 export const menuItemSlots = {
-  content: 's-floating-menu s-rounded-lg',
+  content: 's-floating-menu s-corner [--s-radius:10px]',
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
   itemLeadingIcon: '',

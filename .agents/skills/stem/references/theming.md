@@ -125,7 +125,7 @@ export const sizes = {
 // src/theme/button.ts
 {
   slots: {
-    base: 'cursor-pointer select-none s-rounded-md transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
+    base: 'cursor-pointer select-none s-corner [--s-radius:8px] transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
   },
   compoundVariants: [
     // primary solid
@@ -152,7 +152,7 @@ export const sizes = {
 
 ```ts
 // src/theme/input-commons.ts
-const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-rounded-sm py-[0.5em]! transition duration-200'
+const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-corner [--s-radius:6px] py-[0.5em]! transition duration-200'
 
 const inputSlots = {
   base: inputBase,
@@ -291,7 +291,7 @@ Focus ring uses `has-focus-visible:` instead of `focus-visible:` since focus is 
 ```ts
 // src/theme/menu-items.ts
 const menuItemSlots = {
-  content: 's-floating-menu s-rounded-lg',
+  content: 's-floating-menu s-corner [--s-radius:10px]',
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
   itemLeadingIcon: 'text-highlighted',
@@ -321,6 +321,17 @@ Select and SelectMenu add on top of input commons:
 - Outline hover: subtle background on hover (`hover:bg-iron-500/5`)
 - Combined sizes: merges input sizes with menu item sizes
 
+## FieldGroup Theme
+
+```ts
+// src/theme/field-group.ts
+{
+  base: 's-field-group',
+}
+```
+
+Adds the `s-field-group` class so that `corner-shape.css` can zero out inner corners on grouped elements automatically.
+
 ## FormField Theme
 
 ```ts
@@ -338,7 +349,7 @@ Select and SelectMenu add on top of input commons:
 ```ts
 // src/theme/popover.ts
 {
-  slots: { content: 's-floating-menu s-rounded-lg ring-0' },
+  slots: { content: 's-floating-menu s-corner [--s-radius:10px] ring-0' },
 }
 ```
 
@@ -349,7 +360,7 @@ Select and SelectMenu add on top of input commons:
 {
   slots: {
     overlay: 'fixed inset-0 bg-neutral-800/90 backdrop-blur-sm',
-    content: 'p-0 divide-y-0 s-rounded-xl',
+    content: 'p-0 divide-y-0 s-corner [--s-radius:12px]',
     body: '!p-0',
     header: 'flex-shrink-0',
     footer: 'flex-shrink-0',
@@ -363,22 +374,59 @@ Select and SelectMenu add on top of input commons:
 }
 ```
 
-## Corner Shape — superellipse utilities
+## Corner Shape — superellipse via `s-corner` + `--s-radius`
 
-`src/css/corner-shape.css` provides `s-rounded-*` classes that combine `border-radius` with `corner-shape: superellipse(1.5)` via `@supports (corner-shape: squircle)`. The @supports radius is ×1.5 the base to compensate for superellipse's tighter visual curve.
+`src/css/corner-shape.css` provides the `s-corner` class system for superellipse corners via `@supports (corner-shape: squircle)`.
 
-| Class | Base radius | @supports radius |
-|-------|-------------|-----------------|
-| `s-rounded-sm` | 6px | 9px |
-| `s-rounded-md` | 8px | 12px |
-| `s-rounded-lg` | 10px | 15px |
-| `s-rounded-xl` | 12px | 18px |
-| `s-rounded-2xl` | 16px | 24px |
-| `s-rounded-pill` | 20px | 30px |
+### How it works
 
-**Important:** `.rounded-full` is explicitly reset inside `@supports` (`border-radius: 9999px !important; corner-shape: initial`) so circles/pills (badges, disc buttons, rounded buttons, tags) are never affected.
+Add class `s-corner` and set `--s-radius` on the element:
 
-Standalone `s-corner-*` utilities are also available: `s-corner-squircle`, `s-corner-bevel`, `s-corner-scoop`, `s-corner-notch`, `s-corner-round`, `s-corner-superellipse-{2..10}`.
+```html
+<div class="s-corner [--s-radius:8px]">...</div>
+```
+
+- **Base**: `border-radius: var(--s-radius)`
+- **@supports**: `border-radius: calc(var(--s-radius) * 1.5); corner-shape: superellipse(1.5);`
+
+The ×1.5 multiplier compensates for superellipse's tighter visual curve.
+
+### Usage in Stem themes
+
+| Component | Radius |
+|-----------|--------|
+| Button | `s-corner [--s-radius:8px]` |
+| Inputs (input, select, textarea, inputTags) | `s-corner [--s-radius:6px]` |
+| Input container (SColorPicker) | `s-corner [--s-radius:6px]` |
+| Floating menus (dropdown, select, inputMenu) | `s-corner [--s-radius:10px]` |
+| Popover | `s-corner [--s-radius:10px]` |
+| Slideover | `s-corner [--s-radius:12px]` |
+| SModal | `s-corner [--s-radius:16px]` |
+| SColorPicker popover | `s-corner [--s-radius:8px]` |
+
+### UFieldGroup support — `s-field-group`
+
+The `fieldGroup` theme adds `s-field-group` to the base class automatically. CSS in `corner-shape.css` handles zeroing inner corners for grouped elements:
+
+```css
+@supports (corner-shape: squircle) {
+    .s-field-group > :not(:only-child):first-child .s-corner { border-start-end-radius: 0; border-end-end-radius: 0; }
+    .s-field-group > :not(:only-child):last-child .s-corner { border-start-start-radius: 0; border-end-start-radius: 0; }
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .s-corner { border-radius: 0; }
+}
+```
+
+### rounded-full protection
+
+`.rounded-full` is explicitly reset inside `@supports` so circles/pills (badges, disc buttons, rounded buttons, tags) are never affected:
+
+```css
+.rounded-full { border-radius: 9999px !important; corner-shape: initial !important; }
+```
+
+### Standalone `s-corner-*` utilities
+
+Also available: `s-corner-squircle`, `s-corner-bevel`, `s-corner-scoop`, `s-corner-notch`, `s-corner-round`, `s-corner-superellipse-{2..10}`.
 
 ## CSS: base.css
 
@@ -386,7 +434,7 @@ Standalone `s-corner-*` utilities are also available: `s-corner-squircle`, `s-co
 @import "@fullbrains/vimana";       /* Font theme */
 @import "./animations.css";          /* Modal animations */
 @import "./colors.css";              /* Dark mode palette overrides */
-@import "./corner-shape.css";        /* s-rounded-* + s-corner-* utilities */
+@import "./corner-shape.css";        /* s-corner + s-corner-* utilities */
 
 :root { --font-sans: vimana; }
 

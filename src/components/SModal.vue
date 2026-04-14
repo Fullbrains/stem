@@ -58,7 +58,7 @@ const sizeClasses = computed(() => {
 const uiConfig = computed(() => {
   const classes = typeof sizeClasses.value === 'string' ? sizeClasses.value : ''
   return {
-    content: [classes, 'ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-rounded-2xl'],
+    content: [classes, 'ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-corner [--s-radius:16px]'],
     header: 'block px-0 sm:px-0 py-0 min-h-auto',
     body: '!p-0',
     footer: 'px-0 sm:px-0 py-0',
