@@ -361,6 +361,17 @@ onMounted(() => {
                 <UInput placeholder="Search..." variant="outline" color="primary"/>
                 <SButton icon="i-ph-magnifying-glass" variant="solid"/>
               </UFieldGroup>
+
+              <UFieldGroup>
+                <SButton label="Prev" icon="i-ph-caret-left" rounded variant="soft"/>
+                <SButton label="Next" trailing-icon="i-ph-caret-right" rounded variant="soft"/>
+              </UFieldGroup>
+
+              <UFieldGroup>
+                <SButton icon="i-ph-text-align-left" rounded disc variant="subtle"/>
+                <SButton icon="i-ph-text-align-center" rounded disc variant="subtle"/>
+                <SButton icon="i-ph-text-align-right" rounded disc variant="subtle"/>
+              </UFieldGroup>
             </div>
           </div>
 

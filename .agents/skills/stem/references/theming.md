@@ -410,9 +410,14 @@ The `fieldGroup` theme adds `s-field-group` to the base class automatically. CSS
 
 ```css
 @supports (corner-shape: squircle) {
+    /* s-corner elements */
     .s-field-group > :not(:only-child):first-child .s-corner { border-start-end-radius: 0; border-end-end-radius: 0; }
     .s-field-group > :not(:only-child):last-child .s-corner { border-start-start-radius: 0; border-end-start-radius: 0; }
     .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .s-corner { border-radius: 0; }
+    /* rounded-full elements (e.g. SButton rounded/disc) — !important to beat global reset */
+    .s-field-group > :not(:only-child):first-child .rounded-full { border-start-end-radius: 0 !important; border-end-end-radius: 0 !important; }
+    .s-field-group > :not(:only-child):last-child .rounded-full { border-start-start-radius: 0 !important; border-end-start-radius: 0 !important; }
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .rounded-full { border-radius: 0 !important; }
 }
 ```
 

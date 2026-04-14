@@ -36,6 +36,24 @@
         border-radius: 9999px !important;
         corner-shape: initial !important;
     }
+
+    /* s-field-group: reset inner corners for rounded-full elements (after global reset so !important wins) */
+    .s-field-group > :not(:only-child):first-child .rounded-full,
+    .s-field-group > :not(:only-child):first-child.rounded-full {
+        border-start-end-radius: 0 !important;
+        border-end-end-radius: 0 !important;
+    }
+
+    .s-field-group > :not(:only-child):last-child .rounded-full,
+    .s-field-group > :not(:only-child):last-child.rounded-full {
+        border-start-start-radius: 0 !important;
+        border-end-start-radius: 0 !important;
+    }
+
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .rounded-full,
+    .s-field-group > :not(:only-child):not(:first-child):not(:last-child).rounded-full {
+        border-radius: 0 !important;
+    }
 }
 
 /* Standalone corner-shape utilities */
