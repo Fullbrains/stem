@@ -1,14 +1,36 @@
-import {defineNuxtModule, addComponentsDir, addImportsDir, addTemplate, createResolver} from '@nuxt/kit'
+import {defineNuxtModule, addComponentsDir, addImportsDir, addTemplate, createResolver, installModule} from '@nuxt/kit'
 import {defu} from 'defu'
 import {stemAppConfig} from './stem-config'
+import type {StemStandaloneOptions} from './standalone'
 
-export default defineNuxtModule({
+export interface StemModuleOptions {
+  /**
+   * Directory containing the project's SVG icons, resolvable by `<SIcon>`.
+   * Forwarded to the Stem standalone sub-module.
+   *
+   * Default: `'assets/icons'`.
+   */
+  iconsDir?: string
+}
+
+export default defineNuxtModule<StemModuleOptions>({
   meta: {
     name: '@fullbrains/stem',
     configKey: 'stem',
   },
-  setup(_options, nuxt) {
+  defaults: {
+    iconsDir: 'assets/icons',
+  },
+  async setup(options, nuxt) {
     const {resolve} = createResolver(import.meta.url)
+
+    // Install the standalone sub-module so SIcon/SSpinner get registered and
+    // the icon loader gets provided to the app. Kept here so projects that use
+    // the full Stem module don't need to register two modules separately.
+    const standaloneOptions: StemStandaloneOptions = {
+      iconsDir: options.iconsDir,
+    }
+    await installModule(resolve('./standalone'), standaloneOptions)
 
     // Inject Stem theme on top of Nuxt UI defaults.
     // At runtime, Nuxt re-applies the user's app.config.ts via defuFn(userConfig, inlineConfig),

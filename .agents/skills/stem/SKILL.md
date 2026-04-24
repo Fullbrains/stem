@@ -25,6 +25,17 @@ export default defineNuxtConfig({
 
 `@fullbrains/stem/nuxt` must come after `@nuxt/ui` in the modules array. Once registered, Stem auto-registers its components, composables, theme overrides, icons, and CSS. No manual import needed.
 
+By default the module expects the project's SVG icons in `assets/icons` (i.e. `app/assets/icons` in a standard Nuxt 4 project). Override with:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui', '@fullbrains/stem/nuxt'],
+  stem: {iconsDir: 'app/assets/my-icons'},
+})
+```
+
+Internally, the full module delegates icon handling to the Stem **standalone** sub-module described below.
+
 ### CSS setup
 
 Stem injects its own CSS (fonts via `@fullbrains/vimana`, animations, base styles) before the app's CSS, so app-level overrides always win.
@@ -67,9 +78,37 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 
 Stem components wrap and extend their Nuxt UI counterparts — all original props/attrs are passed through.
 
-### Standalone usage (without Stem module)
+### Standalone usage (without Nuxt UI)
 
-`SIcon` and `SSpinner` can be imported directly without registering the Stem Nuxt module. Dedicated subpath exports let consumers import only what they need:
+For Nuxt projects that do **not** use `@nuxt/ui` but still want Stem's standalone components (today: `SIcon`, `SSpinner`; more to come), register the dedicated sub-module:
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@fullbrains/stem/standalone'],
+})
+```
+
+This:
+- Auto-registers `SIcon` and `SSpinner` as global components.
+- Generates a plugin that globs `<srcDir>/assets/icons/**/*.svg` and provides the loader `SIcon` needs.
+
+Override the icons directory with:
+
+```ts
+modules: [
+  ['@fullbrains/stem/standalone', {iconsDir: 'app/assets/my-icons'}],
+]
+// or
+modules: ['@fullbrains/stem/standalone'],
+stemStandalone: {iconsDir: 'app/assets/my-icons'},
+```
+
+The sub-module is the canonical home for every Stem component that does **not** depend on `@nuxt/ui`. Projects that use the full `@fullbrains/stem/nuxt` module get it installed transitively — no need to register both.
+
+### Manual integration (fallback)
+
+If the sub-module doesn't fit (non-Nuxt app, custom icon source like a CDN, etc.), the individual pieces remain importable via subpath exports:
 
 ```ts
 import SIcon from '@fullbrains/stem/components/SIcon'
@@ -77,7 +116,7 @@ import SSpinner from '@fullbrains/stem/components/SSpinner'
 import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
 ```
 
-`SSpinner` is fully self-contained. `SIcon` needs a loader provided by the consumer — the icons live in the host project, not in Stem. Typical Nuxt setup via a plugin:
+`SSpinner` is fully self-contained. `SIcon` needs a loader provided by the consumer — typical Nuxt setup via a hand-written plugin:
 
 ```ts
 // app/plugins/stem-icons.ts
@@ -96,6 +135,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.provide(STEM_ICON_LOADER, loader)
 })
 ```
+
+Prefer the sub-module approach whenever possible — this manual pattern exists for edge cases.
 
 For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAlert`), use the Nuxt UI component directly — Stem's theme overrides are applied automatically via `app.config.ui`.
 
