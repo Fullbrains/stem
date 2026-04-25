@@ -25,12 +25,12 @@ export default defineNuxtConfig({
 
 `@fullbrains/stem/nuxt` must come after `@nuxt/ui` in the modules array. Once registered, Stem auto-registers its components, composables, theme overrides, icons, and CSS. No manual import needed.
 
-By default the module expects the project's SVG icons in `assets/icons` (i.e. `app/assets/icons` in a standard Nuxt 4 project). Override with:
+By default the module expects the project's SVG icons in `assets/icons` (resolved relative to `srcDir`, so `app/assets/icons` in a standard Nuxt 4 project). Override with a path **relative to `srcDir`**:
 
 ```ts
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@fullbrains/stem/nuxt'],
-  stem: {iconsDir: 'app/assets/my-icons'},
+  stem: {iconsDir: 'assets/my-icons'},  // → <srcDir>/assets/my-icons
 })
 ```
 
@@ -93,15 +93,15 @@ This:
 - Auto-registers `SIcon` and `SSpinner` as global components.
 - Generates a plugin that globs `<srcDir>/assets/icons/**/*.svg` and provides the loader `SIcon` needs.
 
-Override the icons directory with:
+Override the icons directory (path **relative to `srcDir`**):
 
 ```ts
 modules: [
-  ['@fullbrains/stem/standalone', {iconsDir: 'app/assets/my-icons'}],
+  ['@fullbrains/stem/standalone', {iconsDir: 'assets/my-icons'}],
 ]
 // or
 modules: ['@fullbrains/stem/standalone'],
-stemStandalone: {iconsDir: 'app/assets/my-icons'},
+stemStandalone: {iconsDir: 'assets/my-icons'},
 ```
 
 The sub-module is the canonical home for every Stem component that does **not** depend on `@nuxt/ui`. Projects that use the full `@fullbrains/stem/nuxt` module get it installed transitively — no need to register both.

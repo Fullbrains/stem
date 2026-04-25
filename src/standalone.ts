@@ -1,5 +1,4 @@
 import {addComponent, addPluginTemplate, createResolver, defineNuxtModule} from '@nuxt/kit'
-import {join} from 'node:path'
 
 export interface StemStandaloneOptions {
   /**
@@ -42,7 +41,7 @@ export default defineNuxtModule<StemStandaloneOptions>({
   defaults: {
     iconsDir: 'assets/icons',
   },
-  setup(options, nuxt) {
+  setup(options, _nuxt) {
     const {resolve} = createResolver(import.meta.url)
 
     // Register the standalone components globally. Use a non-zero priority so
@@ -59,14 +58,14 @@ export default defineNuxtModule<StemStandaloneOptions>({
       priority: 10,
     })
 
-    // Resolve the icons directory to an absolute path rooted in the consumer
-    // project. We intentionally avoid relying on Nuxt aliases (`~`, `@`) —
-    // `import.meta.glob` is parsed by Vite statically and does not expand
-    // aliases, so the emitted plugin must contain a literal absolute path.
-    // Vite always uses forward slashes for glob keys, so we normalize here
-    // to keep the path comparison in the plugin working on Windows too.
-    const srcDir = nuxt.options.srcDir || nuxt.options.rootDir
-    const iconsAbsPath = join(srcDir, options.iconsDir!).replace(/\\/g, '/')
+    // Build the glob pattern as project-root-relative for Vite. With
+    // `@nuxt/vite-builder` the Vite project root is set to `srcDir`, so a
+    // pattern starting with `/` resolves relative to `srcDir`. Since
+    // `iconsDir` is already relative to `srcDir`, the resulting pattern is
+    // simply `/<iconsDir>/**/*.svg`. We strip any leading slash to keep the
+    // join unambiguous and use forward slashes regardless of OS.
+    const iconsDirNormalized = options.iconsDir!.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '')
+    const globPattern = `/${iconsDirNormalized}/**/*.svg`
 
     addPluginTemplate({
       filename: 'stem-standalone.plugin.ts',
@@ -74,17 +73,15 @@ export default defineNuxtModule<StemStandaloneOptions>({
       getContents: () => `import {STEM_ICON_LOADER, type StemIconLoader} from '@fullbrains/stem/icon-loader'
 import {defineNuxtPlugin} from '#imports'
 
-// Glob resolved at build time by Vite, relative to the consumer project.
-const icons = import.meta.glob(${JSON.stringify(`${iconsAbsPath}/**/*.svg`)}, {
+// Vite resolves this glob at build time, relative to the consumer project root.
+const icons = import.meta.glob(${JSON.stringify(globPattern)}, {
   query: '?raw',
   import: 'default',
 }) as Record<string, () => Promise<string>>
 
-const ICONS_ROOT = ${JSON.stringify(`${iconsAbsPath}/`)}
-
 const loader: StemIconLoader = async (name) => {
-  const suffix = \`\${ICONS_ROOT}\${name}.svg\`
-  const entry = Object.entries(icons).find(([path]) => path === suffix)
+  const suffix = \`/\${name}.svg\`
+  const entry = Object.entries(icons).find(([path]) => path.endsWith(suffix))
   return entry ? await entry[1]() : null
 }
 
