@@ -1,7 +1,7 @@
 /* s-corner — superellipse corner-shape with automatic radius compensation.
    Set --s-radius on the element (e.g. [--s-radius:8px]) and add class s-corner.
    Base: border-radius = var(--s-radius).
-   @supports: border-radius = var(--s-radius) * 1.5, corner-shape = superellipse(1.5). */
+   @supports: border-radius = var(--s-radius) * 1.33, corner-shape = superellipse(1.33). */
 
 .s-corner {
     border-radius: var(--s-radius);
@@ -9,8 +9,8 @@
 
 @supports (corner-shape: squircle) {
     .s-corner {
-        border-radius: calc(var(--s-radius) * 1.5);
-        corner-shape: superellipse(1.5);
+        border-radius: calc(var(--s-radius) * 1.33);
+        corner-shape: superellipse(1.33);
     }
 
     /* s-field-group: reset inner corners for grouped elements */
