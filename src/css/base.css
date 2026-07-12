@@ -1,11 +1,6 @@
-@import "@fullbrains/vimana";
 @import "./animations.css";
 @import "./colors.css";
 @import "./corner-shape.css";
-
-:root {
-    --font-sans: vimana;
-}
 
 @layer base {
     *, *::before, *::after {
@@ -45,7 +40,7 @@
 @supports (corner-shape: squircle) {
     .s-outline {
         border-radius: 9px;
-        corner-shape: superellipse(1.5);
+        corner-shape: superellipse(1.33);
     }
 }
 

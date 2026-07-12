@@ -1,0 +1,9 @@
+/* Vimana variable font + --font-sans mapping.
+   Caricato dal modulo Stem solo quando l'opzione `fonts` non è false, così i
+   progetti che usano un font custom possono disattivarlo (stem: { fonts: false })
+   ed evitare di scaricare il font base64 di Vimana. */
+@import "@fullbrains/vimana";
+
+:root {
+    --font-sans: vimana;
+}

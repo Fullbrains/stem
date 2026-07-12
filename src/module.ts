@@ -11,6 +11,15 @@ export interface StemModuleOptions {
    * Default: `'assets/icons'`.
    */
   iconsDir?: string
+
+  /**
+   * Load the Vimana variable font and map it to `--font-sans`.
+   * Set to `false` when the project ships its own font, to avoid downloading
+   * Vimana's base64-embedded font (the app can then set `--font-sans` itself).
+   *
+   * Default: `true`.
+   */
+  fonts?: boolean
 }
 
 export default defineNuxtModule<StemModuleOptions>({
@@ -20,6 +29,7 @@ export default defineNuxtModule<StemModuleOptions>({
   },
   defaults: {
     iconsDir: 'assets/icons',
+    fonts: true,
   },
   async setup(options, nuxt) {
     const {resolve} = createResolver(import.meta.url)
@@ -64,8 +74,13 @@ export default defineNuxtModule<StemModuleOptions>({
       config.server.fs.allow.push(stemRoot)
     })
 
-    // Inject Stem's CSS (before app CSS so app can override)
+    // Inject Stem's CSS (before app CSS so app can override).
+    // The Vimana font lives in a separate file loaded only when `fonts` is enabled,
+    // so projects with a custom font can opt out via `stem: { fonts: false }`.
     nuxt.options.css.unshift(resolve('./css/base.css'))
+    if (options.fonts !== false) {
+      nuxt.options.css.unshift(resolve('./css/fonts.css'))
+    }
 
     // Collect all CSS classes from stem theme so Tailwind can generate them.
     // Stem classes are injected via appConfig (not in any scanned source file),
