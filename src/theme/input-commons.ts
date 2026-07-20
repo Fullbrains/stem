@@ -1,6 +1,9 @@
 import {sizes} from './sizes'
 
-export const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-corner [--s-radius:6px] py-[0.5em]! transition duration-200'
+// `outline-none`: Nuxt UI v4.10 moved input focus onto `focus-visible:outline`
+// on top of the existing ring. Stem draws its own focus with a shadow (see
+// inputFocusRing below), so we suppress Nuxt UI's outline to avoid a double ring.
+export const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-corner [--s-radius:6px] py-[0.5em]! transition duration-200 outline-none'
 
 export const inputSlots = {
   base: inputBase,
