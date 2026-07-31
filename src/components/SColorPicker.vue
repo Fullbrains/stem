@@ -203,9 +203,12 @@ const popoverContentStyle = computed(() => {
     </div>
 
     <template #content>
+      <!-- select-none: Nuxt UI's drag handler never preventDefaults pointerdown,
+           so without it, dragging the picker thumb also drags a native text
+           selection across the surrounding page. -->
       <UColorPicker
           :model-value="modelValue"
-          class="p-2"
+          class="p-2 select-none"
           :style="popoverContentStyle"
           :ui="{selector: `grow`}"
           @update:model-value="handleColorPickerUpdate"
