@@ -136,6 +136,16 @@ const searchActiveFilterCount = computed(() => {
   return count
 })
 
+// SearchBar configurator (persisted)
+const searchBarVariants = ['outline', 'soft', 'subtle', 'ghost'] as const
+const sbVariant = useCookie<typeof searchBarVariants[number]>('stem-search-variant', {default: () => 'outline'})
+const sbCompact = useCookie('stem-search-compact', {default: () => false})
+const sbFilters = useCookie('stem-search-filters', {default: () => true})
+const sbMore = useCookie('stem-search-more', {default: () => false})
+const sbTrailing = useCookie('stem-search-trailing', {default: () => false})
+const searchBarIcons = ['i-ph-magnifying-glass', 'i-ph-sparkle', 'i-ph-scales', 'i-ph-book-open'] as const
+const sbIcon = useCookie<typeof searchBarIcons[number]>('stem-search-icon', {default: () => 'i-ph-magnifying-glass'})
+
 // ColorPicker demo
 const colorValue = ref('#3b82f6')
 const colorWithDefault = ref('#ef4444')
@@ -685,6 +695,67 @@ onMounted(() => {
           <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
             Search
           </h2>
+
+          <!-- Controls -->
+          <div class="flex flex-wrap items-center gap-4 rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium uppercase text-neutral-500">Variant</span>
+              <USelectMenu v-model="sbVariant" :items="[...searchBarVariants]" class="w-28" size="xs"/>
+            </div>
+            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
+              <USwitch v-model="sbCompact" size="xs"/>
+              Compact
+            </label>
+            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
+              <USwitch v-model="sbFilters" size="xs"/>
+              Filters
+            </label>
+            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
+              <USwitch v-model="sbMore" size="xs"/>
+              More
+            </label>
+            <label class="flex items-center gap-1.5 text-xs font-medium uppercase text-neutral-500">
+              <USwitch v-model="sbTrailing" size="xs"/>
+              Trailing
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium uppercase text-neutral-500">Icon</span>
+              <USelectMenu v-model="sbIcon" :items="[...searchBarIcons]" :icon="sbIcon" class="w-44" size="xs"/>
+            </div>
+          </div>
+
+          <!-- Playground -->
+          <SSearchBar
+              v-model="searchQuery"
+              :variant="sbVariant"
+              :compact="sbCompact"
+              :icon="sbIcon"
+              placeholder="Search projects..."
+              :active-filter-count="searchActiveFilterCount"
+          >
+            <template v-if="sbFilters" #filters>
+              <SSearchFilter
+                  v-model="searchStatusFilter"
+                  :options="statusOptions"
+                  label="Status"
+              />
+              <SSearchFilter
+                  v-model="searchCategoryFilter"
+                  :options="categoryOptions"
+                  label="Category"
+              />
+            </template>
+            <template v-if="sbMore" #more>
+              <SSearchFilter
+                  v-model="searchCategoryFilter"
+                  :options="categoryOptions"
+                  label="Category"
+              />
+            </template>
+            <template v-if="sbTrailing" #trailing>
+              <SSearchOrder v-model="searchOrder" :options="orderOptions"/>
+            </template>
+          </SSearchBar>
 
           <!-- SearchBar variants -->
           <div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, inject} from 'vue'
+import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
 
 const props = withDefaults(defineProps<{
   leadingIcon?: string
@@ -16,6 +17,10 @@ const props = withDefaults(defineProps<{
   allLabel: 'All',
   selectedTemplate: '% selected',
 })
+
+// Inside a compact SSearchBar the chips tighten too (see searchBarContext).
+const searchBarCompact = inject(SEARCH_BAR_COMPACT, null)
+const tight = computed(() => !!searchBarCompact?.value)
 
 const displayValue = computed(() => {
   if (!props.selectedValues || props.count === undefined) return null
@@ -35,7 +40,10 @@ const displayValue = computed(() => {
       rounded
       compact
       class="select-none"
-      :class="[active ? 'bg-iron-400/30!' : '']"
+      :class="[
+        active ? 'bg-iron-400/30!' : '',
+        tight ? 'py-[0.1em]! min-h-[calc(1lh+0.2em)]!' : '',
+      ]"
   >
     <template v-if="label && displayValue !== null">
       <span class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
