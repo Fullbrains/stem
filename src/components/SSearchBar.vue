@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, toRef, useSlots} from 'vue'
+import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
 
 const modelValue = defineModel<string>({default: ''})
@@ -16,8 +17,14 @@ const props = withDefaults(defineProps<{
   variant: 'outline',
   activeFilterCount: 0,
   compact: false,
-  icon: 'i-ph-magnifying-glass',
 })
+
+const appConfig = useAppConfig()
+
+// The default icon is the `ui.icons.search` token (Nuxt UI convention, seeded
+// by stemIcons), so an app can rebrand every searchbar from its app.config;
+// the prop stays as a per-instance override.
+const searchIcon = computed(() => props.icon ?? appConfig.ui?.icons?.search ?? 'i-ph-magnifying-glass')
 
 provide(SEARCH_BAR_COMPACT, toRef(props, 'compact'))
 
@@ -168,7 +175,7 @@ function clear() {
           :class="{'pl-2 gap-2': compact, 'pl-4 gap-4': !compact}"
       >
         <UIcon
-            :name="icon"
+            :name="searchIcon"
             class="size-4 text-iron-500/80 shrink-0"
         />
         <input
@@ -222,6 +229,7 @@ function clear() {
           rounded
           compact
           class="select-none"
+          :class="{'py-[0.1em]! min-h-[calc(1lh+0.2em)]!': props.compact}"
           @click="mobileExpanded = !mobileExpanded"
       />
     </div>
