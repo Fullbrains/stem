@@ -335,9 +335,12 @@ const items = computed(() => {
         </slot>
       </template>
     </UDropdownMenu>
+    <!-- With alignEnd the width change is NOT animated: the dropdown anchors
+         to the pill's edge and repositions instantly, so an animated reset
+         button would slide under a menu that has already jumped. -->
     <div
-        class="shrink-0 overflow-hidden flex transition-all duration-150"
-        :class="showReset ? 'w-6.5' : 'w-0'"
+        class="shrink-0 overflow-hidden flex"
+        :class="[showReset ? 'w-6.5' : 'w-0', alignEnd ? '' : 'transition-all duration-150']"
     >
       <button
           class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
