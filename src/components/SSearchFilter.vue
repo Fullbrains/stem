@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, ref} from 'vue'
 
 export interface SSearchFilterOption {
   readonly value: string
@@ -15,6 +15,11 @@ export interface SSearchFilterGroup {
 }
 
 const open = defineModel<boolean>('open')
+
+// The menu anchors to the whole PILL (chip + reset button), not to the chip
+// trigger: the pill's edges never move when the reset button animates in and
+// out, so the menu stays put — no jumps, no offset math.
+const rootEl = ref<HTMLElement>()
 
 const props = withDefaults(defineProps<{
   modelValue: Set<string>
@@ -254,13 +259,14 @@ const items = computed(() => {
 
 <template>
   <div
+      ref="rootEl"
       class="flex items-stretch overflow-hidden rounded-full"
       :class="chipClass"
   >
     <UDropdownMenu
         v-model:open="open"
         :items="(items as any)"
-        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const}"
+        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
         :ui="{
         content: contentClass,
         item: 'px-3! min-h-7 py-1! text-sm',
