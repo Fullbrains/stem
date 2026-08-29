@@ -270,6 +270,7 @@ const items = computed(() => {
       <SSearchChip
           :active="open"
           :label="label"
+          :all-label="allLabel"
           :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
           :count="multiple ? totalOptions : Infinity"
           :threshold="threshold"
