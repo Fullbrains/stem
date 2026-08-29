@@ -260,7 +260,7 @@ const items = computed(() => {
     <UDropdownMenu
         v-model:open="open"
         :items="(items as any)"
-        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3}"
+        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const}"
         :ui="{
         content: contentClass,
         item: 'px-3! min-h-7 py-1! text-sm',
@@ -335,12 +335,13 @@ const items = computed(() => {
         </slot>
       </template>
     </UDropdownMenu>
-    <!-- With alignEnd the width change is NOT animated: the dropdown anchors
-         to the pill's edge and repositions instantly, so an animated reset
-         button would slide under a menu that has already jumped. -->
+    <!-- The reset button animates its width; the menu keeps up because the
+         popper uses updatePositionStrategy 'always' (repositioned every
+         animation frame), so an open end-aligned menu glides with the pill
+         instead of jumping. -->
     <div
-        class="shrink-0 overflow-hidden flex"
-        :class="[showReset ? 'w-6.5' : 'w-0', alignEnd ? '' : 'transition-all duration-150']"
+        class="shrink-0 overflow-hidden flex transition-all duration-150"
+        :class="showReset ? 'w-6.5' : 'w-0'"
     >
       <button
           class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
