@@ -39,6 +39,8 @@ const props = withDefaults(defineProps<{
   threshold?: number
   contentClass?: string
   alignEnd?: boolean
+  /** Accessible name of the reset (X) button shown on a partial selection. */
+  resetLabel?: string
 }>(), {
   multiple: true,
   placeholder: 'None selected',
@@ -50,6 +52,7 @@ const props = withDefaults(defineProps<{
   nullIconClass: 'text-(--ui-text-muted)',
   threshold: 3,
   contentClass: 'min-w-48',
+  resetLabel: 'Reset',
 })
 
 const emit = defineEmits<{
@@ -263,13 +266,15 @@ const items = computed(() => {
       class="flex items-stretch overflow-hidden rounded-full"
       :class="chipClass"
   >
+    <!-- size sm: item metrics (36px box, px-2, gap-2, 16px icons) come from
+         the shared menu-items theme instead of local overrides. -->
     <UDropdownMenu
         v-model:open="open"
+        size="sm"
         :items="(items as any)"
         :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
         :ui="{
         content: contentClass,
-        item: 'px-3! min-h-7 py-1! text-sm',
         itemTrailing: 'flex items-center justify-end',
       }"
     >
@@ -285,7 +290,7 @@ const items = computed(() => {
       />
 
       <template #filter-all="{item: _item}">
-        <div class="flex items-center gap-2 w-full py-[0.2em]">
+        <div class="flex items-center gap-2 w-full">
           <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
           <span
               v-if="(_item as any).count != null"
@@ -301,7 +306,7 @@ const items = computed(() => {
       </template>
 
       <template #group-header="{item: _item}">
-        <div class="flex items-center gap-2 w-full cursor-pointer py-[0.2em]">
+        <div class="flex items-center gap-2 w-full cursor-pointer">
           <span class="text-(--ui-text-highlighted) normal-case! flex-1 text-left">
             {{ (_item as any).label }}
           </span>
@@ -316,14 +321,14 @@ const items = computed(() => {
       <template #filter-item="{item: _item}">
         <slot name="item" :option="(_item as any)" :checked="(_item as any).checked">
           <div
-              class="flex items-center gap-2 w-full py-[0.2em]"
+              class="flex items-center gap-2 w-full"
               :class="(_item as any).iconClass"
           >
             <slot name="leading" :option="_item">
               <UIcon
                   v-if="(_item as any).icon"
                   :name="(_item as any).icon"
-                  class="size-5 shrink-0"
+                  class="size-4 shrink-0"
               />
             </slot>
             <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
@@ -352,6 +357,7 @@ const items = computed(() => {
       <button
           class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
           :tabindex="showReset ? 0 : -1"
+          :aria-label="resetLabel"
           @click.stop.prevent="selectAll()"
       >
         <UIcon
