@@ -58,6 +58,15 @@
     border-radius: 0 !important;
 }
 
+/* Bottom-sheet modals: on small screens SModal squares its bottom corners with
+   max-sm:rounded-b-none, which .s-corner's border-radius would otherwise override. */
+@media (width < 40rem) {
+    .max-sm\:rounded-b-none {
+        border-bottom-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+}
+
 /* Standalone corner-shape utilities */
 @supports (corner-shape: squircle) {
     .s-corner-squircle {
