@@ -1,4 +1,5 @@
 import {inputBase, baseCompoundVariants, outlineCommons} from './input-commons'
+import {iconSizeClass} from './icon-sizes'
 import {sizes} from './sizes'
 
 // InputTags uses has-focus-visible (focus is on inner input, not root)
@@ -61,11 +62,11 @@ export default {
       false: {base: 'pr-2.5!'},
     },
     size: {
-      xs: {...sizes.xs, item: 'text-xs', itemDeleteIcon: 'size-3'},
-      sm: {...sizes.sm, item: 'text-sm', itemDeleteIcon: 'size-3.5'},
-      md: {...sizes.md, item: 'text-base', itemDeleteIcon: 'size-4'},
-      lg: {...sizes.lg, item: 'text-lg', itemDeleteIcon: 'size-4.5'},
-      xl: {...sizes.xl, item: 'text-xl', itemDeleteIcon: 'size-5'},
+      xs: {...sizes.xs, item: 'text-xs', itemDeleteIcon: iconSizeClass},
+      sm: {...sizes.sm, item: 'text-sm', itemDeleteIcon: iconSizeClass},
+      md: {...sizes.md, item: 'text-base', itemDeleteIcon: iconSizeClass},
+      lg: {...sizes.lg, item: 'text-lg', itemDeleteIcon: iconSizeClass},
+      xl: {...sizes.xl, item: 'text-xl', itemDeleteIcon: iconSizeClass},
     },
   },
 }

@@ -1,34 +1,26 @@
+import {iconSizeClass, iconSizeFor} from './icon-sizes'
+
+const badgeBase = 'rounded-full px-[0.75em] py-[0.35em] gap-[0.5em]'
+
+function badgeSize(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+  return {
+    base: `${badgeBase} ${text} ${iconSizeFor(token)}`,
+    leadingIcon: iconSizeClass,
+    trailingIcon: iconSizeClass,
+  }
+}
+
 export default {
   slots: {
     base: 'rounded-full font-normal',
   },
   variants: {
     size: {
-      xs: {
-        base: 'rounded-full text-xs px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-3 shrink-0',
-        trailingIcon: 'size-3 shrink-0',
-      },
-      sm: {
-        base: 'rounded-full text-sm px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-3.5 shrink-0',
-        trailingIcon: 'size-3.5 shrink-0',
-      },
-      md: {
-        base: 'rounded-full text-base px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-4 shrink-0',
-        trailingIcon: 'size-4 shrink-0',
-      },
-      lg: {
-        base: 'rounded-full text-lg px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-4.5 shrink-0',
-        trailingIcon: 'size-4.5 shrink-0',
-      },
-      xl: {
-        base: 'rounded-full text-xl px-[0.75em] py-[0.35em] gap-[0.5em]',
-        leadingIcon: 'size-5 shrink-0',
-        trailingIcon: 'size-5 shrink-0',
-      },
+      xs: badgeSize('xs', 'text-xs'),
+      sm: badgeSize('sm', 'text-sm'),
+      md: badgeSize('md', 'text-base'),
+      lg: badgeSize('lg', 'text-lg'),
+      xl: badgeSize('xl', 'text-xl'),
     },
   },
   compoundVariants: [

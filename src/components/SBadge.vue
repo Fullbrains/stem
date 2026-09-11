@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import {computed} from 'vue'
+import {iconSizeStyle} from '../theme/icon-sizes'
 
 const props = defineProps<{
   compact?: boolean | 'x' | 'y'
+  iconSize?: string
 }>()
+
+// Overrides --s-icon-size for this instance; the size variant sets it otherwise.
+const resolvedStyle = computed(() => iconSizeStyle(props.iconSize))
 
 const resolvedUi = computed(() => {
   if (!props.compact) return undefined
@@ -16,7 +21,7 @@ const resolvedUi = computed(() => {
 </script>
 
 <template>
-  <UBadge :ui="resolvedUi">
+  <UBadge :ui="resolvedUi" :style="resolvedStyle">
     <template v-if="$slots.leading" #leading>
       <slot name="leading"/>
     </template>

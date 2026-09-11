@@ -299,7 +299,7 @@ const items = computed(() => {
           <UIcon
               v-if="(_item as any).checked"
               name="i-ph-check"
-              class="size-4"
+              class="size-4 shrink-0"
           />
           <div v-else class="w-4"/>
         </div>
@@ -313,7 +313,7 @@ const items = computed(() => {
           <UIcon
               v-if="(_item as any).checked"
               name="i-ph-check"
-              class="size-4"
+              class="size-4 shrink-0"
           />
         </div>
       </template>
@@ -339,7 +339,7 @@ const items = computed(() => {
             <UIcon
                 v-if="(_item as any).checked"
                 name="i-ph-check"
-                class="size-4"
+                class="size-4 shrink-0"
             />
             <div v-else class="w-4"/>
           </div>
@@ -362,7 +362,7 @@ const items = computed(() => {
       >
         <UIcon
             name="i-ph-x"
-            class="size-3.5 ml-1"
+            class="size-3 shrink-0 ml-1"
         />
       </button>
     </div>

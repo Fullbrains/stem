@@ -17,6 +17,18 @@ import avatar from './avatar'
 import checkbox from './checkbox'
 import fieldGroup from './field-group'
 
+export {
+  iconSizeScale,
+  iconSizeTokens,
+  iconSizes,
+  iconSizeVar,
+  iconSizeClass,
+  iconSizeFor,
+  resolveIconSize,
+  iconSizeStyle,
+  type IconSizeToken,
+} from './icon-sizes'
+
 export const stem = {
   avatar,
   checkbox,

@@ -1,7 +1,21 @@
+import {iconSizeClass, iconSizeFor} from './icon-sizes'
+
+const base = 'px-[1em] py-[0.5em] gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]'
+
+function size(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+  return {
+    // The size token sets --s-icon-size on the root; leading and trailing icons
+    // read it, so an `iconSize` override on the component overrides both at once.
+    base: `${base} ${text} ${iconSizeFor(token)}`,
+    leadingIcon: iconSizeClass,
+    trailingIcon: iconSizeClass,
+  }
+}
+
 export const sizes = {
-  xs: {base: 'px-[1em] py-[0.5em] text-xs gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-3.5', trailingIcon: 'size-3.5'},
-  sm: {base: 'px-[1em] py-[0.5em] text-sm gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-4', trailingIcon: 'size-4'},
-  md: {base: 'px-[1em] py-[0.5em] text-base gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-4.5', trailingIcon: 'size-4.5'},
-  lg: {base: 'px-[1em] py-[0.5em] text-lg gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-5', trailingIcon: 'size-5'},
-  xl: {base: 'px-[1em] py-[0.5em] text-xl gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-5.5', trailingIcon: 'size-5.5'},
+  xs: size('xs', 'text-xs'),
+  sm: size('sm', 'text-sm'),
+  md: size('md', 'text-base'),
+  lg: size('lg', 'text-lg'),
+  xl: size('xl', 'text-xl'),
 }

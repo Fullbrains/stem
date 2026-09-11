@@ -11,6 +11,7 @@ Enhanced badge wrapping Nuxt UI's `UBadge`. Adds compact mode for reduced paddin
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `compact` | `boolean \| 'x' \| 'y'` | `false` | Reduce padding. `true` = both axes, `'x'` = horizontal only, `'y'` = vertical only |
+| `iconSize` | `string` | — | Override the icon size for this badge. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'24px'`, `'1.5em'`). Sets `--s-icon-size`, so leading and trailing icons change together |
 
 ### Slots
 
@@ -47,6 +48,10 @@ All `UBadge` props are passed through via `$attrs` (e.g., `label`, `icon`, `vari
 
 <!-- All UBadge props work -->
 <SBadge label="Error" color="error" variant="soft" size="lg" compact />
+
+<!-- Icon size override -->
+<SBadge label="Tag" icon="i-ph-tag" icon-size="24px" />
+<SBadge label="Tag" icon="i-ph-tag" icon-size="lg" />
 ```
 
 ## SButton
@@ -60,6 +65,7 @@ Enhanced button wrapping Nuxt UI's `UButton`. Provides loading states with anima
 | `icon` | `string` | — | Leading icon name (e.g., `i-ph-check`) |
 | `label` | `string` | — | Button text label |
 | `trailingIcon` | `string` | — | Trailing icon name |
+| `iconSize` | `string` | — | Override the icon size for this button. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'32px'`, `'1.5em'`). Sets `--s-icon-size`, so leading icon, trailing icon and the loading spinner all change together |
 | `caret` | `boolean` | `false` | Show a caret (chevron-down) as trailing icon, pushed to the right with `ml-auto` |
 | `rounded` | `boolean` | `false` | Make button pill-shaped (`rounded-full`) |
 | `disc` | `boolean` | `false` | Circular icon-only button. Removes min-height, hides label and trailing icon, applies uniform `p-[0.3em]` padding |
@@ -93,8 +99,9 @@ All `UButton` props are passed through via `$attrs` (e.g., `variant`, `size`, `c
 
 ### Behavior Details
 
-- **Loading**: When `loading` is true, the icon slot shows an `SSpinner` with a smooth grow-in animation. Click events are suppressed.
-- **Icon animation**: The leading icon/spinner container uses `max-w` transition. When no icon and not loading, it collapses to `max-w-0` with negative margin to eliminate gap.
+- **Loading**: When `loading` is true, the icon slot shows an `SSpinner` with a smooth grow-in animation. Click events are suppressed. The spinner defaults to `var(--s-icon-size, 1em)`, so it occupies exactly the box of the icon it replaces.
+- **Icon sizing**: Icons are rendered with `size-(--s-icon-size) shrink-0` — no hardcoded size. The size variant sets the variable; `iconSize` overrides it per instance.
+- **Icon animation**: The leading icon/spinner container uses `max-w` transition, expanding to `max-w-(--s-icon-size)`. When no icon and not loading, it collapses to `max-w-0` with negative margin to eliminate gap.
 - **Confirm flow**: When `onConfirm` is provided, click is intercepted with `stopPropagation()`, and `useConfirmModal()` opens a modal. The `click` event is NOT emitted.
 - **Disc mode**: Sets `rounded-full`, `min-h-0!`, `p-[0.3em]!`. Label and trailing icon are not passed to `UButton`.
 
@@ -136,6 +143,16 @@ All `UButton` props are passed through via `$attrs` (e.g., `variant`, `size`, `c
 
 <!-- Dropdown trigger with caret -->
 <SButton label="Select option" caret />
+
+<!-- Icon size: follows the component size by default -->
+<SButton icon="i-ph-plus" />
+
+<!-- Icon size: scale token -->
+<SButton icon="i-ph-plus" icon-size="lg" />   <!-- 20px -->
+
+<!-- Icon size: any CSS length -->
+<SButton icon="i-ph-plus" icon-size="32px" />
+<SButton icon="i-ph-plus" icon-size="1.5em" />
 ```
 
 ## SModal
@@ -249,7 +266,7 @@ Internal component used by `SModal`. Renders title, description, icon, and close
 | `title` | `string` | — | Header title |
 | `description` | `string` | — | Description (rendered as HTML) |
 | `icon` | `string` | — | Large icon (size-10) above title |
-| `compact` | `boolean` | `false` | Compact mode: py-3 instead of py-6, text-lg instead of text-2xl, icon inline beside title at size-[1em] |
+| `compact` | `boolean` | `false` | Compact mode: py-3 instead of py-6, text-lg instead of text-2xl, icon inline beside title at `size-6` |
 | `closeable` | `boolean` | `true` | Show close button |
 | `disabled` | `boolean` | `false` | Disable close button |
 
@@ -363,9 +380,15 @@ SVG-based animated loading spinner. Uses CSS keyframe animations for rotation an
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `size` | `string` | `'1em'` | Width and height (supports any CSS unit) |
-| `stroke` | `number` | `2` | Stroke width of the circle |
+| `size` | `string` | `'var(--s-icon-size, 1em)'` | Width and height (supports any CSS unit) |
+| `stroke` | `number` | `1` | Stroke width of the circle |
 | `grow` | `boolean` | `false` | Animate in from 0 width (used by SButton) |
+
+### Sizing
+
+The default reads the ambient `--s-icon-size`, so a spinner swapped in for an icon (as `SButton` does when `loading`) keeps exactly the same box. The `1em` fallback keeps the component standalone-safe: outside the Stem theme, where the variable is unset, it still sizes to the text.
+
+Size is applied via a CSS `style` binding rather than the SVG `width`/`height` attributes, which do not accept `var()`.
 
 ### Animations
 
@@ -700,7 +723,9 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 | `label` | `string` | — | Text label |
 | `loading` | `boolean` | `false` | Show SSpinner instead of icon (same size) |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Text and icon size (follows golden rule) |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Text size (golden rule) and glyph size (dedicated scale below) |
+| `iconSize` | `string` | — | Override the glyph size. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'48px'`, `'3em'`). Applies to both orientations, and to the spinner in `loading` state |
+| `stroke` | `number` | — | Spinner stroke width when `loading` (defaults to `1.5` in vertical orientation) |
 
 ### Slots
 
@@ -709,10 +734,24 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 | `default` | Replaces label for custom text content |
 | `after` | Content after text (e.g., action button) |
 
+### Glyph Scale
+
+The empty-state glyph is an illustration, not an inline icon, so it does **not** follow `--s-icon-size` — it keeps a scale of its own. Horizontal reads as an oversized inline icon; vertical as a proper graphic. Both are built on the same 4px step as the icon scale.
+
+| size | horizontal | vertical |
+|------|-----------|----------|
+| `xs` | 16px | 32px |
+| `sm` | 20px | 40px |
+| `md` | 24px | 48px |
+| `lg` | 28px | 56px |
+| `xl` | 32px | 64px |
+
+`iconSize` overrides either.
+
 ### Behavior
 
-- Vertical: `flex-col items-center text-center`, icon is large (size-8 to size-16), uses light icon variant
-- Horizontal: `flex items-center`, icon is slightly larger than text (size-4.5 to size-8), uses regular icon
+- Vertical: `flex-col items-center text-center`, uses light icon variant
+- Horizontal: `flex items-center`, uses regular icon
 - Text and icon use `text-(--ui-text-muted)` color
 - Gap defaults to `gap-3`, overridable via `class`
 - CSS class `s-empty` on root element
@@ -735,6 +774,9 @@ Empty state placeholder with icon, label, and optional action slot. Supports ver
 
 <!-- Loading state -->
 <SEmpty loading label="Loading..." />
+
+<!-- Explicit glyph size -->
+<SEmpty label="No results" icon-size="80px" />
 ```
 
 ## SColorPicker
@@ -748,6 +790,7 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 | `modelValue` | `string` | — | Hex color value (v-model) |
 | `placeholder` | `string` | — | Input placeholder text |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Size following golden rule |
+| `iconSize` | `string` | — | Override the icon size. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length. Sets `--s-icon-size` on the container, so the caret and reset icons change together. Does not affect the swatch |
 | `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'none'` | `'outline'` | Visual variant matching Stem inputs |
 | `color` | `'primary' \| 'error' \| 'success'` | `'primary'` | Semantic color |
 | `disabled` | `boolean` | `false` | Disable interaction |
@@ -756,7 +799,8 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 
 ### Behavior
 
-- **Swatch**: colored circle on the left, clickable to open color picker popover
+- **Swatch**: colored circle on the left, clickable to open color picker popover. It is a colour sample rather than an icon, so it sits one step above the icon scale — still on the same 4px grid: `xs` 16px, `sm` 16px, `md` 20px, `lg` 24px, `xl` 28px
+- **Icons**: the caret and reset icons read `--s-icon-size`, set on the container by the size variant and overridable with `iconSize`
 - **Text input**: editable hex value, validates on blur/enter. Auto-prepends `#` if missing
 - **Caret**: dropdown toggle button on the right, color follows semantic color (primary=slate, error=rose, success=emerald)
 - **Reset button**: appears when `defaultValue` is set and current value differs; neutral color (not themed)
@@ -789,6 +833,19 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 // Main entry (@fullbrains/stem)
 export { stem } from './theme'              // Theme objects
 export { stemIcons, stemColors } from './config' // Config
+
+// Icon sizing scale
+export {
+  iconSizeScale,      // {sm: '12px', md: '16px', lg: '20px', xl: '24px'}
+  iconSizeTokens,     // ['sm', 'md', 'lg', 'xl']
+  iconSizes,          // iconSizeScale + xs alias (12px)
+  iconSizeVar,        // '--s-icon-size'
+  iconSizeClass,      // 'size-(--s-icon-size) shrink-0'
+  iconSizeFor,        // (size) => '[--s-icon-size:20px]'
+  resolveIconSize,    // (token | CSS length) => CSS length
+  iconSizeStyle,      // (value) => {'--s-icon-size': '...'} | undefined
+  type IconSizeToken,
+} from './theme/icon-sizes'
 export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmModal, SAlertModal, SSpinner, SIcon } from './components'
 export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker, SScrollArea } from './components'
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
@@ -801,6 +858,7 @@ export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
 
 // Theme only (@fullbrains/stem/theme)
 export { stem } from './theme'
+// re-exports the full icon-sizes API listed above
 
 // Icon loader only (@fullbrains/stem/icon-loader)
 export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'

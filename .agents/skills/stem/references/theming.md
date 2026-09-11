@@ -87,18 +87,94 @@ export const stemIcons = {
 }
 ```
 
+## Icon Size Scale
+
+Icon size is decoupled from the component's text size: a size token maps to a fixed pixel value, not a multiple of the font size. One scale, shared by every component.
+
+| token | text | icon |
+|-------|------|------|
+| sm | text-sm | 12px |
+| md | text-base | 16px |
+| lg | text-lg | 20px |
+| xl | text-xl | 24px |
+
+`xs` is not part of the public scale, but is kept as an alias of `sm` (12px) so `size="xs"` — which Nuxt UI still accepts — never ends up with no icon class at all.
+
+```ts
+// src/theme/icon-sizes.ts
+export const iconSizeScale = {
+  sm: '12px',
+  md: '16px',
+  lg: '20px',
+  xl: '24px',
+} as const
+
+export type IconSizeToken = keyof typeof iconSizeScale
+
+/** Public tokens, in ascending order. Excludes the `xs` compatibility alias. */
+export const iconSizeTokens = Object.keys(iconSizeScale) as IconSizeToken[]
+
+/** Every size key a component may receive, including the `xs` alias. */
+export const iconSizes = {
+  xs: iconSizeScale.sm,
+  ...iconSizeScale,
+} as const
+
+export const iconSizeVar = '--s-icon-size'
+
+/** Class that makes an element read its dimensions from `--s-icon-size`. */
+export const iconSizeClass = 'size-(--s-icon-size) shrink-0'
+
+/** Sets `--s-icon-size` for a given size token, as a Tailwind arbitrary property. */
+export function iconSizeFor(size: keyof typeof iconSizes): string {
+  return `[${iconSizeVar}:${iconSizes[size]}]`
+}
+
+/** Resolves an `iconSize` prop (token or CSS length) to a CSS length. */
+export function resolveIconSize(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  return value in iconSizes ? iconSizes[value as keyof typeof iconSizes] : value
+}
+
+/** Inline style that overrides `--s-icon-size`, or undefined when unset. */
+export function iconSizeStyle(value: string | undefined): Record<string, string> | undefined {
+  const resolved = resolveIconSize(value)
+  return resolved ? {[iconSizeVar]: resolved} : undefined
+}
+```
+
+### Mechanism
+
+Components size their icons off the `--s-icon-size` custom property rather than a hardcoded `size-*` class: a single declaration on the root cascades to leading icon, trailing icon and spinner together — and can be overridden per instance via the `iconSize` prop (`SButton`, `SBadge`, `SEmpty`, `SColorPicker`).
+
+Everything above is re-exported from both `@fullbrains/stem` and `@fullbrains/stem/theme`.
+
 ## Shared Sizing System
 
-All components with `size` follow the Golden Rule. The shared `sizes` object:
+All components with `size` follow the Golden Rule for text; icons come from the scale above. The shared `sizes` object:
 
 ```ts
 // src/theme/sizes.ts
+import {iconSizeClass, iconSizeFor} from './icon-sizes'
+
+const base = 'px-[1em] py-[0.5em] gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]'
+
+function size(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+  return {
+    // The size token sets --s-icon-size on the root; leading and trailing icons
+    // read it, so an `iconSize` override on the component overrides both at once.
+    base: `${base} ${text} ${iconSizeFor(token)}`,
+    leadingIcon: iconSizeClass,
+    trailingIcon: iconSizeClass,
+  }
+}
+
 export const sizes = {
-  xs: { base: 'px-[1em] py-[0.5em] text-xs gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-3.5', trailingIcon: 'size-3.5' },
-  sm: { base: 'px-[1em] py-[0.5em] text-sm gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-4', trailingIcon: 'size-4' },
-  md: { base: 'px-[1em] py-[0.5em] text-base gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-4.5', trailingIcon: 'size-4.5' },
-  lg: { base: 'px-[1em] py-[0.5em] text-lg gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-5', trailingIcon: 'size-5' },
-  xl: { base: 'px-[1em] py-[0.5em] text-xl gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]', leadingIcon: 'size-5.5', trailingIcon: 'size-5.5' },
+  xs: size('xs', 'text-xs'),
+  sm: size('sm', 'text-sm'),
+  md: size('md', 'text-base'),
+  lg: size('lg', 'text-lg'),
+  xl: size('xl', 'text-xl'),
 }
 ```
 
@@ -190,12 +266,27 @@ Neutralizes Nuxt UI's responsive `md:text-*` classes that would override the gol
 
 ```ts
 // src/theme/badge.ts
+import {iconSizeClass, iconSizeFor} from './icon-sizes'
+
+const badgeBase = 'rounded-full px-[0.75em] py-[0.35em] gap-[0.5em]'
+
+function badgeSize(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+  return {
+    base: `${badgeBase} ${text} ${iconSizeFor(token)}`,
+    leadingIcon: iconSizeClass,
+    trailingIcon: iconSizeClass,
+  }
+}
+
 {
   slots: { base: 'rounded-full font-normal' },
   variants: {
     size: {
-      xs: { base: 'rounded-full text-xs px-[0.75em] py-[0.35em] gap-[0.5em]', leadingIcon: 'size-3 shrink-0', trailingIcon: 'size-3 shrink-0' },
-      // sm, md, lg, xl follow same pattern with larger text/icons
+      xs: badgeSize('xs', 'text-xs'),
+      sm: badgeSize('sm', 'text-sm'),
+      md: badgeSize('md', 'text-base'),
+      lg: badgeSize('lg', 'text-lg'),
+      xl: badgeSize('xl', 'text-xl'),
     },
   },
   compoundVariants: [
@@ -245,11 +336,11 @@ Alert has no `size` prop in Nuxt UI, so the golden rule does not apply.
       link: { trigger: 'cursor-pointer' },
     },
     size: {
-      xs: { trigger: 'px-2 py-1 text-xs gap-1', leadingIcon: 'size-3' },
-      sm: { trigger: 'px-2.5 py-1.5 text-sm gap-1.5', leadingIcon: 'size-3.5' },
-      md: { trigger: 'px-3 py-1.5 text-base gap-1.5', leadingIcon: 'size-4' },
-      lg: { trigger: 'px-3 py-2 text-lg gap-2', leadingIcon: 'size-4.5' },
-      xl: { trigger: 'px-3 py-2 text-xl gap-2', leadingIcon: 'size-5' },
+      xs: { trigger: `px-2 py-1 text-xs gap-1 ${iconSizeFor('xs')}`, leadingIcon: iconSizeClass },
+      sm: { trigger: `px-2.5 py-1.5 text-sm gap-1.5 ${iconSizeFor('sm')}`, leadingIcon: iconSizeClass },
+      md: { trigger: `px-3 py-1.5 text-base gap-1.5 ${iconSizeFor('md')}`, leadingIcon: iconSizeClass },
+      lg: { trigger: `px-3 py-2 text-lg gap-2 ${iconSizeFor('lg')}`, leadingIcon: iconSizeClass },
+      xl: { trigger: `px-3 py-2 text-xl gap-2 ${iconSizeFor('xl')}`, leadingIcon: iconSizeClass },
     },
   },
   compoundVariants: [
@@ -274,11 +365,11 @@ Alert has no `size` prop in Nuxt UI, so the golden rule does not apply.
   },
   variants: {
     size: {
-      xs: { ...sizes.xs, item: 'text-xs', itemDeleteIcon: 'size-3' },
-      sm: { ...sizes.sm, item: 'text-sm', itemDeleteIcon: 'size-3.5' },
-      md: { ...sizes.md, item: 'text-base', itemDeleteIcon: 'size-4' },
-      lg: { ...sizes.lg, item: 'text-lg', itemDeleteIcon: 'size-4.5' },
-      xl: { ...sizes.xl, item: 'text-xl', itemDeleteIcon: 'size-5' },
+      xs: { ...sizes.xs, item: 'text-xs', itemDeleteIcon: iconSizeClass },
+      sm: { ...sizes.sm, item: 'text-sm', itemDeleteIcon: iconSizeClass },
+      md: { ...sizes.md, item: 'text-base', itemDeleteIcon: iconSizeClass },
+      lg: { ...sizes.lg, item: 'text-lg', itemDeleteIcon: iconSizeClass },
+      xl: { ...sizes.xl, item: 'text-xl', itemDeleteIcon: iconSizeClass },
     },
   },
 }
@@ -294,19 +385,22 @@ const menuItemSlots = {
   content: 's-floating-menu s-corner [--s-radius:10px]',
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
-  itemLeadingIcon: 'text-highlighted',
+  itemLeadingIcon: '',
 }
 
 const menuItemSizes = {
-  xs: { item: 'p-[0.5em] text-xs gap-[0.5em]', itemLeadingIcon: 'size-3.5', itemTrailingIcon: 'size-3.5' },
-  sm: { item: 'p-[0.5em] text-sm gap-[0.5em]', itemLeadingIcon: 'size-4', itemTrailingIcon: 'size-4' },
-  md: { item: 'p-[0.5em] text-base gap-[0.5em]', itemLeadingIcon: 'size-4.5', itemTrailingIcon: 'size-4.5' },
-  lg: { item: 'p-[0.5em] text-lg gap-[0.5em]', itemLeadingIcon: 'size-5', itemTrailingIcon: 'size-5' },
-  xl: { item: 'p-[0.5em] text-xl gap-[0.5em]', itemLeadingIcon: 'size-5.5', itemTrailingIcon: 'size-5.5' },
+  xs: {item: `p-[0.5em] text-xs gap-[0.5em] ${iconSizeFor('xs')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
+  // sm mirrors the metrics of a standard selectable row (36px box, px-2,
+  // gap-2): min-h instead of a fixed height so multi-line items can still
+  // grow, with py-1 as the guard for that case.
+  sm: {item: `min-h-9 px-2 py-1 text-sm gap-2 ${iconSizeFor('sm')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
+  md: {item: `p-[0.5em] text-base gap-[0.5em] ${iconSizeFor('md')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
+  lg: {item: `p-[0.5em] text-lg gap-[0.5em] ${iconSizeFor('lg')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
+  xl: {item: `p-[0.5em] text-xl gap-[0.5em] ${iconSizeFor('xl')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
 }
 ```
 
-Note: menu item icons are one step larger than button icons at the same size (e.g., md = size-4.5 vs size-4 for buttons).
+Note: menu item icons use the same shared icon scale as every other component — `sm` = 12px, `md` = 16px, and so on.
 
 **Highlight background** is NOT in menuItemSlots (to avoid CSS specificity conflicts with Nuxt UI compound variants for colored items like `color: 'error'`). Instead, each component adds it in its own `active: false` variant:
 - **dropdownMenu**: `data-highlighted:before:bg-elevated` (same selector as Nuxt UI compound variants, so `bg-error/10` wins)

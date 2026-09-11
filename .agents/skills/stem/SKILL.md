@@ -69,10 +69,10 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `UBadge`      | `SBadge`     | Compact mode for reduced padding |
 | `UButton`     | `SButton`    | Loading spinner, confirm dialogs, disc/rounded/caret modes |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
-| custom spinner | `SSpinner`  | Consistent animated spinner, em-scaled, grow animation |
+| custom spinner | `SSpinner`  | Consistent animated spinner, follows `--s-icon-size`, grow animation |
 | `UIcon` (for local SVGs) | `SIcon` | Inline SVG rendering with currentColor, proportional mode, loader provided by the consumer app |
 | custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters, multi-select, sort order |
-| empty state placeholder | `SEmpty` | Icon + label + action slot, vertical/horizontal orientation, golden rule sizes |
+| empty state placeholder | `SEmpty` | Icon + label + action slot, vertical/horizontal orientation, dedicated glyph scale |
 | `UColorPicker` (inline) | `SColorPicker` | Hex input + swatch + popover picker, variant/color/size/disabled matching Stem inputs |
 | `UScrollArea` | `SScrollArea` | Gradient fade overlays at scroll edges, auto dark mode, doesn't cover scrollbar |
 
@@ -144,17 +144,80 @@ For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAle
 
 ### Golden Rule of Sizes
 
-Every component with a `size` prop follows a single scale. Deviating from this rule breaks visual consistency.
+Every component with a `size` prop follows a single text scale. Deviating from this rule breaks visual consistency.
 
-| size | text     | leadingIcon | trailingIcon |
-|------|----------|-------------|--------------|
-| xs   | text-xs  | size-3.5    | size-3.5     |
-| sm   | text-sm  | size-4      | size-4       |
-| md   | text-base| size-4.5    | size-4.5     |
-| lg   | text-lg  | size-5      | size-5       |
-| xl   | text-xl  | size-5.5    | size-5.5     |
+| size | text      |
+|------|-----------|
+| xs   | text-xs   |
+| sm   | text-sm   |
+| md   | text-base |
+| lg   | text-lg   |
+| xl   | text-xl   |
 
 Padding uses `em` units so it scales proportionally with text size (e.g., `px-[1em] py-[0.5em]`).
+
+### Icon Size Scale
+
+**Icons do not scale with text.** They follow their own fixed scale in pixels, defined once in `src/theme/icon-sizes.ts` and shared by every component:
+
+| token | text      | icon |
+|-------|-----------|------|
+| sm    | text-sm   | 12px |
+| md    | text-base | 16px |
+| lg    | text-lg   | 20px |
+| xl    | text-xl   | 24px |
+
+`xs` is **not** part of the public scale, but is kept as an alias of `sm` (12px) for backwards compatibility, since Nuxt UI still accepts `size="xs"`.
+
+An icon next to `text-base` is not always meant to be 16px, and expressing icon size in `em` made every component drift as soon as its text scale moved — hence the decoupling.
+
+#### How it works: `--s-icon-size`
+
+Each size variant sets the CSS custom property `--s-icon-size` on the component root, via a Tailwind arbitrary property (e.g. `[--s-icon-size:16px]`). Icons then read it with `size-(--s-icon-size) shrink-0`.
+
+Because leading icon, trailing icon and spinner all read the *same* variable, a single override changes them together.
+
+```ts
+// src/theme/sizes.ts — how a size variant declares it
+base: `${base} ${text} ${iconSizeFor(token)}`,   // → [--s-icon-size:16px]
+leadingIcon: iconSizeClass,                      // → size-(--s-icon-size) shrink-0
+trailingIcon: iconSizeClass,
+```
+
+#### The `iconSize` prop
+
+`SButton`, `SBadge`, `SEmpty` and `SColorPicker` accept an `iconSize` prop that overrides `--s-icon-size` for that instance. It takes either a scale token or any CSS length:
+
+```vue
+<SButton icon="i-ph-plus" />                  <!-- follows the component size -->
+<SButton icon="i-ph-plus" icon-size="lg" />   <!-- 20px -->
+<SButton icon="i-ph-plus" icon-size="32px" /> <!-- 32px -->
+<SButton icon="i-ph-plus" icon-size="1.5em" /><!-- any CSS length -->
+<SBadge icon="i-ph-tag" icon-size="24px" />
+```
+
+#### Exported API
+
+From `@fullbrains/stem` and `@fullbrains/stem/theme`:
+
+| Export | Description |
+|--------|-------------|
+| `iconSizeScale` | `{sm: '12px', md: '16px', lg: '20px', xl: '24px'}` |
+| `iconSizeTokens` | Public tokens in ascending order (excludes the `xs` alias) |
+| `iconSizes` | Every accepted key, including `xs` → 12px. Use when building Tailwind Variants `size` maps |
+| `iconSizeVar` | `'--s-icon-size'` |
+| `iconSizeClass` | `'size-(--s-icon-size) shrink-0'` |
+| `iconSizeFor(size)` | Arbitrary-property class that sets the variable, e.g. `[--s-icon-size:20px]` |
+| `resolveIconSize(value)` | Token or CSS length → CSS length |
+| `iconSizeStyle(value)` | Inline style object overriding the variable, or `undefined` |
+| `IconSizeToken` | Type: `'sm' \| 'md' \| 'lg' \| 'xl'` |
+
+#### Exceptions
+
+Two glyphs deliberately step off the icon scale, because they are not inline icons:
+
+- **SEmpty** — the empty-state glyph is an illustration. Horizontal: 16/20/24/28/32px; vertical: 32/40/48/56/64px (xs→xl). Still on the same 4px step; `iconSize` overrides either.
+- **SColorPicker swatch** — a colour sample, one step above the icon scale: xs=16px, sm=16px, md=20px, lg=24px, xl=28px.
 
 ### Color System
 
@@ -230,9 +293,12 @@ Enhanced badge wrapping `UBadge`. Adds compact mode for reduced padding.
 
 <!-- Compact Y only: reduced vertical padding -->
 <SBadge label="Status" compact="y" />
+
+<!-- Icon size override (token or any CSS length) -->
+<SBadge label="Status" icon="i-ph-tag" icon-size="24px" />
 ```
 
-**Props:** `compact` (boolean | 'x' | 'y')
+**Props:** `compact` (boolean | 'x' | 'y'), `iconSize` (string — icon scale token or CSS length, overrides `--s-icon-size`)
 
 The `compact` prop reduces padding:
 - `true` — reduces both axes (`py-[0.15em]`, `px-[0.5em]`)
@@ -270,9 +336,13 @@ Enhanced button wrapping `UButton`. Adds confirm dialogs, loading states with an
 
 <!-- Rounded: pill shape -->
 <SButton label="Tag" rounded />
+
+<!-- Icon size override: applies to leading icon, trailing icon and spinner -->
+<SButton icon="i-ph-plus" icon-size="lg" />
+<SButton icon="i-ph-plus" icon-size="32px" />
 ```
 
-**Props:** `icon`, `label`, `trailingIcon`, `caret`, `rounded`, `disc`, `compact` (boolean | 'x' | 'y'), `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`
+**Props:** `icon`, `label`, `trailingIcon`, `iconSize` (string — icon scale token or CSS length, overrides `--s-icon-size`), `caret`, `rounded`, `disc`, `compact` (boolean | 'x' | 'y'), `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`
 
 The `compact` prop reduces padding and removes min-height. It accepts:
 - `true` — reduces both axes (`py-[0.25em]`, `px-[0.65em]`, `min-h-0`)
@@ -306,7 +376,7 @@ Slide-over modal built on `USlideover` with header/footer structure.
 </SModal>
 ```
 
-**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `size` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number), `header`, `closeable`, `footer`, `headerCompact` (boolean, default: false — compact header: py-3, icon inline beside title at 1em), `headerSeparator`, `footerSeparator`, `disabled`, `open`, `defaultOpen`
+**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `size` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number), `header`, `closeable`, `footer`, `headerCompact` (boolean, default: false — compact header: py-3, icon inline beside title at `size-6`), `headerSeparator`, `footerSeparator`, `disabled`, `open`, `defaultOpen`
 
 **Slots:** `title`, `after-header`, `body`, `footer`
 
@@ -328,13 +398,15 @@ await alert({ title: 'Error', message: 'Something went wrong', icon: 'i-ph-warni
 
 ### SSpinner
 
-SVG-based animated spinner. Scales with `em` units by default.
+SVG-based animated spinner. Defaults to the ambient icon size, so a spinner swapped in for an icon keeps exactly the same box.
 
 ```vue
-<SSpinner />               <!-- 1em, inherits text color -->
+<SSpinner />               <!-- var(--s-icon-size, 1em), inherits text color -->
 <SSpinner size="2em" />    <!-- Explicit size -->
 <SSpinner grow />          <!-- Animates in from 0 width -->
 ```
+
+The `size` default is `var(--s-icon-size, 1em)`, applied via CSS `style` (the SVG `width`/`height` attributes do not accept `var()`). The `1em` fallback keeps it standalone-safe outside the Stem theme.
 
 ### SIcon
 
@@ -451,11 +523,21 @@ Empty state placeholder with icon, label, and optional action slot.
 </SEmpty>
 ```
 
-**Props:** `icon` (default: `i-ph-empty-light` vertical, `i-ph-empty` horizontal), `label`, `orientation` ('vertical' | 'horizontal', default: 'vertical'), `size` (xs/sm/md/lg/xl, default: md)
+**Props:** `icon` (default: `i-ph-empty-light` vertical, `i-ph-empty` horizontal), `label`, `loading`, `orientation` ('vertical' | 'horizontal', default: 'vertical'), `size` (xs/sm/md/lg/xl, default: md), `iconSize` (string — token or CSS length, overrides the glyph size)
 
 **Slots:** `default` (replaces label), `after` (content after text, e.g. a button)
 
-In vertical mode the icon is significantly larger (size-8 to size-16) with the light variant for visual weight. In horizontal mode the icon is slightly larger than text (size-4.5 to size-8). Text and icon use `text-(--ui-text-muted)` color. Gap defaults to `gap-3`, overridable via `class`.
+The empty-state glyph is an illustration, not an inline icon, so it keeps a scale of its own instead of following `--s-icon-size` — still on the same 4px step:
+
+| size | horizontal | vertical |
+|------|-----------|----------|
+| xs   | 16px      | 32px     |
+| sm   | 20px      | 40px     |
+| md   | 24px      | 48px     |
+| lg   | 28px      | 56px     |
+| xl   | 32px      | 64px     |
+
+Vertical uses the light icon variant for visual weight. `iconSize` overrides either orientation. Text and icon use `text-(--ui-text-muted)` color. Gap defaults to `gap-3`, overridable via `class`.
 
 ### SColorPicker
 
@@ -474,9 +556,11 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 <SColorPicker v-model="color" allow-empty placeholder="Optional" />
 ```
 
-**Props:** `modelValue` (string, v-model), `placeholder`, `size` (xs/sm/md/lg/xl, default: sm), `variant` ('outline' | 'soft' | 'subtle' | 'ghost' | 'none', default: 'outline'), `color` ('primary' | 'error' | 'success', default: 'primary'), `disabled`, `defaultValue` (shows reset button when value differs), `allowEmpty` (permits empty string)
+**Props:** `modelValue` (string, v-model), `placeholder`, `size` (xs/sm/md/lg/xl, default: sm), `iconSize` (string — token or CSS length, overrides `--s-icon-size`), `variant` ('outline' | 'soft' | 'subtle' | 'ghost' | 'none', default: 'outline'), `color` ('primary' | 'error' | 'success', default: 'primary'), `disabled`, `defaultValue` (shows reset button when value differs), `allowEmpty` (permits empty string)
 
 Variant/color classes come from shared `input-container.ts` (same visual appearance as UInput). The swatch opens the popover on click; the caret toggles it. Focus ring, placeholder color, and icon colors all follow the semantic color.
+
+The caret and reset icons follow `--s-icon-size` (set on the container by the size variant, overridable with `iconSize`). The swatch is a colour sample rather than an icon, so it sits one step above the icon scale: xs=16px, sm=16px, md=20px, lg=24px, xl=28px.
 
 ### SScrollArea
 
@@ -548,10 +632,10 @@ Stem overrides these Nuxt UI component themes via `app.config.ui`:
 - **checkbox** — Primary indicator uses stem-900/stem-100 to match button solid colors
 - **input / textarea** — Custom placeholder colors, rounded-[6px], shadow-based focus rings (not outline), border-based outline variant
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
-- **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), proportional delete button
+- **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), delete icon follows `--s-icon-size`
 - **badge** — Always rounded-full, em-based padding, hardcoded slate colors matching button (includes secondary)
 - **alert** — Hardcoded slate colors matching button (no size prop)
-- **tabs** — Slate-900 indicator for primary, cursor-pointer on all variants, golden rule sizes
+- **tabs** — Slate-900 indicator for primary, cursor-pointer on all variants, golden rule text sizes + shared icon scale
 - **dropdownMenu** — Floating menu styling, highlighted items
 - **popover** — Floating menu styling (s-floating-menu), ring-0
 - **slideover** — Dark overlay, rounded content, slide animations

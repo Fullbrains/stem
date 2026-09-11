@@ -199,7 +199,7 @@ function clear() {
           <template #leading>
             <UIcon
                 name="i-ph-backspace-fill"
-                class="size-6"
+                class="size-5 shrink-0"
             />
           </template>
         </SButton>

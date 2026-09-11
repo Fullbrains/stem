@@ -2,6 +2,19 @@
 export { stem } from './theme'
 export { stemIcons, stemColors } from './config'
 
+// Icon sizing scale
+export {
+  iconSizeScale,
+  iconSizeTokens,
+  iconSizes,
+  iconSizeVar,
+  iconSizeClass,
+  iconSizeFor,
+  resolveIconSize,
+  iconSizeStyle,
+  type IconSizeToken,
+} from './theme/icon-sizes'
+
 // Components
 export { default as SModal } from './components/SModal.vue'
 export { default as SModalHeader } from './components/SModalHeader.vue'

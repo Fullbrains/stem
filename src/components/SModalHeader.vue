@@ -33,7 +33,7 @@ const slots = defineSlots<{
       <UIcon
           v-if="icon && !compact"
           :name="icon"
-          class="size-10"
+          class="size-10 shrink-0"
       />
       <div
           v-if="title || slots.title"
@@ -43,7 +43,7 @@ const slots = defineSlots<{
         <UIcon
             v-if="icon && compact"
             :name="icon"
-            class="size-[1.25em] shrink-0"
+            class="size-6 shrink-0"
         />
         <slot name="title">{{ title }}</slot>
       </div>

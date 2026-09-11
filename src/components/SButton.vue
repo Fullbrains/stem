@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {computed} from 'vue'
+import {iconSizeStyle} from '../theme/icon-sizes'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
 const props = defineProps<{
   icon?: string
   label?: string
   trailingIcon?: string
+  iconSize?: string
   caret?: boolean
   rounded?: boolean
   disc?: boolean
@@ -48,6 +50,10 @@ const resolvedUi = computed(() => {
   return Object.keys(ui).length ? ui : undefined
 })
 
+// Overrides --s-icon-size for this instance; the size variant sets it otherwise.
+// Inherited by leading icon, trailing icon and the loading spinner alike.
+const resolvedStyle = computed(() => iconSizeStyle(props.iconSize))
+
 const resolvedTrailingIcon = computed(() => {
   if (props.caret) return 'i-ph-caret-down'
   return props.trailingIcon
@@ -80,6 +86,7 @@ function handleClick(e: MouseEvent) {
       :trailing-icon="disc ? undefined : resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"
+      :style="resolvedStyle"
       :disabled="loading || $attrs.disabled as boolean"
       @click="handleClick"
   >
@@ -88,10 +95,10 @@ function handleClick(e: MouseEvent) {
       <span
           v-else
           class="inline-flex overflow-hidden transition-all duration-300 ease-out"
-          :class="loading || icon ? 'max-w-[1.125em] opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
+          :class="loading || icon ? 'max-w-(--s-icon-size) opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
       >
-        <SSpinner v-if="loading" size="1.125em"/>
-        <UIcon v-else-if="icon" :name="icon" class="size-[1.125em] shrink-0"/>
+        <SSpinner v-if="loading"/>
+        <UIcon v-else-if="icon" :name="icon" class="size-(--s-icon-size) shrink-0"/>
       </span>
     </template>
     <template v-if="$slots.default" #default>

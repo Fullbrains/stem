@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
+import {resolveIconSize} from '../theme/icon-sizes'
 
 type Orientation = 'vertical' | 'horizontal'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -11,6 +12,7 @@ const props = withDefaults(defineProps<{
   stroke?: number
   orientation?: Orientation
   size?: Size
+  iconSize?: string
 }>(), {
   orientation: 'vertical',
   size: 'md',
@@ -20,22 +22,35 @@ const resolvedIcon = computed(() =>
     props.icon ?? (props.orientation === 'vertical' ? 'i-ph-empty-light' : 'i-ph-empty'),
 )
 
-const iconSize: Record<Orientation, Record<Size, string>> = {
+// The empty-state glyph is an illustration, not an inline icon, so it keeps a
+// scale of its own rather than following --s-icon-size: horizontal reads as an
+// oversized inline icon, vertical as a proper graphic. Both are still built on
+// the same 4px step as the icon scale, and `iconSize` overrides either.
+const glyphSize: Record<Orientation, Record<Size, string>> = {
   horizontal: {
-    xs: 'size-4.5',
-    sm: 'size-5',
-    md: 'size-6',
-    lg: 'size-7',
-    xl: 'size-8',
+    xs: '16px',
+    sm: '20px',
+    md: '24px',
+    lg: '28px',
+    xl: '32px',
   },
   vertical: {
-    xs: 'size-8',
-    sm: 'size-10',
-    md: 'size-12',
-    lg: 'size-14',
-    xl: 'size-16',
+    xs: '32px',
+    sm: '40px',
+    md: '48px',
+    lg: '56px',
+    xl: '64px',
   },
 }
+
+const resolvedGlyphSize = computed(() =>
+    resolveIconSize(props.iconSize) ?? glyphSize[props.orientation][props.size],
+)
+
+const glyphStyle = computed(() => ({
+  width: resolvedGlyphSize.value,
+  height: resolvedGlyphSize.value,
+}))
 
 const textSize: Record<Size, string> = {
   xs: 'text-xs',
@@ -55,8 +70,8 @@ const textSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <SSpinner v-if="loading" :class="iconSize[orientation][size]" :stroke="stroke ?? (orientation === 'vertical' ? 1.5 : undefined)" class="text-(--ui-text-muted) shrink-0"/>
-    <UIcon v-else :name="resolvedIcon" :class="iconSize[orientation][size]"
+    <SSpinner v-if="loading" :size="resolvedGlyphSize" :stroke="stroke ?? (orientation === 'vertical' ? 1.5 : undefined)" class="text-(--ui-text-muted) shrink-0"/>
+    <UIcon v-else :name="resolvedIcon" :style="glyphStyle"
            class="text-(--ui-text-muted) shrink-0"/>
     <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
       <slot>{{ label }}</slot>

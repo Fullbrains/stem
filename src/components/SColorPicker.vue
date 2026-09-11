@@ -2,6 +2,7 @@
 import {ref, computed, watch} from 'vue'
 import {inputContainerClasses, inputIconColors} from '../theme/input-container'
 import type {InputColor, InputVariant} from '../theme/input-container'
+import {iconSizeClass, iconSizeFor, iconSizeStyle} from '../theme/icon-sizes'
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -11,6 +12,7 @@ const props = withDefaults(defineProps<{
   allowEmpty?: boolean
   placeholder?: string
   size?: Size
+  iconSize?: string
   variant?: InputVariant
   color?: InputColor
   disabled?: boolean
@@ -94,18 +96,24 @@ const sizeClasses: Record<Size, string> = {
   xl: 'text-xl leading-normal min-h-[calc(1lh+1em)]',
 }
 
-const iconSize: Record<Size, string> = {
-  xs: 'size-3.5',
-  sm: 'size-4',
-  md: 'size-4.5',
-  lg: 'size-5',
-  xl: 'size-5.5',
+// Sets --s-icon-size on the container; the icons below read it through
+// iconSizeClass, so the `iconSize` prop overrides all of them at once.
+const iconSizeVars: Record<Size, string> = {
+  xs: iconSizeFor('xs'),
+  sm: iconSizeFor('sm'),
+  md: iconSizeFor('md'),
+  lg: iconSizeFor('lg'),
+  xl: iconSizeFor('xl'),
 }
 
+const resolvedIconStyle = computed(() => iconSizeStyle(props.iconSize))
+
+// The swatch is a colour sample rather than an icon, so it sits one step above
+// the icon scale to stay readable — still on the same 4px grid.
 const swatchSize: Record<Size, string> = {
   xs: 'size-4',
-  sm: 'size-5',
-  md: 'size-5.5',
+  sm: 'size-4',
+  md: 'size-5',
   lg: 'size-6',
   xl: 'size-7',
 }
@@ -148,8 +156,10 @@ const popoverContentStyle = computed(() => {
     <div
         ref="containerRef"
         class="relative flex items-center gap-[0.5em] w-full px-[0.6em] py-[0.5em]"
+        :style="resolvedIconStyle"
         :class="[
           sizeClasses[props.size],
+          iconSizeVars[props.size],
           ...variantClasses,
           hasError && 'border-rose-500/60!',
         ]"
@@ -186,7 +196,7 @@ const popoverContentStyle = computed(() => {
             @mousedown.prevent.stop
             @click.stop="resetToDefault"
         >
-          <UIcon name="i-ph-arrow-u-up-left" :class="iconSize[props.size]"/>
+          <UIcon name="i-ph-arrow-u-up-left" :class="iconSizeClass"/>
         </button>
 
         <button
@@ -197,7 +207,7 @@ const popoverContentStyle = computed(() => {
             @mousedown.prevent
             @click.stop="!disabled && (open = !open)"
         >
-          <UIcon name="i-ph-caret-down" :class="iconSize[props.size]"/>
+          <UIcon name="i-ph-caret-down" :class="iconSizeClass"/>
         </button>
       </div>
     </div>

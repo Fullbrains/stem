@@ -1,22 +1,30 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+import {computed} from 'vue'
+
+// Defaults to the ambient icon size so a spinner swapped in for an icon keeps
+// the same box, falling back to 1em where --s-icon-size is not set (the
+// component is standalone and must also work outside the Stem theme).
+const props = withDefaults(defineProps<{
   size?: string
   stroke?: number
   grow?: boolean
 }>(), {
-  size: '1em',
+  size: 'var(--s-icon-size, 1em)',
   stroke: 1,
   grow: false,
 })
+
+// Sized through CSS rather than the width/height attributes, which do not
+// accept var().
+const sizeStyle = computed(() => ({width: props.size, height: props.size}))
 </script>
 
 <template>
   <span v-if="grow"
         class="inline-flex overflow-hidden animate-[s-spinner-grow-in_500ms_ease-out_both]">
     <svg
-        class="animate-[s-spinner-rotate_1.4s_linear_infinite]"
-        :width="size"
-        :height="size"
+        class="animate-[s-spinner-rotate_1.4s_linear_infinite] shrink-0"
+        :style="sizeStyle"
         viewBox="0 0 24 24"
         fill="none"
     >
@@ -26,9 +34,8 @@ withDefaults(defineProps<{
   </span>
   <svg
       v-else
-      class="animate-[s-spinner-rotate_1.4s_linear_infinite]"
-      :width="size"
-      :height="size"
+      class="animate-[s-spinner-rotate_1.4s_linear_infinite] shrink-0"
+      :style="sizeStyle"
       viewBox="0 0 24 24"
       fill="none"
   >
