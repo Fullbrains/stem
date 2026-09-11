@@ -6,7 +6,7 @@ export default {
       class: {
         root: `
           text-white dark:text-stem-900
-          bg-stem-900 dark:bg-stem-100
+          bg-gray-800 dark:bg-stem-100
         `,
       },
     },
@@ -35,8 +35,8 @@ export default {
       variant: 'outline',
       class: {
         root: `
-          text-stem-900 dark:text-stem-100
-          ring-stem-900/25 dark:ring-stem-100/25
+          text-gray-800 dark:text-stem-100
+          ring-gray-800/25 dark:ring-stem-100/25
         `,
       },
     },

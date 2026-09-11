@@ -7,7 +7,7 @@ export default {
     {
       color: 'primary',
       class: {
-        indicator: 'bg-stem-900 dark:bg-stem-100',
+        indicator: 'bg-gray-800 dark:bg-stem-100',
         base: 'focus-visible:outline-iron-500',
       },
     },

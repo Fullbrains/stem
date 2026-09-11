@@ -29,7 +29,7 @@ export default {
       variant: 'solid',
       class: `
         text-white dark:text-stem-900
-        bg-stem-900 dark:bg-stem-100
+        bg-gray-800 dark:bg-stem-100
       `,
     },
     {
@@ -44,8 +44,8 @@ export default {
       color: 'primary',
       variant: 'outline',
       class: `
-        text-stem-900 dark:text-stem-100
-        ring-stem-900/50 dark:ring-stem-100/50
+        text-gray-800 dark:text-stem-100
+        ring-gray-800/50 dark:ring-stem-100/50
       `,
     },
     {

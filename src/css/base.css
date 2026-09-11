@@ -15,7 +15,10 @@
 }
 
 :root:not(.dark) {
-    --ui-text: var(--color-stem-900);
+    /* Light-mode default text. Uses Tailwind's gray rather than the stem
+       palette: stem stays the dark-mode primary, while light mode reads as a
+       plain neutral grey. */
+    --ui-text: var(--color-gray-800);
 }
 
 .s-overlay {

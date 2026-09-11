@@ -10,10 +10,10 @@ export default {
       variant: 'solid',
       class: `
         text-white dark:text-stem-900
-        bg-stem-900 dark:bg-stem-100
-        hover:bg-stem-800 dark:hover:bg-stem-300
-        active:bg-stem-900 dark:active:bg-stem-100
-        disabled:bg-stem-900 dark:disabled:bg-stem-100
+        bg-gray-800 dark:bg-stem-100
+        hover:bg-gray-700 dark:hover:bg-stem-300
+        active:bg-gray-800 dark:active:bg-stem-100
+        disabled:bg-gray-800 dark:disabled:bg-stem-100
         focus-visible:outline-iron-500
       `,
     },

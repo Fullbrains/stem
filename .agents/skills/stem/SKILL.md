@@ -223,15 +223,26 @@ Two glyphs deliberately step off the icon scale, because they are not inline ico
 
 Stem maps semantic colors to specific Tailwind palettes:
 
-| Semantic  | Palette  | Notes |
-|-----------|----------|-------|
-| primary   | slate    | Dark bg in light, light bg in dark |
-| secondary | slate    | Inverse of primary: white bg in light, dark bg in dark |
-| neutral   | gray     | Mid-tone, same in both modes |
-| success   | emerald  | |
-| error     | rose     | |
+| Semantic  | Palette | Notes |
+|-----------|---------|-------|
+| primary   | `stem`  | Dark bg in light, light bg in dark |
+| secondary | `iron`  | Inverse of primary: white bg in light, dark bg in dark |
+| neutral   | `muto`  | Mid-tone, same in both modes |
+| success   | emerald | |
+| error     | rose    | |
 
-Theme overrides use hardcoded slate/gray classes (not CSS variable-based semantic classes) to ensure buttons, badges, alerts, and tabs all share the exact same visual appearance for each color+variant combination.
+`stem`, `iron` and `muto` are Stem's own palettes, registered in `colors-theme.css`. In light mode they are built on tar (a custom oklch ramp), slate and gray; in dark mode `colors.css` overrides all three with zinc.
+
+**Light-mode primary uses Tailwind `gray`, not the `stem` ramp.** Solid backgrounds, default text, indicators and rings resolve to `gray-800`, with `gray-700` for hover. The `stem` ramp still drives dark mode (`stem-100`/`stem-300`/`stem-900`), and `stem-600` is deliberately kept for `neutral solid` and `neutral outline` in badge and alert — that is the one place primary and neutral stay visually distinct, since `muto` *is* Tailwind gray.
+
+| Role | Light | Dark |
+|------|-------|------|
+| primary solid bg | `gray-800` | `stem-100` |
+| primary solid hover | `gray-700` | `stem-300` |
+| default text (`--ui-text`) | `gray-800` | (unchanged) |
+| neutral solid (badge/alert) | `stem-600` | `stem-600` |
+
+Theme overrides use hardcoded palette classes (not CSS variable-based semantic classes) to ensure buttons, badges, alerts, and tabs all share the exact same visual appearance for each color+variant combination.
 
 The `secondary` color is the visual inverse of `primary`:
 
@@ -629,7 +640,7 @@ Stem overrides these Nuxt UI component themes via `app.config.ui`:
 
 - **avatar** — Custom bg (bg-slate-500/10), fallback text with leading-normal instead of leading-none
 - **button** — Hardcoded slate primary/secondary/neutral colors, em-based sizing, rounded-[8px], cursor-pointer, smooth transitions
-- **checkbox** — Primary indicator uses stem-900/stem-100 to match button solid colors
+- **checkbox** — Primary indicator uses gray-800 (light) / stem-100 (dark) to match button solid colors
 - **input / textarea** — Custom placeholder colors, rounded-[6px], shadow-based focus rings (not outline), border-based outline variant
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
 - **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), delete icon follows `--s-icon-size`

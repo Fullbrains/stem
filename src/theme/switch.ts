@@ -6,7 +6,7 @@ export default {
     {
       color: 'primary',
       class: {
-        base: 'data-[state=checked]:bg-stem-900 dark:data-[state=checked]:bg-stem-100 focus-visible:outline-iron-500',
+        base: 'data-[state=checked]:bg-gray-800 dark:data-[state=checked]:bg-stem-100 focus-visible:outline-iron-500',
       },
     },
   ],
