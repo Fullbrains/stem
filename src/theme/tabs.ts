@@ -13,11 +13,11 @@ export default {
       },
     },
     size: {
-      xs: {trigger: `px-2 py-1 text-xs gap-1 ${iconSizeFor('xs')}`, leadingIcon: iconSizeClass},
-      sm: {trigger: `px-2.5 py-1.5 text-sm gap-1.5 ${iconSizeFor('sm')}`, leadingIcon: iconSizeClass},
-      md: {trigger: `px-3 py-1.5 text-base gap-1.5 ${iconSizeFor('md')}`, leadingIcon: iconSizeClass},
-      lg: {trigger: `px-3 py-2 text-lg gap-2 ${iconSizeFor('lg')}`, leadingIcon: iconSizeClass},
-      xl: {trigger: `px-3 py-2 text-xl gap-2 ${iconSizeFor('xl')}`, leadingIcon: iconSizeClass},
+      xs: {trigger: `px-2 py-1 text-xs gap-1 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
+      sm: {trigger: `px-2.5 py-1.5 text-sm gap-1.5 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
+      md: {trigger: `px-3 py-1.5 text-base gap-1.5 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
+      lg: {trigger: `px-3 py-2 text-lg gap-2 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
+      xl: {trigger: `px-3 py-2 text-xl gap-2 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
     },
   },
   compoundVariants: [

@@ -2,11 +2,12 @@ import {iconSizeClass, iconSizeFor} from './icon-sizes'
 
 const base = 'px-[1em] py-[0.5em] gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]'
 
-function size(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+function size(_token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
   return {
-    // The size token sets --s-icon-size on the root; leading and trailing icons
-    // read it, so an `iconSize` override on the component overrides both at once.
-    base: `${base} ${text} ${iconSizeFor(token)}`,
+    // The root declares --s-icon-size as 1em, so icons follow THIS variant's
+    // text size; leading and trailing icons read it, and an `iconSize` prop on
+    // the component overrides both at once.
+    base: `${base} ${text} ${iconSizeFor()}`,
     leadingIcon: iconSizeClass,
     trailingIcon: iconSizeClass,
   }

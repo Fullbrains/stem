@@ -2,9 +2,10 @@ import {iconSizeClass, iconSizeFor} from './icon-sizes'
 
 const badgeBase = 'rounded-full px-[0.75em] py-[0.35em] gap-[0.5em]'
 
-function badgeSize(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+function badgeSize(_token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
   return {
-    base: `${badgeBase} ${text} ${iconSizeFor(token)}`,
+    // Icons follow this variant's text (1em), like every other Stem control.
+    base: `${badgeBase} ${text} ${iconSizeFor()}`,
     leadingIcon: iconSizeClass,
     trailingIcon: iconSizeClass,
   }

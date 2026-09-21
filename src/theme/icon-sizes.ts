@@ -1,14 +1,19 @@
 /**
  * Single source of truth for icon sizing across Stem.
  *
- * Icon size is decoupled from the component's text size: a size token maps to
- * a fixed pixel value, not to a multiple of the font size. This is deliberate —
- * an icon next to `text-base` is not always meant to be 16px, and expressing
- * icon size in `em` made every component drift as soon as its text scale moved.
+ * Icon size follows TEXT size: the default is `1em`, so an icon is always
+ * proportional to the label beside it and a component that changes its text
+ * scale carries its icons along. This works because the icon sets in use
+ * (Phosphor, and the brand sets built on stroke weight rather than on
+ * per-pixel grids) are drawn to scale.
  *
- * The scale is sm/md/lg/xl. `xs` is not part of the public scale but is kept as
- * an alias of `sm` so that `size="xs"`, which Nuxt UI still accepts, never ends
- * up with no icon class at all.
+ * ⚠️ This reverses the fixed-pixel scale introduced in 353f242. That decision
+ * assumed icon sets drawn for specific pixel sizes, where rendering at an
+ * in-between size wastes the hinting; with scalable sets, following the text
+ * is what keeps a button's icon and label optically paired at every size.
+ *
+ * The named scale survives for the cases that genuinely need a fixed size —
+ * an icon standing alone, with no text to follow.
  */
 export const iconSizeScale = {
   sm: '12px',
@@ -39,12 +44,20 @@ export const iconSizes = {
  */
 export const iconSizeVar = '--s-icon-size'
 
+/** The default: an icon is as tall as one em of the text beside it. */
+export const iconSizeDefault = '1em'
+
 /** Class that makes an element read its dimensions from `--s-icon-size`. */
 export const iconSizeClass = 'size-(--s-icon-size) shrink-0'
 
-/** Sets `--s-icon-size` for a given size token, as a Tailwind arbitrary property. */
-export function iconSizeFor(size: keyof typeof iconSizes): string {
-  return `[${iconSizeVar}:${iconSizes[size]}]`
+/**
+ * Declares `--s-icon-size` on a component root, as a Tailwind arbitrary
+ * property. Called with no argument it declares the `1em` default, which is
+ * what every size variant does: the icon then tracks that variant's text.
+ */
+export function iconSizeFor(size?: keyof typeof iconSizes): string {
+  const value = size ? iconSizes[size] : iconSizeDefault
+  return `[${iconSizeVar}:${value}]`
 }
 
 /**
