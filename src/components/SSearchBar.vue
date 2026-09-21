@@ -12,11 +12,16 @@ const props = withDefaults(defineProps<{
   activeFilterCount?: number
   compact?: boolean
   icon?: string
+  /** Nasconde il pulsante che svuota il campo. Utile dove la ricerca ha già
+   un proprio modo di chiudersi, e due comandi di annullamento vicini
+   confonderebbero. */
+  hideClear?: boolean
 }>(), {
   minInputWidth: 280,
   variant: 'outline',
   activeFilterCount: 0,
   compact: false,
+  hideClear: false,
 })
 
 const appConfig = useAppConfig()
@@ -189,7 +194,7 @@ function clear() {
         >
 
         <SButton
-            v-if="modelValue?.length"
+            v-if="modelValue?.length && !hideClear"
             color="neutral"
             variant="link"
             aria-label="Clear search"
