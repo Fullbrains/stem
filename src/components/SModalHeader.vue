@@ -54,13 +54,9 @@ const slots = defineSlots<{
         <slot name="description"><span v-html="description"/></slot>
       </div>
     </div>
-    <SButton
+    <SCloseButton
         v-if="closeable"
-        class="shrink-0 absolute min-h-none py-[0.2em]! px-[0.6em]! top-3 right-3"
-        rounded
-        icon="i-ph-x"
-        size="xl"
-        variant="soft"
+        class="absolute top-3 right-3"
         :disabled="disabled"
         @click="$emit('close')"
     />

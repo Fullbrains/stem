@@ -276,6 +276,29 @@ Internal component used by `SModal`. Renders title, description, icon, and close
 |------|-------------|
 | `title` | Custom title content |
 
+## SCloseButton
+
+The close control of Stem's surfaces — the soft pill with an X that `SModalHeader` pins to its corner. Use it for any panel, drawer or slideover, so every surface closes with the same button. Placement is the caller's.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `'Close'` | Accessible name (`aria-label`), not rendered. Pass the app's own wording |
+| `disabled` | `boolean` | `false` | Disable the button |
+
+### Emits
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `click` | `MouseEvent` | The button was pressed |
+
+### Example
+
+```vue
+<SCloseButton label="Chiudi il documento" @click="close" />
+```
+
 ## SModalFooter
 
 Internal component used by `SModal`. Renders footer with responsive button layout.
