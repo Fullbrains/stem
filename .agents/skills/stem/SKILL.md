@@ -282,6 +282,14 @@ Compose them to create custom containers that look like Stem inputs:
 
 When combining `.s-outline` with `.s-outline-focus-within`, the focus state automatically wins over the hover state.
 
+### Scroll Fade
+
+`.s-scroll-fade` is the fade `SScrollArea` draws at its edges, exported for any other scroller (e.g. a page whose `<main>` scrolls): content slides under it instead of being cut. `.s-scroll-fade` fades from the top edge down; add `.s-scroll-fade--bottom` for the bottom edge. Custom properties: `--s-fade-color` (default `var(--ui-bg)`) and `--s-fade-size` (default `1.5rem`). The ramp is three quarters smoothstep, one quarter linear: soft at both ends. Show/hide it yourself (e.g. opacity on scroll position).
+
+```html
+<div class="s-scroll-fade pointer-events-none sticky top-0 -mb-4 [--s-fade-size:1rem]" />
+```
+
 ### Icon Set
 
 Stem uses Phosphor Icons (`@iconify-json/ph`) as its icon set, mapped via `stemIcons` in the config. Format: `i-ph-{name}`.

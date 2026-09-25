@@ -1,0 +1,36 @@
+/* s-scroll-fade — the fade at the edge of a scrolling area: content slides
+   under it instead of being cut. SScrollArea draws it; any other scroller can
+   use the same classes.
+
+   .s-scroll-fade           from the top edge down (solid at the top)
+   .s-scroll-fade--bottom   from the bottom edge up (solid at the bottom)
+
+   --s-fade-color   the surface it fades into (default: the page background)
+   --s-fade-size    its height (default: 1.5rem)
+
+   The ramp is three quarters smoothstep, 1 − (3t² − 2t³), one quarter
+   linear, sampled every tenth: soft at both ends, so neither the solid edge
+   nor the point where the fade begins reads as a line, without the full S
+   curve's pronounced middle. */
+
+.s-scroll-fade {
+    --s-fade: var(--s-fade-color, var(--ui-bg));
+    height: var(--s-fade-size, 1.5rem);
+    background: linear-gradient(var(--s-fade-direction, to bottom),
+        var(--s-fade) 0%,
+        color-mix(in oklab, var(--s-fade) 95.4%, transparent) 10%,
+        color-mix(in oklab, var(--s-fade) 87.2%, transparent) 20%,
+        color-mix(in oklab, var(--s-fade) 76.3%, transparent) 30%,
+        color-mix(in oklab, var(--s-fade) 63.6%, transparent) 40%,
+        color-mix(in oklab, var(--s-fade) 50%, transparent) 50%,
+        color-mix(in oklab, var(--s-fade) 36.4%, transparent) 60%,
+        color-mix(in oklab, var(--s-fade) 23.7%, transparent) 70%,
+        color-mix(in oklab, var(--s-fade) 12.8%, transparent) 80%,
+        color-mix(in oklab, var(--s-fade) 4.6%, transparent) 90%,
+        transparent 100%
+    );
+}
+
+.s-scroll-fade--bottom {
+    --s-fade-direction: to top;
+}

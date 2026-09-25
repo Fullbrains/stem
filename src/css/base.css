@@ -1,6 +1,7 @@
 @import "./animations.css";
 @import "./colors.css";
 @import "./corner-shape.css";
+@import "./scroll-fade.css";
 
 @layer base {
     *, *::before, *::after {

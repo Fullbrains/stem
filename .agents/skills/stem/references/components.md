@@ -538,7 +538,7 @@ Uses `useOverlay()` from Nuxt UI to create and open an `SConfirmModal` instance 
 
 ## SScrollArea
 
-Wraps Nuxt UI's `UScrollArea` with gradient fade overlays at top/bottom edges when content overflows. Gradient appears/disappears based on scroll position with a 300ms opacity transition. Uses `position: sticky` inside the scroll viewport so the gradient does not cover the scrollbar.
+Wraps Nuxt UI's `UScrollArea` with gradient fade overlays at top/bottom edges when content overflows. The fades are the global `.s-scroll-fade` classes (see SKILL.md, Scroll Fade), usable outside it. Gradient appears/disappears based on scroll position with a 300ms opacity transition. Uses `position: sticky` inside the scroll viewport so the gradient does not cover the scrollbar.
 
 ### Props
 
