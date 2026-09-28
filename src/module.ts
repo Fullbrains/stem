@@ -102,6 +102,11 @@ export default defineNuxtModule<StemModuleOptions>({
 
     // Append @source and @theme (color palettes) to the Nuxt UI generated ui.css
     const stemComponents = resolve('./components')
+    // ⚠️ Anche `theme`: da 0.29.0 `inputContainerClasses` è pubblico, quindi
+    // le sue classi possono comparire in un componente del consumatore e non
+    // solo dentro SColorPicker. Senza questa sorgente Tailwind non le genera,
+    // e il container resta senza bordo di focus — visibile solo a runtime.
+    const stemTheme = resolve('./theme')
     const colorsThemeCss = resolve('./css/colors-theme.css')
     nuxt.hook('build:before', async () => {
       const {join} = await import('pathe')
@@ -111,7 +116,7 @@ export default defineNuxtModule<StemModuleOptions>({
         const content = await fs.readFile(uiCss, 'utf-8')
         if (!content.includes('/* Stem */')) {
           const colorsTheme = await fs.readFile(colorsThemeCss, 'utf-8')
-          const injection = `\n/* Stem */\n@source "${stemComponents}";\n@source "./${classesFile.filename}";\n${colorsTheme}\n`
+          const injection = `\n/* Stem */\n@source "${stemComponents}";\n@source "${stemTheme}";\n@source "./${classesFile.filename}";\n${colorsTheme}\n`
           await fs.writeFile(uiCss, injection + content, 'utf-8')
         }
       } catch {

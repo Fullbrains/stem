@@ -15,6 +15,18 @@ export {
   type IconSizeToken,
 } from './theme/icon-sizes'
 
+// Input container classes — for components that must LOOK like a Stem input
+// without being one (a popover trigger, a token field). SColorPicker already
+// builds on them; exporting keeps every such container in step with the real
+// inputs instead of drifting on copied classes.
+export {
+  inputContainerClasses,
+  inputIconColors,
+  type InputColor,
+  type InputVariant,
+  type ContainerClasses,
+} from './theme/input-container'
+
 // Components
 export { default as SModal } from './components/SModal.vue'
 export { default as SModalHeader } from './components/SModalHeader.vue'
