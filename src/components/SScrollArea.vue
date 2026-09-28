@@ -11,9 +11,17 @@ const props = withDefaults(defineProps<{
   fade?: boolean
   fadeSize?: string
   fadeColor?: string
+  /**
+   * How the edges fade. `color` (default) paints a gradient of the surface's
+   * colour over the content: it needs a surface of one colour. `mask` fades
+   * the content itself to transparent (s-scroll-mask): whatever is behind
+   * shows through, a gradient, an image, a translucent surface.
+   */
+  fadeMode?: 'color' | 'mask'
 }>(), {
   fade: true,
   fadeSize: '1.5rem',
+  fadeMode: 'color',
 })
 
 const attrs = useAttrs()
@@ -26,12 +34,27 @@ const clientHeight = ref(0)
 const paddingTop = ref(0)
 const paddingBottom = ref(0)
 const resolvedBgColor = ref('')
+const scrollbarWidth = ref(0)
 
 const hasOverflow = computed(() => scrollHeight.value > clientHeight.value)
 const showTop = computed(() => hasOverflow.value && scrollTop.value > 1)
 const showBottom = computed(() => hasOverflow.value && scrollTop.value < scrollHeight.value - clientHeight.value - 1)
 
 const fadeColorValue = computed(() => props.fadeColor ?? (resolvedBgColor.value || 'var(--ui-bg)'))
+
+const masked = computed(() => props.fade && props.fadeMode === 'mask')
+const painted = computed(() => props.fade && props.fadeMode === 'color')
+
+/** The mask's edges, and the scrollbar it leaves out: a classic scrollbar
+    measured, an overlay one (0 wide in layout, drawn over the content)
+    given room of its own. */
+const maskStyle = computed(() => masked.value
+  ? {
+      '--s-mask-top': showTop.value ? props.fadeSize : '0px',
+      '--s-mask-bottom': showBottom.value ? props.fadeSize : '0px',
+      '--s-mask-gutter': scrollbarWidth.value ? `${scrollbarWidth.value}px` : undefined,
+    }
+  : {})
 
 function getScrollElement(): HTMLElement | null {
   if (!scrollRef.value?.$el) return null
@@ -61,6 +84,7 @@ function updateScrollState() {
   const styles = window.getComputedStyle(el)
   paddingTop.value = parseFloat(styles.paddingTop) || 0
   paddingBottom.value = parseFloat(styles.paddingBottom) || 0
+  scrollbarWidth.value = el.offsetWidth - el.clientWidth - (parseFloat(styles.borderLeftWidth) || 0) - (parseFloat(styles.borderRightWidth) || 0)
 
   if (!props.fadeColor) {
     resolvedBgColor.value = resolveBackgroundColor(el)
@@ -100,12 +124,14 @@ watch(() => scrollRef.value, async () => {
   <UScrollArea
       ref="scrollRef"
       v-bind="attrs"
+      :class="masked && 's-scroll-mask'"
       :style="{
         '--s-fade-size': fadeSize,
         '--s-fade-color': fadeColorValue,
+        ...maskStyle,
       }"
   >
-    <template v-if="fade">
+    <template v-if="painted">
       <div
           class="s-scroll-fade sticky inset-x-0 top-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showTop && 'opacity-100'"
@@ -116,7 +142,7 @@ watch(() => scrollRef.value, async () => {
       />
     </template>
     <slot/>
-    <template v-if="fade">
+    <template v-if="painted">
       <div
           class="s-scroll-fade s-scroll-fade--bottom sticky inset-x-0 bottom-0 z-1 shrink-0 pointer-events-none opacity-0 transition-opacity duration-300"
           :class="showBottom && 'opacity-100'"

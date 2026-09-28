@@ -34,3 +34,66 @@
 .s-scroll-fade--bottom {
     --s-fade-direction: to top;
 }
+
+/* s-scroll-mask — the same fade cut out of the content instead of painted
+   over it (SScrollArea fade-mode="mask"): the scroller's own mask, so what
+   is behind it shows through at the edges, whatever it is. The same ramp,
+   as alpha. The mask would cut the scrollbar too, which is drawn inside the
+   scroller: a second layer keeps a strip along the scrollbar's edge whole.
+
+   --s-mask-top      the top fade's height, 0 when the content is at the top
+   --s-mask-bottom   the bottom fade's, 0 when it is at the bottom
+   --s-mask-gutter   the strip left whole (default 1rem: an overlay
+                     scrollbar, 0 wide in layout, widens as the pointer
+                     goes over it, so it gets the room of its widest, fixed;
+                     SScrollArea measures a classic one, which does not)
+
+   The two heights are registered lengths, so they transition: the fade grows
+   in as the content leaves an edge, as the painted one fades in. */
+
+@property --s-mask-top {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+@property --s-mask-bottom {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+.s-scroll-mask {
+    --s-t: var(--s-mask-top);
+    --s-b: var(--s-mask-bottom);
+    mask-image:
+        linear-gradient(to bottom,
+            transparent 0,
+            rgb(0 0 0 / 4.6%) calc(var(--s-t) * 0.1),
+            rgb(0 0 0 / 12.8%) calc(var(--s-t) * 0.2),
+            rgb(0 0 0 / 23.7%) calc(var(--s-t) * 0.3),
+            rgb(0 0 0 / 36.4%) calc(var(--s-t) * 0.4),
+            rgb(0 0 0 / 50%) calc(var(--s-t) * 0.5),
+            rgb(0 0 0 / 63.6%) calc(var(--s-t) * 0.6),
+            rgb(0 0 0 / 76.3%) calc(var(--s-t) * 0.7),
+            rgb(0 0 0 / 87.2%) calc(var(--s-t) * 0.8),
+            rgb(0 0 0 / 95.4%) calc(var(--s-t) * 0.9),
+            #000 var(--s-t),
+            #000 calc(100% - var(--s-b)),
+            rgb(0 0 0 / 95.4%) calc(100% - var(--s-b) * 0.9),
+            rgb(0 0 0 / 87.2%) calc(100% - var(--s-b) * 0.8),
+            rgb(0 0 0 / 76.3%) calc(100% - var(--s-b) * 0.7),
+            rgb(0 0 0 / 63.6%) calc(100% - var(--s-b) * 0.6),
+            rgb(0 0 0 / 50%) calc(100% - var(--s-b) * 0.5),
+            rgb(0 0 0 / 36.4%) calc(100% - var(--s-b) * 0.4),
+            rgb(0 0 0 / 23.7%) calc(100% - var(--s-b) * 0.3),
+            rgb(0 0 0 / 12.8%) calc(100% - var(--s-b) * 0.2),
+            rgb(0 0 0 / 4.6%) calc(100% - var(--s-b) * 0.1),
+            transparent 100%
+        ),
+        linear-gradient(#000 0 0);
+    mask-size: 100% 100%, var(--s-mask-gutter, 1rem) 100%;
+    mask-position: 0 0, right 0 top 0;
+    mask-repeat: no-repeat;
+    transition: --s-mask-top 300ms, --s-mask-bottom 300ms;
+}
