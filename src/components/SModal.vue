@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   open?: boolean
   defaultOpen?: boolean
+  /** Classes added to the slideover's own, per slot. */
+  ui?: Partial<Record<'content' | 'header' | 'body' | 'footer', string>>
 }>(), {
   side: 'top',
   size: 'xl',
@@ -28,6 +30,18 @@ const props = withDefaults(defineProps<{
   footerSeparator: true,
   disabled: false,
 })
+
+defineSlots<{
+  /** The trigger that opens the modal (optional: `open` works without). */
+  default?: () => unknown
+  title?: () => unknown
+  description?: () => unknown
+  /** Buttons in the header, beside the close button. */
+  actions?: () => unknown
+  'after-header'?: () => unknown
+  body?: () => unknown
+  footer?: () => unknown
+}>()
 
 const emit = defineEmits<{
   close: []
@@ -59,10 +73,10 @@ const sizeClasses = computed(() => {
 const uiConfig = computed(() => {
   const classes = typeof sizeClasses.value === 'string' ? sizeClasses.value : ''
   return {
-    content: [classes, 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-corner [--s-radius:16px]'],
-    header: 'block px-0 sm:px-0 py-0 min-h-auto',
-    body: '!p-0',
-    footer: 'px-0 sm:px-0 py-0',
+    content: [classes, 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
+    header: ['block px-0 sm:px-0 py-0 min-h-auto', props.ui?.header],
+    body: ['!p-0', props.ui?.body],
+    footer: ['px-0 sm:px-0 py-0', props.ui?.footer],
   }
 })
 
@@ -74,6 +88,12 @@ function handleClose() {
   emit('close')
   emit('update:open', false)
 }
+
+/** Both ways, for `v-model:open`; closing emits `close` too. */
+function onUpdateOpen(value: boolean) {
+  if (value) emit('update:open', true)
+  else handleClose()
+}
 </script>
 
 <template>
@@ -84,8 +104,12 @@ function handleClose() {
       :dismissible="!disabled"
       :open="open"
       :default-open="defaultOpen"
-      @update:open="val => { if (!val) handleClose() }"
+      @update:open="onUpdateOpen"
   >
+    <template v-if="$slots.default" #default>
+      <slot/>
+    </template>
+
     <template #header>
       <SModalHeader
           v-if="header"
@@ -103,6 +127,9 @@ function handleClose() {
         </template>
         <template v-if="$slots.description" #description>
           <slot name="description"/>
+        </template>
+        <template v-if="$slots.actions" #actions>
+          <slot name="actions"/>
         </template>
       </SModalHeader>
       <slot name="after-header"/>

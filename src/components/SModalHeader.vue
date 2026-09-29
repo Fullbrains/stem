@@ -41,6 +41,8 @@ const compactClasses = computed(() => {
 const slots = defineSlots<{
   title?: () => unknown
   description?: () => unknown
+  /** Buttons in the header, beside the close button (e.g. "Remove"). */
+  actions?: () => unknown
 }>()
 </script>
 
@@ -52,7 +54,12 @@ const slots = defineSlots<{
       (description || slots.description) ? 'items-start' : 'items-center',
     ]"
   >
-    <div class="pr-8 flex flex-col truncate text-base gap-[1em]">
+    <!-- pr-8 keeps the text clear of the close button, pinned in the corner;
+         with actions, they stand between the two and keep the distance. -->
+    <div
+        class="min-w-0 flex-1 flex flex-col truncate text-base gap-[1em]"
+        :class="{ 'pr-8': !slots.actions }"
+    >
       <UIcon
           v-if="icon"
           :name="icon"
@@ -78,6 +85,13 @@ const slots = defineSlots<{
       >
         <slot name="description"><span v-html="description"/></slot>
       </div>
+    </div>
+    <!-- me-10: 8px short of the close button (12px in, 44px wide). -->
+    <div
+        v-if="slots.actions"
+        class="ms-3 me-10 flex shrink-0 items-center gap-2"
+    >
+      <slot name="actions"/>
     </div>
     <SCloseButton
         v-if="closeable"
