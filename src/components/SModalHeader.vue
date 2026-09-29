@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import DOMPurify from 'dompurify'
+import {safeHtml} from '../safeHtml'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -23,22 +23,8 @@ defineEmits<{
   close: []
 }>()
 
-/**
- * The description renders as HTML — formatting is welcome — but sanitized
- * (DOMPurify): callers build it from data they do not control (a chat's
- * title in a delete confirm), and markup that runs code must not survive.
- * Without a DOM (server rendering) DOMPurify cannot parse, so there it is
- * escaped to plain text instead.
- */
-const ESCAPES: Record<string, string> = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}
-
-const descriptionHtml = computed(() => {
-  if (!props.description) return ''
-
-  return typeof window === 'undefined'
-      ? props.description.replace(/[&<>"']/g, c => ESCAPES[c]!)
-      : DOMPurify.sanitize(props.description)
-})
+/** HTML, sanitized: see safeHtml. */
+const descriptionHtml = computed(() => safeHtml(props.description))
 
 /** Each part of the header, compact, full, or compact below sm only. */
 const compactClasses = computed(() => {

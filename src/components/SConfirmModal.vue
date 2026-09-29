@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref, computed} from 'vue'
+import {safeHtml} from '../safeHtml'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -33,6 +34,12 @@ const emit = defineEmits<{
 const loading = ref(false)
 const inputValue = ref('')
 
+/**
+ * The message is HTML, sanitized, wherever it lands: in the header (as
+ * SModalHeader's description) or in the body under the line.
+ */
+const messageHtml = computed(() => safeHtml(props.message))
+
 const confirmDisabled = computed(() =>
     loading.value || (props.confirmMatch != null && inputValue.value !== props.confirmMatch),
 )
@@ -65,7 +72,8 @@ async function handleConfirm() {
           v-if="headerSeparator && message"
           class="px-6 pt-6 text-base whitespace-normal sm:whitespace-pre-line"
           :class="{ 'pb-6': confirmMatch == null }"
-      >{{ message }}</p>
+          v-html="messageHtml"
+      />
       <div v-if="confirmMatch != null" class="p-6">
         <UInput
             v-model="inputValue"
