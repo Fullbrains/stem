@@ -17,8 +17,8 @@ export function useConfirmModal() {
     confirmPlaceholder?: string
     /** A line under the title (SConfirmModal's `headerSeparator`). */
     headerSeparator?: boolean
-    /** SModal's compact header (SConfirmModal's `headerCompact`). */
-    headerCompact?: boolean
+    /** SModal's compact header: true, false, or `'mobileOnly'` (below sm). */
+    headerCompact?: boolean | 'mobileOnly'
     onConfirm: () => Promise<void> | void
   }) {
     const modal = overlay.create(SConfirmModal, {

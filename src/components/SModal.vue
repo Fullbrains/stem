@@ -12,7 +12,8 @@ const props = withDefaults(defineProps<{
   header?: boolean
   closeable?: boolean
   footer?: boolean
-  headerCompact?: boolean
+  /** SModalHeader's `compact`: true, false, or `'mobileOnly'` (below sm). */
+  headerCompact?: boolean | 'mobileOnly'
   headerSeparator?: boolean
   footerSeparator?: boolean
   disabled?: boolean
