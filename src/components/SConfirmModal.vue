@@ -10,6 +10,12 @@ const props = withDefaults(defineProps<{
   destructive?: boolean
   confirmMatch?: string
   confirmPlaceholder?: string
+  /**
+   * A line under the title, as SModal's `headerSeparator`. The message then
+   * moves from the header into the body, under the line: in the header the
+   * line would fall after the message, right against the footer's own.
+   */
+  headerSeparator?: boolean
   onConfirm?: () => Promise<void> | void
 }>(), {
   title: 'Confirm',
@@ -45,13 +51,19 @@ async function handleConfirm() {
 <template>
   <SModal
       :title="title"
-      :description="message"
+      :description="headerSeparator ? undefined : message"
       :icon="icon"
       :disabled="loading"
+      :header-separator="headerSeparator"
       @close="emit('close', false)"
   >
-    <template v-if="confirmMatch != null" #body>
-      <div class="p-6">
+    <template v-if="headerSeparator || confirmMatch != null" #body>
+      <p
+          v-if="headerSeparator && message"
+          class="px-6 pt-6 text-base whitespace-normal sm:whitespace-pre-line"
+          :class="{ 'pb-6': confirmMatch == null }"
+      >{{ message }}</p>
+      <div v-if="confirmMatch != null" class="p-6">
         <UInput
             v-model="inputValue"
             :placeholder="confirmPlaceholder"

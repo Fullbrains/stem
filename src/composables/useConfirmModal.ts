@@ -15,6 +15,8 @@ export function useConfirmModal() {
     destructive?: boolean
     confirmMatch?: string
     confirmPlaceholder?: string
+    /** A line under the title (SConfirmModal's `headerSeparator`). */
+    headerSeparator?: boolean
     onConfirm: () => Promise<void> | void
   }) {
     const modal = overlay.create(SConfirmModal, {
@@ -30,6 +32,7 @@ export function useConfirmModal() {
       destructive: options.destructive,
       confirmMatch: options.confirmMatch,
       confirmPlaceholder: options.confirmPlaceholder,
+      headerSeparator: options.headerSeparator,
       onConfirm: options.onConfirm,
     })
   }
