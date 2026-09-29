@@ -86,10 +86,12 @@ const slots = defineSlots<{
         <slot name="description"><span v-html="description"/></slot>
       </div>
     </div>
-    <!-- me-10: 8px short of the close button (12px in, 44px wide). -->
+    <!-- me-10: 8px short of the close button (12px in, 44px wide). -my-1:
+         a button taller than the title does not push the row down, so the
+         actions stay level with the close button, pinned 12px down. -->
     <div
         v-if="slots.actions"
-        class="ms-3 me-10 flex shrink-0 items-center gap-2"
+        class="ms-3 me-10 -my-1 flex shrink-0 items-center gap-2"
     >
       <slot name="actions"/>
     </div>
