@@ -24,7 +24,8 @@
   "dependencies": {
     "@fullbrains/vimana": "^1.1.1",
     "@iconify-json/ph": "^1.2.2",
-    "defu": "^6"
+    "defu": "^6",
+    "dompurify": "^3.4.16"
   },
   "devDependencies": {
     "@fullbrains/vimana": "^1.1.1",
