@@ -73,7 +73,7 @@ const sizeClasses = computed(() => {
 const uiConfig = computed(() => {
   const classes = typeof sizeClasses.value === 'string' ? sizeClasses.value : ''
   return {
-    content: [classes, 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
+    content: [classes, 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100vh-4rem)] sm:max-h-[calc(100vh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
     header: ['block px-0 sm:px-0 py-0 min-h-auto', props.ui?.header],
     body: ['!p-0', props.ui?.body],
     footer: ['px-0 sm:px-0 py-0', props.ui?.footer],
