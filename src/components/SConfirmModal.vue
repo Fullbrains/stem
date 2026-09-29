@@ -16,6 +16,8 @@ const props = withDefaults(defineProps<{
    * line would fall after the message, right against the footer's own.
    */
   headerSeparator?: boolean
+  /** SModal's compact header: a smaller title, less air around it. */
+  headerCompact?: boolean
   onConfirm?: () => Promise<void> | void
 }>(), {
   title: 'Confirm',
@@ -55,6 +57,7 @@ async function handleConfirm() {
       :icon="icon"
       :disabled="loading"
       :header-separator="headerSeparator"
+      :header-compact="headerCompact"
       @close="emit('close', false)"
   >
     <template v-if="headerSeparator || confirmMatch != null" #body>
