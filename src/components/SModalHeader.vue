@@ -34,6 +34,7 @@ const compactClasses = computed(() => {
   if (props.compact === 'mobileOnly') {
     return {
       header: 'py-6 max-sm:py-4',
+      actions: 'max-sm:self-start',
       title: 'text-2xl max-sm:text-lg',
       blockIcon: 'max-sm:hidden',
       inlineIcon: 'sm:hidden',
@@ -41,8 +42,8 @@ const compactClasses = computed(() => {
   }
 
   return props.compact
-      ? {header: 'py-4', title: 'text-lg', blockIcon: 'hidden', inlineIcon: ''}
-      : {header: 'py-6', title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden'}
+      ? {header: 'py-4', title: 'text-lg', blockIcon: 'hidden', inlineIcon: '', actions: 'self-start'}
+      : {header: 'py-6', title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden', actions: ''}
 })
 
 const slots = defineSlots<{
@@ -93,12 +94,15 @@ const slots = defineSlots<{
         <slot name="description"><span v-html="descriptionHtml"/></slot>
       </div>
     </div>
-    <!-- me-10: 8px short of the close button (12px in, 44px wide). -my-1:
-         a button taller than the title does not push the row down, so the
-         actions stay level with the close button, pinned 12px down. -->
+    <!-- me-10: 8px short of the close button (12px in, 44px wide). Pinned
+         to the top in the compact header, as the close button is (12px
+         down: the header's 16px, less 4), not centred on the title: a title
+         on two lines took the actions down with its middle. -my-1 keeps a button taller than a
+         one-line title from pushing the row down. -->
     <div
         v-if="slots.actions"
         class="ms-3 me-10 -my-1 flex shrink-0 items-center gap-2"
+        :class="compactClasses.actions"
     >
       <slot name="actions"/>
     </div>
