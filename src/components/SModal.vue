@@ -14,6 +14,8 @@ const props = withDefaults(defineProps<{
   footer?: boolean
   /** SModalHeader's `compact`: true, false, or `'mobileOnly'` (below sm). */
   headerCompact?: boolean | 'mobileOnly'
+  /** SModalHeader's `wrap`: the title on as many lines as it needs. */
+  headerWrap?: boolean
   headerSeparator?: boolean
   footerSeparator?: boolean
   disabled?: boolean
@@ -73,7 +75,10 @@ const sizeClasses = computed(() => {
 const uiConfig = computed(() => {
   const classes = typeof sizeClasses.value === 'string' ? sizeClasses.value : ''
   return {
-    content: [classes, 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
+    // `!` on the square corners: s-corner sets the radius outside the
+    // layers, and a plain utility lost to it — a sheet on the bottom edge
+    // kept its rounded lower corners.
+    content: [classes, props.side === 'bottom' && 'rounded-b-none!', 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none! shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
     header: ['block px-0 sm:px-0 py-0 min-h-auto', props.ui?.header],
     body: ['!p-0', props.ui?.body],
     footer: ['px-0 sm:px-0 py-0', props.ui?.footer],
@@ -117,6 +122,7 @@ function onUpdateOpen(value: boolean) {
           :description="description"
           :icon="icon"
           :compact="headerCompact"
+          :wrap="headerWrap"
           :separator="headerSeparator"
           :closeable="closeable"
           :disabled="disabled"

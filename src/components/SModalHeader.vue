@@ -14,6 +14,9 @@ const props = withDefaults(defineProps<{
   compact?: boolean | 'mobileOnly'
   closeable?: boolean
   disabled?: boolean
+  /** The title wraps onto as many lines as it needs, instead of being cut
+   with an ellipsis: a document's name, a title the reader came for. */
+  wrap?: boolean
 }>(), {
   closeable: true,
   disabled: false,
@@ -61,7 +64,8 @@ const slots = defineSlots<{
     <!-- pr-8 keeps the text clear of the close button, pinned in the corner;
          with actions, they stand between the two and keep the distance. -->
     <div
-        class="min-w-0 flex-1 flex flex-col truncate text-base gap-[1em]"
+        class="min-w-0 flex-1 flex flex-col text-base gap-[1em]"
+        :class="{ truncate: !wrap }"
         :class="{ 'pr-8': !slots.actions }"
     >
       <UIcon
@@ -72,8 +76,8 @@ const slots = defineSlots<{
       />
       <div
           v-if="title || slots.title"
-          class="leading-tight block truncate flex items-center gap-[0.5em]"
-          :class="compactClasses.title"
+          class="leading-tight block flex items-center gap-[0.5em]"
+          :class="[compactClasses.title, wrap ? 'whitespace-normal' : 'truncate']"
       >
         <UIcon
             v-if="icon"
