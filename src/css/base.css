@@ -13,6 +13,11 @@
 
 :root {
     --ui-border: color-mix(in oklch, var(--color-iron-500) 20%, transparent);
+    /* A sheet's (SModal's) way in and out, on every side: one duration and
+       one curve, for the sheet and for whatever is timed on it — a scrim
+       that dims the page behind, a handover to the next overlay. */
+    --s-sheet-duration: 500ms;
+    --s-sheet-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root:not(.dark) {
