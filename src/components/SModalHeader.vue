@@ -65,8 +65,7 @@ const slots = defineSlots<{
          with actions, they stand between the two and keep the distance. -->
     <div
         class="min-w-0 flex-1 flex flex-col text-base gap-[1em]"
-        :class="{ truncate: !wrap }"
-        :class="{ 'pr-8': !slots.actions }"
+        :class="{ truncate: !wrap, 'pr-8': !slots.actions }"
     >
       <UIcon
           v-if="icon"
