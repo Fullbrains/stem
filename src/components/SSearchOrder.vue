@@ -6,9 +6,12 @@ const open = defineModel<boolean>('open', {default: false})
 
 const props = withDefaults(defineProps<{
   options: { value: string; label: string }[]
+  /** The chip's name for what it chooses, in the app's language. */
+  label?: string
   contentClass?: string
   chipClass?: string
 }>(), {
+  label: 'Order by',
   contentClass: 'min-w-36 w-full',
 })
 
@@ -41,7 +44,7 @@ const items = computed(() => [
       <SSearchChip
         trailing-icon="i-ph-caret-down"
         :active="open"
-        label="Order by"
+        :label="label"
         :selected-values="[sortLabel]"
         :count="options.length"
         class="flex-1 min-w-0"
