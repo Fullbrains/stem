@@ -11,15 +11,19 @@ import {useLocale} from '@nuxt/ui/composables'
  * Without one it takes Nuxt UI's own word for "close" (`modal.close`), in
  * the locale the app gives UApp — the same the Nuxt UI overlays read.
  *
+ * `size` is SModalButton's: `sm` and `xs` for a popover or a card.
+ *
  * Placement is the caller's: SModalHeader pins it to its corner.
  */
 const props = withDefaults(defineProps<{
   /** Accessible name (aria-label). Not rendered. */
   label?: string
   disabled?: boolean
+  size?: 'xs' | 'sm' | 'md'
 }>(), {
   label: undefined,
   disabled: false,
+  size: 'md',
 })
 
 const {t} = useLocale()
@@ -37,6 +41,7 @@ defineEmits<{
     icon="i-ph-x"
     :aria-label="ariaLabel"
     :disabled="disabled"
+    :size="size"
     @click="$emit('click', $event)"
   />
 </template>
