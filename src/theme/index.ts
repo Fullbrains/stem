@@ -15,6 +15,7 @@ import popover from './popover'
 import _switch from './switch'
 import avatar from './avatar'
 import checkbox from './checkbox'
+import radioGroup from './radio-group'
 import fieldGroup from './field-group'
 
 export {
@@ -32,6 +33,7 @@ export {
 export const stem = {
   avatar,
   checkbox,
+  radioGroup,
   fieldGroup,
   button,
   input,
