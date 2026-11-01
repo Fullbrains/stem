@@ -41,6 +41,8 @@ const props = withDefaults(defineProps<{
   alignEnd?: boolean
   /** Accessible name of the reset (X) button shown on a partial selection. */
   resetLabel?: string
+  /** Chip text for a multi-selection past the threshold; `%` is replaced by the count. */
+  selectedTemplate?: string
 }>(), {
   multiple: true,
   placeholder: 'None selected',
@@ -282,6 +284,7 @@ const items = computed(() => {
           :active="open"
           :label="label"
           :all-label="allLabel"
+          :selected-template="selectedTemplate"
           :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
           :count="multiple ? totalOptions : Infinity"
           :threshold="threshold"
