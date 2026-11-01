@@ -46,15 +46,17 @@ export default defineNuxtModule<StemModuleOptions>({
     // At runtime, Nuxt re-applies the user's app.config.ts via defuFn(userConfig, inlineConfig),
     // so user overrides always win.
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
+    const ui = nuxt.options.appConfig.ui as Record<string, unknown>
     for (const [key, value] of Object.entries(stemAppConfig.ui)) {
+      const current = (ui[key] ?? {}) as Record<string, unknown>
       if (key === 'colors') {
         // Colors must override Nuxt UI defaults (e.g. secondary: 'blue' → 'iron').
         // Using Object.assign ensures Stem values win over getDefaultConfig() values.
-        nuxt.options.appConfig.ui[key] = Object.assign(nuxt.options.appConfig.ui[key] || {}, value)
+        ui[key] = Object.assign(current, value)
       } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        nuxt.options.appConfig.ui[key] = defu(value, nuxt.options.appConfig.ui[key] || {})
+        ui[key] = defu(value, current)
       } else {
-        nuxt.options.appConfig.ui[key] = value
+        ui[key] = value
       }
     }
 

@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
 
 const attrs = useAttrs()
 
-const scrollRef = ref<InstanceType<typeof import('#components').UScrollArea> | null>(null)
+const scrollRef = ref<{ $el?: Element } | null>(null)
 
 const scrollTop = ref(0)
 const scrollHeight = ref(0)
