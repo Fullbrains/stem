@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, inject} from 'vue'
+import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
 const model = defineModel<string>({required: true})
 const open = defineModel<boolean>('open', {default: false})
@@ -14,6 +15,8 @@ const props = withDefaults(defineProps<{
   label: 'Order by',
   contentClass: 'min-w-36 w-full',
 })
+
+const inPanel = inject(SEARCH_BAR_PANEL, false)
 
 const sortLabel = computed(() =>
   props.options.find(o => o.value === model.value)?.label ?? model.value,
@@ -38,7 +41,7 @@ const items = computed(() => [
       v-model:open="open"
       :items="items"
       size="sm"
-      :content="{align: 'end' as const, sideOffset: 3}"
+      :content="{align: inPanel ? 'start' as const : 'end' as const, sideOffset: 3}"
       :ui="{content: contentClass}"
     >
       <SSearchChip

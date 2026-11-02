@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, toRef, useSlots} from 'vue'
+import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, toRef, useSlots, defineComponent} from 'vue'
 import {useAppConfig} from '#imports'
-import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
+import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
 const modelValue = defineModel<string>({default: ''})
 
@@ -35,6 +35,13 @@ const appConfig = useAppConfig()
 const searchIcon = computed(() => props.icon ?? appConfig.ui?.icons?.search ?? 'i-ph-magnifying-glass')
 
 provide(SEARCH_BAR_COMPACT, toRef(props, 'compact'))
+
+const PanelScope = defineComponent({
+  setup(_, {slots}) {
+    provide(SEARCH_BAR_PANEL, true)
+    return () => slots.default?.()
+  },
+})
 
 const slots = useSlots()
 const hasFilters = computed(() => !!slots.filters)
@@ -235,7 +242,7 @@ function clear() {
           :text="activeFilterCount"
           :show="activeFilterCount > 0"
           size="3xl"
-          :ui="{base: 'px-1 tabular-nums'}"
+          :ui="{base: 'px-1 tabular-nums ring-0'}"
       >
         <SButton
             icon="i-ph-funnel-simple"
@@ -257,8 +264,10 @@ function clear() {
         :style="{height: `${mobileHeight}px`}"
     >
       <div class="flex flex-wrap gap-1 pt-2 pb-2 border-t pl-0.5 border-(--ui-border) mx-1.5">
-        <slot v-if="collapsed" name="filters"/>
-        <slot name="more"/>
+        <PanelScope>
+          <slot v-if="collapsed" name="filters"/>
+          <slot name="more"/>
+        </PanelScope>
       </div>
     </div>
   </div>

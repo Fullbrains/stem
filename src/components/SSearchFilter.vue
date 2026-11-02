@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, inject, ref} from 'vue'
+import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
 export interface SSearchFilterOption {
   readonly value: string
@@ -20,6 +21,7 @@ const open = defineModel<boolean>('open')
 // trigger: the pill's edges never move when the reset button animates in and
 // out, so the menu stays put — no jumps, no offset math.
 const rootEl = ref<HTMLElement>()
+const inPanel = inject(SEARCH_BAR_PANEL, false)
 
 const props = withDefaults(defineProps<{
   modelValue: Set<string>
@@ -274,7 +276,7 @@ const items = computed(() => {
         v-model:open="open"
         size="sm"
         :items="(items as any)"
-        :content="{align: alignEnd ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
+        :content="{align: alignEnd && !inPanel ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
         :ui="{
         content: contentClass,
         itemTrailing: 'flex items-center justify-end',
