@@ -10,6 +10,8 @@ const props = withDefaults(defineProps<{
   minInputWidth?: number
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost'
   activeFilterCount?: number
+  /** Accessible name of the funnel button that opens the extra filters. */
+  filtersLabel?: string
   compact?: boolean
   icon?: string
   /** Nasconde il pulsante che svuota il campo. Utile dove la ricerca ha già
@@ -20,6 +22,7 @@ const props = withDefaults(defineProps<{
   minInputWidth: 280,
   variant: 'outline',
   activeFilterCount: 0,
+  filtersLabel: 'Filters',
   compact: false,
   hideClear: false,
 })
@@ -225,18 +228,26 @@ function clear() {
         <slot name="trailing"/>
       </div>
 
-      <SButton
+      <!-- The count rides on a chip, not in the label: a label widens the
+           button every time a filter is toggled and shoves the row sideways. -->
+      <UChip
           v-if="showFunnel"
-          icon="i-ph-funnel-simple"
-          :label="activeFilterCount && activeFilterCount > 0 ? String(activeFilterCount) : undefined"
-          :variant="mobileExpanded ? 'solid' : 'soft'"
-          size="sm"
-          rounded
-          compact
-          class="select-none"
-          :class="{'py-[0.1em]! min-h-[calc(1lh+0.2em)]!': props.compact}"
-          @click="mobileExpanded = !mobileExpanded"
-      />
+          :text="activeFilterCount"
+          :show="activeFilterCount > 0"
+          size="3xl"
+          :ui="{base: 'px-1 tabular-nums'}"
+      >
+        <SButton
+            icon="i-ph-funnel-simple"
+            :aria-label="filtersLabel"
+            :variant="mobileExpanded ? 'solid' : 'soft'"
+            size="sm"
+            disc
+            compact
+            class="select-none"
+            @click="mobileExpanded = !mobileExpanded"
+        />
+      </UChip>
     </div>
 
     <div
