@@ -12,6 +12,9 @@ import type {ButtonProps} from '@nuxt/ui'
  * wanted — a secret revealed on demand. Returning null copies nothing; a
  * failure is emitted as `error` and leaves the icon alone.
  *
+ * Where the Clipboard API is refused (an embedded browser, a frame without
+ * the permission) it falls back to the older selection-and-copy command.
+ *
  * Icon-only: `label` is its accessible name (aria-label), never shown. It is
  * English by default, so an app passes it in its own language.
  */
@@ -44,11 +47,33 @@ const emit = defineEmits<{
 const copied = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
 
+function legacyCopy(value: string) {
+  const area = document.createElement('textarea')
+  area.value = value
+  area.setAttribute('readonly', '')
+  area.style.position = 'fixed'
+  area.style.opacity = '0'
+  document.body.appendChild(area)
+  area.select()
+  const done = document.execCommand('copy')
+  area.remove()
+  if (!done) throw new Error('Copy refused')
+}
+
+async function write(value: string) {
+  try {
+    await navigator.clipboard.writeText(value)
+  }
+  catch {
+    legacyCopy(value)
+  }
+}
+
 async function copy() {
   try {
     const value = typeof props.text === 'function' ? await props.text() : props.text
     if (value == null) return
-    await navigator.clipboard.writeText(value)
+    await write(value)
     copied.value = true
     clearTimeout(timer)
     timer = setTimeout(() => {
