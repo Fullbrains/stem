@@ -61,6 +61,15 @@ export default {
       `
     },
     {
+      color: ['primary', 'neutral', 'secondary'],
+      variant: 'ghost',
+      class: `
+        text-muto-800 dark:text-muto-200
+        hover:bg-iron-400/20
+        active:bg-iron-400/30
+      `
+    },
+    {
       color: ['primary', 'neutral'],
       variant: 'subtle',
       class: `

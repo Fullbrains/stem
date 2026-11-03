@@ -3,7 +3,7 @@ import type {DropdownMenuItem} from '@nuxt/ui'
 
 const allColors = ['primary', 'secondary', 'neutral', 'error', 'success'] as const
 const allButtonColors = ['primary', 'secondary', 'neutral', 'error'] as const
-const allButtonVariants = ['solid', 'soft', 'subtle'] as const
+const allButtonVariants = ['solid', 'soft', 'subtle', 'ghost'] as const
 const allInputColors = ['primary', 'error', 'success'] as const
 const allInputVariants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
 const badgeVariants = ['solid', 'outline', 'soft', 'subtle'] as const
