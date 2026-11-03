@@ -15,9 +15,6 @@ import {computed} from 'vue'
  * `size` scales the pill down for the small surfaces that close too — a
  * popover, a card by a link — where a header's pill would outweigh the
  * title: `sm` is 24px tall, `xs` 20px. `md`, a modal's header, is 32px.
- * Scaled down, a Phosphor icon takes its bold weight (`i-ph-x` →
- * `i-ph-x-bold`): the regular stroke went thin at 16px and under. An icon
- * that names its weight, or of another set, is drawn as given.
  *
  * Everything else goes to SButton (`color`, `disabled`, `to`, `loading`…).
  */
@@ -39,13 +36,6 @@ const sizes = {
 } as const
 
 const resolved = computed(() => sizes[props.size])
-
-/** Phosphor's weights, as the end of an icon's name. */
-const WEIGHTED = /-(thin|light|bold|fill|duotone)$/
-
-const icon = computed(() => props.size !== 'md' && props.icon?.startsWith('i-ph-') && !WEIGHTED.test(props.icon)
-  ? `${props.icon}-bold`
-  : props.icon)
 </script>
 
 <template>
