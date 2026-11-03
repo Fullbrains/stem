@@ -45,6 +45,7 @@ const inputMenuValue = ref('')
 const sections = [
   {id: 'checkbox', label: 'Checkbox & Switch'},
   {id: 'buttons', label: 'Buttons'},
+  {id: 'copy-button', label: 'CopyButton'},
   {id: 'inputs', label: 'Inputs'},
   {id: 'dropdown-menu', label: 'DropdownMenu'},
   {id: 'input-tags', label: 'InputTags'},
@@ -386,6 +387,30 @@ onMounted(() => {
           </div>
 
 
+        </section>
+
+        <!-- ======================================== -->
+        <!-- CopyButton                               -->
+        <!-- ======================================== -->
+        <section id="copy-button" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            CopyButton
+          </h2>
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <SCopyButton text="Copied from Stem"/>
+              <SCopyButton text="Copied from Stem" variant="ghost"/>
+              <SCopyButton text="Copied from Stem" color="secondary" variant="subtle"/>
+              <SCopyButton text="Copied from Stem" color="primary" variant="solid"/>
+              <SCopyButton text="Copied from Stem" size="xs" compact/>
+              <SCopyButton text="Copied from Stem" disc rounded/>
+              <SCopyButton :text="() => Promise.resolve('Fetched on click')" label="Copy a fetched value"/>
+            </div>
+            <div class="flex items-start gap-2">
+              <code class="flex-1 rounded-md bg-neutral-100 p-3 text-xs dark:bg-neutral-900">npx nuxi module add @fullbrains/stem</code>
+              <SCopyButton text="npx nuxi module add @fullbrains/stem"/>
+            </div>
+          </div>
         </section>
 
         <!-- ======================================== -->
