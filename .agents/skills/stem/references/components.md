@@ -709,7 +709,7 @@ interface SSearchFilterGroup {
 
 ### Behavior
 
-- **Multi mode** (default): Empty `Set` = all selected. When all options toggled on, resets to empty Set. Groups: clicking header toggles all in group. Reset button (×) animates in/out.
+- **Multi mode** (default): Empty `Set` = all selected. When all options toggled on, resets to empty Set, unless there is only one option, which stays checkable. Groups: clicking header toggles all in group. Reset button (×) animates in/out.
 - **Single mode** (`multiple=false`): No checkbox, no "All" option, no reset button. Dropdown closes on selection. Chip shows selected label or placeholder.
 
 ## SSearchOrder

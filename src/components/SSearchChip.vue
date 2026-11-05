@@ -52,7 +52,7 @@ const displayValue = computed(() => {
       <UIcon
           v-if="labelIcon"
           :name="labelIcon"
-          class="size-(--s-icon-size) shrink-0"
+          class="size-4 shrink-0"
       />
       <span v-else class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
       <span class="font-semibold truncate">{{ displayValue }}</span>

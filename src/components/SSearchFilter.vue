@@ -70,11 +70,15 @@ const emit = defineEmits<{
 const selectedSet = computed(() => props.modelValue)
 
 const totalOptions = computed(() => props.options.length + (props.nullable ? 1 : 0))
-const isAllSelected = computed(() => props.multiple && (props.modelValue.size === 0 || props.modelValue.size >= totalOptions.value))
+// Picking every option means "all", except when there is only one: then
+// "all" and that option would be the same click, and the option could never
+// be checked.
+const coversAll = (size: number) => size === 0 || (totalOptions.value > 1 && size >= totalOptions.value)
+const isAllSelected = computed(() => props.multiple && coversAll(props.modelValue.size))
 const showReset = computed(() => props.multiple && !isAllSelected.value)
 
 function emitOrReset(newSet: Set<string>) {
-  if (newSet.size === 0 || newSet.size >= totalOptions.value) {
+  if (coversAll(newSet.size)) {
     emit('update:modelValue', new Set())
   } else {
     emit('update:modelValue', newSet)
@@ -310,7 +314,7 @@ const items = computed(() => {
             :all-label="allLabel"
             :selected-template="selectedTemplate"
             :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
-            :count="multiple ? totalOptions : Infinity"
+            :count="multiple && isAllSelected ? totalOptions : Infinity"
             :threshold="threshold"
             class="flex-1 min-w-0 rounded-r-none!"
             :class="showReset ? 'pr-1!' : ''"
