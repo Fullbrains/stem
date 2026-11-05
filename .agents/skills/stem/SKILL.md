@@ -501,7 +501,7 @@ Multi-select dropdown filter with chip trigger, optional groups, nullable option
 
 **v-model:open** — controls dropdown open state
 
-**Slots:** `#leading` — custom leading content for filter items (receives `{option}`); `#chip` — replaces the chip's label and value text (receives `{values, all}`, `values` empty when all are selected)
+**Slots:** `#leading` — custom leading content for filter items (receives `{option}`); `#chip` — draws the selection in place of the label and value text (receives `{values}`); with everything selected the chip shows its default text
 
 Empty Set = "All selected". When all options are selected, resets to empty Set — unless there is only one option, which stays checkable.
 

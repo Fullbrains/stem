@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {computed, inject, ref} from 'vue'
+import {computed, inject, ref, useSlots} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
 defineOptions({inheritAttrs: false})
+
+const slots = useSlots()
 
 export interface SSearchFilterOption {
   readonly value: string
@@ -76,6 +78,9 @@ const totalOptions = computed(() => props.options.length + (props.nullable ? 1 :
 const coversAll = (size: number) => size === 0 || (totalOptions.value > 1 && size >= totalOptions.value)
 const isAllSelected = computed(() => props.multiple && coversAll(props.modelValue.size))
 const showReset = computed(() => props.multiple && !isAllSelected.value)
+// The chip slot draws a selection; with everything selected there is none,
+// so the chip reads like any other: icon, label and the "all" text.
+const drawsSelection = computed(() => !!slots.chip && !isAllSelected.value)
 
 function emitOrReset(newSet: Set<string>) {
   if (coversAll(newSet.size)) {
@@ -287,7 +292,7 @@ const items = computed(() => {
   <UTooltip
       :text="label"
       :delay-duration="0"
-      :disabled="(!icon || isAllSelected) && !$slots.chip"
+      :disabled="isAllSelected || (!icon && !$slots.chip)"
   >
     <div
         ref="rootEl"
@@ -309,7 +314,7 @@ const items = computed(() => {
       >
         <SSearchChip
             :active="open"
-            :label="$slots.chip ? undefined : label"
+            :label="drawsSelection ? undefined : label"
             :label-icon="chipIcon"
             :all-label="allLabel"
             :selected-template="selectedTemplate"
@@ -319,14 +324,13 @@ const items = computed(() => {
             class="flex-1 min-w-0 rounded-r-none!"
             :class="showReset ? 'pr-1!' : ''"
         >
-          <!-- The chip slot replaces label and values together: an app that draws
-               the selection itself (avatars, swatches) says what is filtered
-               without the label beside it. -->
-          <template v-if="$slots.chip" #default>
+          <!-- The chip slot replaces label and values together while something is
+               filtered: an app that draws the selection itself (avatars,
+               swatches) says what is filtered without the label beside it. -->
+          <template v-if="drawsSelection" #default>
             <slot
                 name="chip"
-                :values="isAllSelected ? [] : [...modelValue]"
-                :all="isAllSelected"
+                :values="[...modelValue]"
             />
           </template>
         </SSearchChip>

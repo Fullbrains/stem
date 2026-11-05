@@ -705,7 +705,7 @@ interface SSearchFilterGroup {
 |------|-------|-------------|
 | `item` | `{ option, checked }` | Replace the entire menu item content |
 | `leading` | `{ option }` | Custom leading content for filter items (inside default item layout) |
-| `chip` | `{ values, all }` | Replaces the chip's label and value text; the label shows in a tooltip at once. `values` is the selection (empty when `all`) |
+| `chip` | `{ values }` | Draws the selection in place of the label and value text, the label moving into a tooltip. With everything selected the chip shows its default text instead |
 
 ### Behavior
 
