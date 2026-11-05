@@ -635,7 +635,7 @@ Filter chip that wraps `SButton` (variant="soft", size="sm", rounded, compact). 
 | `trailingIcon` | `string` | — | Trailing icon |
 | `active` | `boolean` | `false` | Active/pressed state (darker bg) |
 | `label` | `string` | — | Label text |
-| `labelIcon` | `string` | — | Icon drawn in place of the label text; the label becomes the accessible name |
+| `labelIcon` | `string` | — | Icon drawn before the label, which then shows only while everything is selected; the label becomes the accessible name |
 | `selectedValues` | `string[]` | — | Selected value labels |
 | `count` | `number` | — | Total option count |
 | `threshold` | `number` | `3` | Max values to list before showing "N selected" |
@@ -659,7 +659,7 @@ Dropdown filter with `SSearchChip` trigger, optional groups, nullable option, co
 | `modelValue` | `Set<string>` | (required) | Selected values (v-model). Empty Set = all selected (multi) or none (single) |
 | `options` | `SSearchFilterOption[]` | (required) | Available options |
 | `label` | `string` | (required) | Filter label |
-| `icon` | `string` | — | Icon drawn in place of the label text; the label becomes the accessible name and shows in a tooltip at once. With one option selected, that option's icon takes its place |
+| `icon` | `string` | — | Icon drawn before the label, which then shows only while everything is selected; otherwise the label is the accessible name and shows in a tooltip at once. With one option selected, that option's icon takes its place |
 | `multiple` | `boolean` | `true` | Multi-select mode. When `false`: single select, no checkbox, no "All", no reset button, dropdown closes on select |
 | `placeholder` | `string` | `'None selected'` | Placeholder shown in single mode when nothing is selected |
 | `allLabel` | `string` | `'All'` | Label for "select all" (multi mode only) |

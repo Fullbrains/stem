@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<{
   modelValue: Set<string>
   options: readonly SSearchFilterOption[]
   label: string
-  /** Drawn in place of the label text; the label stays as the accessible name. */
+  /** Drawn before the label, which then shows only while everything is selected; the label stays as the accessible name. */
   icon?: string
   multiple?: boolean
   placeholder?: string
@@ -282,12 +282,12 @@ const items = computed(() => {
 </script>
 
 <template>
-  <!-- Without its label text (an icon or the chip slot in its place) the chip
-       shows the label on hover at once, so the filter still says what it is. -->
+  <!-- Without its label text (a filtering chip with an icon, or the chip slot)
+       the chip shows the label on hover at once, so it still says what it is. -->
   <UTooltip
       :text="label"
       :delay-duration="0"
-      :disabled="!icon && !$slots.chip"
+      :disabled="(!icon || isAllSelected) && !$slots.chip"
   >
     <div
         ref="rootEl"

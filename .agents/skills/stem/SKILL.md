@@ -482,7 +482,7 @@ Filter chip wrapping `SButton` (variant="soft", size="sm", rounded, compact). Di
 <SSearchChip label="Status" :selected-values="['Active', 'Pending']" :count="5" />
 ```
 
-**Props:** `leadingIcon`, `trailingIcon`, `active`, `label`, `labelIcon` (drawn in place of the label text), `selectedValues` (string[]), `count`, `threshold` (default: 3), `allLabel` (default: 'All'), `selectedTemplate` (default: '% selected')
+**Props:** `leadingIcon`, `trailingIcon`, `active`, `label`, `labelIcon` (drawn before the label, which then shows only while everything is selected), `selectedValues` (string[]), `count`, `threshold` (default: 3), `allLabel` (default: 'All'), `selectedTemplate` (default: '% selected')
 
 ### SSearchFilter
 
@@ -497,7 +497,7 @@ Multi-select dropdown filter with chip trigger, optional groups, nullable option
 />
 ```
 
-**Props:** `modelValue` (Set\<string\>, v-model), `options` (SSearchFilterOption[]), `label`, `icon` (drawn in place of the label text, which then shows in a tooltip; one selected option shows its own icon), `allLabel`, `groups` (SSearchFilterGroup[]), `nullable`, `nullLabel`, `nullValue`, `nullIcon`, `nullIconClass`, `counts` (Record\<string, number\>), `chipClass`, `threshold`, `contentClass`, `alignEnd` (boolean — align dropdown to end)
+**Props:** `modelValue` (Set\<string\>, v-model), `options` (SSearchFilterOption[]), `label`, `icon` (drawn before the label, which shows only while everything is selected and otherwise in a tooltip; one selected option shows its own icon), `allLabel`, `groups` (SSearchFilterGroup[]), `nullable`, `nullLabel`, `nullValue`, `nullIcon`, `nullIconClass`, `counts` (Record\<string, number\>), `chipClass`, `threshold`, `contentClass`, `alignEnd` (boolean — align dropdown to end)
 
 **v-model:open** — controls dropdown open state
 

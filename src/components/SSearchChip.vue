@@ -7,7 +7,7 @@ const props = withDefaults(defineProps<{
   trailingIcon?: string
   active?: boolean
   label?: string
-  /** Drawn in place of the label text; the label stays as the accessible name. */
+  /** Drawn before the label, which then shows only while everything is selected; the label stays as the accessible name. */
   labelIcon?: string
   selectedValues?: string[]
   count?: number
@@ -24,10 +24,12 @@ const props = withDefaults(defineProps<{
 const searchBarCompact = inject(SEARCH_BAR_COMPACT, null)
 const tight = computed(() => !!searchBarCompact?.value)
 
+const coversAll = computed(() => !!props.selectedValues && props.selectedValues.length === props.count)
+
 const displayValue = computed(() => {
   if (!props.selectedValues || props.count === undefined) return null
   const len = props.selectedValues.length
-  if (len === props.count) return props.allLabel
+  if (coversAll.value) return props.allLabel
   if (len <= props.threshold) return props.selectedValues.join(', ')
   return props.selectedTemplate.replace('%', String(len))
 })
@@ -54,7 +56,7 @@ const displayValue = computed(() => {
           :name="labelIcon"
           class="size-4 shrink-0"
       />
-      <span v-else class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
+      <span v-if="!labelIcon || coversAll" class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
       <span class="font-semibold truncate">{{ displayValue }}</span>
     </template>
     <slot v-else/>
