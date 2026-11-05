@@ -284,7 +284,7 @@ const items = computed(() => {
     >
       <SSearchChip
           :active="open"
-          :label="label"
+          :label="$slots.chip ? undefined : label"
           :all-label="allLabel"
           :selected-template="selectedTemplate"
           :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
@@ -292,7 +292,18 @@ const items = computed(() => {
           :threshold="threshold"
           class="flex-1 min-w-0 rounded-r-none!"
           :class="showReset ? 'pr-1!' : ''"
-      />
+      >
+        <!-- The chip slot replaces label and values together: an app that draws
+             the selection itself (avatars, swatches) says what is filtered
+             without the label beside it. -->
+        <template v-if="$slots.chip" #default>
+          <slot
+              name="chip"
+              :values="isAllSelected ? [] : [...modelValue]"
+              :all="isAllSelected"
+          />
+        </template>
+      </SSearchChip>
 
       <template #filter-all="{item: _item}">
         <div class="flex items-center gap-2 w-full">
