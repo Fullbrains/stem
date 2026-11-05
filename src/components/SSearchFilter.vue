@@ -137,6 +137,15 @@ const selectedGroups = computed(() => {
   return result
 })
 
+// With one option picked, the chip wears that option's icon instead of the
+// filter's own, the way it shows that option's label instead of the count.
+const chipIcon = computed(() => {
+  if (!props.icon || props.modelValue.size !== 1 || isAllSelected.value) return props.icon
+  const value = [...props.modelValue][0]
+  if (props.nullable && value === props.nullValue) return props.nullIcon
+  return props.options.find(o => o.value === value)?.icon ?? props.icon
+})
+
 const singleLabel = computed(() => {
   if (props.modelValue.size === 0) return null
   const value = [...props.modelValue][0]
@@ -297,7 +306,7 @@ const items = computed(() => {
         <SSearchChip
             :active="open"
             :label="$slots.chip ? undefined : label"
-            :label-icon="icon"
+            :label-icon="chipIcon"
             :all-label="allLabel"
             :selected-template="selectedTemplate"
             :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
