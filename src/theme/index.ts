@@ -6,6 +6,7 @@ import selectMenu from './select-menu'
 import inputMenu from './input-menu'
 import slideover from './slideover'
 import dropdownMenu from './dropdown-menu'
+import contextMenu from './context-menu'
 import formField from './form-field'
 import tabs from './tabs'
 import inputTags from './input-tags'
@@ -44,6 +45,7 @@ export const stem = {
   inputTags,
   slideover,
   dropdownMenu,
+  contextMenu,
   formField,
   tabs,
   badge,

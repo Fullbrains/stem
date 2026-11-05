@@ -377,7 +377,7 @@ Alert has no `size` prop in Nuxt UI, so the golden rule does not apply.
 
 Focus ring uses `has-focus-visible:` instead of `focus-visible:` since focus is on the inner input, not the root element.
 
-## Menu Items (shared by dropdownMenu, select, selectMenu, inputMenu)
+## Menu Items (shared by dropdownMenu, contextMenu, select, selectMenu, inputMenu)
 
 ```ts
 // src/theme/menu-items.ts
@@ -404,6 +404,7 @@ Note: menu item icons use the same shared icon scale as every other component â€
 
 **Highlight background** is NOT in menuItemSlots (to avoid CSS specificity conflicts with Nuxt UI compound variants for colored items like `color: 'error'`). Instead, each component adds it in its own `active: false` variant:
 - **dropdownMenu**: `data-highlighted:before:bg-elevated` (same selector as Nuxt UI compound variants, so `bg-error/10` wins)
+- **contextMenu**: the dropdownMenu theme, unchanged
 - **select, selectMenu, inputMenu**: `data-highlighted:not-data-disabled:before:bg-elevated`
 
 ## Select Commons

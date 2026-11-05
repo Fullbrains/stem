@@ -656,6 +656,7 @@ Stem overrides these Nuxt UI component themes via `app.config.ui`:
 - **alert** — Hardcoded slate colors matching button (no size prop)
 - **tabs** — Slate-900 indicator for primary, cursor-pointer on all variants, golden rule text sizes + shared icon scale
 - **dropdownMenu** — Floating menu styling, highlighted items
+- **contextMenu** — Same theme as dropdownMenu
 - **popover** — Floating menu styling (s-floating-menu), ring-0
 - **slideover** — Dark overlay, rounded content, slide animations
 - **switch** — cursor-pointer
