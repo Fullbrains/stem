@@ -7,6 +7,8 @@ const props = withDefaults(defineProps<{
   trailingIcon?: string
   active?: boolean
   label?: string
+  /** Drawn in place of the label text; the label stays as the accessible name. */
+  labelIcon?: string
   selectedValues?: string[]
   count?: number
   threshold?: number
@@ -40,13 +42,19 @@ const displayValue = computed(() => {
       rounded
       compact
       class="select-none"
+      :aria-label="labelIcon && label && displayValue !== null ? `${label}: ${displayValue}` : undefined"
       :class="[
         active ? 'bg-iron-400/30!' : '',
         tight ? 'py-[0.1em]! min-h-[calc(1lh+0.2em)]!' : '',
       ]"
   >
     <template v-if="label && displayValue !== null">
-      <span class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
+      <UIcon
+          v-if="labelIcon"
+          :name="labelIcon"
+          class="size-(--s-icon-size) shrink-0"
+      />
+      <span v-else class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
       <span class="font-semibold truncate">{{ displayValue }}</span>
     </template>
     <slot v-else/>

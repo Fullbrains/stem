@@ -2,6 +2,8 @@
 import {computed, inject, ref} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
+defineOptions({inheritAttrs: false})
+
 export interface SSearchFilterOption {
   readonly value: string
   readonly label: string
@@ -27,6 +29,8 @@ const props = withDefaults(defineProps<{
   modelValue: Set<string>
   options: readonly SSearchFilterOption[]
   label: string
+  /** Drawn in place of the label text; the label stays as the accessible name. */
+  icon?: string
   multiple?: boolean
   placeholder?: string
   allLabel?: string
@@ -265,88 +269,57 @@ const items = computed(() => {
 </script>
 
 <template>
-  <div
-      ref="rootEl"
-      class="flex items-stretch overflow-hidden rounded-full"
-      :class="chipClass"
+  <!-- Without its label text (an icon or the chip slot in its place) the chip
+       shows the label on hover at once, so the filter still says what it is. -->
+  <UTooltip
+      :text="label"
+      :delay-duration="0"
+      :disabled="!icon && !$slots.chip"
   >
-    <!-- size sm: item metrics (36px box, px-2, gap-2, 16px icons) come from
-         the shared menu-items theme instead of local overrides. -->
-    <UDropdownMenu
-        v-model:open="open"
-        size="sm"
-        :items="(items as any)"
-        :content="{align: alignEnd && !inPanel ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
-        :ui="{
-        content: contentClass,
-        itemTrailing: 'flex items-center justify-end',
-      }"
+    <div
+        ref="rootEl"
+        v-bind="$attrs"
+        class="flex items-stretch overflow-hidden rounded-full"
+        :class="chipClass"
     >
-      <SSearchChip
-          :active="open"
-          :label="$slots.chip ? undefined : label"
-          :all-label="allLabel"
-          :selected-template="selectedTemplate"
-          :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
-          :count="multiple ? totalOptions : Infinity"
-          :threshold="threshold"
-          class="flex-1 min-w-0 rounded-r-none!"
-          :class="showReset ? 'pr-1!' : ''"
+      <!-- size sm: item metrics (36px box, px-2, gap-2, 16px icons) come from
+           the shared menu-items theme instead of local overrides. -->
+      <UDropdownMenu
+          v-model:open="open"
+          size="sm"
+          :items="(items as any)"
+          :content="{align: alignEnd && !inPanel ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
+          :ui="{
+          content: contentClass,
+          itemTrailing: 'flex items-center justify-end',
+        }"
       >
-        <!-- The chip slot replaces label and values together: an app that draws
-             the selection itself (avatars, swatches) says what is filtered
-             without the label beside it. -->
-        <template v-if="$slots.chip" #default>
-          <slot
-              name="chip"
-              :values="isAllSelected ? [] : [...modelValue]"
-              :all="isAllSelected"
-          />
-        </template>
-      </SSearchChip>
+        <SSearchChip
+            :active="open"
+            :label="$slots.chip ? undefined : label"
+            :label-icon="icon"
+            :all-label="allLabel"
+            :selected-template="selectedTemplate"
+            :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
+            :count="multiple ? totalOptions : Infinity"
+            :threshold="threshold"
+            class="flex-1 min-w-0 rounded-r-none!"
+            :class="showReset ? 'pr-1!' : ''"
+        >
+          <!-- The chip slot replaces label and values together: an app that draws
+               the selection itself (avatars, swatches) says what is filtered
+               without the label beside it. -->
+          <template v-if="$slots.chip" #default>
+            <slot
+                name="chip"
+                :values="isAllSelected ? [] : [...modelValue]"
+                :all="isAllSelected"
+            />
+          </template>
+        </SSearchChip>
 
-      <template #filter-all="{item: _item}">
-        <div class="flex items-center gap-2 w-full">
-          <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
-          <span
-              v-if="(_item as any).count != null"
-              class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
-          >{{ (_item as any).count }}</span>
-          <UIcon
-              v-if="(_item as any).checked"
-              name="i-ph-check"
-              class="size-4 shrink-0"
-          />
-          <div v-else class="w-4"/>
-        </div>
-      </template>
-
-      <template #group-header="{item: _item}">
-        <div class="flex items-center gap-2 w-full cursor-pointer">
-          <span class="text-(--ui-text-highlighted) normal-case! flex-1 text-left">
-            {{ (_item as any).label }}
-          </span>
-          <UIcon
-              v-if="(_item as any).checked"
-              name="i-ph-check"
-              class="size-4 shrink-0"
-          />
-        </div>
-      </template>
-
-      <template #filter-item="{item: _item}">
-        <slot name="item" :option="(_item as any)" :checked="(_item as any).checked">
-          <div
-              class="flex items-center gap-2 w-full"
-              :class="(_item as any).iconClass"
-          >
-            <slot name="leading" :option="_item">
-              <UIcon
-                  v-if="(_item as any).icon"
-                  :name="(_item as any).icon"
-                  class="size-4 shrink-0"
-              />
-            </slot>
+        <template #filter-all="{item: _item}">
+          <div class="flex items-center gap-2 w-full">
             <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
             <span
                 v-if="(_item as any).count != null"
@@ -359,28 +332,69 @@ const items = computed(() => {
             />
             <div v-else class="w-4"/>
           </div>
-        </slot>
-      </template>
-    </UDropdownMenu>
-    <!-- The reset button animates its width; the menu keeps up because the
-         popper uses updatePositionStrategy 'always' (repositioned every
-         animation frame), so an open end-aligned menu glides with the pill
-         instead of jumping. -->
-    <div
-        class="shrink-0 overflow-hidden flex transition-all duration-150"
-        :class="showReset ? 'w-6.5' : 'w-0'"
-    >
-      <button
-          class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
-          :tabindex="showReset ? 0 : -1"
-          :aria-label="resetLabel"
-          @click.stop.prevent="selectAll()"
+        </template>
+
+        <template #group-header="{item: _item}">
+          <div class="flex items-center gap-2 w-full cursor-pointer">
+            <span class="text-(--ui-text-highlighted) normal-case! flex-1 text-left">
+              {{ (_item as any).label }}
+            </span>
+            <UIcon
+                v-if="(_item as any).checked"
+                name="i-ph-check"
+                class="size-4 shrink-0"
+            />
+          </div>
+        </template>
+
+        <template #filter-item="{item: _item}">
+          <slot name="item" :option="(_item as any)" :checked="(_item as any).checked">
+            <div
+                class="flex items-center gap-2 w-full"
+                :class="(_item as any).iconClass"
+            >
+              <slot name="leading" :option="_item">
+                <UIcon
+                    v-if="(_item as any).icon"
+                    :name="(_item as any).icon"
+                    class="size-4 shrink-0"
+                />
+              </slot>
+              <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
+              <span
+                  v-if="(_item as any).count != null"
+                  class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
+              >{{ (_item as any).count }}</span>
+              <UIcon
+                  v-if="(_item as any).checked"
+                  name="i-ph-check"
+                  class="size-4 shrink-0"
+              />
+              <div v-else class="w-4"/>
+            </div>
+          </slot>
+        </template>
+      </UDropdownMenu>
+      <!-- The reset button animates its width; the menu keeps up because the
+           popper uses updatePositionStrategy 'always' (repositioned every
+           animation frame), so an open end-aligned menu glides with the pill
+           instead of jumping. -->
+      <div
+          class="shrink-0 overflow-hidden flex transition-all duration-150"
+          :class="showReset ? 'w-6.5' : 'w-0'"
       >
-        <UIcon
-            name="i-ph-x"
-            class="size-3 shrink-0 ml-1"
-        />
-      </button>
+        <button
+            class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
+            :tabindex="showReset ? 0 : -1"
+            :aria-label="resetLabel"
+            @click.stop.prevent="selectAll()"
+        >
+          <UIcon
+              name="i-ph-x"
+              class="size-3 shrink-0 ml-1"
+          />
+        </button>
+      </div>
     </div>
-  </div>
+  </UTooltip>
 </template>
