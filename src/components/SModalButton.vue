@@ -29,18 +29,21 @@ const props = withDefaults(defineProps<{
   size: 'md',
 })
 
+// `pad`: with a label, room at the sides for the text; `bare`: icon only
+// (the X), the pill as narrow as it was.
 const sizes = {
-  md: {class: 'h-8 gap-1.5 px-3! text-sm', icon: 'xl'},
-  sm: {class: 'h-6 gap-1 px-2! text-xs', icon: 'md'},
-  xs: {class: 'h-5 gap-1 px-1.5! text-xs', icon: 'sm'},
+  md: {class: 'h-8 gap-1.5 text-sm', pad: 'px-4!', bare: 'px-3!', icon: 'xl'},
+  sm: {class: 'h-6 gap-1 text-xs', pad: 'px-3!', bare: 'px-2!', icon: 'md'},
+  xs: {class: 'h-5 gap-1 text-xs', pad: 'px-2.5!', bare: 'px-1.5!', icon: 'sm'},
 } as const
 
 const resolved = computed(() => sizes[props.size])
+const padding = computed(() => props.label ? resolved.value.pad : resolved.value.bare)
 </script>
 
 <template>
   <SButton
-    :class="['min-h-0 shrink-0 py-0! font-medium', resolved.class]"
+    :class="['min-h-0 shrink-0 py-0! font-normal', resolved.class, padding]"
     rounded
     size="xl"
     variant="soft"
