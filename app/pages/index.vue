@@ -9,6 +9,8 @@ const allInputVariants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
 const badgeVariants = ['solid', 'outline', 'soft', 'subtle'] as const
 const alertVariants = ['solid', 'outline', 'soft', 'subtle'] as const
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
+const hintColors = ['muted', 'primary', 'info', 'success', 'warning', 'danger'] as const
+const hintSizes = ['xs', 'sm', 'md', 'lg'] as const
 
 const dropdownItems: DropdownMenuItem[] = [
   {label: 'Profile', icon: 'i-ph-user'},
@@ -58,6 +60,7 @@ const sections = [
   {id: 'modal', label: 'Modal'},
   {id: 'spinner', label: 'Spinner'},
   {id: 'empty', label: 'Empty'},
+  {id: 'hint', label: 'Hint'},
   {id: 'color-picker', label: 'ColorPicker'},
   {id: 'scroll-area', label: 'ScrollArea'},
 ]
@@ -1141,6 +1144,62 @@ onMounted(() => {
             </div>
           </div>
         </section>
+
+        <!-- ======================================== -->
+        <!-- Hint                                      -->
+        <!-- ======================================== -->
+        <section id="hint" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Hint
+          </h2>
+          <p class="text-sm text-neutral-500">
+            A rule told where it applies, in one small line. No padding nor margin of its own: the container places it.
+          </p>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Colors (size xs, muted default)</h3>
+            <div class="space-y-3">
+              <SHint v-for="color in hintColors" :key="color" :color="color">
+                <strong>{{ color }}</strong> — You can save it in many folders at once.
+              </SHint>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Sizes</h3>
+            <div class="space-y-3">
+              <SHint v-for="size in hintSizes" :key="size" :size="size">
+                <strong>{{ size }}</strong> — You can save it in many folders at once.
+              </SHint>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Wrapping (icon stays on the first line)</h3>
+            <div class="grid gap-6 sm:grid-cols-4">
+              <SHint v-for="size in hintSizes" :key="size" :size="size">
+                Many documents only carry the year: searching by exact dates leaves them out of the results.
+              </SHint>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Colors × sizes</h3>
+            <div class="grid gap-x-8 gap-y-3 sm:grid-cols-4">
+              <template v-for="color in hintColors" :key="color">
+                <SHint v-for="size in hintSizes" :key="`${color}-${size}`" :color="color" :size="size">
+                  {{ color }} · {{ size }}
+                </SHint>
+              </template>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-2 text-sm font-medium uppercase tracking-wide text-neutral-500">Custom icon</h3>
+            <SHint icon="i-ph-lock-simple" size="sm">Only you can see this note.</SHint>
+          </div>
+        </section>
+
         <!-- ======================================== -->
         <!-- ColorPicker                               -->
         <!-- ======================================== -->
