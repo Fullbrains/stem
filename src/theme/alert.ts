@@ -1,96 +1,30 @@
+import {alertClasses, alertColors, alertOrientation, alertSlots, alertVariants} from './alert-colors'
+
+/**
+ * UAlert: the inline alert. Same box, type and close pill as the toast
+ * (`toast.ts`), from `alert-colors.ts`. `outline` is the default: the
+ * surface with the color in the icon, what a toast looks like.
+ */
 export default {
-  compoundVariants: [
-    {
-      color: 'primary',
-      variant: 'solid',
+  slots: alertSlots,
+  variants: {
+    orientation: alertOrientation,
+  },
+  compoundVariants: alertColors.flatMap(color => alertVariants.map(variant => {
+    const c = alertClasses(color, variant)
+    return {
+      color,
+      variant,
       class: {
-        root: `
-          text-white dark:text-stem-900
-          bg-gray-800 dark:bg-stem-100
-        `,
+        root: variant === 'solid' ? c.root : `${c.root} text-default`,
+        icon: c.icon,
+        title: c.title,
+        description: c.description,
+        ...(c.close && {close: c.close}),
       },
-    },
-    {
-      color: 'neutral',
-      variant: 'solid',
-      class: {
-        root: `
-          text-white dark:text-white
-          bg-stem-600 dark:bg-stem-600
-        `,
-      },
-    },
-    {
-      color: 'secondary',
-      variant: 'solid',
-      class: {
-        root: `
-          text-(--ui-text) dark:text-iron-100
-          bg-white dark:bg-iron-800
-        `,
-      },
-    },
-    {
-      color: 'primary',
-      variant: 'outline',
-      class: {
-        root: `
-          text-gray-800 dark:text-stem-100
-          ring-gray-800/25 dark:ring-stem-100/25
-        `,
-      },
-    },
-    {
-      color: 'neutral',
-      variant: 'outline',
-      class: {
-        root: `
-          text-stem-600 dark:text-stem-400
-          ring-iron-500/25 dark:ring-iron-400/25
-        `,
-      },
-    },
-    {
-      color: 'primary',
-      variant: 'soft',
-      class: {
-        root: `
-          text-muto-800 dark:text-muto-200
-          bg-iron-400/20
-        `,
-      },
-    },
-    {
-      color: 'neutral',
-      variant: 'soft',
-      class: {
-        root: `
-          text-muto-800 dark:text-muto-200
-          bg-iron-400/10
-        `,
-      },
-    },
-    {
-      color: 'primary',
-      variant: 'subtle',
-      class: {
-        root: `
-          text-muto-800 dark:text-muto-200
-          bg-iron-400/20
-          ring-muto-500/30 dark:ring-muto-300/20
-        `,
-      },
-    },
-    {
-      color: 'neutral',
-      variant: 'subtle',
-      class: {
-        root: `
-          text-muto-800 dark:text-muto-200
-          bg-iron-400/10
-          ring-muto-500/20 dark:ring-muto-300/15
-        `,
-      },
-    },
-  ],
+    }
+  })),
+  defaultVariants: {
+    variant: 'outline',
+  },
 }

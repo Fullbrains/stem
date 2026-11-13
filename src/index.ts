@@ -15,6 +15,16 @@ export {
   type IconSizeToken,
 } from './theme/icon-sizes'
 
+// Alert classes — UAlert and UToast share them; a toast takes another
+// variant than its own through `ui: alertClasses(color, variant)`.
+export {
+  alertClasses,
+  alertColors,
+  alertVariants,
+  type AlertColor,
+  type AlertVariant,
+} from './theme/alert-colors'
+
 // Input container classes — for components that must LOOK like a Stem input
 // without being one (a popover trigger, a token field). SColorPicker already
 // builds on them; exporting keeps every such container in step with the real

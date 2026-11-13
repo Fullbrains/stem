@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type {DropdownMenuItem} from '@nuxt/ui'
+import {alertClasses} from '../../src/theme/alert-colors'
+import {h} from 'vue'
 
 const allColors = ['primary', 'secondary', 'neutral', 'error', 'success'] as const
 const allButtonColors = ['primary', 'secondary', 'neutral', 'error'] as const
@@ -54,6 +56,7 @@ const sections = [
   {id: 'tabs', label: 'Tabs'},
   {id: 'badges', label: 'Badges'},
   {id: 'alerts', label: 'Alerts'},
+  {id: 'alert-toast', label: 'Alert & toast'},
   {id: 'popover', label: 'Popover'},
   {id: 'search', label: 'Search'},
   {id: 'cards', label: 'Cards'},
@@ -64,6 +67,101 @@ const sections = [
   {id: 'color-picker', label: 'ColorPicker'},
   {id: 'scroll-area', label: 'ScrollArea'},
 ]
+
+// ---- Alert & toast -------------------------------------------------------
+type AtColor = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'error'
+type AtVariant = 'outline' | 'soft' | 'subtle' | 'solid'
+
+const atVariant = ref<AtVariant>('outline')
+const atOrientation = ref<'horizontal' | 'vertical'>('horizontal')
+const atDescription = ref(true)
+const atClose = ref(true)
+const atActions = ref(true)
+
+const atVariantItems = (['outline', 'soft', 'subtle', 'solid'] as const).map(v => ({label: v, value: v}))
+const atOrientationItems = [
+  {label: 'horizontal', value: 'horizontal'},
+  {label: 'vertical', value: 'vertical'},
+]
+
+const atCases: {color: AtColor, icon: string, title: string, description: string, actions: string[]}[] = [
+  {color: 'neutral', icon: 'i-ph-chat-circle', title: 'Was this answer helpful?', description: 'Your feedback improves the next answers.', actions: ['No', 'Yes']},
+  {color: 'primary', icon: 'i-ph-sparkle', title: 'A new version is ready', description: 'Reload the page to get the latest changes.', actions: ['Reload']},
+  {color: 'info', icon: 'i-ph-info', title: 'Search covers rulings up to 2024', description: 'Older documents are being indexed.', actions: ['Details']},
+  {color: 'success', icon: 'i-ph-check-circle', title: 'Document saved', description: 'It is in the folder “Contracts”.', actions: ['Open']},
+  {color: 'warning', icon: 'i-ph-warning', title: 'Your session expires in 5 minutes', description: 'Unsaved changes will be lost.', actions: ['Extend']},
+  {color: 'error', icon: 'i-ph-warning-circle', title: 'Upload failed', description: 'The file is larger than 20 MB.', actions: ['Retry']},
+]
+
+// The actions of one case: the last is the main one. On a solid ground the
+// main is the white button, the others soft over it.
+function atActionsFor(c: typeof atCases[number]) {
+  if (!atActions.value) return undefined
+  const solid = atVariant.value === 'solid'
+  return c.actions.map((label, i) => {
+    const main = i === c.actions.length - 1
+    return {
+      label,
+      color: (solid ? 'secondary' : main ? 'primary' : 'neutral') as any,
+      variant: (main ? 'solid' : 'soft') as any,
+      ...(solid && !main ? {class: 'bg-white/20 hover:bg-white/30 text-current'} : {}),
+    }
+  })
+}
+
+function atProps(c: typeof atCases[number]) {
+  return {
+    title: c.title,
+    description: atDescription.value ? c.description : undefined,
+    icon: c.icon,
+    color: c.color,
+    orientation: atOrientation.value,
+    close: atClose.value,
+    actions: atActionsFor(c),
+  }
+}
+
+const toast = useToast()
+
+function launchToast(c: typeof atCases[number]) {
+  toast.add({
+    ...atProps(c),
+    duration: Infinity,
+    progress: false,
+    // UToast has no `variant`: another look than its own (outline) goes through `ui`.
+    ui: atVariant.value === 'outline' ? undefined : alertClasses(c.color, atVariant.value),
+  })
+}
+
+// Content under the text: SAlert's default slot inline, the toast's
+// description as a render function — the same block in both.
+const atBody = {
+  color: 'neutral' as const,
+  icon: 'i-ph-chat-circle',
+  title: 'What went wrong?',
+  description: 'Pick one or more reasons.',
+}
+
+function launchBodyToast() {
+  toast.add({
+    ...atBody,
+    description: () => h('div', [
+      h('p', atBody.description),
+      h('div', {class: 'mt-2.5'}, [h(resolveComponent('DemoFeedbackReasons') as any)]),
+    ]),
+    orientation: atOrientation.value,
+    close: atClose.value,
+    actions: atActions.value ? [{label: 'Send', color: 'primary', variant: 'solid'}] : undefined,
+    duration: Infinity,
+    progress: false,
+    ui: atVariant.value === 'outline' ? undefined : alertClasses(atBody.color, atVariant.value),
+  })
+}
+
+function launchAllToasts() {
+  toast.clear()
+  atCases.forEach(launchToast)
+}
 
 const overlay = useOverlay()
 const {alert} = useAlertModal()
@@ -629,6 +727,60 @@ onMounted(() => {
               <UAlert v-for="color in allColors" :key="color" :title="color"
                       :description="`${variant} alert with ${color} color.`" :color="color" :variant="variant"
                       icon="i-ph-info"/>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- Alert & toast                            -->
+        <!-- ======================================== -->
+        <section id="alert-toast" class="scroll-mt-8 space-y-6">
+          <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+            Alert &amp; toast
+          </h2>
+          <p class="text-sm text-neutral-500">
+            One look, two ways in: inline (UAlert) or arriving as a toast (UToast). Both are themed from
+            <code>alert-colors.ts</code>; a toast is the outline alert with a shadow.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <UTabs v-model="atVariant" :items="atVariantItems" :content="false" size="xs" class="w-auto"/>
+            <UTabs v-model="atOrientation" :items="atOrientationItems" :content="false" size="xs" class="w-auto"/>
+            <USwitch v-model="atDescription" label="Description" size="sm"/>
+            <USwitch v-model="atActions" label="Actions" size="sm"/>
+            <USwitch v-model="atClose" label="Close" size="sm"/>
+          </div>
+
+          <div class="grid gap-x-8 gap-y-3 md:grid-cols-[24rem_auto]">
+            <h3 class="text-sm font-medium uppercase tracking-wide text-neutral-500">Inline</h3>
+            <div class="hidden items-center gap-3 md:flex">
+              <h3 class="text-sm font-medium uppercase tracking-wide text-neutral-500">Toast</h3>
+              <SButton label="Show all" size="xs" variant="soft" icon="i-ph-stack" @click="launchAllToasts"/>
+              <SButton label="Clear" size="xs" variant="soft" @click="toast.clear()"/>
+            </div>
+            <template v-for="c in atCases" :key="c.color">
+              <UAlert v-bind="atProps(c)" :variant="atVariant"/>
+              <div class="flex items-center">
+                <SButton :label="`Toast ${c.color}`" size="sm" variant="soft" icon="i-ph-arrow-square-up-right" @click="launchToast(c)"/>
+              </div>
+            </template>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="text-sm font-medium uppercase tracking-wide text-neutral-500">Content under the text (SAlert default slot)</h3>
+            <div class="grid gap-x-8 gap-y-3 md:grid-cols-[24rem_auto]">
+              <SAlert
+                v-bind="atBody"
+                :variant="atVariant"
+                :orientation="atOrientation"
+                :close="atClose"
+                :actions="atActions ? [{label: 'Send', color: 'primary', variant: 'solid'}] : undefined"
+              >
+                <DemoFeedbackReasons/>
+              </SAlert>
+              <div class="flex items-start">
+                <SButton label="Toast" size="sm" variant="soft" icon="i-ph-arrow-square-up-right" @click="launchBodyToast"/>
+              </div>
             </div>
           </div>
         </section>
