@@ -13,9 +13,9 @@ import {computed} from 'vue'
  * - `color`: `muted` (the default, a hint the reader can pass over),
  *   `primary`, `info`, `success`, `warning`, `danger`. The whole line takes
  *   it, and each has its own icon unless `icon` names another.
- *   `primary` is the default text color; info, success, warning and danger
- *   are a step darker than their token in light mode (600), to read as text
- *   on white.
+ *   `primary` is the default text color; `info` is sky, not the theme's
+ *   info; info, success, warning and danger are a 600 in light mode, to read
+ *   as text on white.
  * - `size`: `xs` (the default), `sm`, `md`, `lg`: the text's and the icon's.
  *
  * No padding nor margin of its own: where it stands is its container's. The
@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<{
 const COLORS: Record<HintColor, {text: string, icon: string}> = {
   muted: {text: 'text-(--ui-text-muted)', icon: 'i-ph-info'},
   primary: {text: 'text-(--ui-text)', icon: 'i-ph-info'},
-  info: {text: 'text-(--ui-color-info-600) dark:text-(--ui-info)', icon: 'i-ph-info'},
+  info: {text: 'text-sky-600 dark:text-sky-400', icon: 'i-ph-info'},
   success: {text: 'text-(--ui-color-success-600) dark:text-(--ui-success)', icon: 'i-ph-check-circle'},
   warning: {text: 'text-(--ui-color-warning-600) dark:text-(--ui-warning)', icon: 'i-ph-warning'},
   danger: {text: 'text-(--ui-color-error-600) dark:text-(--ui-error)', icon: 'i-ph-warning-circle'},
