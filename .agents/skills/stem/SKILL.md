@@ -413,7 +413,7 @@ An alert inline (`UAlert`) and an alert arriving as a toast (`UToast`) look the 
 - **Actions and X** are always `sm`, rounded, compact pills, whatever size an action asks for.
 - `UToast` has no `variant` prop: pass `ui: alertClasses(color, variant)` (exported from `@fullbrains/stem`) to `toast.add()` for a soft/subtle/solid toast.
 
-`SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.
+`SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). In `horizontal` it spans to the alert's right edge, under the actions and the X too. Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.
 
 ```vue
 <SAlert title="What went wrong?" description="Pick one or more reasons." icon="i-ph-chat-circle"
