@@ -403,6 +403,30 @@ Slide-over modal built on `USlideover` with header/footer structure.
 
 Used internally by `SButton` via `useConfirmModal()`. Renders an `SModal` with confirm/cancel buttons.
 
+### SAlert, UAlert and UToast
+
+An alert inline (`UAlert`) and an alert arriving as a toast (`UToast`) look the same: both themes are built from `src/theme/alert-colors.ts`. A toast is the `outline` alert with a shadow.
+
+- **Colors:** `neutral`, `primary`, `secondary`, `info` (sky), `success`, `warning`, `error`.
+- **Variants:** `outline` (default: surface + colored ring, color in the icon only), `soft` (light tint over the surface), `subtle` (tint + ring), `solid` (color as ground).
+- **Orientation:** `horizontal` (actions beside the text) or `vertical` (actions under it). Icon, actions and X always line up with the title.
+- **Actions and X** are always `sm`, rounded, compact pills, whatever size an action asks for.
+- `UToast` has no `variant` prop: pass `ui: alertClasses(color, variant)` (exported from `@fullbrains/stem`) to `toast.add()` for a soft/subtle/solid toast.
+
+`SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.
+
+```vue
+<SAlert title="What went wrong?" description="Pick one or more reasons." icon="i-ph-chat-circle"
+        color="neutral" close :actions="[{label: 'Send'}]">
+  <ReasonChips/>
+</SAlert>
+```
+
+```ts
+toast.add({title: 'Upload failed', icon: 'i-ph-warning-circle', color: 'error', close: true,
+  ui: alertClasses('error', 'solid')})
+```
+
 ### SAlertModal
 
 Simple message modal with a single OK button. Used programmatically via `useAlertModal()`.
@@ -653,7 +677,7 @@ Stem overrides these Nuxt UI component themes via `app.config.ui`:
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
 - **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), delete icon follows `--s-icon-size`
 - **badge** — Always rounded-full, em-based padding, hardcoded slate colors matching button (includes secondary)
-- **alert** — Hardcoded slate colors matching button (no size prop)
+- **alert / toast** — One look from `alert-colors.ts`: outline default, soft/subtle tint over an opaque surface, solid; actions and X as sm rounded compact pills aligned with the title
 - **tabs** — Slate-900 indicator for primary, cursor-pointer on all variants, golden rule text sizes + shared icon scale
 - **dropdownMenu** — Floating menu styling, highlighted items
 - **contextMenu** — Same theme as dropdownMenu
