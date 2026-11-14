@@ -60,3 +60,15 @@ export const fieldLabelCompounds = [
   {class: {base: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px)-var(--s-label-alone-start,0em))]!'}},
   {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-icon-start,0em))]!'}},
 ]
+
+/**
+ * A one-line <input> centres its text itself, in its fixed height
+ * (singleLineHeight), when the line fits; with padding-y the line (Vimana's
+ * 1.29em of ascent + descent, more than the icon-size line height) does not
+ * fit the content box and the browser sets it at the top: the text sits
+ * lower than a button's. No padding-y, so the browser centres it, as a
+ * button's label is. After the size variants, so it wins over py-(--s-py)!.
+ */
+export const singleLineFieldCompounds = [
+  {class: {base: 'py-0!'}},
+]
