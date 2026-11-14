@@ -55,6 +55,14 @@ const current = computed(() => {
   return out
 })
 
+// Squircle e pillola a confronto: il button del playground senza size né
+// forma; su ghost e link, che non mostrano la forma, soft.
+const pillCompare = computed(() => {
+  const p = without(current.value, 'size', 'rounded', 'roundness')
+  if (p.variant === 'ghost' || p.variant === 'link') p.variant = 'soft'
+  return p
+})
+
 const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
   'caret': {caret: true},
@@ -120,6 +128,23 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
           <SButton v-bind="without(current, 'size')" :size="item as any"/>
         </template>
       </ShowcaseScale>
+    </ShowcaseSection>
+
+    <ShowcaseSection
+        title="Pillola e squircle a confronto"
+        description="A ogni size lo stesso button squircle (sopra) e pillola (sotto), allineati a sinistra. Le linee rosse segnano i bordi del button, dell'icona e della label: dove la pillola cambia lo spazio si vede subito."
+    >
+      <ShowcaseStage body-class="flex flex-wrap items-start gap-10 p-8">
+        <div v-for="s in sizes" :key="s" class="space-y-1.5">
+          <span class="font-mono text-[11px] text-(--ui-text-muted)">{{ s }}</span>
+          <ShowcaseGuides>
+            <div class="flex flex-col items-start gap-3">
+              <SButton v-bind="{...pillCompare}" :size="s as any"/>
+              <SButton v-bind="{...pillCompare}" :size="s as any" rounded/>
+            </div>
+          </ShowcaseGuides>
+        </div>
+      </ShowcaseStage>
     </ShowcaseSection>
 
     <ShowcaseSection
