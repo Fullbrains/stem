@@ -68,6 +68,7 @@ const buttonPull = computed(() => {
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-py': `${buttonPull.value}px`,
+  '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
 // What the buttons inside inherit: the alert's type, a size below. Not its
@@ -134,11 +135,13 @@ const cells = computed(() => hasIcon.value
 // The buttons overhang the title's line by their padding-y, above and below,
 // centred on it: a one-line alert is no taller for them.
 const actionsClass = '-my-(--s-alert-button-py)'
+// Between the buttons: a step below the alert's own space (sm: 10px).
+const actionsGap = 'gap-(--s-alert-button-gap)'
 
 const ui = computed(() => {
   const own = props.ui ?? {}
   if (!spread.value) {
-    return {...own, actions: [props.orientation === 'vertical' ? '' : actionsClass, own.actions].filter(Boolean).join(' ')}
+    return {...own, actions: [props.orientation === 'vertical' ? actionsGap : `${actionsClass} ${actionsGap}`, own.actions].filter(Boolean).join(' ')}
   }
   const c = cells.value
   return {
@@ -147,7 +150,7 @@ const ui = computed(() => {
     icon: [c.icon, own.icon].filter(Boolean).join(' '),
     avatar: [c.icon, own.avatar].filter(Boolean).join(' '),
     title: [c.title, own.title].filter(Boolean).join(' '),
-    actions: [c.actions, actionsClass, own.actions].filter(Boolean).join(' '),
+    actions: [c.actions, actionsClass, actionsGap, own.actions].filter(Boolean).join(' '),
     // Wrapper and description step aside: their children are the grid's.
     wrapper: ['contents', own.wrapper].filter(Boolean).join(' '),
     description: ['contents', own.description].filter(Boolean).join(' '),
