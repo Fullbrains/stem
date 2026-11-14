@@ -30,7 +30,10 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'avatar', type: 'boolean', prop: false},
 
   {group: 'Forma', key: 'square', type: 'boolean'},
-  ...scaleControls(),
+  // A badge is a pill by default, space-y a step below its size.
+  ...scaleControls().map(c => c.key === 'rounded' ? {...c, default: true}
+    : c.key === 'spaceY' && c.type === 'select' ? {...c, options: [{label: '-1 (default)', value: undefined}, ...c.options.slice(1)]}
+    : c),
 ]
 
 const state = useShowcaseState<Record<string, any>>('badge', () => controlDefaults(controls))
@@ -56,6 +59,7 @@ const codeExtra = computed(() => (state.value.avatar ? ':avatar="{src: \'…\'}"
 
 const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
+  'squircle': {rounded: false},
   'square': {square: true},
 }
 
@@ -72,7 +76,7 @@ const people = [
   <ShowcasePage
       title="Badge"
       wraps="UBadge"
-      description="Etichetta breve, sulla stessa scala del button: a parità di size è alta uguale. Squircle di default, pillola con rounded; icone a sinistra e a destra, niente caret."
+      description="Etichetta breve, sulla scala del button: pillola di default, con space-y un gradino sotto la size (sm: 28px). Squircle con rounded a false; icone a sinistra e a destra, niente caret."
   >
     <ShowcasePlayground v-model="state" tag="SBadge" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">

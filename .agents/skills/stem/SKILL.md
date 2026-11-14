@@ -67,12 +67,12 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | Instead of... | Use...       | Why |
 |---------------|--------------|-----|
 | `UButton`     | `SButton`    | Scale props, loading spinner, confirm dialogs, caret, icons on both sides. Without a label it is square; with `rounded` a circle |
-| `UBadge`      | `SBadge`     | Scale props (same height as a button of the same size), icons on both sides |
+| `UBadge`      | `SBadge`     | Scale props; a pill by default, space-y a step below the size (sm: 28px); icons on both sides |
 | `UInput`, `UTextarea` | `SInput`, `STextarea` | Scale props; border and focus never change the field's size |
 | `USelect`, `USelectMenu`, `UInputMenu` | `SSelect`, `SSelectMenu`, `SInputMenu` | Scale props, on the trigger and on the menu's items |
 | `UInputTags` | `SInputTags` | Scale props; tags one line tall, so the field keeps its height |
 | `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale |
-| `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall) |
+| `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall). A tab's badge: the tab's size, text a step below, pill, 2px padding-y given back as a negative margin-y, so the tab keeps its height (sm: 20px in a 32px tab) |
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
 | `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SModalButton actions and X, content slot under the text |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
@@ -269,11 +269,11 @@ Stem uses Phosphor Icons (`@iconify-json/ph`) as its icon set, mapped via `stemI
 
 ### SBadge
 
-`UBadge` on the Stem scale: at a given size as tall as an SButton, with the same text, icon, padding, gap and radius. Squircle by default, pill with `rounded`. Icons on both sides (`icon`, `trailing-icon`); no caret.
+`UBadge` on the Stem scale, with the same text, icon, padding-x, gap as an SButton of the size. Default `rounded` (pill) and `space-y="-1"`: a step tighter than the size's (sm: 6px, 28px tall). `:rounded="false"` for a squircle. Icons on both sides (`icon`, `trailing-icon`); no caret.
 
 ```vue
-<SBadge label="Bozza" icon="i-ph-file" size="sm"/>
-<SBadge label="Bozza" size="sm" space-x="md" rounded/>
+<SBadge label="Bozza" icon="i-ph-file" size="sm"/>             <!-- pill, 28px -->
+<SBadge label="Bozza" size="sm" :rounded="false" space-y="sm"/> <!-- squircle, 32px -->
 ```
 
 **Props:** the scale props. All `UBadge` props pass through (`label`, `icon`, `trailingIcon`, `variant`, `color`, `size`…).

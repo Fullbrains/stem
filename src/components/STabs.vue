@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {computed, useAttrs} from 'vue'
+import {stemScaleClasses, stemScaleStyle, stemSizeStep, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -9,6 +9,11 @@ import {useStemScale} from '../composables/useStemScale'
  * `text-size`, `icon-size`, `space`, `space-x`, `space-y`, `roundness` move
  * one axis off `size`; `rounded` makes it a pill. Every UTabs prop, event and
  * slot passes through.
+ *
+ * A tab's badge is not a badge of the tab's size: the tab's size with the
+ * text a step below, always a pill, 2px padding-y (sm: 12px on a 16px line,
+ * 20px tall). Its padding-y comes back as a negative margin-y: in the layout
+ * it is as tall as the line, so a tab with a badge is as tall as one without.
  */
 defineOptions({inheritAttrs: false})
 
@@ -17,10 +22,22 @@ const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 const scale = useStemScale(props)
 const scaleClasses = computed(() => stemScaleClasses(scale.value))
 const resolvedStyle = computed(() => stemScaleStyle(scale.value))
+
+const attrs = useAttrs()
+const resolvedUi = computed(() => {
+  const ui = (attrs.ui ?? {}) as Record<string, unknown>
+  const size = scale.value.size ?? 'md'
+  const text = stemSizeStep(scale.value.textSize ?? size, -1)
+  return {
+    ...ui,
+    trailingBadgeSize: ui.trailingBadgeSize ?? size,
+    trailingBadge: [`s-text-${text} s-pill [--s-py:2px] my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
+  }
+})
 </script>
 
 <template>
-  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle">
+  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle" :ui="resolvedUi">
     <template v-for="(_, slot) in $slots" #[slot]="slotProps">
       <slot :name="slot" v-bind="slotProps ?? {}"/>
     </template>
