@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {computed} from 'vue'
-import {stemSpaceStep, type StemSize, type StemSpace} from '../theme/scale'
+import type {StemSize, StemSpaceValue} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -9,9 +8,10 @@ import {useStemScale} from '../composables/useStemScale'
  * to open the content elsewhere). Nothing of its own about size: `size`,
  * `space`, `icon-size`, `text-size`… are SButton's, on the Stem scale.
  *
- * Its one default: a pill a step wider and a step lower than its size —
- * space-x one step above `size`, space-y one step below (sm: 10px × 6px,
- * 28px tall). `space`, `space-x` or `space-y` given by the caller win.
+ * Its one default: a pill a step wider and a step lower than it would be —
+ * space-x '+1', space-y '-1' over what it inherits, else over its size
+ * (sm: 10px × 6px, 28px tall). `space`, `space-x` or `space-y` given by the
+ * caller win, or shift it further when relative ('-1').
  * The default `size` is sm. Icon only, pass `aria-label`.
  *
  * Every SButton prop and event passes through (`color`, `disabled`, `to`,
@@ -19,9 +19,9 @@ import {useStemScale} from '../composables/useStemScale'
  */
 const props = withDefaults(defineProps<{
   size?: StemSize
-  space?: StemSpace
-  spaceX?: StemSpace
-  spaceY?: StemSpace
+  space?: StemSpaceValue
+  spaceX?: StemSpaceValue
+  spaceY?: StemSpaceValue
 }>(), {
   size: undefined,
   space: undefined,
@@ -29,11 +29,9 @@ const props = withDefaults(defineProps<{
   spaceY: undefined,
 })
 
-// Size and space inherited from a parent when not given; sm by default.
-const scale = useStemScale(props, {size: 'sm'})
-
-const resolvedSpaceX = computed(() => scale.value.spaceX ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, 1)))
-const resolvedSpaceY = computed(() => scale.value.spaceY ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, -1)))
+// Size and space inherited from a parent when not given; sm by default,
+// a step wider and a step lower than what it inherits.
+const scale = useStemScale(props, {size: 'sm', spaceX: '+1', spaceY: '-1'})
 </script>
 
 <template>
@@ -42,7 +40,7 @@ const resolvedSpaceY = computed(() => scale.value.spaceY ?? (scale.value.space !
       rounded
       :size="scale.size"
       :space="scale.space"
-      :space-x="resolvedSpaceX"
-      :space-y="resolvedSpaceY"
+      :space-x="scale.spaceX"
+      :space-y="scale.spaceY"
   />
 </template>

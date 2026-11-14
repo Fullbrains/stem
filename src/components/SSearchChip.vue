@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleDefaults, stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleDefaults, type StemScaleProps, type StemSize} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -31,16 +31,14 @@ const props = withDefaults(defineProps<StemScaleProps & {
   selectedTemplate: '% selected',
 })
 
-// Scale props inherited from a parent when not given; sm and a pill by default.
-const scale = useStemScale(props, {size: 'sm', rounded: true})
-
-const resolvedSpaceX = computed(() => scale.value.spaceX ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, 1)))
-
 // Inside an SSearchBar (not its panel of extra filters) a chip takes the
 // bar's size and tightens: space-y two steps below, so it sits 4px inside the
 // bar at every size (sm: 24 in 32, md: 32 in 40).
 const inBar = inject(SEARCH_BAR_COMPACT, null) !== null && !inject(SEARCH_BAR_PANEL, false)
-const tightSpaceY = computed(() => inBar ? stemSpaceStep(scale.value.size!, -2) : undefined)
+
+// Scale props inherited from a parent when not given; sm and a pill by
+// default, a step more air at the sides, two steps less above and below in a bar.
+const scale = useStemScale(props, {size: 'sm', rounded: true, spaceX: '+1', spaceY: inBar ? '-2' : undefined})
 
 const coversAll = computed(() => !!props.selectedValues && props.selectedValues.length === props.count)
 
@@ -61,8 +59,8 @@ const displayValue = computed(() => {
       :size="scale.size"
       :rounded="scale.rounded"
       :space="scale.space"
-      :space-x="resolvedSpaceX"
-      :space-y="scale.spaceY ?? tightSpaceY"
+      :space-x="scale.spaceX"
+      :space-y="scale.spaceY"
       :text-size="scale.textSize"
       :optical-label="scale.opticalLabel"
       :icon-size="scale.iconSize"

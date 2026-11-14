@@ -29,6 +29,23 @@ export type StemSpace = 0 | '0' | '2xs' | StemSize
 
 const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl']
 
+/**
+ * A step relative to the space the control would have otherwise (its
+ * parent's, else its size's): '-1' one step tighter, '+2' two looser. A
+ * signed string, or a non-zero number (0 is the absolute none).
+ */
+export type StemSpaceShift = `${'+' | '-'}${1 | 2 | 3 | 4 | 5 | 6}` | number
+
+/** A space prop's value: a step of the scale, or a shift from the one it would have. */
+export type StemSpaceValue = StemSpace | StemSpaceShift
+
+/** The shift of a relative space value in steps, or null for an absolute one. */
+export function stemSpaceShift(v: unknown): number | null {
+  if (typeof v === 'number') return v === 0 ? null : v
+  if (typeof v === 'string' && /^[+-]\d+$/.test(v)) return Number(v)
+  return null
+}
+
 /** The space `by` steps from a size or space, clamped to the scale (sm, +1 → md). */
 export function stemSpaceStep(from: StemSpace, by: number): StemSpace {
   const i = spaceSteps.indexOf(String(from) as StemSpace)
@@ -46,12 +63,12 @@ export interface StemScaleProps {
   textSize?: StemSize
   /** Icon size (and line height). A token, or any CSS length. */
   iconSize?: StemSize | (string & {})
-  /** Padding on both axes, and gap. */
-  space?: StemSpace
-  /** Horizontal padding, and gap. */
-  spaceX?: StemSpace
-  /** Vertical padding. */
-  spaceY?: StemSpace
+  /** Padding on both axes, and gap. A step, or a shift ('-1', '+1'). */
+  space?: StemSpaceValue
+  /** Horizontal padding, and gap. A step, or a shift ('-1', '+1'). */
+  spaceX?: StemSpaceValue
+  /** Vertical padding. A step, or a shift ('-1', '+1'). */
+  spaceY?: StemSpaceValue
   /** Squircle radius. */
   roundness?: StemSize
   /** Pill: fully round ends, never a squircle. */
@@ -168,9 +185,9 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
   return {
     '--s-text': `${stemScale[p.textSize ?? size].text}px`,
     '--s-icon-size': icon,
-    '--s-px': `${sx != null ? stemSpacePx(sx) : base.space}px`,
-    '--s-py': `${sy != null ? stemSpacePx(sy) : base.space}px`,
-    '--s-gap': `${sx != null ? stemSpacePx(sx) : base.space}px`,
+    '--s-px': `${sx != null ? stemSpacePx(sx as StemSpace) : base.space}px`,
+    '--s-py': `${sy != null ? stemSpacePx(sy as StemSpace) : base.space}px`,
+    '--s-gap': `${sx != null ? stemSpacePx(sx as StemSpace) : base.space}px`,
     '--s-radius': p.rounded ? '9999px' : `${stemScale[p.roundness ?? size].radius}px`,
     ...(p.rounded ? {'--s-corner-shape': 'round'} : {}),
     ...stemOpticalVars(stemOpticalMode(p.opticalLabel)),
