@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {stemScale, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 type Orientation = 'vertical' | 'horizontal'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -21,8 +22,11 @@ const props = withDefaults(defineProps<StemScaleProps & {
 }>(), {
   ...stemScaleDefaults,
   orientation: 'vertical',
-  size: 'md',
 })
+
+// Scale props inherited from a parent when not given; md by default.
+const scale = useStemScale(props, {size: 'md'})
+const size = computed(() => scale.value.size as Size)
 
 const resolvedIcon = computed(() =>
     props.icon ?? (props.orientation === 'vertical' ? 'i-ph-empty-light' : 'i-ph-empty'),
@@ -52,12 +56,12 @@ const glyphSize: Record<Orientation, Record<Size, string>> = {
 // `iconSize`: a token of the Stem scale (that size's icon) or any CSS length.
 const resolvedGlyphSize = computed(() => {
   const v = props.iconSize
-  if (!v) return glyphSize[props.orientation][props.size]
+  if (!v) return glyphSize[props.orientation][size.value]
   return v in stemScale ? `${stemScale[v as Size].icon}px` : v
 })
 
 // Text and gap from the scale; the glyph keeps its own (above).
-const scaleClasses = computed(() => [`s-size-${props.size}`, ...stemScaleClasses({...props, iconSize: undefined})])
+const scaleClasses = computed(() => [`s-size-${size.value}`, ...stemScaleClasses({...scale.value, iconSize: undefined})])
 const scaleStyle = computed(() => stemScaleStyle({...props, iconSize: undefined}))
 
 const glyphStyle = computed(() => ({

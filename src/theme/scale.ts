@@ -40,6 +40,8 @@ export function stemSpaceStep(from: StemSize, by: number): StemSpace {
  * when missing, follows `size`.
  */
 export interface StemScaleProps {
+  /** The size: text, icon, padding, gap and radius at once. */
+  size?: StemSize
   /** Font size. */
   textSize?: StemSize
   /** Icon size (and line height). A token, or any CSS length. */
@@ -66,7 +68,22 @@ export interface StemScaleProps {
 /** Defaults of the scale props: pass to withDefaults in every wrapper. */
 export type StemOpticalLabel = 'auto' | 'always' | 'never'
 
-export const stemScaleDefaults = {opticalLabel: 'auto'} as const
+/**
+ * Defaults of the scale props: pass to withDefaults in every wrapper. All
+ * undefined, so an absent prop stays absent (a boolean would turn false) and
+ * useStemScale can take it from a parent.
+ */
+export const stemScaleDefaults = {
+  size: undefined,
+  textSize: undefined,
+  iconSize: undefined,
+  space: undefined,
+  spaceX: undefined,
+  spaceY: undefined,
+  roundness: undefined,
+  rounded: undefined,
+  opticalLabel: undefined,
+} as const
 
 /** The mode of `optical-label`; the old boolean still reads: true → auto, false → never. */
 export function stemOpticalMode(v: unknown): StemOpticalLabel {

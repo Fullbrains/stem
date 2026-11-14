@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed, useSlots} from 'vue'
 import {stemLabelShift, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
 /**
@@ -37,8 +38,9 @@ const {confirm} = useConfirmModal()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
-const scaleClasses = computed(() => stemScaleClasses(props))
-const resolvedStyle = computed(() => stemScaleStyle(props))
+const scale = useStemScale(props)
+const scaleClasses = computed(() => stemScaleClasses(scale.value))
+const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 
 const slots = useSlots()
 
@@ -93,6 +95,7 @@ function handleClick(e: MouseEvent) {
 
 <template>
   <UButton
+      :size="scale.size"
       :label="label"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * UInput on the Stem scale — a text field. At a given `size` it is exactly as tall
@@ -15,12 +16,13 @@ defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
-const scaleClasses = computed(() => stemScaleClasses(props))
-const resolvedStyle = computed(() => stemScaleStyle(props))
+const scale = useStemScale(props)
+const scaleClasses = computed(() => stemScaleClasses(scale.value))
+const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 </script>
 
 <template>
-  <UInput v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle">
+  <UInput :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle">
     <template v-for="(_, slot) in $slots" #[slot]="slotProps">
       <slot :name="slot" v-bind="slotProps ?? {}"/>
     </template>

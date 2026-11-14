@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * UBadge on the Stem scale: at a given size, as tall as a button, with the
@@ -9,12 +10,13 @@ import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults
  */
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
-const scaleClasses = computed(() => stemScaleClasses(props))
-const resolvedStyle = computed(() => stemScaleStyle(props))
+const scale = useStemScale(props)
+const scaleClasses = computed(() => stemScaleClasses(scale.value))
+const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 </script>
 
 <template>
-  <UBadge :class="scaleClasses" :style="resolvedStyle">
+  <UBadge :size="scale.size" :class="scaleClasses" :style="resolvedStyle">
     <template v-if="$slots.leading" #leading>
       <slot name="leading"/>
     </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed, useAttrs} from 'vue'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * UDropdownMenu on the Stem scale — a menu of actions. Its items are controls on the scale: at a given `size`, as tall as an
@@ -16,8 +17,9 @@ defineOptions({inheritAttrs: false})
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 const attrs = useAttrs()
 
-const scaleClasses = computed(() => stemScaleClasses(props))
-const resolvedStyle = computed(() => stemScaleStyle(props))
+const scale = useStemScale(props)
+const scaleClasses = computed(() => stemScaleClasses(scale.value))
+const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 
 const ui = computed(() => {
   const given = (attrs.ui ?? {}) as Record<string, unknown>
@@ -27,7 +29,7 @@ const ui = computed(() => {
 </script>
 
 <template>
-  <UDropdownMenu v-bind="$attrs" :ui="ui">
+  <UDropdownMenu :size="scale.size" v-bind="$attrs" :ui="ui">
     <template v-for="(_, slot) in $slots" #[slot]="slotProps">
       <slot :name="slot" v-bind="slotProps ?? {}"/>
     </template>

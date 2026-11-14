@@ -3,6 +3,7 @@ import {ref, computed, watch} from 'vue'
 import {inputContainerClasses, inputIconColors} from '../theme/input-container'
 import type {InputColor, InputVariant} from '../theme/input-container'
 import {stemScaleClasses, stemScaleIcon, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -23,7 +24,6 @@ const props = withDefaults(defineProps<StemScaleProps & {
   disabled?: boolean
 }>(), {
   ...stemScaleDefaults,
-  size: 'sm',
   variant: 'outline',
   color: 'primary',
   disabled: false,
@@ -93,7 +93,9 @@ function resetToDefault() {
   }
 }
 
-const scaleClasses = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
+// Scale props inherited from a parent when not given; sm by default.
+const scale = useStemScale(props, {size: 'sm'})
+const scaleClasses = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
 const resolvedIconStyle = computed(() => stemScaleStyle(props))
 const iconSizeClass = stemScaleIcon
 

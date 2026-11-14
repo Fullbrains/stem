@@ -2,6 +2,7 @@
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 const model = defineModel<string>({required: true})
 const open = defineModel<boolean>('open', {default: false})
@@ -18,21 +19,12 @@ const props = withDefaults(defineProps<StemScaleProps & {
   ...stemScaleDefaults,
   label: 'Order by',
   contentClass: 'min-w-36 w-full',
-  size: 'sm',
-  rounded: true,
 })
 
-const scale = computed(() => ({
-  size: props.size,
-  textSize: props.textSize,
-  iconSize: props.iconSize,
-  space: props.space,
-  spaceX: props.spaceX,
-  spaceY: props.spaceY,
-  roundness: props.roundness,
-  rounded: props.rounded,
-}))
-const rootScale = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
+// The scale props, inherited from a parent when not given (sm and a pill
+// by default), forwarded to the chip and the menu.
+const scale = useStemScale(props, {size: 'sm', rounded: true})
+const rootScale = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
 
 const inPanel = inject(SEARCH_BAR_PANEL, false)
 

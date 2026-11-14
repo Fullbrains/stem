@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {stemSpaceStep, type StemSize, type StemSpace} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * A button of a modal's header: SButton, soft and rounded — the pill the
@@ -22,22 +23,25 @@ const props = withDefaults(defineProps<{
   spaceX?: StemSpace
   spaceY?: StemSpace
 }>(), {
-  size: 'sm',
+  size: undefined,
   space: undefined,
   spaceX: undefined,
   spaceY: undefined,
 })
 
-const resolvedSpaceX = computed(() => props.spaceX ?? (props.space != null ? undefined : stemSpaceStep(props.size, 1)))
-const resolvedSpaceY = computed(() => props.spaceY ?? (props.space != null ? undefined : stemSpaceStep(props.size, -1)))
+// Size and space inherited from a parent when not given; sm by default.
+const scale = useStemScale(props, {size: 'sm'})
+
+const resolvedSpaceX = computed(() => scale.value.spaceX ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, 1)))
+const resolvedSpaceY = computed(() => scale.value.spaceY ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, -1)))
 </script>
 
 <template>
   <SButton
       variant="soft"
       rounded
-      :size="size"
-      :space="space"
+      :size="scale.size"
+      :space="scale.space"
       :space-x="resolvedSpaceX"
       :space-y="resolvedSpaceY"
   />

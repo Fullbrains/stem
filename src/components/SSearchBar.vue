@@ -3,6 +3,7 @@ import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, useSlot
 import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 const modelValue = defineModel<string>({default: ''})
 
@@ -35,12 +36,14 @@ const props = withDefaults(defineProps<StemScaleProps & {
   compact: false,
   hideClear: false,
   size: undefined,
-  rounded: true,
 })
 
-const resolvedSize = computed<StemSize>(() => props.size ?? (props.compact ? 'sm' : 'md'))
-const scaleClasses = computed(() => [`s-size-${resolvedSize.value}`, ...stemScaleClasses(props)])
-const scaleStyle = computed(() => stemScaleStyle(props))
+// Scale props inherited from a parent when not given; a pill by default, md
+// (sm when compact).
+const scale = useStemScale(props, {rounded: true})
+const resolvedSize = computed<StemSize>(() => scale.value.size ?? (props.compact ? 'sm' : 'md'))
+const scaleClasses = computed(() => [`s-size-${resolvedSize.value}`, ...stemScaleClasses(scale.value)])
+const scaleStyle = computed(() => stemScaleStyle(scale.value))
 
 const appConfig = useAppConfig()
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {stemScaleVars, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 import {computed, useAttrs, useSlots} from 'vue'
 
 /**
@@ -33,13 +34,14 @@ const props = withDefaults(defineProps<StemScaleProps & {
   ui?: Record<string, string | undefined>
 }>(), {
   ...stemScaleDefaults,
-  size: 'sm',
   description: undefined,
   orientation: undefined,
   ui: undefined,
 })
 
-const scaleStyle = computed(() => stemScaleVars(props.size, props))
+// Scale props inherited from a parent when not given; sm by default.
+const scale = useStemScale(props, {size: 'sm'})
+const scaleStyle = computed(() => stemScaleVars(scale.value.size!, scale.value))
 
 const slots = useSlots()
 const attrs = useAttrs()

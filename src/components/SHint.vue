@@ -6,6 +6,7 @@ export type HintSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 <script setup lang="ts">
 import {computed} from 'vue'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * A rule told where it applies, in one small line under or over what it is
@@ -32,7 +33,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
 }>(), {
   ...stemScaleDefaults,
   color: 'muted',
-  size: 'xs',
+  size: undefined,
   icon: undefined,
 })
 
@@ -46,8 +47,10 @@ const COLORS: Record<HintColor, {text: string, icon: string}> = {
 }
 
 const color = computed(() => COLORS[props.color])
-const scaleClasses = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
-const scaleStyle = computed(() => stemScaleStyle(props))
+// Scale props inherited from a parent when not given; xs by default.
+const scale = useStemScale(props, {size: 'xs'})
+const scaleClasses = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
+const scaleStyle = computed(() => stemScaleStyle(scale.value))
 </script>
 
 <template>

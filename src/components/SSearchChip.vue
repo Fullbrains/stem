@@ -2,6 +2,7 @@
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
 import {stemScaleDefaults, stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 /**
  * A filter chip: SButton soft, pill, with a caret. On the Stem scale: `size`
@@ -27,11 +28,12 @@ const props = withDefaults(defineProps<StemScaleProps & {
   threshold: 3,
   allLabel: 'All',
   selectedTemplate: '% selected',
-  size: 'sm',
-  rounded: true,
 })
 
-const resolvedSpaceX = computed(() => props.spaceX ?? (props.space != null ? undefined : stemSpaceStep(props.size, 1)))
+// Scale props inherited from a parent when not given; sm and a pill by default.
+const scale = useStemScale(props, {size: 'sm', rounded: true})
+
+const resolvedSpaceX = computed(() => scale.value.spaceX ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, 1)))
 
 // Inside a compact SSearchBar the chips tighten too (see searchBarContext).
 const searchBarCompact = inject(SEARCH_BAR_COMPACT, null)
@@ -53,15 +55,15 @@ const displayValue = computed(() => {
       :icon="leadingIcon"
       caret
       variant="soft"
-      :size="size"
-      :rounded="rounded"
-      :space="space"
+      :size="scale.size"
+      :rounded="scale.rounded"
+      :space="scale.space"
       :space-x="resolvedSpaceX"
-      :space-y="spaceY ?? (tight ? '2xs' : undefined)"
-      :text-size="textSize"
-      :optical-label="opticalLabel"
-      :icon-size="iconSize"
-      :roundness="roundness"
+      :space-y="scale.spaceY ?? (tight ? '2xs' : undefined)"
+      :text-size="scale.textSize"
+      :optical-label="scale.opticalLabel"
+      :icon-size="scale.iconSize"
+      :roundness="scale.roundness"
       class="select-none"
       :aria-label="labelIcon && label && displayValue !== null ? `${label}: ${displayValue}` : undefined"
       :class="[

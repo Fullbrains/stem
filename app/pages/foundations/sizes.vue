@@ -85,5 +85,30 @@ const tabsItems = [{label: 'Uno', icon: 'i-ph-house'}, {label: 'Due'}]
         </div>
       </ShowcaseStage>
     </ShowcaseSection>
+
+    <ShowcaseSection
+        title="Ereditata dal parent"
+        description="SScale passa le prop di scala a tutto quello che contiene: chi non ne dà una prende quella del parent più vicino, chi la dà vince. Sotto: un SScale sm, con dentro un SScale lg space xs, e un button che forza xl."
+    >
+      <ShowcaseStage body-class="space-y-6 p-8">
+        <SScale size="sm">
+          <div class="flex flex-wrap items-center gap-3">
+            <SButton icon="i-ph-floppy-disk" label="Salva"/>
+            <SBadge label="Bozza" icon="i-ph-file"/>
+            <SInput placeholder="Cerca" icon="i-ph-magnifying-glass" class="w-40"/>
+            <SSelect :items="['Uno', 'Due']" placeholder="Scegli" class="w-32"/>
+            <SModalButton icon="i-ph-arrow-square-out" aria-label="Apri"/>
+          </div>
+          <SScale size="lg" space="xs" class="mt-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <SButton icon="i-ph-floppy-disk" label="Salva"/>
+              <SBadge label="Bozza" icon="i-ph-file"/>
+              <SInput placeholder="Cerca" icon="i-ph-magnifying-glass" class="w-40"/>
+              <SButton icon="i-ph-floppy-disk" label="Forzato xl" size="xl"/>
+            </div>
+          </SScale>
+        </SScale>
+      </ShowcaseStage>
+    </ShowcaseSection>
   </ShowcasePage>
 </template>

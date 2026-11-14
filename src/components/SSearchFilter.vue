@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 import {computed, inject, ref, useSlots} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
@@ -67,23 +68,13 @@ const props = withDefaults(defineProps<StemScaleProps & {
   threshold: 3,
   contentClass: 'min-w-48',
   resetLabel: 'Reset',
-  size: 'sm',
-  rounded: true,
 })
 
-// The scale props, forwarded to the chip and the menu as they are.
-const scale = computed(() => ({
-  size: props.size,
-  textSize: props.textSize,
-  iconSize: props.iconSize,
-  space: props.space,
-  spaceX: props.spaceX,
-  spaceY: props.spaceY,
-  roundness: props.roundness,
-  rounded: props.rounded,
-}))
+// The scale props, inherited from a parent when not given (sm and a pill
+// by default), forwarded to the chip and the menu.
+const scale = useStemScale(props, {size: 'sm', rounded: true})
 // The reset sits outside the chip, on the root: it reads the scale there.
-const rootScale = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
+const rootScale = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
 
 const emit = defineEmits<{
   'update:modelValue': [value: Set<string>]
