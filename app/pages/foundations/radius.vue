@@ -45,15 +45,15 @@ const superellipse = ref(true)
         <SButton size="md" label="md"/>
         <SButton size="lg" label="lg"/>
         <SButton size="xl" label="xl"/>
-        <UInput size="xs" placeholder="xs" class="w-20"/>
-        <UInput size="xl" placeholder="xl" class="w-24"/>
+        <SInput size="xs" placeholder="xs" class="w-20"/>
+        <SInput size="xl" placeholder="xl" class="w-24"/>
       </ShowcaseStage>
     </ShowcaseSection>
 
     <ShowcaseSection title="Gruppi" description="In un UFieldGroup gli angoli interni si azzerano (s-field-group).">
       <ShowcaseStage>
         <UFieldGroup>
-          <UInput placeholder="Cerca…" class="w-40"/>
+          <SInput placeholder="Cerca…" class="w-40"/>
           <SButton label="Vai" color="neutral" variant="soft"/>
         </UFieldGroup>
         <UFieldGroup>

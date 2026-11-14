@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {iconSizeStyle} from '../theme/icon-sizes'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
-const props = defineProps<{
+/**
+ * UButton on the Stem scale. `size` sets text, icon, padding, gap and radius
+ * together; `text-size`, `icon-size`, `space`, `space-x`, `space-y` and
+ * `roundness` move one of them; `rounded` makes it a pill.
+ *
+ * `disc`: icon only, square (padding-y on every side), round. No label,
+ * trailing icon or caret.
+ */
+const props = defineProps<StemScaleProps & {
   icon?: string
   label?: string
   trailingIcon?: string
-  iconSize?: string
   caret?: boolean
-  rounded?: boolean
   disc?: boolean
-  compact?: boolean | 'x' | 'y'
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -33,28 +38,19 @@ const {confirm} = useConfirmModal()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
+const scaleClasses = computed(() => stemScaleClasses({...props, rounded: props.rounded || props.disc}))
+const resolvedStyle = computed(() => stemScaleStyle(props))
+
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
-  if (props.rounded || props.disc) ui.base = 'rounded-full'
-  if (props.disc) ui.base = (ui.base || '') + ' aspect-square justify-center p-0!'
-  if (props.compact) {
-    if (props.disc) {
-      ui.base = (ui.base || '') + ' min-h-0! p-[0.4em]!'
-    } else {
-      const axis = props.compact === 'x' ? 'x' : props.compact === 'y' ? 'y' : 'xy'
-      if (axis.includes('y')) ui.base = (ui.base || '') + ' py-[0.25em]! min-h-[calc(1lh+0.5em)]!'
-      if (axis.includes('x')) ui.base = (ui.base || '') + ' px-[0.65em]!'
-    }
-  }
+  // Square: the vertical padding on every side, so width = height.
+  if (props.disc) ui.base = 'aspect-square justify-center p-(--s-py)!'
   if (props.caret) ui.trailingIcon = 'ml-auto'
   return Object.keys(ui).length ? ui : undefined
 })
 
-// Overrides --s-icon-size for this instance; the size variant sets it otherwise.
-// Inherited by leading icon, trailing icon and the loading spinner alike.
-const resolvedStyle = computed(() => iconSizeStyle(props.iconSize))
-
 const resolvedTrailingIcon = computed(() => {
+  if (props.disc) return undefined
   if (props.caret) return 'i-ph-caret-down'
   return props.trailingIcon
 })
@@ -83,9 +79,10 @@ function handleClick(e: MouseEvent) {
 <template>
   <UButton
       :label="disc ? undefined : label"
-      :trailing-icon="disc ? undefined : resolvedTrailingIcon"
+      :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"
+      :class="scaleClasses"
       :style="resolvedStyle"
       :disabled="loading || $attrs.disabled as boolean"
       @click="handleClick"
@@ -95,13 +92,13 @@ function handleClick(e: MouseEvent) {
       <span
           v-else
           class="inline-flex overflow-hidden transition-all duration-300 ease-out"
-          :class="loading || icon ? 'max-w-(--s-icon-size) opacity-100' : 'max-w-0 opacity-0 -mr-[0.5em]'"
+          :class="loading || icon ? 'max-w-(--s-icon-size) opacity-100' : 'max-w-0 opacity-0 -mr-(--s-gap)'"
       >
         <SSpinner v-if="loading"/>
         <UIcon v-else-if="icon" :name="icon" class="size-(--s-icon-size) shrink-0"/>
       </span>
     </template>
-    <template v-if="$slots.default" #default>
+    <template v-if="$slots.default && !disc" #default>
       <slot/>
     </template>
     <template v-if="$slots.trailing" #trailing>

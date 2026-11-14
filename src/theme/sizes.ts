@@ -1,27 +1,48 @@
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
+import {stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes, type StemSize} from './scale'
 
-const base = 'px-[1em] py-[0.5em] gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]'
-
-function size(_token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
+/**
+ * Size variants built on the Stem scale (see scale.ts).
+ *
+ * `sizes`: for components whose root element holds the text — UButton,
+ * UBadge, USelect, USelectMenu (their `base` is the root).
+ *
+ * `fieldSizes`: for components with a `root` wrapping the field — UInput,
+ * UTextarea, UInputMenu, UInputTags. The scale is declared on `root`, where
+ * the wrapper's classes land too, and read on `base`, which inherits it.
+ *
+ * Paddings carry `!`: Nuxt UI's own size and leading/trailing compound
+ * variants (`ps-9`, `py-1.5`…) would otherwise win on some of them.
+ */
+function size(token: StemSize) {
   return {
-    // The base declares --s-icon-size as 1em, so icons follow THIS variant's
-    // text size; leading and trailing icons read it, and an `iconSize` prop on
-    // the component overrides both at once.
-    base: `${base} ${text} ${iconSizeFor()}`,
-    // In the inputs (Input, InputNumber, InputMenu, Textarea) `base` is the
-    // field itself and the icons sit beside it, under `root`: declared there
-    // too, or they would read nothing and stay zero wide. Components without
-    // a root slot ignore the key.
-    root: iconSizeFor(),
-    leadingIcon: iconSizeClass,
-    trailingIcon: iconSizeClass,
+    base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding}`,
+    leadingIcon: stemScaleIcon,
+    trailingIcon: stemScaleIcon,
   }
 }
 
-export const sizes = {
-  xs: size('xs', 'text-xs'),
-  sm: size('sm', 'text-sm'),
-  md: size('md', 'text-base'),
-  lg: size('lg', 'text-lg'),
-  xl: size('xl', 'text-xl'),
+function fieldSize(token: StemSize) {
+  return {
+    root: stemSizeClass(token),
+    base: `${stemScaleText} px-(--s-px)! py-(--s-py)! gap-(--s-gap)`,
+    leading: 'ps-(--s-px)!',
+    trailing: 'pe-(--s-px)!',
+    leadingIcon: stemScaleIcon,
+    trailingIcon: stemScaleIcon,
+  }
 }
+
+export const sizes = Object.fromEntries(stemSizes.map(s => [s, size(s)])) as Record<StemSize, ReturnType<typeof size>>
+
+export const fieldSizes = Object.fromEntries(stemSizes.map(s => [s, fieldSize(s)])) as Record<StemSize, ReturnType<typeof fieldSize>>
+
+/**
+ * With an icon inside the field, the text starts after it: padding + icon +
+ * gap, the same distance as in a button. Compound variants, not variants:
+ * they come after the size's `px-(--s-px)!`, which tailwind-merge would
+ * otherwise let win over an earlier `ps-*`.
+ */
+export const fieldIconCompounds = [
+  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
+  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
+]

@@ -1,27 +1,20 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {iconSizeStyle} from '../theme/icon-sizes'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
 
-const props = defineProps<{
-  compact?: boolean | 'x' | 'y'
-  iconSize?: string
-}>()
+/**
+ * UBadge on the Stem scale: at a given size, as tall as a button, with the
+ * same text, icon, padding and radius. Icons on both sides (`icon`,
+ * `trailing-icon`); no caret. `rounded` makes it a pill.
+ */
+const props = defineProps<StemScaleProps>()
 
-// Overrides --s-icon-size for this instance; the size variant sets it otherwise.
-const resolvedStyle = computed(() => iconSizeStyle(props.iconSize))
-
-const resolvedUi = computed(() => {
-  if (!props.compact) return undefined
-  const classes: string[] = []
-  const axis = props.compact === 'x' ? 'x' : props.compact === 'y' ? 'y' : 'xy'
-  if (axis.includes('y')) classes.push('py-[0.15em]!')
-  if (axis.includes('x')) classes.push('px-[0.5em]!')
-  return {base: classes.join(' ')}
-})
+const scaleClasses = computed(() => stemScaleClasses(props))
+const resolvedStyle = computed(() => stemScaleStyle(props))
 </script>
 
 <template>
-  <UBadge :ui="resolvedUi" :style="resolvedStyle">
+  <UBadge :class="scaleClasses" :style="resolvedStyle">
     <template v-if="$slots.leading" #leading>
       <slot name="leading"/>
     </template>

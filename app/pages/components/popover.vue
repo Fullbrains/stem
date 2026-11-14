@@ -80,8 +80,8 @@ const actions = [
                   <p class="text-sm font-semibold text-(--ui-text-highlighted)">Invita</p>
                   <SCloseButton size="sm" @click="close"/>
                 </div>
-                <UInput placeholder="Nome" size="sm" class="w-full"/>
-                <UInput placeholder="Email" size="sm" class="w-full"/>
+                <SInput placeholder="Nome" size="sm" class="w-full"/>
+                <SInput placeholder="Email" size="sm" class="w-full"/>
                 <SButton label="Invia invito" size="sm" block @click="close"/>
               </div>
               <div v-else class="flex w-48 flex-col p-1">
@@ -197,8 +197,8 @@ const actions = [
                     <p class="text-sm font-semibold text-(--ui-text-highlighted)">Invita</p>
                     <SCloseButton size="sm" @click="close"/>
                   </div>
-                  <UInput placeholder="Nome" size="sm" class="w-full"/>
-                  <UInput placeholder="Email" size="sm" class="w-full"/>
+                  <SInput placeholder="Nome" size="sm" class="w-full"/>
+                  <SInput placeholder="Email" size="sm" class="w-full"/>
                   <SButton label="Invia invito" size="sm" block @click="close"/>
                 </div>
               </template>

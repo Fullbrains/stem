@@ -1,28 +1,13 @@
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
-
-const badgeBase = 'rounded-full px-[0.75em] py-[0.35em] gap-[0.5em]'
-
-function badgeSize(_token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
-  return {
-    // Icons follow this variant's text (1em), like every other Stem control.
-    base: `${badgeBase} ${text} ${iconSizeFor()}`,
-    leadingIcon: iconSizeClass,
-    trailingIcon: iconSizeClass,
-  }
-}
+import {sizes} from './sizes'
 
 export default {
+  // Same scale as a button: at a given size a badge is as tall as a button,
+  // with the same text, icon, padding and radius. Squircle; pill via `rounded`.
   slots: {
-    base: 'rounded-full font-normal',
+    base: 's-corner font-normal',
   },
   variants: {
-    size: {
-      xs: badgeSize('xs', 'text-xs'),
-      sm: badgeSize('sm', 'text-sm'),
-      md: badgeSize('md', 'text-base'),
-      lg: badgeSize('lg', 'text-lg'),
-      xl: badgeSize('xl', 'text-xl'),
-    },
+    size: sizes,
   },
   compoundVariants: [
     {

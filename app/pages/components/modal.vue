@@ -139,10 +139,10 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
             <template v-if="s.body !== 'nessuno'" #body>
               <div class="space-y-4 p-6">
                 <UFormField label="Nome">
-                  <UInput model-value="Stem" class="w-full"/>
+                  <SInput model-value="Stem" class="w-full"/>
                 </UFormField>
                 <UFormField label="Visibilità">
-                  <USelect model-value="team" :items="[{label: 'Solo io', value: 'me'}, {label: 'Team', value: 'team'}, {label: 'Pubblico', value: 'public'}]" class="w-full"/>
+                  <SSelect model-value="team" :items="[{label: 'Solo io', value: 'me'}, {label: 'Team', value: 'team'}, {label: 'Pubblico', value: 'public'}]" class="w-full"/>
                 </UFormField>
                 <template v-if="s.body === 'lungo'">
                   <p v-for="n in 12" :key="n" class="text-sm text-(--ui-text-muted)">

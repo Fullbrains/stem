@@ -28,15 +28,9 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'icon', type: 'select', options: icons},
   {group: 'Contenuto', key: 'trailingIcon', label: 'trailing-icon', type: 'select', options: icons},
   {group: 'Contenuto', key: 'avatar', type: 'boolean', prop: false},
-  {
-    group: 'Contenuto', key: 'iconSize', label: 'icon-size', type: 'select',
-    options: [{label: 'segue il testo', value: undefined}, 'sm', 'md', 'lg', 'xl', '1.25em'],
-  },
 
-  {group: 'Forma', key: 'compact', type: 'select', default: false, options: [
-    {label: 'no', value: false}, {label: 'sì', value: true}, 'x', 'y',
-  ]},
   {group: 'Forma', key: 'square', type: 'boolean'},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-badge', {default: () => controlDefaults(controls)})
@@ -61,15 +55,11 @@ const avatar = computed(() => (state.value.avatar ? {src: 'https://i.pravatar.cc
 const codeExtra = computed(() => (state.value.avatar ? ':avatar="{src: \'…\'}"' : ''))
 
 const shapes: Record<string, Record<string, unknown>> = {
-  'normale': {},
-  'compact': {compact: true},
-  'compact x': {compact: 'x'},
-  'compact y': {compact: 'y'},
+  ...scaleShapes,
   'square': {square: true},
-  'square compact': {square: true, compact: true},
 }
 
-const iconSizes = ['segue il testo', 'sm', 'md', 'lg', 'xl']
+const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 
 const people = [
   {src: 'https://i.pravatar.cc/96?img=5', alt: 'Anna Rossi'},
@@ -82,7 +72,7 @@ const people = [
   <ShowcasePage
       title="Badge"
       wraps="UBadge"
-      description="Etichetta breve, a pillola. Stem aggiunge il compact, che stringe il padding su uno o entrambi gli assi, e icon-size."
+      description="Etichetta breve, sulla stessa scala del button: a parità di size è alta uguale. Squircle di default, pillola con rounded; icone a sinistra e a destra, niente caret."
   >
     <ShowcasePlayground v-model="state" tag="SBadge" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">
@@ -114,22 +104,22 @@ const people = [
 
     <ShowcaseSection
         title="Forme"
-        description="Il compact di Stem e lo square di Nuxt UI, alla size scelta."
+        description="space, space-x, space-y, roundness, pillola e lo square di Nuxt UI, alla size scelta."
     >
       <ShowcaseScale :items="Object.keys(shapes)">
         <template #item="{item}">
-          <SBadge v-bind="{...without(current, 'compact', 'square'), ...shapes[item]}"/>
+          <SBadge v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'square'), ...shapes[item]}"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
 
     <ShowcaseSection
         title="Icona"
-        description="Di default l'icona è alta 1em e segue il testo; icon-size la fissa su un gradino della scala."
+        description="L'icona è alta quanto il leading della size; icon-size la sposta su un altro gradino."
     >
       <ShowcaseScale :items="iconSizes">
         <template #item="{item}">
-          <SBadge v-bind="without(current, 'iconSize')" :icon="(current.icon as string) ?? 'i-ph-tag'" :icon-size="item === 'segue il testo' ? undefined : item"/>
+          <SBadge v-bind="without(current, 'iconSize')" :icon="(current.icon as string) ?? 'i-ph-tag'" :icon-size="item === 'da size' ? undefined : item"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>

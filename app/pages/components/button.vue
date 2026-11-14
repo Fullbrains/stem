@@ -25,18 +25,12 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'label', type: 'text', initial: 'Salva', placeholder: 'nessuna'},
   {group: 'Contenuto', key: 'icon', type: 'select', options: icons, initial: 'i-ph-floppy-disk'},
   {group: 'Contenuto', key: 'trailingIcon', label: 'trailing-icon', type: 'select', options: icons},
-  {
-    group: 'Contenuto', key: 'iconSize', label: 'icon-size', type: 'select',
-    options: [{label: 'segue il testo', value: undefined}, 'sm', 'md', 'lg', 'xl', '1.25em'],
-  },
 
-  {group: 'Forma', key: 'compact', type: 'select', default: false, options: [
-    {label: 'no', value: false}, {label: 'sì', value: true}, 'x', 'y',
-  ]},
-  {group: 'Forma', key: 'rounded', type: 'boolean'},
   {group: 'Forma', key: 'disc', type: 'boolean'},
   {group: 'Forma', key: 'caret', type: 'boolean'},
   {group: 'Forma', key: 'block', type: 'boolean'},
+
+  ...scaleControls(),
 
   {group: 'Stato', key: 'loading', type: 'boolean'},
   {group: 'Stato', key: 'disabled', type: 'boolean'},
@@ -63,24 +57,19 @@ const current = computed(() => {
 })
 
 const shapes: Record<string, Record<string, unknown>> = {
-  'normale': {},
-  'compact': {compact: true},
-  'compact x': {compact: 'x'},
-  'compact y': {compact: 'y'},
-  'rounded': {rounded: true},
+  ...scaleShapes,
   'caret': {caret: true},
   'disc': {disc: true},
-  'disc compact': {disc: true, compact: true},
 }
 
-const iconSizes = ['segue il testo', 'sm', 'md', 'lg', 'xl']
+const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 </script>
 
 <template>
   <ShowcasePage
       title="Button"
       wraps="UButton"
-      description="Il pulsante di Stem: aggiunge spinner di caricamento, dialog di conferma, le forme disc e rounded, il caret e il compact."
+      description="Il pulsante di Stem, sulla scala unica: size decide testo, icona, padding, gap e raggio; text-size, icon-size, space e roundness ne spostano uno. Aggiunge spinner, conferma, caret, disc e pillola."
   >
     <ShowcasePlayground v-model="state" tag="SButton" :controls="controls">
       <template #default="{props}">
@@ -111,23 +100,23 @@ const iconSizes = ['segue il testo', 'sm', 'md', 'lg', 'xl']
     </ShowcaseSection>
 
     <ShowcaseSection
-        title="Forme"
-        description="Le forme di Stem affiancate, alla size scelta."
+        title="Spazio e forma"
+        description="space, space-x, space-y, roundness e pillola, alla size scelta."
     >
       <ShowcaseScale :items="Object.keys(shapes)">
         <template #item="{item}">
-          <SButton v-bind="{...without(current, 'compact', 'rounded', 'disc', 'caret'), ...shapes[item]}"/>
+          <SButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'disc', 'caret'), ...shapes[item]}"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
 
     <ShowcaseSection
         title="Icona"
-        description="Di default l'icona è alta 1em e segue il testo; icon-size la fissa su un gradino della scala."
+        description="L'icona è alta quanto il leading della size; icon-size la sposta su un altro gradino."
     >
       <ShowcaseScale :items="iconSizes">
         <template #item="{item}">
-          <SButton v-bind="without(current, 'iconSize')" :icon="current.icon ?? 'i-ph-floppy-disk'" :icon-size="item === 'segue il testo' ? undefined : item"/>
+          <SButton v-bind="without(current, 'iconSize')" :icon="current.icon ?? 'i-ph-floppy-disk'" :icon-size="item === 'da size' ? undefined : item"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>

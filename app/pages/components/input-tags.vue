@@ -43,6 +43,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'required', type: 'boolean'},
   {group: 'Stato', key: 'highlight', type: 'boolean'},
   {group: 'Stato', key: 'fixed', type: 'boolean'},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-input-tags', {default: () => controlDefaults(controls)})
@@ -80,12 +81,12 @@ const states: Record<string, Record<string, unknown>> = {
 <template>
   <ShowcasePage
       title="InputTags"
-      wraps="UInputTags"
+      wraps="SInputTags"
       description="Un campo che raccoglie più valori come tag. Il focus sta sull'input interno: Stem disegna l'anello sul contenitore con has-focus."
   >
-    <ShowcasePlayground v-model="state" tag="UInputTags" :controls="controls" code-extra='v-model="tags"'>
+    <ShowcasePlayground v-model="state" tag="SInputTags" :controls="controls" code-extra='v-model="tags"'>
       <template #default="{props}">
-        <UInputTags v-bind="props" v-model="value" class="w-72"/>
+        <SInputTags v-bind="props" v-model="value" class="w-72"/>
       </template>
     </ShowcasePlayground>
 
@@ -95,7 +96,7 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseMatrix :rows="variants" :cols="colors">
         <template #cell="{row, col}">
-          <UInputTags v-bind="without(look, 'variant', 'color', 'placeholder')" :variant="row as any" :color="col as any" :placeholder="col" :default-value="['Vue']" class="w-44"/>
+          <SInputTags v-bind="without(look, 'variant', 'color', 'placeholder')" :variant="row as any" :color="col as any" :placeholder="col" :default-value="['Vue']" class="w-44"/>
         </template>
       </ShowcaseMatrix>
     </ShowcaseSection>
@@ -106,7 +107,7 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="sizes">
         <template #item="{item}">
-          <UInputTags v-bind="without(look, 'size')" :size="item as any" :default-value="['Vue', 'Nuxt']" class="w-56"/>
+          <SInputTags v-bind="without(look, 'size')" :size="item as any" :default-value="['Vue', 'Nuxt']" class="w-56"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -120,7 +121,7 @@ const states: Record<string, Record<string, unknown>> = {
           <thead>
             <tr>
               <th/>
-              <th v-for="c in ['vuoto', 'con tag', 'UInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
+              <th v-for="c in ['vuoto', 'con tag', 'SInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
             </tr>
           </thead>
           <tbody>
@@ -128,17 +129,17 @@ const states: Record<string, Record<string, unknown>> = {
               <th class="pr-2 text-right font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ s }}</th>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInputTags :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" placeholder="Tag" class="w-44"/>
+                  <SInputTags :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" placeholder="Tag" class="w-44"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInputTags :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" :default-value="['Vue', 'Nuxt']" class="w-44"/>
+                  <SInputTags :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" :default-value="['Vue', 'Nuxt']" class="w-44"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInput :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" placeholder="Tag" class="w-44"/>
+                  <SInput :size="s as any" :variant="look.variant as any" :color="look.color as any" icon="i-ph-tag" placeholder="Tag" class="w-44"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
@@ -158,7 +159,7 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="['sm', 'md', 'lg']">
         <template #item="{item}">
-          <UInputTags v-bind="without(look, 'size')" v-model="many" :size="item as any" class="w-64"/>
+          <SInputTags v-bind="without(look, 'size')" v-model="many" :size="item as any" class="w-64"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -169,16 +170,16 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseStage>
         <UFormField label="max 3">
-          <UInputTags v-bind="look" :max="3" :default-value="['Vue', 'Nuxt']" class="w-60"/>
+          <SInputTags v-bind="look" :max="3" :default-value="['Vue', 'Nuxt']" class="w-60"/>
         </UFormField>
         <UFormField label="max-length 8">
-          <UInputTags v-bind="look" :max-length="8" class="w-60"/>
+          <SInputTags v-bind="look" :max-length="8" class="w-60"/>
         </UFormField>
         <UFormField label="add-on-blur, add-on-paste">
-          <UInputTags v-bind="look" add-on-blur add-on-paste class="w-60"/>
+          <SInputTags v-bind="look" add-on-blur add-on-paste class="w-60"/>
         </UFormField>
         <UFormField label="duplicate">
-          <UInputTags v-bind="look" duplicate :default-value="['Vue', 'Vue']" class="w-60"/>
+          <SInputTags v-bind="look" duplicate :default-value="['Vue', 'Vue']" class="w-60"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -189,7 +190,7 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="Object.keys(states)">
         <template #item="{item}">
-          <UInputTags v-bind="{...without(look, 'disabled', 'loading', 'highlight'), ...states[item]}" class="w-48"/>
+          <SInputTags v-bind="{...without(look, 'disabled', 'loading', 'highlight'), ...states[item]}" class="w-48"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -200,10 +201,10 @@ const states: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseStage body-class="grid grid-cols-2 gap-6 p-8">
         <UFormField label="Competenze" description="Premi Invio dopo ogni voce.">
-          <UInputTags v-bind="look" :default-value="['Vue']" class="w-full"/>
+          <SInputTags v-bind="look" :default-value="['Vue']" class="w-full"/>
         </UFormField>
         <UFormField label="Destinatari" error="Aggiungi almeno un destinatario." required>
-          <UInputTags v-bind="without(look, 'color')" icon="i-ph-at" class="w-full"/>
+          <SInputTags v-bind="without(look, 'color')" icon="i-ph-at" class="w-full"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>

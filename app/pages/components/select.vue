@@ -6,11 +6,11 @@ const colors = themeKeys(theme, 'color')
 const variants = themeKeys(theme, 'variant')
 const sizes = themeKeys(theme, 'size')
 
-const USelect = resolveComponent('USelect')
-const USelectMenu = resolveComponent('USelectMenu')
-const UInputMenu = resolveComponent('UInputMenu')
+const USelect = resolveComponent('SSelect')
+const USelectMenu = resolveComponent('SSelectMenu')
+const UInputMenu = resolveComponent('SInputMenu')
 const components = {USelect, USelectMenu, UInputMenu} as Record<string, any>
-type Tag = 'USelect' | 'USelectMenu' | 'UInputMenu'
+type Tag = 'SSelect' | 'SSelectMenu' | 'SInputMenu'
 
 const items = [
   {label: 'Backlog', value: 'backlog', icon: 'i-ph-circle-dashed'},
@@ -47,7 +47,7 @@ const trailingIcons = [
 ]
 
 const baseControls: ShowcaseControl[] = [
-  {group: 'Componente', key: 'component', label: 'componente', type: 'select', prop: false, default: 'USelect', options: ['USelect', 'USelectMenu', 'UInputMenu']},
+  {group: 'Componente', key: 'component', label: 'componente', type: 'select', prop: false, default: 'SSelect', options: ['SSelect', 'SSelectMenu', 'SInputMenu']},
 
   {group: 'Aspetto', key: 'variant', type: 'select', options: variants, default: 'outline'},
   {group: 'Aspetto', key: 'color', type: 'select', options: colors, default: 'primary'},
@@ -84,20 +84,21 @@ const allControls: ShowcaseControl[] = [
 
 const state = useCookie<Record<string, any>>('showcase-select', {default: () => controlDefaults(allControls)})
 
-const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'USelect')
+const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'SSelect')
 
 // Ogni componente ha il suo pannello: si mostrano solo le prop che accetta.
 const controls = computed<ShowcaseControl[]>(() => {
-  if (tag.value === 'USelect') {
-    return [...baseControls, menuControls[0]!, ...stateControls]
+  if (tag.value === 'SSelect') {
+    return [...baseControls, menuControls[0]!, ...stateControls, ...scaleControls()]
   }
-  if (tag.value === 'USelectMenu') {
+  if (tag.value === 'SSelectMenu') {
     return [
       ...baseControls,
       menuControls[0]!,
       {group: 'Menu', key: 'searchInput', label: 'search-input', type: 'boolean', default: true},
       ...menuControls.slice(1),
       ...stateControls,
+      ...scaleControls(),
     ]
   }
   return [
@@ -106,6 +107,7 @@ const controls = computed<ShowcaseControl[]>(() => {
     {group: 'Menu', key: 'mode', type: 'select', default: 'combobox', options: ['combobox', 'autocomplete']},
     ...menuControls.slice(1),
     ...stateControls,
+    ...scaleControls(),
   ]
 })
 
@@ -150,7 +152,7 @@ const states: Record<string, Record<string, unknown>> = {
   'highlight': {highlight: true, modelValue: 'todo'},
 }
 
-const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
+const tags: Tag[] = ['SSelect', 'SSelectMenu', 'SInputMenu']
 </script>
 
 <template>
@@ -214,7 +216,7 @@ const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
           <thead>
             <tr>
               <th/>
-              <th v-for="c in [...tags, 'UInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
+              <th v-for="c in [...tags, 'SInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
             </tr>
           </thead>
           <tbody>
@@ -227,7 +229,7 @@ const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
               </td>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInput :size="s as any" :variant="shared.variant as any" :color="shared.color as any" icon="i-ph-list" placeholder="Da fare" class="w-36"/>
+                  <SInput :size="s as any" :variant="shared.variant as any" :color="shared.color as any" icon="i-ph-list" placeholder="Da fare" class="w-36"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
@@ -261,7 +263,7 @@ const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
           <component :is="components[t]" v-bind="shared" :items="grouped" value-key="value" class="w-52"/>
         </UFormField>
         <UFormField label="USelectMenu con descrizioni">
-          <USelectMenu v-bind="shared" :items="withDescription" value-key="value" default-value="editor" class="w-52"/>
+          <SSelectMenu v-bind="shared" :items="withDescription" value-key="value" default-value="editor" class="w-52"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -272,16 +274,16 @@ const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
     >
       <ShowcaseStage>
         <UFormField label="search-input false">
-          <USelectMenu v-bind="shared" :search-input="false" :items="items" value-key="value" default-value="todo" class="w-52"/>
+          <SSelectMenu v-bind="shared" :search-input="false" :items="items" value-key="value" default-value="todo" class="w-52"/>
         </UFormField>
         <UFormField label="clear">
-          <USelectMenu v-bind="shared" clear :items="items" value-key="value" default-value="todo" class="w-52"/>
+          <SSelectMenu v-bind="shared" clear :items="items" value-key="value" default-value="todo" class="w-52"/>
         </UFormField>
         <UFormField label="InputMenu clear">
-          <UInputMenu v-bind="shared" clear :items="items" value-key="value" default-value="todo" class="w-52"/>
+          <SInputMenu v-bind="shared" clear :items="items" value-key="value" default-value="todo" class="w-52"/>
         </UFormField>
         <UFormField label="InputMenu autocomplete">
-          <UInputMenu v-bind="shared" mode="autocomplete" :items="items.map(i => i.label)" class="w-52"/>
+          <SInputMenu v-bind="shared" mode="autocomplete" :items="items.map(i => i.label)" class="w-52"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -313,8 +315,8 @@ const tags: Tag[] = ['USelect', 'USelectMenu', 'UInputMenu']
           <SButton icon="i-ph-plus" variant="soft"/>
         </UFieldGroup>
         <UFieldGroup>
-          <UInput v-bind="without(shared, 'icon')" placeholder="Titolo" class="w-36"/>
-          <USelect v-bind="without(shared, 'icon', 'placeholder')" :items="items" value-key="value" default-value="todo" class="w-36"/>
+          <SInput v-bind="without(shared, 'icon')" placeholder="Titolo" class="w-36"/>
+          <SSelect v-bind="without(shared, 'icon', 'placeholder')" :items="items" value-key="value" default-value="todo" class="w-36"/>
         </UFieldGroup>
       </ShowcaseStage>
     </ShowcaseSection>

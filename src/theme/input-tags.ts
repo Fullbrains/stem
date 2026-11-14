@@ -1,24 +1,13 @@
-import {inputBase, baseCompoundVariants, outlineCommons} from './input-commons'
-import {iconSizeClass} from './icon-sizes'
-import {sizes} from './sizes'
+import {inputBase, baseCompoundVariants, fixedSizeOverrides} from './input-commons'
+import {fieldSizes, fieldIconCompounds} from './sizes'
+import {stemScaleIcon, stemSizes} from './scale'
 
-// InputTags uses has-focus-visible (focus is on inner input, not root)
+// InputTags: the focus is on the inner input, so the ring reacts to
+// has-focus-visible on the container. Inset, like every Stem field.
 const inputTagsFocusRing = [
-  {
-    color: 'primary',
-    variant: ['outline', 'subtle'],
-    class: {base: 'has-focus-visible:shadow-[0_0_0_3.5px]! has-focus:border-iron-500/80 has-focus-visible:shadow-iron-500/20'},
-  },
-  {
-    color: 'error',
-    variant: ['outline', 'subtle'],
-    class: {base: 'has-focus-visible:shadow-[0_0_0_3.5px]! has-focus:border-rose-500/80 has-focus-visible:shadow-rose-500/20'},
-  },
-  {
-    color: 'success',
-    variant: ['outline', 'subtle'],
-    class: {base: 'has-focus-visible:shadow-[0_0_0_3.5px]! has-focus:border-emerald-500/80 has-focus-visible:shadow-emerald-500/20'},
-  },
+  {color: 'primary', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-iron-500/80'}},
+  {color: 'error', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-rose-500/80'}},
+  {color: 'success', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-emerald-500/80'}},
 ]
 
 // Remap focus-visible → has-focus-visible in baseCompoundVariants
@@ -37,36 +26,25 @@ const remappedBase = baseCompoundVariants.map((cv) => {
   return cv
 })
 
-const fixedSizeOverrides = [
-  {fixed: false, size: 'xs', class: 'md:text-xs'},
-  {fixed: false, size: 'sm', class: 'md:text-sm'},
-  {fixed: false, size: 'md', class: 'md:text-base'},
-  {fixed: false, size: 'lg', class: 'md:text-lg'},
-]
+// A tag is exactly one line of the scale tall (no vertical padding), so a
+// field with tags is as tall as an empty one.
+const tagSize = {
+  item: 'py-0 leading-(--s-icon-size) px-(--s-px) gap-(--s-gap)',
+  itemDeleteIcon: stemScaleIcon,
+}
 
 export default {
   slots: {
     base: inputBase,
-    leading: 'ml-[0.1em]!',
-    trailing: 'mr-[0.1em]!',
     trailingIcon: 'text-(--ui-text)!',
-    item: 'rounded-full ring-0 pl-[0.6em] leading-none pr-[3px] py-0.5 gap-[0.25em] font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200',
-    itemDelete: 'rounded-full cursor-pointer hover:bg-iron-400/30 text-muto-800 dark:text-muto-200 p-0.5',
+    item: 'rounded-full ring-0 font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200',
+    itemDelete: 'rounded-full cursor-pointer hover:bg-iron-400/30 text-muto-800 dark:text-muto-200 p-0',
+    // The typing field takes the space left on the row, instead of its
+    // intrinsic ~20ch that pushed it onto a second line.
+    input: 'w-0 min-w-[4ch] leading-(--s-icon-size) h-(--s-icon-size) py-0',
   },
-  compoundVariants: [...remappedBase, ...inputTagsFocusRing, ...fixedSizeOverrides],
+  compoundVariants: [...remappedBase, ...inputTagsFocusRing, ...fixedSizeOverrides, ...fieldIconCompounds],
   variants: {
-    leading: {
-      false: {base: 'pl-2.5!'},
-    },
-    trailing: {
-      false: {base: 'pr-2.5!'},
-    },
-    size: {
-      xs: {...sizes.xs, item: 'text-xs', itemDeleteIcon: iconSizeClass},
-      sm: {...sizes.sm, item: 'text-sm', itemDeleteIcon: iconSizeClass},
-      md: {...sizes.md, item: 'text-base', itemDeleteIcon: iconSizeClass},
-      lg: {...sizes.lg, item: 'text-lg', itemDeleteIcon: iconSizeClass},
-      xl: {...sizes.xl, item: 'text-xl', itemDeleteIcon: iconSizeClass},
-    },
+    size: Object.fromEntries(stemSizes.map(k => [k, {...fieldSizes[k], ...tagSize}])),
   },
 }

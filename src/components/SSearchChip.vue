@@ -42,12 +42,12 @@ const displayValue = computed(() => {
       variant="soft"
       size="sm"
       rounded
-      compact
+      space-x="md"
       class="select-none"
       :aria-label="labelIcon && label && displayValue !== null ? `${label}: ${displayValue}` : undefined"
       :class="[
         active ? 'bg-iron-400/30!' : '',
-        tight ? 'py-[0.1em]! min-h-[calc(1lh+0.2em)]!' : '',
+        tight ? 's-space-y-xs' : '',
       ]"
   >
     <template v-if="label && displayValue !== null">

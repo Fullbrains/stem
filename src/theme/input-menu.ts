@@ -1,11 +1,12 @@
-import {inputSlots, inputCompoundVariants, inputVariants} from './input-commons'
-import {selectOpenRing, selectSizes} from './select-commons'
+import {inputSlots, inputCompoundVariants, inputVariants, singleLineHeight} from './input-commons'
+import {selectOpenRing, fieldSelectSizes} from './select-commons'
 import {menuItemSlots} from './menu-items'
 
 export default {
   slots: {
     ...inputSlots,
     ...menuItemSlots,
+    base: `${inputSlots.base} ${singleLineHeight}`,
   },
   compoundVariants: [...inputCompoundVariants, ...selectOpenRing],
   variants: {
@@ -15,6 +16,6 @@ export default {
         item: 'data-highlighted:not-data-disabled:before:bg-elevated before:transition-none',
       },
     },
-    size: selectSizes,
+    size: fieldSelectSizes,
   },
 }

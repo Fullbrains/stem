@@ -5,7 +5,7 @@ import type {ButtonProps} from '@nuxt/ui'
 /**
  * Copies a text to the clipboard, and shows a check in place of its icon
  * while the copy is fresh. An SButton underneath: `color`, `variant` and
- * `size` are its own, and whatever else SButton takes (compact, disc,
+ * `size` are its own, and whatever else SButton takes (space, disc,
  * rounded, classes) passes through, so it fits the surface it sits on.
  *
  * `text` may be a function, called on click, for a value fetched only when

@@ -101,7 +101,7 @@ const iconSizes = ['dalla size', 'sm', 'md', 'lg', 'xl']
           <thead>
             <tr>
               <th/>
-              <th v-for="c in ['SColorPicker', 'UInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
+              <th v-for="c in ['SColorPicker', 'SInput', 'SButton']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@ const iconSizes = ['dalla size', 'sm', 'md', 'lg', 'xl']
               </td>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInput :size="s as any" :variant="current.variant as any" :color="current.color as any" icon="i-ph-palette" placeholder="#3b82f6" class="w-40"/>
+                  <SInput :size="s as any" :variant="current.variant as any" :color="current.color as any" icon="i-ph-palette" placeholder="#3b82f6" class="w-40"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">

@@ -10,7 +10,8 @@
 @supports (corner-shape: squircle) {
     .s-corner {
         border-radius: calc(var(--s-radius) * 1.33);
-        corner-shape: superellipse(1.33);
+        /* --s-corner-shape: `round` for a pill (.s-pill), squircle otherwise. */
+        corner-shape: var(--s-corner-shape, superellipse(1.33));
     }
 
     /* s-field-group: reset inner corners for grouped elements */

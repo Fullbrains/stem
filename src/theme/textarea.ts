@@ -3,8 +3,8 @@ import {inputSlots, inputCompoundVariants, inputVariants} from './input-commons'
 export default {
   slots: {
     ...inputSlots,
-    leading: `${inputSlots.leading} pt-[0.5em]`,
-    trailing: `${inputSlots.trailing} pt-[0.5em]`,
+    leading: 'top-(--s-py)! bottom-auto!',
+    trailing: 'top-(--s-py)! bottom-auto!',
   },
   compoundVariants: inputCompoundVariants,
   variants: inputVariants,

@@ -1,0 +1,65 @@
+/*
+ * The Stem scale — one size for every control.
+ *
+ * `size` sets everything at once; `text-size`, `icon-size`, `space`,
+ * `space-x`, `space-y` and `roundness` move one axis on their own. Each is a
+ * class that declares custom properties on the component's root; the theme
+ * reads them (src/theme/sizes.ts), so a field nested inside the root (the
+ * <input> of UInput) inherits them.
+ *
+ *   --s-text       font size
+ *   --s-icon-size  icon size, and the line height: text and icon share one
+ *                  row, so a control is exactly icon + 2 × padding-y tall
+ *   --s-px/--s-py  padding
+ *   --s-gap        gap between icon and label, follows space-x
+ *   --s-radius     squircle radius (s-corner)
+ *
+ * In @layer components: a Tailwind utility on the same element still wins.
+ * Order matters: the single-axis classes come after `s-size-*` and after
+ * `s-space-*`, so they override them.
+ *
+ * Source of the numbers: src/theme/scale.ts (keep the two in step).
+ */
+@layer components {
+    .s-size-xs { --s-text: 12px; --s-icon-size: 12px; --s-px: 2px; --s-py: 2px; --s-gap: 2px; --s-radius: 4px; }
+    .s-size-sm { --s-text: 14px; --s-icon-size: 16px; --s-px: 4px; --s-py: 4px; --s-gap: 4px; --s-radius: 6px; }
+    .s-size-md { --s-text: 16px; --s-icon-size: 20px; --s-px: 8px; --s-py: 8px; --s-gap: 8px; --s-radius: 8px; }
+    .s-size-lg { --s-text: 18px; --s-icon-size: 24px; --s-px: 12px; --s-py: 12px; --s-gap: 12px; --s-radius: 10px; }
+    .s-size-xl { --s-text: 20px; --s-icon-size: 28px; --s-px: 16px; --s-py: 16px; --s-gap: 16px; --s-radius: 12px; }
+
+    .s-space-xs { --s-px: 2px; --s-py: 2px; --s-gap: 2px; }
+    .s-space-sm { --s-px: 4px; --s-py: 4px; --s-gap: 4px; }
+    .s-space-md { --s-px: 8px; --s-py: 8px; --s-gap: 8px; }
+    .s-space-lg { --s-px: 12px; --s-py: 12px; --s-gap: 12px; }
+    .s-space-xl { --s-px: 16px; --s-py: 16px; --s-gap: 16px; }
+
+    .s-space-x-xs { --s-px: 2px; --s-gap: 2px; }
+    .s-space-x-sm { --s-px: 4px; --s-gap: 4px; }
+    .s-space-x-md { --s-px: 8px; --s-gap: 8px; }
+    .s-space-x-lg { --s-px: 12px; --s-gap: 12px; }
+    .s-space-x-xl { --s-px: 16px; --s-gap: 16px; }
+    .s-space-y-xs { --s-py: 2px; }
+    .s-space-y-sm { --s-py: 4px; }
+    .s-space-y-md { --s-py: 8px; }
+    .s-space-y-lg { --s-py: 12px; }
+    .s-space-y-xl { --s-py: 16px; }
+
+    .s-text-xs { --s-text: 12px; }
+    .s-text-sm { --s-text: 14px; }
+    .s-text-md { --s-text: 16px; }
+    .s-text-lg { --s-text: 18px; }
+    .s-text-xl { --s-text: 20px; }
+    .s-icon-xs { --s-icon-size: 12px; }
+    .s-icon-sm { --s-icon-size: 16px; }
+    .s-icon-md { --s-icon-size: 20px; }
+    .s-icon-lg { --s-icon-size: 24px; }
+    .s-icon-xl { --s-icon-size: 28px; }
+    .s-roundness-xs { --s-radius: 4px; }
+    .s-roundness-sm { --s-radius: 6px; }
+    .s-roundness-md { --s-radius: 8px; }
+    .s-roundness-lg { --s-radius: 10px; }
+    .s-roundness-xl { --s-radius: 12px; }
+
+    /* Pill: a round end whatever the height, never a squircle. */
+    .s-pill { --s-radius: 9999px; --s-corner-shape: round; }
+}

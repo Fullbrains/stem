@@ -65,3 +65,34 @@ export function controlsToCode(tag: string, controls: ShowcaseControl[], state: 
   if (inline.length <= 80) return inline
   return `<${tag}\n${attrs.map(a => `  ${a}`).join('\n')}\n/>`
 }
+
+const scaleTokens = ['xs', 'sm', 'md', 'lg', 'xl']
+const followsSize = {label: 'da size', value: undefined}
+
+/**
+ * I controlli della scala di Stem, uguali per ogni componente con `size`:
+ * ognuno, se non impostato, segue `size`.
+ */
+export function scaleControls(group = 'Scala'): ShowcaseControl[] {
+  const opts = [followsSize, ...scaleTokens]
+  return [
+    {group, key: 'textSize', label: 'text-size', type: 'select', options: opts},
+    {group, key: 'iconSize', label: 'icon-size', type: 'select', options: opts},
+    {group, key: 'space', type: 'select', options: opts},
+    {group, key: 'spaceX', label: 'space-x', type: 'select', options: opts},
+    {group, key: 'spaceY', label: 'space-y', type: 'select', options: opts},
+    {group, key: 'roundness', type: 'select', options: opts},
+    {group, key: 'rounded', label: 'rounded (pillola)', type: 'boolean'},
+  ]
+}
+
+/** Le varianti di spazio e forma da affiancare in una Scale. */
+export const scaleShapes: Record<string, Record<string, unknown>> = {
+  'da size': {},
+  'space-x md': {spaceX: 'md'},
+  'space-y md': {spaceY: 'md'},
+  'space md': {space: 'md'},
+  'space xs': {space: 'xs'},
+  'roundness xl': {roundness: 'xl'},
+  'rounded': {rounded: true},
+}

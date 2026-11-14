@@ -38,6 +38,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'required', type: 'boolean'},
   {group: 'Stato', key: 'highlight', type: 'boolean'},
   {group: 'Stato', key: 'fixed', type: 'boolean'},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-input', {default: () => controlDefaults(controls)})
@@ -90,12 +91,12 @@ const iconCases: Record<string, Record<string, unknown>> = {
 <template>
   <ShowcasePage
       title="Input"
-      wraps="UInput"
+      wraps="SInput"
       description="Il campo di testo. Stem ridisegna bordi, sfondi e anello di focus per primary, error e success; i colori restanti sono quelli di Nuxt UI."
   >
-    <ShowcasePlayground v-model="state" tag="UInput" :controls="controls" :code-extra="codeExtra">
+    <ShowcasePlayground v-model="state" tag="SInput" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">
-        <UInput v-bind="props" v-model="value" :avatar="state.avatar ? {src: avatarSrc} : undefined"/>
+        <SInput v-bind="props" v-model="value" :avatar="state.avatar ? {src: avatarSrc} : undefined"/>
       </template>
     </ShowcasePlayground>
 
@@ -105,7 +106,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseMatrix :rows="variants" :cols="colors">
         <template #cell="{row, col}">
-          <UInput v-bind="without(current, 'variant', 'color', 'placeholder')" :variant="row as any" :color="col as any" :placeholder="col" class="w-40"/>
+          <SInput v-bind="without(current, 'variant', 'color', 'placeholder')" :variant="row as any" :color="col as any" :placeholder="col" class="w-40"/>
         </template>
       </ShowcaseMatrix>
     </ShowcaseSection>
@@ -116,7 +117,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="sizes">
         <template #item="{item}">
-          <UInput v-bind="without(current, 'size')" :size="item as any" class="w-44"/>
+          <SInput v-bind="without(current, 'size')" :size="item as any" class="w-44"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -130,7 +131,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
           <thead>
             <tr>
               <th/>
-              <th v-for="c in ['UInput', 'USelect', 'SButton', 'SButton icona']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
+              <th v-for="c in ['SInput', 'SSelect', 'SButton', 'SButton icona']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
             </tr>
           </thead>
           <tbody>
@@ -138,12 +139,12 @@ const iconCases: Record<string, Record<string, unknown>> = {
               <th class="pr-2 text-right font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ s }}</th>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <UInput :size="s as any" :variant="current.variant as any" :color="current.color as any" icon="i-ph-magnifying-glass" placeholder="Cerca" class="w-40"/>
+                  <SInput :size="s as any" :variant="current.variant as any" :color="current.color as any" icon="i-ph-magnifying-glass" placeholder="Cerca" class="w-40"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
                 <ShowcaseMeasure labels>
-                  <USelect :size="s as any" :variant="current.variant as any" :color="current.color as any" :items="['Tutti', 'Attivi']" default-value="Tutti" class="w-32"/>
+                  <SSelect :size="s as any" :variant="current.variant as any" :color="current.color as any" :items="['Tutti', 'Attivi']" default-value="Tutti" class="w-32"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-center align-top">
@@ -169,7 +170,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
       <ShowcaseScale :items="sizes">
         <template #item="{item}">
           <UFieldGroup :size="item as any">
-            <UInput v-bind="without(current, 'size', 'trailingIcon')" class="w-40"/>
+            <SInput v-bind="without(current, 'size', 'trailingIcon')" class="w-40"/>
             <SButton icon="i-ph-arrow-right" label="Vai"/>
           </UFieldGroup>
         </template>
@@ -177,20 +178,20 @@ const iconCases: Record<string, Record<string, unknown>> = {
       <ShowcaseStage>
         <UFieldGroup>
           <SButton label="https://" variant="soft" color="secondary"/>
-          <UInput placeholder="stem.dev" class="w-40"/>
+          <SInput placeholder="stem.dev" class="w-40"/>
         </UFieldGroup>
         <UFieldGroup>
-          <UInput placeholder="Importo" type="number" class="w-28"/>
-          <USelect :items="['EUR', 'USD']" default-value="EUR" class="w-24"/>
+          <SInput placeholder="Importo" type="number" class="w-28"/>
+          <SSelect :items="['EUR', 'USD']" default-value="EUR" class="w-24"/>
         </UFieldGroup>
         <UFieldGroup>
-          <UInput icon="i-ph-magnifying-glass" placeholder="Cerca" class="w-40"/>
+          <SInput icon="i-ph-magnifying-glass" placeholder="Cerca" class="w-40"/>
           <SButton icon="i-ph-faders" variant="soft"/>
           <SButton label="Cerca"/>
         </UFieldGroup>
         <UFieldGroup orientation="vertical" class="w-48">
-          <UInput placeholder="Nome"/>
-          <UInput placeholder="Email"/>
+          <SInput placeholder="Nome"/>
+          <SInput placeholder="Email"/>
           <SButton label="Iscriviti" block/>
         </UFieldGroup>
       </ShowcaseStage>
@@ -202,7 +203,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="Object.keys(iconCases)">
         <template #item="{item}">
-          <UInput v-bind="{...without(current, 'icon', 'trailingIcon', 'loading'), ...iconCases[item]}" class="w-44"/>
+          <SInput v-bind="{...without(current, 'icon', 'trailingIcon', 'loading'), ...iconCases[item]}" class="w-44"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -213,7 +214,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="Object.keys(states)">
         <template #item="{item}">
-          <UInput v-bind="{...without(current, 'disabled', 'readonly', 'loading', 'highlight'), ...states[item]}" class="w-44"/>
+          <SInput v-bind="{...without(current, 'disabled', 'readonly', 'loading', 'highlight'), ...states[item]}" class="w-44"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -224,22 +225,22 @@ const iconCases: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseStage body-class="grid grid-cols-2 gap-6 p-8 lg:grid-cols-3">
         <UFormField label="Email" description="Useremo questo indirizzo per le notifiche.">
-          <UInput v-bind="without(current, 'icon')" icon="i-ph-envelope" placeholder="nome@esempio.it" class="w-full"/>
+          <SInput v-bind="without(current, 'icon')" icon="i-ph-envelope" placeholder="nome@esempio.it" class="w-full"/>
         </UFormField>
         <UFormField label="Password" hint="Almeno 8 caratteri" required>
-          <UInput v-bind="without(current, 'icon', 'type')" icon="i-ph-lock" type="password" class="w-full"/>
+          <SInput v-bind="without(current, 'icon', 'type')" icon="i-ph-lock" type="password" class="w-full"/>
         </UFormField>
         <UFormField label="Nome utente" help="Visibile a tutto il team.">
-          <UInput v-bind="without(current, 'icon')" v-model="filled" icon="i-ph-user" class="w-full"/>
+          <SInput v-bind="without(current, 'icon')" v-model="filled" icon="i-ph-user" class="w-full"/>
         </UFormField>
         <UFormField label="Dominio" error="Questo dominio è già in uso.">
-          <UInput v-bind="without(current, 'icon', 'color')" icon="i-ph-at" model-value="stem" class="w-full"/>
+          <SInput v-bind="without(current, 'icon', 'color')" icon="i-ph-at" model-value="stem" class="w-full"/>
         </UFormField>
         <UFormField label="Disabilitato" description="Il campo non si può modificare.">
-          <UInput v-bind="current" disabled class="w-full"/>
+          <SInput v-bind="current" disabled class="w-full"/>
         </UFormField>
         <UFormField label="Orizzontale" description="orientation horizontal" orientation="horizontal">
-          <UInput v-bind="current" class="w-40"/>
+          <SInput v-bind="current" class="w-40"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -251,7 +252,7 @@ const iconCases: Record<string, Record<string, unknown>> = {
       <ShowcaseScale :items="formFieldSizes">
         <template #item="{item}">
           <UFormField :size="item as any" label="Etichetta" description="Descrizione" hint="hint" class="w-48">
-            <UInput v-bind="without(current, 'size')" class="w-full"/>
+            <SInput v-bind="without(current, 'size')" class="w-full"/>
           </UFormField>
         </template>
       </ShowcaseScale>

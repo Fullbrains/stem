@@ -203,7 +203,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
           <thead>
             <tr>
               <th/>
-              <th v-for="c in [...tags, 'UInput']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
+              <th v-for="c in [...tags, 'SInput']" :key="c" class="text-center font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ c }}</th>
             </tr>
           </thead>
           <tbody>
@@ -226,7 +226,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
               </td>
               <td class="text-left align-middle">
                 <ShowcaseMeasure labels>
-                  <UInput :size="s as any" placeholder="Etichetta" class="w-36"/>
+                  <SInput :size="s as any" placeholder="Etichetta" class="w-36"/>
                 </ShowcaseMeasure>
               </td>
             </tr>

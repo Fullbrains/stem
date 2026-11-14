@@ -97,7 +97,7 @@ const longText = 'Molti documenti hanno solo l\'anno: cercare per date esatte li
     >
       <ShowcaseStage body-class="grid grid-cols-2 items-start gap-8 p-8">
         <div class="space-y-1.5">
-          <UInput placeholder="Nome della cartella" class="w-full"/>
+          <SInput placeholder="Nome della cartella" class="w-full"/>
           <SHint v-bind="current">{{ text }}</SHint>
         </div>
         <div class="space-y-2">

@@ -32,10 +32,7 @@ const controls: ShowcaseControl[] = [
     {label: '800 ms', value: 800}, {label: '1500 ms', value: 1500}, {label: '3000 ms', value: 3000},
   ]},
 
-  {group: 'Forma', key: 'compact', type: 'select', default: false, options: [
-    {label: 'no', value: false}, {label: 'sì', value: true}, 'x', 'y',
-  ]},
-  {group: 'Forma', key: 'rounded', type: 'boolean'},
+  ...scaleControls(),
   {group: 'Forma', key: 'disc', type: 'boolean'},
 
   {group: 'Stato', key: 'disabled', type: 'boolean'},
@@ -60,11 +57,8 @@ const current = computed(() => {
 })
 
 const shapes: Record<string, Record<string, unknown>> = {
-  'normale': {},
-  'compact': {compact: true},
-  'rounded': {rounded: true},
+  ...scaleShapes,
   'disc': {disc: true},
-  'disc compact': {disc: true, compact: true},
 }
 
 const lastCopied = ref<string>()
@@ -129,7 +123,7 @@ const snippets = [
     >
       <ShowcaseScale :items="Object.keys(shapes)">
         <template #item="{item}">
-          <SCopyButton v-bind="{...without(current, 'compact', 'rounded', 'disc'), ...shapes[item]} as any"/>
+          <SCopyButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'disc'), ...shapes[item]} as any"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -161,7 +155,7 @@ const snippets = [
 
     <ShowcaseSection
         title="Accanto a un valore"
-        description="L'uso tipico: un comando o un identificativo con il pulsante al fianco, ghost e compact per non pesare sulla riga."
+        description="L'uso tipico: un comando o un identificativo con il pulsante al fianco, ghost e disc per non pesare sulla riga."
     >
       <ShowcaseStage body-class="flex flex-col gap-2 p-8">
         <div
@@ -170,7 +164,7 @@ const snippets = [
             class="flex items-center gap-2 rounded-lg bg-(--ui-bg-elevated) py-1 pr-1 pl-3"
         >
           <code class="flex-1 truncate font-mono text-xs">{{ s }}</code>
-          <SCopyButton :text="s" label="Copia il comando" variant="ghost" size="sm" compact/>
+          <SCopyButton :text="s" label="Copia il comando" variant="ghost" size="sm" disc/>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>

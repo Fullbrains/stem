@@ -40,6 +40,15 @@ export {
   type IconSizeToken,
 } from './icon-sizes'
 
+export {
+  stemScale,
+  stemSizes,
+  stemScaleClasses,
+  stemScaleStyle,
+  type StemSize,
+  type StemScaleProps,
+} from './scale'
+
 export const stem = {
   avatar,
   checkbox,
