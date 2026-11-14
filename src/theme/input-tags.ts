@@ -1,6 +1,6 @@
 import {inputBase, baseCompoundVariants, fixedSizeOverrides} from './input-commons'
 import {fieldSizes, fieldIconCompounds} from './sizes'
-import {stemScaleIcon, stemSizes} from './scale'
+import {stemSizes} from './scale'
 
 // InputTags: the focus is on the inner input, so the ring reacts to
 // has-focus-visible on the container: darker border, halo outside.
@@ -32,12 +32,18 @@ const remappedBase = baseCompoundVariants.map((cv) => {
 // chip in a search bar; the field takes that much off its own padding-y
 // (--s-tag-py), so it is as tall with tags as without. Literal per size, so
 // Tailwind sees them.
+//
+// The X is an SButton of its own, icon only and rounded: the size below the
+// tag's, space 2xs (sm: a 12px X in a 20px circle). It sits at the pill's
+// round end, concentric with it: as far from the right edge as from the top
+// and bottom (sm: 2px). Its X is a gap from the text, as a button's trailing
+// icon. --s-tag-x: the X's icon; --s-tag-x-pad: the circle's padding.
 const tagPy: Record<string, string> = {
-  xs: '[--s-tag-py:0px]',
-  sm: '[--s-tag-py:4px]',
-  md: '[--s-tag-py:6px]',
-  lg: '[--s-tag-py:8px]',
-  xl: '[--s-tag-py:10px]',
+  xs: '[--s-tag-py:0px] [--s-tag-x:8px] [--s-tag-x-pad:2px]',
+  sm: '[--s-tag-py:4px] [--s-tag-x:12px] [--s-tag-x-pad:4px]',
+  md: '[--s-tag-py:6px] [--s-tag-x:16px] [--s-tag-x-pad:4px]',
+  lg: '[--s-tag-py:8px] [--s-tag-x:20px] [--s-tag-x-pad:4px]',
+  xl: '[--s-tag-py:10px] [--s-tag-x:24px] [--s-tag-x-pad:4px]',
 }
 
 function tagSize(token: string) {
@@ -45,8 +51,13 @@ function tagSize(token: string) {
     root: tagPy[token]!,
     // A pill, compensated as a rounded button's (--s-pill-x, 8% of its
     // height): more padding-x, given back as a negative margin.
-    item: 'py-(--s-tag-py) px-[calc(var(--s-px)+(var(--s-icon-size)+2*var(--s-tag-py))*0.08)] mx-[calc((var(--s-icon-size)+2*var(--s-tag-py))*-0.08)] gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)',
-    itemDeleteIcon: stemScaleIcon,
+    // On the right the X's circle takes over: padding-right is its inset from
+    // the pill's end, the gap is the button's less the circle's padding.
+    item: 'py-(--s-tag-py) ps-[calc(var(--s-px)+(var(--s-icon-size)+2*var(--s-tag-py))*0.08)] ms-[calc((var(--s-icon-size)+2*var(--s-tag-py))*-0.08)] pe-[calc((var(--s-icon-size)+2*var(--s-tag-py)-var(--s-tag-x)-2*var(--s-tag-x-pad))/2)] gap-[calc(var(--s-gap)-var(--s-tag-x-pad))] text-(length:--s-text) leading-(--s-icon-size)',
+    // As tall as the text's line in the flow (a negative margin-y), so the
+    // circle does not make the tag taller.
+    itemDelete: 'size-[calc(var(--s-tag-x)+2*var(--s-tag-x-pad))] -my-[calc((var(--s-tag-x)+2*var(--s-tag-x-pad)-var(--s-icon-size))/2)] justify-center shrink-0',
+    itemDeleteIcon: 'size-(--s-tag-x) shrink-0',
   }
 }
 
