@@ -55,10 +55,10 @@ export interface StemScaleProps {
   /** Pill: fully round ends, never a squircle. */
   rounded?: boolean
   /**
-   * Trim the label by the font's side bearing on the side of an icon, so the
-   * gap to the icon is measured to the letters. `auto` (default): only beside
-   * icons; `always`: also a label without icons, on both sides; `never`:
-   * none. See src/css/scale.css.
+   * Trim the label by the font's side bearing on the side of an icon, and
+   * give a side without one the air a Phosphor icon carries. `auto`
+   * (default): both; `always`: also trims the bare sides by the bearing;
+   * `never`: none. See src/css/scale.css.
    */
   opticalLabel?: StemOpticalLabel
 }
@@ -78,11 +78,14 @@ export function stemOpticalMode(v: unknown): StemOpticalLabel {
  * The optical label trim (src/css/scale.css), on a label slot. On the side
  * of an icon only: `iconStart` for an icon on its left, `iconEnd` for one on
  * its right (both, if both); the side facing the padding stays as it is.
- * `alone` for a label without icons (always mode only).
+ * `aloneStart` / `aloneEnd` for a side without an icon (the icon's air
+ * added), `alone` for both.
  */
 export const stemLabelShift = {
   iconStart: 'ms-[calc(var(--s-label-icon-start,0em)*-1)]',
   iconEnd: 'me-[calc(var(--s-label-icon-end,0em)*-1)]',
+  aloneStart: 'ms-[calc(var(--s-label-alone-start,0em)*-1)]',
+  aloneEnd: 'me-[calc(var(--s-label-alone-end,0em)*-1)]',
   alone: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)]',
 } as const
 
@@ -157,10 +160,12 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
 function stemOpticalVars(mode: StemOpticalLabel): Record<string, string> {
   const start = 'var(--s-label-bearing-start)'
   const end = 'var(--s-label-bearing-end)'
+  // A Phosphor icon's air inside its box, given to the sides without one.
+  const air = 'var(--s-icon-size) * 0.09375'
   return {
     '--s-label-icon-start': mode === 'never' ? '0em' : start,
     '--s-label-icon-end': mode === 'never' ? '0em' : end,
-    '--s-label-alone-start': mode === 'always' ? start : '0em',
-    '--s-label-alone-end': mode === 'always' ? end : '0em',
+    '--s-label-alone-start': mode === 'never' ? '0em' : mode === 'always' ? `calc(${start} - ${air})` : `calc(-1 * ${air})`,
+    '--s-label-alone-end': mode === 'never' ? '0em' : mode === 'always' ? `calc(${end} - ${air})` : `calc(-1 * ${air})`,
   }
 }

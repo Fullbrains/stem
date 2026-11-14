@@ -96,31 +96,36 @@
      * bearings), so the gap between a label and an icon beside it looks wider
      * than it is. The label is trimmed by that air on the side of the icon:
      * on its left after a leading icon, on its right before a trailing one,
-     * on both with both. The side facing the padding stays as it is.
+     * on both with both.
+     *
+     * A side without an icon gets the opposite: as much space as a Phosphor
+     * icon carries inside its box (24/256 = 0.09375 of its size), so a label
+     * alone, or the bare side of a label, sits as far from the edge as an
+     * icon's drawing would.
      *
      *   --s-label-bearing-start  0.09em: Vimana's stems (H, E, B, D, P…), the
      *                            common first letter of a label
      *   --s-label-bearing-end    the same as the start, by choice (the
      *                            lowercase endings vary: n 0.07, e 0.05, t 0.02)
      *
-     * optical-label: auto (default) trims only on the side of an icon; always
-     * also labels without icons, on both sides (a field's text, a label
-     * alone, a menu item without icon, the label of a checkbox); never none. The
-     * theme reads --s-label-icon-* and --s-label-alone-*; set a bearing to 0
-     * to turn that side off app-wide. In em, it follows the text.
+     * optical-label: auto (default) trims the icon sides and adds the icon's
+     * air on the bare ones; always also trims the bare ones by the letter's
+     * bearing (air − bearing); never none. The theme reads --s-label-icon-*
+     * and --s-label-alone-* (a negative trim is added space); they are
+     * declared on the component, where --s-icon-size is its own.
      */
     :root { --s-label-bearing-start: 0.09em; --s-label-bearing-end: var(--s-label-bearing-start); }
     :root, .s-optical-label-auto {
         --s-label-icon-start: var(--s-label-bearing-start);
         --s-label-icon-end: var(--s-label-bearing-end);
-        --s-label-alone-start: 0em;
-        --s-label-alone-end: 0em;
+        --s-label-alone-start: calc(var(--s-icon-size) * -0.09375);
+        --s-label-alone-end: calc(var(--s-icon-size) * -0.09375);
     }
     .s-optical-label-always {
         --s-label-icon-start: var(--s-label-bearing-start);
         --s-label-icon-end: var(--s-label-bearing-end);
-        --s-label-alone-start: var(--s-label-bearing-start);
-        --s-label-alone-end: var(--s-label-bearing-end);
+        --s-label-alone-start: calc(var(--s-label-bearing-start) - var(--s-icon-size) * 0.09375);
+        --s-label-alone-end: calc(var(--s-label-bearing-end) - var(--s-icon-size) * 0.09375);
     }
     .s-optical-label-never {
         --s-label-icon-start: 0em;

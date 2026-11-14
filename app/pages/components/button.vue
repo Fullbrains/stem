@@ -63,6 +63,9 @@ const pillCompare = computed(() => {
   return p
 })
 
+// La stessa label senza icone: i lati nudi prendono l'aria di un'icona.
+const labelCompare = computed(() => without(pillCompare.value, 'icon', 'trailingIcon', 'caret', 'loading'))
+
 const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
   'caret': {caret: true},
@@ -132,7 +135,7 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 
     <ShowcaseSection
         title="Pillola e squircle a confronto"
-        description="A ogni size lo stesso button squircle (sopra) e pillola (sotto), allineati a sinistra. Le linee rosse segnano i bordi del button, dell'icona e della label: dove la pillola cambia lo spazio si vede subito."
+        description="A ogni size lo stesso button squircle e pillola, con icona e poi con la sola label, allineati a sinistra. Le linee rosse segnano i bordi del button, dell'icona e della label: dove la pillola cambia lo spazio si vede subito."
     >
       <ShowcaseStage body-class="flex flex-wrap items-start gap-10 p-8">
         <div v-for="s in sizes" :key="s" class="space-y-1.5">
@@ -141,6 +144,8 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
             <div class="flex flex-col items-start gap-3">
               <SButton v-bind="{...pillCompare}" :size="s as any"/>
               <SButton v-bind="{...pillCompare}" :size="s as any" rounded/>
+              <SButton v-bind="{...labelCompare}" :size="s as any"/>
+              <SButton v-bind="{...labelCompare}" :size="s as any" rounded/>
             </div>
           </ShowcaseGuides>
         </div>

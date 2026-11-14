@@ -20,9 +20,10 @@ export const selectOpenRing = [
 ]
 
 // The optical label trim on the chosen value and the placeholder, on the
-// side of an icon: the chevron on the right always, a leading icon if any.
+// side of an icon: the chevron on the right always, a leading icon if any;
+// without one, the left gets the icon's air.
 export const selectLabelCompounds = [
-  {class: {value: stemLabelShift.iconEnd, placeholder: stemLabelShift.iconEnd}},
+  {class: {value: `${stemLabelShift.aloneStart} ${stemLabelShift.iconEnd}`, placeholder: `${stemLabelShift.aloneStart} ${stemLabelShift.iconEnd}`}},
   {leading: true, class: {value: stemLabelShift.iconStart, placeholder: stemLabelShift.iconStart}},
 ]
 

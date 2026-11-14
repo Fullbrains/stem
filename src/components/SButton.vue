@@ -50,12 +50,13 @@ const labelShift = computed(() =>
   !!(props.icon || props.loading) && !!(props.label || slots.default),
 )
 
-// Slot content takes UButton's place for the label, so neither side of the
-// trim reaches it from the theme: it gets both here, on the side of each icon.
+// Slot content takes UButton's place for the label, so the theme's trim
+// does not reach it: each side gets it here, `icon` beside an icon, `alone`
+// (the icon's air added) without.
 const slotLabelClass = computed(() => [
-  labelShift.value && stemLabelShift.iconStart,
-  (props.caret || props.trailingIcon) && stemLabelShift.iconEnd,
-].filter(Boolean).join(' '))
+  labelShift.value ? stemLabelShift.iconStart : stemLabelShift.aloneStart,
+  (props.caret || props.trailingIcon) ? stemLabelShift.iconEnd : stemLabelShift.aloneEnd,
+].join(' '))
 
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
@@ -115,10 +116,9 @@ function handleClick(e: MouseEvent) {
       </span>
     </template>
     <template v-if="$slots.default" #default>
-      <span v-if="slotLabelClass" data-slot="label" :class="slotLabelClass">
+      <span data-slot="label" :class="slotLabelClass">
         <slot/>
       </span>
-      <slot v-else/>
     </template>
     <template v-if="$slots.trailing" #trailing>
       <slot name="trailing"/>
