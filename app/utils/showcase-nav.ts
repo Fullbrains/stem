@@ -25,6 +25,7 @@ export const showcaseNav: ShowcaseNavGroup[] = [
     items: [
       {label: 'Button', to: '/components/button'},
       {label: 'CopyButton', to: '/components/copy-button'},
+      {label: 'ModalButton', to: '/components/modal-button'},
       {label: 'CloseButton', to: '/components/close-button'},
       {label: 'DropdownMenu', to: '/components/dropdown-menu'},
     ],
