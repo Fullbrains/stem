@@ -2,7 +2,9 @@
 import type {ShowcaseControl} from '~/utils/showcase-controls'
 
 /**
- * Anteprima dal vivo + pannello dei controlli + codice generato.
+ * Anteprima dal vivo + codice generato; i controlli vanno nella sidebar
+ * fissa a destra del layout (#showcase-options), uno sotto l'altro se la
+ * pagina ha più playground.
  * Lo slot riceve `{props, mode}`: `props` sono le sole prop del componente
  * (i controlli con `prop: false` restano in `state`, per la demo).
  */
@@ -30,10 +32,15 @@ const code = computed(() => controlsToCode(props.tag, props.controls, state.valu
 function reset() {
   state.value = controlDefaults(props.controls)
 }
+
+// Il layout apre la sidebar delle opzioni finché c'è almeno un playground.
+const optionsCount = useState('showcase-options-count', () => 0)
+onMounted(() => optionsCount.value++)
+onBeforeUnmount(() => optionsCount.value--)
 </script>
 
 <template>
-  <div class="grid grid-cols-[minmax(0,1fr)_15rem] items-start gap-4">
+  <div>
     <div class="space-y-3">
       <ShowcaseStage body-class="flex min-h-36 items-center justify-center-safe overflow-x-auto p-10">
         <template #default="{mode}">
@@ -44,12 +51,18 @@ function reset() {
       </ShowcaseStage>
       <ShowcaseCode :code="code"/>
     </div>
-    <div class="sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
-      <div class="mb-3 flex items-center justify-between">
-        <p class="text-[12px] font-medium text-gray-900">Opzioni</p>
-        <button type="button" class="text-[11px] text-gray-400 hover:text-gray-800" @click="reset">Ripristina</button>
-      </div>
-      <ShowcaseControls v-model="state" :controls="controls"/>
-    </div>
+    <ClientOnly>
+      <Teleport to="#showcase-options" defer>
+        <section class="border-b border-gray-200 px-4 py-4 last:border-b-0">
+          <div class="mb-3 flex items-center justify-between">
+            <p class="text-[12px] font-medium text-gray-900">
+              Opzioni <span class="font-mono font-normal text-gray-400">{{ tag }}</span>
+            </p>
+            <button type="button" class="text-[11px] text-gray-400 hover:text-gray-800" @click="reset">Ripristina</button>
+          </div>
+          <ShowcaseControls v-model="state" :controls="controls"/>
+        </section>
+      </Teleport>
+    </ClientOnly>
   </div>
 </template>

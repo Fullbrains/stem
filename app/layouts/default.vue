@@ -8,6 +8,9 @@ colorMode.preference = 'light'
 const route = useRoute()
 const {modes, measure, checker} = useShowcase()
 
+// I playground mandano i loro controlli nella sidebar a destra (#showcase-options).
+const optionsCount = useState('showcase-options-count', () => 0)
+
 const modeOptions: {value: ShowcaseModes, label: string, icon: string}[] = [
   {value: 'both', label: 'Entrambi', icon: 'i-ph-circle-half'},
   {value: 'light', label: 'Chiaro', icon: 'i-ph-sun'},
@@ -45,7 +48,13 @@ const modeOptions: {value: ShowcaseModes, label: string, icon: string}[] = [
       </NuxtLink>
     </aside>
 
-    <div class="pl-56">
+    <aside
+        v-show="optionsCount > 0"
+        id="showcase-options"
+        class="fixed inset-y-0 right-0 z-30 w-64 overflow-y-auto border-l border-gray-200 bg-gray-50/80 backdrop-blur"
+    />
+
+    <div class="pl-56" :class="optionsCount > 0 && 'pr-64'">
       <header class="sticky top-0 z-20 flex h-12 items-center justify-end gap-4 border-b border-gray-200 bg-white/85 px-6 backdrop-blur">
         <div class="flex rounded-lg bg-gray-100 p-0.5">
           <button
