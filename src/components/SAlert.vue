@@ -56,8 +56,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
 // steps more space-x than its size and three more space-y (sm: 12 × 14px).
 const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3'})
 
-// The buttons are SModalButtons of the alert's size, space-y two steps below
-// it (sm: 4px, 24px tall). The actions are pulled up by half their excess
+// The buttons are SModalButtons of the alert's size, space-x the size's own
+// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall). The actions are pulled up by half their excess
 // over the title's line, so they sit centred on it.
 const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
 const buttonPull = computed(() => stemSpacePx(buttonSpaceY.value))
@@ -170,13 +170,14 @@ const bodyClass = computed(() => {
     </template>
     <template v-if="hasActions" #actions>
       <slot name="actions">
-        <SModalButton v-for="(action, index) in actions" :key="index" :space-y="buttonSpaceY" v-bind="action" :class="actionTint(action)"/>
+        <SModalButton v-for="(action, index) in actions" :key="index" :space-x="scale.size" :space-y="buttonSpaceY" v-bind="action" :class="actionTint(action)"/>
       </slot>
     </template>
     <template v-if="close" #close>
       <slot name="close">
         <SModalButton
             :icon="closeIcon"
+            :space-x="scale.size"
             :space-y="buttonSpaceY"
             :aria-label="t('alert.close')"
             v-bind="closeProps"
