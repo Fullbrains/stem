@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   size?: StemSize
   description?: string
   orientation?: 'horizontal' | 'vertical'
-  /** The X: true, or the SButton props it takes. */
+  /** The X: true, or the SModalButton props it takes. */
   close?: boolean | Record<string, unknown>
   closeIcon?: string
   ui?: Record<string, string | undefined>
@@ -54,29 +54,29 @@ const props = withDefaults(defineProps<StemScaleProps & {
 
 // Scale props inherited from a parent when not given; sm by default.
 const scale = useStemScale(props, {size: 'sm'})
-// The buttons' padding-y: two steps below the size (sm: 2xs, 4px), whatever
-// the alert's own space: they stay compact.
-const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
+// The buttons are SModalButtons: their padding-y is a step below the size
+// (sm: 6px, 28px tall). The actions are pulled up by as much, so they sit
+// centred on the title's line.
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -1))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-py': `${stemSpacePx(buttonSpaceY.value)}px`,
 }))
 
-// What the buttons inside inherit: the alert's size and type, a pill, the
-// alert's padding-x and gap, the compact padding-y.
+// What the buttons inside inherit: the alert's size and type. Not its
+// space: that is the alert's own, the buttons keep SModalButton's.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
   space: undefined,
-  spaceX: scale.value.spaceX ?? scale.value.space,
-  spaceY: buttonSpaceY.value,
-  rounded: true,
+  spaceX: undefined,
+  spaceY: undefined,
 })))
 
 const emit = defineEmits<{'update:open': [value: boolean]}>()
 const appConfig = useAppConfig()
 const {t} = useLocale()
 
-// The X: an icon-only button, so a circle (space on both axes, not only y).
+// The X: an icon-only SModalButton.
 const closeIcon = computed(() => props.closeIcon ?? appConfig.ui?.icons?.close ?? 'i-ph-x')
 const closeProps = computed(() => typeof props.close === 'object' ? props.close : {})
 // On a solid alert the X keeps the tone's own tint (the iron pill would vanish).
@@ -160,17 +160,13 @@ const bodyClass = computed(() => {
     </template>
     <template v-if="hasActions" #actions>
       <slot name="actions">
-        <SButton v-for="(action, index) in actions" :key="index" v-bind="action"/>
+        <SModalButton v-for="(action, index) in actions" :key="index" v-bind="action"/>
       </slot>
     </template>
     <template v-if="close" #close>
       <slot name="close">
-        <SButton
+        <SModalButton
             :icon="closeIcon"
-            variant="soft"
-            :space="buttonSpaceY"
-            :space-x="buttonSpaceY"
-            :space-y="buttonSpaceY"
             :aria-label="t('alert.close')"
             v-bind="closeProps"
             data-slot="close"
