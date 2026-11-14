@@ -25,6 +25,11 @@ function set(key: string, value: unknown) {
   state.value = {...state.value, [key]: value}
 }
 
+// Le prop che prendono un'icona Phosphor: tutte le icone, con ricerca.
+function isIcon(c: ShowcaseControl) {
+  return c.type === 'select' && /icon$/i.test(c.key) && c.options.some(o => String(optionValue(o)).startsWith('i-ph-'))
+}
+
 function isSegmented(c: ShowcaseControl) {
   return c.type === 'select' && c.options.length <= 7
 }
@@ -51,6 +56,16 @@ function isSegmented(c: ShowcaseControl) {
             />
           </button>
         </label>
+
+        <!-- icona -->
+        <div v-else-if="c.type === 'select' && isIcon(c)">
+          <p class="mb-1 text-gray-600">{{ c.label ?? c.key }}</p>
+          <ShowcaseIconPicker
+              :model-value="state[c.key]"
+              :options="c.options"
+              @update:model-value="set(c.key, $event)"
+          />
+        </div>
 
         <!-- select segmentato -->
         <div v-else-if="c.type === 'select' && isSegmented(c)">
