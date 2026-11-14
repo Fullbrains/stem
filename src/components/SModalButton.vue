@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {StemSize, StemSpaceValue} from '../theme/scale'
+import type {StemSizeValue, StemSpaceValue} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -18,7 +18,7 @@ import {useStemScale} from '../composables/useStemScale'
  * `loading`, `variant`…).
  */
 const props = withDefaults(defineProps<{
-  size?: StemSize
+  size?: StemSizeValue
   space?: StemSpaceValue
   spaceX?: StemSpaceValue
   spaceY?: StemSpaceValue

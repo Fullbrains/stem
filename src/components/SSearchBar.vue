@@ -2,7 +2,7 @@
 import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, useSlots, defineComponent} from 'vue'
 import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 
 const modelValue = defineModel<string>({default: ''})
@@ -14,7 +14,7 @@ const modelValue = defineModel<string>({default: ''})
  * `compact` is the sm size, kept for the chips that tighten inside it.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
-  size?: StemSize
+  size?: StemSizeValue
   placeholder?: string
   minInputWidth?: number
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost'

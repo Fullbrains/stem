@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleDefaults, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleDefaults, type StemScaleProps, type StemSize, type StemSizeValue} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -12,7 +12,7 @@ import {useStemScale} from '../composables/useStemScale'
  * tightens to space-y two steps below.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
-  size?: StemSize
+  size?: StemSizeValue
   leadingIcon?: string
   trailingIcon?: string
   active?: boolean

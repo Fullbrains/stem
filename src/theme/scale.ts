@@ -46,6 +46,15 @@ export function stemSpaceShift(v: unknown): number | null {
   return null
 }
 
+/** A size prop's value: a size, or a shift from the one it would have ('-1': a size below). */
+export type StemSizeValue = StemSize | StemSpaceShift
+
+/** The size `by` steps from another, clamped to the scale (sm, -1 → xs). */
+export function stemSizeStep(from: StemSize, by: number): StemSize {
+  const i = stemSizes.indexOf(from)
+  return stemSizes[Math.min(stemSizes.length - 1, Math.max(0, i + by))]!
+}
+
 /** The space `by` steps from a size or space, clamped to the scale (sm, +1 → md). */
 export function stemSpaceStep(from: StemSpace, by: number): StemSpace {
   const i = spaceSteps.indexOf(String(from) as StemSpace)
@@ -57,8 +66,11 @@ export function stemSpaceStep(from: StemSpace, by: number): StemSpace {
  * when missing, follows `size`.
  */
 export interface StemScaleProps {
-  /** The size: text, icon, padding, gap and radius at once. */
-  size?: StemSize
+  /**
+   * The size: text, icon, padding, gap and radius at once. A size, or a
+   * shift ('-1', '+1') from the one it would have.
+   */
+  size?: StemSizeValue
   /** Font size. */
   textSize?: StemSize
   /** Icon size (and line height). A token, or any CSS length. */
@@ -80,6 +92,14 @@ export interface StemScaleProps {
    * `never`: none. See src/css/scale.css.
    */
   opticalLabel?: StemOpticalLabel
+}
+
+/** The scale props once resolved: shifts settled into steps. */
+export type StemScaleResolved = Omit<StemScaleProps, 'size' | 'space' | 'spaceX' | 'spaceY'> & {
+  size?: StemSize
+  space?: StemSpace
+  spaceX?: StemSpace
+  spaceY?: StemSpace
 }
 
 /** Defaults of the scale props: pass to withDefaults in every wrapper. */

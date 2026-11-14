@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {stemScaleClasses, type StemScaleProps, type StemSize, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 const model = defineModel<string>({required: true})
@@ -9,7 +9,7 @@ const open = defineModel<boolean>('open', {default: false})
 
 const props = withDefaults(defineProps<StemScaleProps & {
   /** On the Stem scale, for the chip and the menu: sm by default. */
-  size?: StemSize
+  size?: StemSizeValue
   options: { value: string; label: string }[]
   /** The chip's name for what it chooses, in the app's language. */
   label?: string

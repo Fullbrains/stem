@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScale, stemScaleVars, stemSizes, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {stemScale, stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {alertClasses, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
@@ -36,7 +36,7 @@ defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<StemScaleProps & {
   /** On the Stem scale: text, icon, padding, gap and radius, as a button's. */
-  size?: StemSize
+  size?: StemSizeValue
   description?: string
   orientation?: 'horizontal' | 'vertical'
   /** The X: true, or the SModalButton props it takes. */
@@ -56,14 +56,13 @@ const props = withDefaults(defineProps<StemScaleProps & {
 // steps more space than its size (sm: 12px).
 const scale = useStemScale(props, {size: 'sm', space: '+2'})
 
-// The buttons are SModalButtons a size below the alert's (sm alert: xs
-// buttons). The actions are pulled up by half their excess over the title's
-// line, so they sit centred on it.
-const buttonSize = computed<StemSize>(() => stemSizes[Math.max(0, stemSizes.indexOf(scale.value.size!) - 1)]!)
+// The buttons are SModalButtons of the alert's size, space-y a step below
+// it (SModalButton's own default: sm, 28px tall). The actions are pulled up
+// by half their excess over the title's line, so they sit centred on it.
 const buttonPull = computed(() => {
-  const b = buttonSize.value
-  const height = stemScale[b].icon + 2 * stemSpacePx(stemSpaceStep(b, -1))
-  return (height - stemScale[scale.value.size!].icon) / 2
+  const size = scale.value.size!
+  const height = stemScale[size].icon + 2 * stemSpacePx(stemSpaceStep(size, -1))
+  return (height - stemScale[size].icon) / 2
 })
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
@@ -71,11 +70,10 @@ const scaleStyle = computed(() => ({
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
-// What the buttons inside inherit: the alert's type, a size below. Not its
-// space: that is the alert's own, the buttons keep SModalButton's.
+// What the buttons inside inherit: the alert's size and type. Not its
+// space: that is the alert's own, the buttons keep SModalButton's (space-y -1).
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
-  size: buttonSize.value,
   space: undefined,
   spaceX: undefined,
   spaceY: undefined,

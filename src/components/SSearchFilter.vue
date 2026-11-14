@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {stemScaleClasses, type StemScaleProps, type StemSize, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 import {computed, inject, ref, useSlots} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
@@ -31,7 +31,7 @@ const inPanel = inject(SEARCH_BAR_PANEL, false)
 
 const props = withDefaults(defineProps<StemScaleProps & {
   /** On the Stem scale, for the chip, the menu and the reset: sm by default. */
-  size?: StemSize
+  size?: StemSizeValue
   modelValue: Set<string>
   options: readonly SSearchFilterOption[]
   label: string
