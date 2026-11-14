@@ -3,11 +3,11 @@ import {fieldSizes, fieldIconCompounds} from './sizes'
 import {stemScaleIcon, stemSizes} from './scale'
 
 // InputTags: the focus is on the inner input, so the ring reacts to
-// has-focus-visible on the container. Inset, like every Stem field.
+// has-focus-visible on the container: darker border, halo outside.
 const inputTagsFocusRing = [
-  {color: 'primary', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-iron-500/80'}},
-  {color: 'error', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-rose-500/80'}},
-  {color: 'success', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-2 has-focus-visible:ring-emerald-500/80'}},
+  {color: 'primary', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-iron-500/80 has-focus-visible:shadow-[0_0_0_3.5px] has-focus-visible:shadow-iron-500/20'}},
+  {color: 'error', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-rose-500/80 has-focus-visible:shadow-[0_0_0_3.5px] has-focus-visible:shadow-rose-500/20'}},
+  {color: 'success', variant: ['outline', 'subtle'], class: {base: 'has-focus-visible:ring-emerald-500/80 has-focus-visible:shadow-[0_0_0_3.5px] has-focus-visible:shadow-emerald-500/20'}},
 ]
 
 // Remap focus-visible → has-focus-visible in baseCompoundVariants

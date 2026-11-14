@@ -19,8 +19,9 @@ export const inputIconColors: Record<InputColor, string> = {
   success: 'text-emerald-500/80',
 }
 
-// Radius from the Stem scale (the container carries an s-size-* class). Border
-// and focus are inset rings, as in every Stem field: they never resize it.
+// Radius from the Stem scale (the container carries an s-size-* class). The
+// border is a 1px inset ring; focus darkens it and adds a halo outside. Both
+// are box-shadows: they never resize it.
 const common = 's-corner transition duration-200'
 
 export const inputContainerClasses: Record<InputColor, Record<InputVariant, ContainerClasses>> = {
@@ -28,7 +29,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     outline: {
       base: `${common} bg-default ring-1 ring-inset ring-iron-500/30`,
       hover: 'hover:ring-iron-500/50',
-      focus: 'ring-2! ring-iron-500/80!',
+      focus: 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20',
       placeholder: 'placeholder:text-iron-500/80',
     },
     soft: {
@@ -40,7 +41,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     subtle: {
       base: `${common} ring-1 ring-inset bg-iron-500/5 ring-iron-500/30`,
       hover: 'hover:bg-iron-500/10 hover:ring-iron-500/50',
-      focus: 'ring-2! ring-iron-500/80! bg-iron-500/5!',
+      focus: 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20 bg-iron-500/5!',
       placeholder: 'placeholder:text-iron-500/80',
     },
     ghost: {
@@ -55,7 +56,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     outline: {
       base: `${common} bg-default ring-1 ring-inset ring-rose-500/30`,
       hover: 'hover:ring-rose-500/50',
-      focus: 'ring-2! ring-rose-500/80!',
+      focus: 'ring-rose-500/80! shadow-[0_0_0_3.5px] shadow-rose-500/20',
       placeholder: 'placeholder:text-rose-500/80',
     },
     soft: {
@@ -67,7 +68,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     subtle: {
       base: `${common} ring-1 ring-inset bg-rose-500/5 ring-rose-500/30`,
       hover: 'hover:bg-rose-500/10 hover:ring-rose-500/50',
-      focus: 'ring-2! ring-rose-500/80! bg-rose-500/5!',
+      focus: 'ring-rose-500/80! shadow-[0_0_0_3.5px] shadow-rose-500/20 bg-rose-500/5!',
       placeholder: 'placeholder:text-rose-500/80',
     },
     ghost: {
@@ -82,7 +83,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     outline: {
       base: `${common} bg-default ring-1 ring-inset ring-emerald-500/30`,
       hover: 'hover:ring-emerald-500/50',
-      focus: 'ring-2! ring-emerald-500/80!',
+      focus: 'ring-emerald-500/80! shadow-[0_0_0_3.5px] shadow-emerald-500/20',
       placeholder: 'placeholder:text-emerald-500/80',
     },
     soft: {
@@ -94,7 +95,7 @@ export const inputContainerClasses: Record<InputColor, Record<InputVariant, Cont
     subtle: {
       base: `${common} ring-1 ring-inset bg-emerald-500/5 ring-emerald-500/30`,
       hover: 'hover:bg-emerald-500/10 hover:ring-emerald-500/50',
-      focus: 'ring-2! ring-emerald-500/80! bg-emerald-500/5!',
+      focus: 'ring-emerald-500/80! shadow-[0_0_0_3.5px] shadow-emerald-500/20 bg-emerald-500/5!',
       placeholder: 'placeholder:text-emerald-500/80',
     },
     ghost: {

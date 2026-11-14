@@ -148,23 +148,24 @@ export const baseCompoundVariants = [
   },
 ]
 
-// Focus for inputs (focus-visible on the element itself): the inset ring
-// thickens to 2px and darkens. Drawn inside, it never shifts the field.
+// Focus for inputs (focus-visible on the element itself): the 1px inset
+// border darkens and a 3.5px halo appears outside. A box-shadow, so neither
+// changes the field's size.
 export const inputFocusRing = [
   {
     color: 'primary',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:ring-2 focus-visible:ring-iron-500/80'},
+    class: {base: 'focus-visible:ring-iron-500/80 focus-visible:shadow-[0_0_0_3.5px] focus-visible:shadow-iron-500/20'},
   },
   {
     color: 'error',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:ring-2 focus-visible:ring-rose-500/80'},
+    class: {base: 'focus-visible:ring-rose-500/80 focus-visible:shadow-[0_0_0_3.5px] focus-visible:shadow-rose-500/20'},
   },
   {
     color: 'success',
     variant: ['outline', 'subtle'],
-    class: {base: 'focus-visible:ring-2 focus-visible:ring-emerald-500/80'},
+    class: {base: 'focus-visible:ring-emerald-500/80 focus-visible:shadow-[0_0_0_3.5px] focus-visible:shadow-emerald-500/20'},
   },
 ]
 

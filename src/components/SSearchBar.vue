@@ -86,7 +86,7 @@ const variantClasses = computed(() => {
       return [
         `${base} ring ring-inset ring-iron-500/30 bg-iron-500/5`,
         focused
-            ? 'ring-2! ring-iron-500/80!'
+            ? 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20'
             : 'hover:ring-iron-500/50 hover:bg-iron-500/10',
       ]
     case 'ghost':
@@ -99,7 +99,7 @@ const variantClasses = computed(() => {
       return [
         `${base} ring ring-inset ring-iron-500/30`,
         focused
-            ? 'ring-2! ring-iron-500/80!'
+            ? 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20'
             : 'hover:ring-iron-500/50',
       ]
   }

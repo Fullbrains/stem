@@ -27,8 +27,8 @@ function fieldSize(token: StemSize) {
     base: `${stemScaleText} px-(--s-px)! py-(--s-py)! gap-(--s-gap)`,
     leading: 'ps-(--s-px)!',
     trailing: 'pe-(--s-px)!',
-    leadingIcon: stemScaleIcon,
-    trailingIcon: stemScaleIcon,
+    leadingIcon: `${stemScaleIcon} ${stemIconOptical}`,
+    trailingIcon: `${stemScaleIcon} ${stemIconOptical}`,
   }
 }
 
@@ -38,11 +38,13 @@ export const fieldSizes = Object.fromEntries(stemSizes.map(s => [s, fieldSize(s)
 
 /**
  * With an icon inside the field, the text starts after it: padding + icon +
- * gap, the same distance as in a button. Compound variants, not variants:
+ * gap, the same distance as in a button — measured on the icon's drawing,
+ * not its box (stemIconOptical: 3/32 of the icon off each side, so the icon
+ * counts as 26/32 = 0.8125 of its size). Compound variants, not variants:
  * they come after the size's `px-(--s-px)!`, which tailwind-merge would
  * otherwise let win over an earlier `ps-*`.
  */
 export const fieldIconCompounds = [
-  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
-  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
+  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)*0.8125+var(--s-gap))]!'}},
+  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)*0.8125+var(--s-gap))]!'}},
 ]
