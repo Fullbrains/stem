@@ -55,10 +55,10 @@ export interface StemScaleProps {
   /** Pill: fully round ends, never a squircle. */
   rounded?: boolean
   /**
-   * Trim the label by the font's side bearings on both sides, so the space
-   * to an icon and to the edge is measured to the letters. `auto` (default):
-   * labels with an icon beside them, left or right; `always`: every label;
-   * `never`: none. See src/css/scale.css.
+   * Trim the label by the font's side bearing on the side of an icon, so the
+   * gap to the icon is measured to the letters. `auto` (default): only beside
+   * icons; `always`: also a label without icons, on both sides; `never`:
+   * none. See src/css/scale.css.
    */
   opticalLabel?: StemOpticalLabel
 }
@@ -75,11 +75,14 @@ export function stemOpticalMode(v: unknown): StemOpticalLabel {
 }
 
 /**
- * The optical label trim (src/css/scale.css), on a label slot: `icon` for a
- * label with an icon beside it, `alone` for one without.
+ * The optical label trim (src/css/scale.css), on a label slot. On the side
+ * of an icon only: `iconStart` for an icon on its left, `iconEnd` for one on
+ * its right (both, if both); the side facing the padding stays as it is.
+ * `alone` for a label without icons (always mode only).
  */
 export const stemLabelShift = {
-  icon: 'ms-[calc(var(--s-label-icon-start,0em)*-1)] me-[calc(var(--s-label-icon-end,0em)*-1)]',
+  iconStart: 'ms-[calc(var(--s-label-icon-start,0em)*-1)]',
+  iconEnd: 'me-[calc(var(--s-label-icon-end,0em)*-1)]',
   alone: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)]',
 } as const
 

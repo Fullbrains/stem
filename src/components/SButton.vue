@@ -44,16 +44,23 @@ const slots = useSlots()
 
 // The icon is drawn in SButton's own leading slot, so UButton does not know
 // it is there (its `leading` variant stays off, and it would take the label
-// for one alone): the optical label shift for a label after the icon, `icon`,
+// for one alone): the optical label trim on its left, after the icon,
 // is set here. Every other case is UButton's own (theme/button.ts).
 const labelShift = computed(() =>
   !!(props.icon || props.loading) && !!(props.label || slots.default),
 )
 
+// Slot content takes UButton's place for the label, so neither side of the
+// trim reaches it from the theme: it gets both here, on the side of each icon.
+const slotLabelClass = computed(() => [
+  labelShift.value && stemLabelShift.iconStart,
+  (props.caret || props.trailingIcon) && stemLabelShift.iconEnd,
+].filter(Boolean).join(' '))
+
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.caret) ui.trailingIcon = 'ml-auto'
-  if (labelShift.value) ui.label = stemLabelShift.icon
+  if (labelShift.value) ui.label = stemLabelShift.iconStart
   return Object.keys(ui).length ? ui : undefined
 })
 
@@ -108,7 +115,7 @@ function handleClick(e: MouseEvent) {
       </span>
     </template>
     <template v-if="$slots.default" #default>
-      <span v-if="labelShift" data-slot="label" :class="stemLabelShift.icon">
+      <span v-if="slotLabelClass" data-slot="label" :class="slotLabelClass">
         <slot/>
       </span>
       <slot v-else/>

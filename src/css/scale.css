@@ -74,19 +74,19 @@
 
     /*
      * Optical label: a letter carries air inside its own box (the font's side
-     * bearings), so the space between a label and an icon beside it, and
-     * between the label and the edge, looks wider than it is. A label with an
-     * icon beside it, on the left or the right, is trimmed on both sides by
-     * that air, so the distances are measured to the letters:
+     * bearings), so the gap between a label and an icon beside it looks wider
+     * than it is. The label is trimmed by that air on the side of the icon:
+     * on its left after a leading icon, on its right before a trailing one,
+     * on both with both. The side facing the padding stays as it is.
      *
      *   --s-label-bearing-start  0.09em: Vimana's stems (H, E, B, D, P…), the
      *                            common first letter of a label
      *   --s-label-bearing-end    0.05em: the median of the lowercase endings
      *                            (n 0.07, e 0.05, t 0.02, y 0.005)
      *
-     * optical-label: auto (default) trims only labels with an icon beside
-     * them; always also labels without icons (a field's text, a label alone,
-     * a menu item without icon, the label of a checkbox); never none. The
+     * optical-label: auto (default) trims only on the side of an icon; always
+     * also labels without icons, on both sides (a field's text, a label
+     * alone, a menu item without icon, the label of a checkbox); never none. The
      * theme reads --s-label-icon-* and --s-label-alone-*; set a bearing to 0
      * to turn that side off app-wide. In em, it follows the text.
      */

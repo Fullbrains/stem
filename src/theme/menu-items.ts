@@ -15,9 +15,9 @@ export const menuItemSlots = {
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal s-corner before:hidden data-disabled:opacity-50',
   itemLeadingIcon: '',
-  // The optical label trim: `icon` after a leading icon or avatar, `alone`
-  // without (written out: Tailwind reads only literals).
-  itemLabel: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=itemLeadingIcon]+[data-slot=itemWrapper]_&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=itemLeadingIcon]+[data-slot=itemWrapper]_&]:me-[calc(var(--s-label-icon-end,0em)*-1)] [[data-slot=itemLeadingAvatar]+[data-slot=itemWrapper]_&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=itemLeadingAvatar]+[data-slot=itemWrapper]_&]:me-[calc(var(--s-label-icon-end,0em)*-1)]',
+  // The optical label trim on the side of the leading icon or avatar;
+  // `alone` without (written out: Tailwind reads only literals).
+  itemLabel: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=itemLeadingIcon]+[data-slot=itemWrapper]_&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=itemLeadingAvatar]+[data-slot=itemWrapper]_&]:ms-[calc(var(--s-label-icon-start,0em)*-1)]',
 }
 
 /** The highlighted, not-yet-chosen item: what a pointer or the keyboard is on. */

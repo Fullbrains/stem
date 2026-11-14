@@ -50,11 +50,10 @@ export const fieldIconCompounds = [
 
 /**
  * The optical label trim on a field's text, on its start (the end of a field
- * is not the text's): its padding-left less the letter's air, `icon` with an
- * icon on either side, `alone` without. After fieldIconCompounds, so they win.
+ * is not the text's): its padding-left less the letter's air after a leading
+ * icon (`icon`), or with none (`alone`, always mode only). After fieldIconCompounds, so they win.
  */
 export const fieldLabelCompounds = [
   {class: {base: 'ps-[calc(var(--s-px)-var(--s-label-alone-start,0em))]!'}},
-  {trailing: true, class: {base: 'ps-[calc(var(--s-px)-var(--s-label-icon-start,0em))]!'}},
   {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-icon-start,0em))]!'}},
 ]

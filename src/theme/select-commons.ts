@@ -19,10 +19,11 @@ export const selectOpenRing = [
   {color: 'success', variant: ['outline', 'subtle'], class: {base: `${openRing} focus:ring-emerald-500/80! data-[state=open]:ring-emerald-500/80! focus:shadow-emerald-500/20 data-[state=open]:shadow-emerald-500/20`}},
 ]
 
-// The optical label trim on the chosen value and the placeholder: a select
-// always has its chevron beside the text, so `icon`.
+// The optical label trim on the chosen value and the placeholder, on the
+// side of an icon: the chevron on the right always, a leading icon if any.
 export const selectLabelCompounds = [
-  {class: {value: stemLabelShift.icon, placeholder: stemLabelShift.icon}},
+  {class: {value: stemLabelShift.iconEnd, placeholder: stemLabelShift.iconEnd}},
+  {leading: true, class: {value: stemLabelShift.iconStart, placeholder: stemLabelShift.iconStart}},
 ]
 
 // USelect / USelectMenu: the trigger is the root; leading and trailing icons
