@@ -62,21 +62,29 @@ export default defineAppConfig({
 
 ## Component Preference
 
-When a Stem component exists for a given purpose, always prefer it over the raw Nuxt UI equivalent:
+When a Stem component exists for a given purpose, always prefer it over the raw Nuxt UI equivalent. Every sized Stem component takes the **scale props** (see *The Stem scale*): `size`, `text-size`, `icon-size`, `space`, `space-x`, `space-y`, `roundness`, `rounded`.
 
 | Instead of... | Use...       | Why |
 |---------------|--------------|-----|
-| `UBadge`      | `SBadge`     | Compact mode for reduced padding |
-| `UButton`     | `SButton`    | Loading spinner, confirm dialogs, disc/rounded/caret modes |
+| `UButton`     | `SButton`    | Scale props, loading spinner, confirm dialogs, caret, icons on both sides. Without a label it is square; with `rounded` a circle |
+| `UBadge`      | `SBadge`     | Scale props (same height as a button of the same size), icons on both sides |
+| `UInput`, `UTextarea` | `SInput`, `STextarea` | Scale props; border and focus never change the field's size |
+| `USelect`, `USelectMenu`, `UInputMenu` | `SSelect`, `SSelectMenu`, `SInputMenu` | Scale props, on the trigger and on the menu's items |
+| `UInputTags` | `SInputTags` | Scale props; tags one line tall, so the field keeps its height |
+| `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale |
+| `UTabs` | `STabs` | Tab list as tall as a button of the same size |
+| `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
+| `UAlert` | `SAlert` | Scale props (padding and gap 1.5x), content slot under the text |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
-| custom spinner | `SSpinner`  | Consistent animated spinner, follows `--s-icon-size`, grow animation |
-| `UIcon` (for local SVGs) | `SIcon` | Inline SVG rendering with currentColor, proportional mode, loader provided by the consumer app |
-| custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters, multi-select, sort order |
-| empty state placeholder | `SEmpty` | Icon + label + action slot, vertical/horizontal orientation, dedicated glyph scale |
-| `UColorPicker` (inline) | `SColorPicker` | Hex input + swatch + popover picker, variant/color/size/disabled matching Stem inputs |
-| `UScrollArea` | `SScrollArea` | Gradient fade overlays at scroll edges, auto dark mode, doesn't cover scrollbar |
+| header buttons | `SModalButton`, `SCloseButton` | Thin wrappers of SButton: soft, pill, space-x one step above size and space-y one below |
+| custom spinner | `SSpinner`  | Follows the ambient icon size; `size` takes a scale token |
+| `UIcon` (for local SVGs) | `SIcon` | Inline SVG rendering with currentColor, loader provided by the consumer app |
+| custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters; chips and menus on the scale |
+| empty state placeholder | `SEmpty` | Icon + label + action slot; text on the scale, glyph on its own scale |
+| `UColorPicker` (inline) | `SColorPicker` | Hex input + swatch + popover picker, on the scale |
+| `UScrollArea` | `SScrollArea` | Gradient fade overlays at scroll edges |
 
-Stem components wrap and extend their Nuxt UI counterparts — all original props/attrs are passed through.
+Stem components wrap and extend their Nuxt UI counterparts — all original props, attrs, events and slots are passed through.
 
 ### Standalone usage (without Nuxt UI)
 
@@ -142,82 +150,40 @@ For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAle
 
 ## Design Conventions
 
-### Golden Rule of Sizes
+### The Stem scale
 
-Every component with a `size` prop follows a single text scale. Deviating from this rule breaks visual consistency.
+At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon.
 
-| size | text      |
-|------|-----------|
-| xs   | text-xs   |
-| sm   | text-sm   |
-| md   | text-base |
-| lg   | text-lg   |
-| xl   | text-xl   |
+| size | text | icon (= leading) | padding / gap | radius | height |
+|------|------|------------------|---------------|--------|--------|
+| xs   | 12px (text-xs)   | 12px (size-3) | 6px (p-1.5) | 4px  | 24px |
+| sm   | 14px (text-sm)   | 16px (size-4) | 8px (p-2)   | 6px  | 32px |
+| md   | 16px (text-base) | 20px (size-5) | 10px (p-2.5)| 8px  | 40px |
+| lg   | 18px (text-lg)   | 24px (size-6) | 12px (p-3)  | 10px | 48px |
+| xl   | 20px (text-xl)   | 28px (size-7) | 14px (p-3.5)| 12px | 56px |
 
-Padding uses `em` units so it scales proportionally with text size (e.g., `px-[1em] py-[0.5em]`).
+The space scale has two more steps below xs: `2xs` (4px) and `0`.
 
-### Icon Size Scale
-
-**Icons do not scale with text.** They follow their own fixed scale in pixels, defined once in `src/theme/icon-sizes.ts` and shared by every component:
-
-| token | text      | icon |
-|-------|-----------|------|
-| sm    | text-sm   | 12px |
-| md    | text-base | 16px |
-| lg    | text-lg   | 20px |
-| xl    | text-xl   | 24px |
-
-`xs` is **not** part of the public scale, but is kept as an alias of `sm` (12px) for backwards compatibility, since Nuxt UI still accepts `size="xs"`.
-
-An icon next to `text-base` is not always meant to be 16px, and expressing icon size in `em` made every component drift as soon as its text scale moved — hence the decoupling.
-
-#### How it works: `--s-icon-size`
-
-Each size variant sets the CSS custom property `--s-icon-size` on the component root, via a Tailwind arbitrary property (e.g. `[--s-icon-size:16px]`). Icons then read it with `size-(--s-icon-size) shrink-0`.
-
-Because leading icon, trailing icon and spinner all read the *same* variable, a single override changes them together.
-
-```ts
-// src/theme/sizes.ts — how a size variant declares it
-base: `${base} ${text} ${iconSizeFor(token)}`,   // → [--s-icon-size:16px]
-leadingIcon: iconSizeClass,                      // → size-(--s-icon-size) shrink-0
-trailingIcon: iconSizeClass,
-```
-
-#### The `iconSize` prop
-
-`SButton`, `SBadge`, `SEmpty` and `SColorPicker` accept an `iconSize` prop that overrides `--s-icon-size` for that instance. It takes either a scale token or any CSS length:
+Each axis moves on its own, defaulting to `size`:
 
 ```vue
-<SButton icon="i-ph-plus" />                  <!-- follows the component size -->
-<SButton icon="i-ph-plus" icon-size="lg" />   <!-- 20px -->
-<SButton icon="i-ph-plus" icon-size="32px" /> <!-- 32px -->
-<SButton icon="i-ph-plus" icon-size="1.5em" /><!-- any CSS length -->
-<SBadge icon="i-ph-tag" icon-size="24px" />
+<SButton size="sm" label="Salva" icon="i-ph-floppy-disk"/>          <!-- 32px -->
+<SButton size="sm" space-x="lg" space-y="xs" icon="i-ph-x"/>        <!-- 40 × 28 -->
+<SButton size="xs" space="2xs" label="Tag"/>                        <!-- 20px -->
+<SInput size="md" text-size="sm" icon-size="lg"/>
+<SBadge size="sm" roundness="xl"/> <SBadge size="sm" rounded/>      <!-- squircle / pill -->
 ```
 
-#### Exported API
+Rules that hold everywhere:
+- **Squircle only.** Corners are `s-corner` (superellipse) with the size's radius; `rounded` makes a pill (round ends, never a squircle).
+- **Borders and focus never resize a field.** The border is a 1px inset ring; focus darkens it and adds a 3.5px halo outside (box-shadow).
+- **Icons align by their drawing.** Phosphor draws in a 256 grid with 24 units of air per side, so beside a label an icon takes a negative margin of 3/32 of its size (`stemIconOptical`): padding and gap are measured to the drawing. Icon-only controls keep the box (they stay square).
 
-From `@fullbrains/stem` and `@fullbrains/stem/theme`:
+How it works: `src/css/scale.css` defines `s-size-*` (all variables) and `s-text-*`, `s-icon-*`, `s-space-*`, `s-space-x-*`, `s-space-y-*`, `s-roundness-*`, `s-pill` (one axis each), in `@layer components`. Themes read the variables: `--s-text`, `--s-icon-size`, `--s-px`, `--s-py`, `--s-gap`, `--s-radius`. The wrappers turn the props into those classes.
 
-| Export | Description |
-|--------|-------------|
-| `iconSizeScale` | `{sm: '12px', md: '16px', lg: '20px', xl: '24px'}` |
-| `iconSizeTokens` | Public tokens in ascending order (excludes the `xs` alias) |
-| `iconSizes` | Every accepted key, including `xs` → 12px. Use when building Tailwind Variants `size` maps |
-| `iconSizeVar` | `'--s-icon-size'` |
-| `iconSizeClass` | `'size-(--s-icon-size) shrink-0'` |
-| `iconSizeFor(size)` | Arbitrary-property class that sets the variable, e.g. `[--s-icon-size:20px]` |
-| `resolveIconSize(value)` | Token or CSS length → CSS length |
-| `iconSizeStyle(value)` | Inline style object overriding the variable, or `undefined` |
-| `IconSizeToken` | Type: `'sm' \| 'md' \| 'lg' \| 'xl'` |
+Exported from `@fullbrains/stem` and `/theme`: `stemScale`, `stemSizes`, `stemScaleClasses(props)`, `stemScaleStyle(props)`, `stemScaleVars(size, props)`, `stemSpaceStep(size, by)`, types `StemSize`, `StemSpace`, `StemScaleProps`.
 
-#### Exceptions
-
-Two glyphs deliberately step off the icon scale, because they are not inline icons:
-
-- **SEmpty** — the empty-state glyph is an illustration. Horizontal: 16/20/24/28/32px; vertical: 32/40/48/56/64px (xs→xl). Still on the same 4px step; `iconSize` overrides either.
-- **SColorPicker swatch** — a colour sample, one step above the icon scale: xs=16px, sm=16px, md=20px, lg=24px, xl=28px.
+Exceptions: **SEmpty**'s glyph is an illustration with its own scale (horizontal 16–32px, vertical 32–64px); its text and gap follow the scale.
 
 ### Color System
 
@@ -229,9 +195,10 @@ Stem maps semantic colors to specific Tailwind palettes:
 | secondary | `iron`  | Inverse of primary: white bg in light, dark bg in dark |
 | neutral   | `muto`  | Mid-tone, same in both modes |
 | success   | emerald | |
+| info      | sky     | |
 | error     | rose    | |
 
-`stem`, `iron` and `muto` are Stem's own palettes, registered in `colors-theme.css`. In light mode they are built on tar (a custom oklch ramp), slate and gray; in dark mode `colors.css` overrides all three with zinc.
+`stem`, `iron` and `muto` are Stem's own palettes, registered in `colors-theme.css`, with `smut`: a cool grey in 25-step increments (50, 75, 100 … 950), mode-stable. `--ui-text-muted` is its lightest step that keeps WCAG AA (4.5:1) on white and on elevated surfaces: `smut-525` in light, `smut-400` in dark. In light mode they are built on tar (a custom oklch ramp), slate and gray; in dark mode `colors.css` overrides all three with zinc.
 
 **Light-mode primary uses Tailwind `gray`, not the `stem` ramp.** Solid backgrounds, default text, indicators and rings resolve to `gray-800`, with `gray-700` for hover. The `stem` ramp still drives dark mode (`stem-100`/`stem-300`/`stem-900`), and `stem-600` is deliberately kept for `neutral solid` and `neutral outline` in badge and alert — that is the one place primary and neutral stay visually distinct, since `muto` *is* Tailwind gray.
 
@@ -240,6 +207,7 @@ Stem maps semantic colors to specific Tailwind palettes:
 | primary solid bg | `gray-800` | `stem-100` |
 | primary solid hover | `gray-700` | `stem-300` |
 | default text (`--ui-text`) | `gray-800` | (unchanged) |
+| muted text (`--ui-text-muted`) | `smut-525` | `smut-400` |
 | neutral solid (badge/alert) | `stem-600` | `stem-600` |
 
 Theme overrides use hardcoded palette classes (not CSS variable-based semantic classes) to ensure buttons, badges, alerts, and tabs all share the exact same visual appearance for each color+variant combination.
@@ -298,79 +266,40 @@ Stem uses Phosphor Icons (`@iconify-json/ph`) as its icon set, mapped via `stemI
 
 ### SBadge
 
-Enhanced badge wrapping `UBadge`. Adds compact mode for reduced padding.
+`UBadge` on the Stem scale: at a given size as tall as an SButton, with the same text, icon, padding, gap and radius. Squircle by default, pill with `rounded`. Icons on both sides (`icon`, `trailing-icon`); no caret.
 
 ```vue
-<!-- Normal badge -->
-<SBadge label="Status" icon="i-ph-tag" />
-
-<!-- Compact: reduced both axes -->
-<SBadge label="Status" compact />
-
-<!-- Compact X only: reduced horizontal padding -->
-<SBadge label="Status" compact="x" />
-
-<!-- Compact Y only: reduced vertical padding -->
-<SBadge label="Status" compact="y" />
-
-<!-- Icon size override (token or any CSS length) -->
-<SBadge label="Status" icon="i-ph-tag" icon-size="24px" />
+<SBadge label="Bozza" icon="i-ph-file" size="sm"/>
+<SBadge label="Bozza" size="sm" space-x="md" rounded/>
 ```
 
-**Props:** `compact` (boolean | 'x' | 'y'), `iconSize` (string — icon scale token or CSS length, overrides `--s-icon-size`)
-
-The `compact` prop reduces padding:
-- `true` — reduces both axes (`py-[0.15em]`, `px-[0.5em]`)
-- `"x"` — reduces only horizontal padding (`px-[0.5em]`)
-- `"y"` — reduces only vertical padding (`py-[0.15em]`)
-
-All `UBadge` props are passed through via `$attrs` (e.g., `label`, `icon`, `variant`, `size`, `color`).
+**Props:** the scale props. All `UBadge` props pass through (`label`, `icon`, `trailingIcon`, `variant`, `color`, `size`…).
 
 ### SButton
 
-Enhanced button wrapping `UButton`. Adds confirm dialogs, loading states with animated spinner, and disc mode.
+`UButton` on the Stem scale, plus confirm dialogs, loading spinner and caret.
 
 ```vue
-<!-- Basic -->
-<SButton label="Save" icon="i-ph-check" />
-
-<!-- Loading state (spinner replaces icon, click disabled) -->
-<SButton label="Saving..." loading />
-
-<!-- Destructive with confirmation dialog -->
+<SButton label="Salva" icon="i-ph-floppy-disk"/>
+<SButton label="Salva" icon="i-ph-floppy-disk" trailing-icon="i-ph-arrow-right"/>
+<SButton label="Opzioni" caret/>                       <!-- trailing chevron, pushed right -->
+<SButton icon="i-ph-plus" aria-label="Aggiungi"/>       <!-- no label: square -->
+<SButton icon="i-ph-plus" aria-label="Aggiungi" rounded/> <!-- circle -->
+<SButton label="Salvataggio…" loading/>
 <SButton
-  label="Delete"
-  destructive
-  confirm-title="Delete item?"
-  confirm-message="This action cannot be undone."
+  label="Elimina" destructive
+  confirm-title="Eliminare?" confirm-message="Non si può annullare."
   :on-confirm="handleDelete"
 />
-
-<!-- Disc: circular icon-only button -->
-<SButton disc icon="i-ph-plus" />
-<SButton disc icon="i-ph-x" variant="soft" size="sm" />
-
-<!-- Caret: trailing chevron-down, auto-pushed right -->
-<SButton label="Options" caret />
-
-<!-- Rounded: pill shape -->
-<SButton label="Tag" rounded />
-
-<!-- Icon size override: applies to leading icon, trailing icon and spinner -->
-<SButton icon="i-ph-plus" icon-size="lg" />
-<SButton icon="i-ph-plus" icon-size="32px" />
 ```
 
-**Props:** `icon`, `label`, `trailingIcon`, `iconSize` (string — icon scale token or CSS length, overrides `--s-icon-size`), `caret`, `rounded`, `disc`, `compact` (boolean | 'x' | 'y'), `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`
+**Props:** the scale props, `icon`, `label`, `trailingIcon`, `caret`, `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmCancelLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`.
 
-The `compact` prop reduces padding and removes min-height. It accepts:
-- `true` — reduces both axes (`py-[0.25em]`, `px-[0.65em]`, `min-h-0`)
-- `"x"` — reduces only horizontal padding (`px-[0.65em]`)
-- `"y"` — reduces only vertical padding (`py-[0.25em]`, `min-h-0`)
+Without a label the button keeps the size's padding on every side: square, as tall as with a label (space-x / space-y still apply). There is no `disc` and no `compact` any more: `rounded` and `space` do their job.
 
-On disc buttons, `compact` produces a smaller circle (`p-[0.4em]`, `min-h-0`). The `x`/`y` axis distinction is ignored for disc.
+### SModalButton and SCloseButton
 
-The `disc` prop makes the button a circle with `aspect-square`, same height as a normal button at the same size. Hides label and trailing icon.
+`SModalButton` is SButton soft and `rounded`, `size` sm by default, with space-x one step above the size and space-y one step below (sm: 10 × 6px, 28px tall) unless `space`, `space-x` or `space-y` is given. `SCloseButton` is SModalButton with an X and an accessible name (`label`, default from Nuxt UI's locale). Everything else passes through to SButton.
 
 ### SModal
 
@@ -410,7 +339,7 @@ An alert inline (`UAlert`) and an alert arriving as a toast (`UToast`) look the 
 - **Colors:** `neutral`, `primary`, `secondary`, `info` (sky), `success`, `warning`, `error`.
 - **Variants:** `outline` (default: surface + colored ring, color in the icon only), `soft` (light tint over the surface), `subtle` (tint + ring), `solid` (color as ground).
 - **Orientation:** `horizontal` (actions beside the text) or `vertical` (actions under it). Icon, actions and X always line up with the title.
-- **Actions and X** are always `sm`, rounded, compact pills, whatever size an action asks for.
+- **Actions and X** are pills on the alert's scale (half its padding-y above and below), whatever size an action asks for. SAlert takes the scale props: padding and gap are 1.5× the scale's (sm: 12px); toasts and bare UAlerts are sm.
 - `UToast` has no `variant` prop: pass `ui: alertClasses(color, variant)` (exported from `@fullbrains/stem`) to `toast.add()` for a soft/subtle/solid toast.
 
 `SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). In `horizontal` it spans to the alert's right edge, under the actions and the X too. Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.
@@ -500,7 +429,7 @@ Supports the same `variant` prop as Stem inputs (`outline`, `soft`, `subtle`, `g
 
 ### SSearchChip
 
-Filter chip wrapping `SButton` (variant="soft", size="sm", rounded, compact). Displays a label + selected values summary. When the count exceeds `threshold`, shows "N selected" instead of listing all values.
+Filter chip wrapping `SButton` (variant="soft", pill, `size` sm by default, space-x one step above the size; scale props pass through). Displays a label + selected values summary. When the count exceeds `threshold`, shows "N selected" instead of listing all values.
 
 ```vue
 <SSearchChip label="Status" :selected-values="['Active', 'Pending']" :count="5" />
@@ -677,7 +606,7 @@ Stem overrides these Nuxt UI component themes via `app.config.ui`:
 - **select / selectMenu / inputMenu** — Inherit input styling + floating menu + open-state ring
 - **inputTags** — Pill-shaped tags (rounded-full, bg-slate-400/20), delete icon follows `--s-icon-size`
 - **badge** — Always rounded-full, em-based padding, hardcoded slate colors matching button (includes secondary)
-- **alert / toast** — One look from `alert-colors.ts`: outline default, soft/subtle tint over an opaque surface, solid; actions and X as sm rounded compact pills aligned with the title
+- **alert / toast** — One look from `alert-colors.ts`: outline default, soft/subtle tint over an opaque surface, solid; actions and X as pills on the alert's scale, centred on the title
 - **tabs** — Slate-900 indicator for primary, cursor-pointer on all variants, golden rule text sizes + shared icon scale
 - **dropdownMenu** — Floating menu styling, highlighted items
 - **contextMenu** — Same theme as dropdownMenu

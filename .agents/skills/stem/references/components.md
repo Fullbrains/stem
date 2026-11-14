@@ -1,3 +1,5 @@
+> **Note (redesign, 2026-11):** sizes now follow the Stem scale — see "The Stem scale" in SKILL.md. Where this file mentions `compact`, `disc`, `em` padding or the old icon scale (`icon-sizes.ts`), SKILL.md wins.
+
 # Stem Components Reference
 
 Detailed API for all custom components provided by `@fullbrains/stem`.
@@ -68,7 +70,7 @@ Enhanced button wrapping Nuxt UI's `UButton`. Provides loading states with anima
 | `iconSize` | `string` | — | Override the icon size for this button. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'32px'`, `'1.5em'`). Sets `--s-icon-size`, so leading icon, trailing icon and the loading spinner all change together |
 | `caret` | `boolean` | `false` | Show a caret (chevron-down) as trailing icon, pushed to the right with `ml-auto` |
 | `rounded` | `boolean` | `false` | Make button pill-shaped (`rounded-full`) |
-| `disc` | `boolean` | `false` | Circular icon-only button. Removes min-height, hides label and trailing icon, applies uniform `p-[0.3em]` padding |
+| ~~`disc`~~ | — | — | Removed: an icon-only button is square; add `rounded` for a circle. Was: Circular icon-only button. Removes min-height, hides label and trailing icon, applies uniform `p-[0.3em]` padding |
 | `compact` | `boolean` | `false` | Reduced vertical padding (`py-[0.25em]`) and no min-height. Useful for inline/toolbar contexts |
 | `loading` | `boolean` | `false` | Show spinner instead of icon, disable click |
 | `destructive` | `boolean` | `false` | Use error color |
@@ -124,11 +126,11 @@ All `UButton` props are passed through via `$attrs` (e.g., `variant`, `size`, `c
 <SButton label="Outline" variant="outline" />
 
 <!-- Disc buttons (different sizes) -->
-<SButton disc icon="i-ph-plus" size="xs" />
-<SButton disc icon="i-ph-plus" size="sm" />
-<SButton disc icon="i-ph-plus" size="md" />
-<SButton disc icon="i-ph-plus" size="lg" />
-<SButton disc icon="i-ph-plus" size="xl" />
+<SButton rounded icon="i-ph-plus" size="xs" />
+<SButton rounded icon="i-ph-plus" size="sm" />
+<SButton rounded icon="i-ph-plus" size="md" />
+<SButton rounded icon="i-ph-plus" size="lg" />
+<SButton rounded icon="i-ph-plus" size="xl" />
 
 <!-- Destructive with confirm -->
 <SButton

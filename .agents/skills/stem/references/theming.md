@@ -1,3 +1,5 @@
+> **Note (redesign, 2026-11):** the size variants now come from `src/theme/sizes.ts` on the Stem scale (`src/css/scale.css`, `src/theme/scale.ts`); field borders and focus are inset rings plus an outer halo. Where this file shows `em` paddings, `[--s-radius:Npx]` per component or `icon-sizes.ts`, SKILL.md and the source win.
+
 # Stem Theming Reference
 
 Complete theme configuration for every component overridden by `@fullbrains/stem`.
