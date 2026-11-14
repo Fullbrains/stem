@@ -14,7 +14,9 @@
  *   --s-gap        gap between icon and label: half the icon, follows space-x
  *
  * The space scale has two steps below xs: 2xs (4px), for tighter controls
- * (size="xs" space="2xs" is 20px tall), and 0, no padding and no gap.
+ * (size="xs" space="2xs" is 20px tall), and 0, no padding and no gap; and
+ * four above xl, 2xl to 5xl (16–22px, 2px apart), for containers (an
+ * alert's padding) that a shift takes past the sizes.
  *   --s-radius     squircle radius (s-corner)
  *
  * In @layer components: a Tailwind utility on the same element still wins.
@@ -37,6 +39,10 @@
     .s-space-md { --s-px: 10px; --s-py: 10px; --s-gap: 10px; }
     .s-space-lg { --s-px: 12px; --s-py: 12px; --s-gap: 12px; }
     .s-space-xl { --s-px: 14px; --s-py: 14px; --s-gap: 14px; }
+    .s-space-2xl { --s-px: 16px; --s-py: 16px; --s-gap: 16px; }
+    .s-space-3xl { --s-px: 18px; --s-py: 18px; --s-gap: 18px; }
+    .s-space-4xl { --s-px: 20px; --s-py: 20px; --s-gap: 20px; }
+    .s-space-5xl { --s-px: 22px; --s-py: 22px; --s-gap: 22px; }
 
     .s-space-x-0 { --s-px: 0px; --s-gap: 0px; }
     .s-space-x-2xs { --s-px: 4px; --s-gap: 4px; }
@@ -45,6 +51,10 @@
     .s-space-x-md { --s-px: 10px; --s-gap: 10px; }
     .s-space-x-lg { --s-px: 12px; --s-gap: 12px; }
     .s-space-x-xl { --s-px: 14px; --s-gap: 14px; }
+    .s-space-x-2xl { --s-px: 16px; --s-gap: 16px; }
+    .s-space-x-3xl { --s-px: 18px; --s-gap: 18px; }
+    .s-space-x-4xl { --s-px: 20px; --s-gap: 20px; }
+    .s-space-x-5xl { --s-px: 22px; --s-gap: 22px; }
     .s-space-y-0 { --s-py: 0px; }
     .s-space-y-2xs { --s-py: 4px; }
     .s-space-y-xs { --s-py: 6px; }
@@ -52,6 +62,10 @@
     .s-space-y-md { --s-py: 10px; }
     .s-space-y-lg { --s-py: 12px; }
     .s-space-y-xl { --s-py: 14px; }
+    .s-space-y-2xl { --s-py: 16px; }
+    .s-space-y-3xl { --s-py: 18px; }
+    .s-space-y-4xl { --s-py: 20px; }
+    .s-space-y-5xl { --s-py: 22px; }
 
     .s-text-xs { --s-text: 12px; }
     .s-text-sm { --s-text: 14px; }

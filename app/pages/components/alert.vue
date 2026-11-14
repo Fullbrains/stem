@@ -171,7 +171,7 @@ function showToast(extra: Record<string, unknown> = {}) {
 
     <ShowcaseSection
         title="Feedback"
-        description="Un alert su misura: space-y +4 (space-x quello di sempre, +2), la X a destra e due azioni primary con i parametri dello slot."
+        description="La X a destra e due azioni primary con i parametri dello slot."
     >
       <ShowcaseStage body-class="grid gap-4 p-8">
         <SAlert
@@ -179,7 +179,6 @@ function showToast(extra: Record<string, unknown> = {}) {
             description="Il tuo voto ci aiuta a migliorare le risposte."
             icon="i-ph-chat-circle"
             orientation="horizontal"
-            space-y="+4"
             close
         >
           <template #actions="{primary}">

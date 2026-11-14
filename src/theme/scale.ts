@@ -24,10 +24,13 @@ export type StemSize = keyof typeof stemScale
 
 export const stemSizes = Object.keys(stemScale) as StemSize[]
 
-/** The space scale: the sizes, plus 2xs (4px) and 0 (none) below xs. */
-export type StemSpace = 0 | '0' | '2xs' | StemSize
+/**
+ * The space scale: the sizes, plus 2xs (4px) and 0 (none) below xs, and
+ * 2xl to 5xl (16–22px) above xl, for containers.
+ */
+export type StemSpace = 0 | '0' | '2xs' | StemSize | '2xl' | '3xl' | '4xl' | '5xl'
 
-const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl']
+const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl']
 
 /**
  * A step relative to the space the control would have otherwise (its
@@ -184,9 +187,9 @@ export function stemSizeClass(size: StemSize) {
   return `s-size-${size}`
 }
 
-const spacePx: Record<string, number> = {'0': 0, '2xs': 4}
+const spacePx: Record<string, number> = {'0': 0, '2xs': 4, '2xl': 16, '3xl': 18, '4xl': 20, '5xl': 22}
 
-/** A step of the space scale in px (0, 2xs 4, xs 6 … xl 14). */
+/** A step of the space scale in px (0, 2xs 4, xs 6 … xl 14 … 5xl 22). */
 export function stemSpacePx(v: StemSpace): number {
   return String(v) in spacePx ? spacePx[String(v)]! : stemScale[v as StemSize].space
 }

@@ -75,7 +75,7 @@ const followsSize = {label: 'da size', value: undefined}
  */
 export function scaleControls(group = 'Scala'): ShowcaseControl[] {
   const opts = [followsSize, ...scaleTokens]
-  const spaceOpts = [followsSize, '-2', '-1', '+1', '+2', '0', '2xs', ...scaleTokens]
+  const spaceOpts = [followsSize, '-2', '-1', '+1', '+2', '0', '2xs', ...scaleTokens, '2xl', '3xl', '4xl', '5xl']
   return [
     {group, key: 'textSize', label: 'text-size', type: 'select', options: opts},
     {group, key: 'iconSize', label: 'icon-size', type: 'select', options: opts},

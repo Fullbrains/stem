@@ -69,9 +69,9 @@ const props = withDefaults(defineProps<StemScaleProps & {
 })
 
 // Scale props inherited from a parent when not given; sm by default, two
-// steps more space-x than its size and three more space-y (sm: 12 × 14px),
+// steps more space-x than its size and four more space-y (sm: 12 × 16px),
 // the radius a step rounder (sm: md's, 8px).
-const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3', roundness: '+1'})
+const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+4', roundness: '+1'})
 
 // The buttons are SModalButtons of the alert's size, space-x the size's own
 // (no shift: sm 8px), space-y a step below it (sm: 6px, 28px tall); the
