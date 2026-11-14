@@ -26,7 +26,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Demo', key: 'surface', label: 'superficie', type: 'select', prop: false, default: 'pagina', options: Object.keys(surfaces)},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-scroll-area', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('scroll-area', () => controlDefaults(controls))
 
 const current = computed(() => {
   const out: Record<string, unknown> = {}

@@ -38,7 +38,7 @@ const controls: ShowcaseControl[] = [
   ...scaleControls(),
 ]
 
-const state = useCookie<Record<string, any>>('showcase-textarea', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('textarea', () => controlDefaults(controls))
 
 const value = ref('')
 const long = ref('Prima riga.\nSeconda riga.\nTerza riga.\nQuarta riga: scrivi ancora per vedere crescere il campo.')

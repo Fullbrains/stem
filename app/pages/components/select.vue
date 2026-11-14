@@ -82,7 +82,7 @@ const allControls: ShowcaseControl[] = [
   ...stateControls,
 ]
 
-const state = useCookie<Record<string, any>>('showcase-select', {default: () => controlDefaults(allControls)})
+const state = useShowcaseState<Record<string, any>>('select', () => controlDefaults(allControls))
 
 const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'SSelect')
 

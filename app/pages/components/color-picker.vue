@@ -27,7 +27,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'disabled', type: 'boolean'},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-color-picker', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('color-picker', () => controlDefaults(controls))
 
 const color = ref('#3b82f6')
 const changed = ref('#ef4444')

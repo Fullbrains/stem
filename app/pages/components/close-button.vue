@@ -11,7 +11,7 @@ const controls: ShowcaseControl[] = [
   ...scaleControls(),
 ]
 
-const state = useCookie<Record<string, any>>('showcase-close-button', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('close-button', () => controlDefaults(controls))
 
 const current = computed(() => {
   const out: Record<string, unknown> = {}

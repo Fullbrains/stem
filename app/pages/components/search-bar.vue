@@ -63,7 +63,7 @@ const controls: ShowcaseControl[] = [
   ]},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-search-bar', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('search-bar', () => controlDefaults(controls))
 
 const codeExtra = 'v-model="query" :active-filter-count="activeCount"'
 
@@ -71,7 +71,7 @@ const codeExtra = 'v-model="query" :active-filter-count="activeCount"'
 const clearA = ref('contratti 2024')
 const clearB = ref('contratti 2024')
 
-const resizeWidth = useCookie<number>('showcase-search-bar-width', {default: () => 720})
+const resizeWidth = useShowcaseState<number>('search-bar-width', () => 720)
 </script>
 
 <template>

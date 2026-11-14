@@ -37,7 +37,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'destructive', type: 'boolean'},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-button', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('button', () => controlDefaults(controls))
 
 // Per matrice e scale: le opzioni scelte, meno l'asse che la vista fa variare.
 function without(p: Record<string, unknown>, ...keys: string[]) {

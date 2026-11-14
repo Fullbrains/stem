@@ -81,7 +81,7 @@ const byTag: Record<Tag, ShowcaseControl[]> = {
 
 const allControls = [...byTag.UCheckbox, ...byTag.USwitch, ...byTag.URadioGroup]
 
-const state = useCookie<Record<string, any>>('showcase-checkbox', {default: () => controlDefaults(allControls)})
+const state = useShowcaseState<Record<string, any>>('checkbox', () => controlDefaults(allControls))
 
 const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'SCheckbox')
 const controls = computed(() => byTag[tag.value])

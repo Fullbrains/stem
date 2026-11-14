@@ -41,7 +41,7 @@ const controls: ShowcaseControl[] = [
   ...scaleControls(),
 ]
 
-const state = useCookie<Record<string, any>>('showcase-input', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('input', () => controlDefaults(controls))
 
 const value = ref('')
 const filled = ref('Stem')

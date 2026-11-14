@@ -69,7 +69,7 @@ const filterControls: ShowcaseControl[] = [
   {group: 'Classi', key: 'contentClass', label: 'content-class', type: 'select', default: 'min-w-48', options: ['min-w-48', 'min-w-64', 'w-80']},
 ]
 
-const filterState = useCookie<Record<string, any>>('showcase-search-filter', {default: () => controlDefaults(filterControls)})
+const filterState = useShowcaseState<Record<string, any>>('search-filter', () => controlDefaults(filterControls))
 
 // Il Set non va nel cookie: la selezione resta in memoria.
 const filterValue = ref(new Set<string>())
@@ -149,7 +149,7 @@ const chipControls: ShowcaseControl[] = [
   {group: 'Stato', key: 'active', type: 'boolean'},
 ]
 
-const chipState = useCookie<Record<string, any>>('showcase-search-filter-chip', {default: () => controlDefaults(chipControls)})
+const chipState = useShowcaseState<Record<string, any>>('search-filter-chip', () => controlDefaults(chipControls))
 
 const chipCodeExtra = computed(() => {
   const v = chipValues[chipState.value.values]
@@ -174,7 +174,7 @@ const orderControls: ShowcaseControl[] = [
   {key: 'chipClass', label: 'chip-class', type: 'select', options: [{label: 'nessuna', value: undefined}, 'max-w-40']},
 ]
 
-const orderState = useCookie<Record<string, any>>('showcase-search-filter-order', {default: () => controlDefaults(orderControls)})
+const orderState = useShowcaseState<Record<string, any>>('search-filter-order', () => controlDefaults(orderControls))
 const order = ref('newest')
 </script>
 

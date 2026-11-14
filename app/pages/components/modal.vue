@@ -40,7 +40,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'disabled', type: 'boolean'},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-modal', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('modal', () => controlDefaults(controls))
 
 // Uno stato di apertura per pannello: chiaro e scuro aprono ciascuno il proprio.
 const open = reactive<Record<string, boolean>>({})

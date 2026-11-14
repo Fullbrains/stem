@@ -26,7 +26,7 @@ const controls: ShowcaseControl[] = [
   ]},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-hint', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('hint', () => controlDefaults(controls))
 
 function without(p: Record<string, unknown>, ...keys: string[]) {
   const out = {...p}

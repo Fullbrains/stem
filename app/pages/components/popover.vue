@@ -25,7 +25,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'example', label: 'contenuto', type: 'select', prop: false, initial: 'testo', options: ['testo', 'form', 'azioni']},
 ]
 
-const state = useCookie<Record<string, any>>('showcase-popover', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('popover', () => controlDefaults(controls))
 
 // side/align/side-offset vivono nell'oggetto `content`: il codice lo scrive a mano.
 const content = computed(() => {

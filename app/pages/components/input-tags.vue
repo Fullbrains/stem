@@ -46,7 +46,7 @@ const controls: ShowcaseControl[] = [
   ...scaleControls(),
 ]
 
-const state = useCookie<Record<string, any>>('showcase-input-tags', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('input-tags', () => controlDefaults(controls))
 
 const value = ref(['Vue', 'Nuxt'])
 const many = ref(['Vue', 'Nuxt', 'Tailwind', 'Reka UI', 'TypeScript', 'Vite', 'Pinia', 'Vitest'])

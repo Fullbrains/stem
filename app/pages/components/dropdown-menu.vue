@@ -97,7 +97,7 @@ const controls: ShowcaseControl[] = [
   ...scaleControls(),
 ]
 
-const state = useCookie<Record<string, any>>('showcase-dropdown-menu', {default: () => controlDefaults(controls)})
+const state = useShowcaseState<Record<string, any>>('dropdown-menu', () => controlDefaults(controls))
 
 const items = computed(() => itemSets[state.value.items as string] ?? itemSets.base!)
 
