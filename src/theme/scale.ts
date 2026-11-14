@@ -55,11 +55,10 @@ export interface StemScaleProps {
   /** Pill: fully round ends, never a squircle. */
   rounded?: boolean
   /**
-   * Pull the label left by the font's side bearing, so its first letter, not
-   * its box, sits at the edge. `auto` (default): only where nothing balances
-   * the letter's air (a field's text, a menu item or alert without icon, the
-   * label after a checkbox, radio or switch); `always`: also beside an icon
-   * and on a label alone; `never`: off. See src/css/scale.css.
+   * Trim the label by the font's side bearings on both sides, so the space
+   * to an icon and to the edge is measured to the letters. `auto` (default):
+   * labels with an icon beside them, left or right; `always`: every label;
+   * `never`: none. See src/css/scale.css.
    */
   opticalLabel?: StemOpticalLabel
 }
@@ -76,13 +75,12 @@ export function stemOpticalMode(v: unknown): StemOpticalLabel {
 }
 
 /**
- * The optical label shift, one class per case (src/css/scale.css): on a
- * label slot, the margin that pulls it left by its case's variable.
+ * The optical label trim (src/css/scale.css), on a label slot: `icon` for a
+ * label with an icon beside it, `alone` for one without.
  */
 export const stemLabelShift = {
-  edge: 'ms-[calc(var(--s-label-shift-edge,0em)*-1)]',
-  icon: 'ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
-  center: 'ms-[calc(var(--s-label-shift-center,0em)*-1)]',
+  icon: 'ms-[calc(var(--s-label-icon-start,0em)*-1)] me-[calc(var(--s-label-icon-end,0em)*-1)]',
+  alone: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)]',
 } as const
 
 function isToken(v: unknown): v is StemSize {
@@ -154,10 +152,12 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
 
 /** The optical label variables of a mode, inline (see stemScaleVars). */
 function stemOpticalVars(mode: StemOpticalLabel): Record<string, string> {
-  const on = 'var(--s-label-bearing)'
+  const start = 'var(--s-label-bearing-start)'
+  const end = 'var(--s-label-bearing-end)'
   return {
-    '--s-label-shift-edge': mode === 'never' ? '0em' : on,
-    '--s-label-shift-icon': mode === 'always' ? on : '0em',
-    '--s-label-shift-center': mode === 'always' ? on : '0em',
+    '--s-label-icon-start': mode === 'never' ? '0em' : start,
+    '--s-label-icon-end': mode === 'never' ? '0em' : end,
+    '--s-label-alone-start': mode === 'always' ? start : '0em',
+    '--s-label-alone-end': mode === 'always' ? end : '0em',
   }
 }

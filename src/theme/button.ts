@@ -11,9 +11,9 @@ export default {
     // as tall as the same control with a label — and square, since padding-x
     // and padding-y are equal unless space-x / space-y set them apart.
     {square: true, class: {base: 'px-(--s-px)! py-(--s-py)!'}},
-    // The optical label shift: `center` on a label alone, `icon` beside an
-    // icon (SButton draws its own leading icon and sets it itself).
-    {leading: false, trailing: false, class: {label: stemLabelShift.center}},
+    // The optical label trim: `icon` beside an icon, `alone` without (SButton
+    // draws its own leading icon and sets it itself).
+    {leading: false, trailing: false, class: {label: stemLabelShift.alone}},
     {leading: true, class: {label: stemLabelShift.icon}},
     {trailing: true, class: {label: stemLabelShift.icon}},
     {

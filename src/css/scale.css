@@ -73,41 +73,40 @@
     .s-pill { --s-radius: 9999px; --s-corner-shape: round; }
 
     /*
-     * Optical label: a letter carries air on its left inside its own box (the
-     * font's side bearing): Vimana's stems (H, E, B, D, P…), the most common
-     * first letter of a label, 0.09em (rounds 0.05, diagonals 0.01).
-     * Pulling the label left by that much brings the letter, not its box, to
-     * the edge. Whether it should depends on what is on the other side, so
-     * each case has its own variable, to tune one without touching the others:
+     * Optical label: a letter carries air inside its own box (the font's side
+     * bearings), so the space between a label and an icon beside it, and
+     * between the label and the edge, looks wider than it is. A label with an
+     * icon beside it, on the left or the right, is trimmed on both sides by
+     * that air, so the distances are measured to the letters:
      *
-     *   --s-label-shift-edge    text aligned to an edge with nothing to balance
-     *                           its air: a field's text, a menu item or alert
-     *                           without icon, the label after a checkbox,
-     *                           radio or switch (their box is drawn edge to edge)
-     *   --s-label-shift-icon    a label beside an icon, before or after it: the
-     *                           icon's own air balances the letter's
-     *   --s-label-shift-center  a label alone, centred between equal paddings:
-     *                           the last letter's air balances the first's
+     *   --s-label-bearing-start  0.09em: Vimana's stems (H, E, B, D, P…), the
+     *                            common first letter of a label
+     *   --s-label-bearing-end    0.05em: the median of the lowercase endings
+     *                            (n 0.07, e 0.05, t 0.02, y 0.005)
      *
-     * optical-label: auto (default) shifts only `edge`; always shifts all
-     * three; never none. --s-label-bearing: 0 turns it off app-wide. Written
-     * in em, the shift follows the text. The theme reads the variables where
-     * the text starts: margin on a label, padding-left on a field.
+     * optical-label: auto (default) trims only labels with an icon beside
+     * them; always also labels without icons (a field's text, a label alone,
+     * a menu item without icon, the label of a checkbox); never none. The
+     * theme reads --s-label-icon-* and --s-label-alone-*; set a bearing to 0
+     * to turn that side off app-wide. In em, it follows the text.
      */
-    :root { --s-label-bearing: 0.09em; }
+    :root { --s-label-bearing-start: 0.09em; --s-label-bearing-end: 0.05em; }
     :root, .s-optical-label-auto {
-        --s-label-shift-edge: var(--s-label-bearing);
-        --s-label-shift-icon: 0em;
-        --s-label-shift-center: 0em;
+        --s-label-icon-start: var(--s-label-bearing-start);
+        --s-label-icon-end: var(--s-label-bearing-end);
+        --s-label-alone-start: 0em;
+        --s-label-alone-end: 0em;
     }
     .s-optical-label-always {
-        --s-label-shift-edge: var(--s-label-bearing);
-        --s-label-shift-icon: var(--s-label-bearing);
-        --s-label-shift-center: var(--s-label-bearing);
+        --s-label-icon-start: var(--s-label-bearing-start);
+        --s-label-icon-end: var(--s-label-bearing-end);
+        --s-label-alone-start: var(--s-label-bearing-start);
+        --s-label-alone-end: var(--s-label-bearing-end);
     }
     .s-optical-label-never {
-        --s-label-shift-edge: 0em;
-        --s-label-shift-icon: 0em;
-        --s-label-shift-center: 0em;
+        --s-label-icon-start: 0em;
+        --s-label-icon-end: 0em;
+        --s-label-alone-start: 0em;
+        --s-label-alone-end: 0em;
     }
 }

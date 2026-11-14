@@ -19,9 +19,9 @@ export default {
   slots: {
     root: '[--s-inset:2px]',
     trigger: 's-corner-inner cursor-pointer',
-    // The optical label shift: `center` on a label alone, `icon` after an
-    // icon or avatar.
-    label: 'ms-[calc(var(--s-label-shift-center,0em)*-1)] [[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
+    // The optical label trim: `icon` beside an icon or avatar (left or
+    // right), `alone` without; the siblings decide, the more specific wins.
+    label: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=leadingIcon]+&]:me-[calc(var(--s-label-icon-end,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=leadingAvatar]+&]:me-[calc(var(--s-label-icon-end,0em)*-1)] [&:has(+[data-slot=trailingIcon])]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [&:has(+[data-slot=trailingIcon])]:me-[calc(var(--s-label-icon-end,0em)*-1)]',
   },
   variants: {
     variant: {
