@@ -23,7 +23,8 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'label', type: 'text', placeholder: 'nessuna'},
   {group: 'Contenuto', key: 'ariaLabel', label: 'aria-label', type: 'text', initial: 'Apri a parte'},
 
-  ...scaleControls(),
+  // rounded è il default di SModalButton: true finché non lo si spegne.
+  ...scaleControls().map(c => c.key === 'rounded' ? {...c, default: true} : c),
 
   {group: 'Stato', key: 'loading', type: 'boolean'},
   {group: 'Stato', key: 'disabled', type: 'boolean'},
