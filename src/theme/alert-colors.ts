@@ -19,13 +19,15 @@
 
 export const alertSlots = {
   // On the Stem scale (sm by default; SAlert's size and scale props set the
-  // variables inline). A container, not a control: its padding and gap are
-  // one and a half the scale's, so a sm alert has 12px around and between.
-  // As a button of the same size: its squircle, its padding, its gap.
+  // variables inline, with its own defaults: space-x +2, space-y +4,
+  // roundness +1).
   root: 's-size-sm s-corner px-(--s-px) py-(--s-py) gap-(--s-gap)',
   // The optical label trim on title and description, on the side of the
   // icon or avatar; `alone` without.
   wrapper: 'min-w-0 flex-1 flex flex-col text-(length:--s-text) ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=icon]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=avatar]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)]',
+  // The avatar on the scale: twice the icon (sm: 32px), its initials at the
+  // text's size.
+  avatar: 'shrink-0 size-[calc(var(--s-icon-size)*2)] text-(length:--s-text)',
   title: 'text-(length:--s-text) leading-(--s-icon-size) font-medium',
   description: 'text-(length:--s-text) leading-[calc(var(--s-icon-size)+4px)] opacity-100',
   icon: 'shrink-0 size-(--s-icon-size)',
