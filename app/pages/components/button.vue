@@ -98,14 +98,14 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
     </ShowcaseSection>
 
     <ShowcaseSection
-        title="Ispezione"
-        description="Box del pulsante (magenta), dell'icona (lime) e della label (cyan). Solo label, solo icona, entrambe, caret, cerchio: a parità di size, stessa altezza."
+        title="Contenuto e altezza"
+        description="Solo label, solo icona, entrambe, caret, cerchio: a parità di size, stessa altezza."
     >
       <ShowcaseStage body-class="space-y-5 p-8">
         <div v-for="s in sizes" :key="s" class="flex items-start gap-6">
           <span class="w-8 pt-2 font-mono text-[11px] text-(--ui-text-muted)">{{ s }}</span>
           <ShowcaseMeasure v-for="(c, name) in contents" :key="name" labels>
-            <SButton v-bind="{...without(current, 'size', 'label', 'icon', 'trailingIcon', 'caret'), ...c}" :size="s as any" class="b [&_.iconify]:b1 [&_[data-slot=label]]:b2"/>
+            <SButton v-bind="{...without(current, 'size', 'label', 'icon', 'trailingIcon', 'caret'), ...c}" :size="s as any"/>
           </ShowcaseMeasure>
         </div>
       </ShowcaseStage>
