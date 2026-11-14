@@ -24,8 +24,8 @@ import {computed, provide, useAttrs, useSlots} from 'vue'
  * already, and the slot stays in the text's column.
  *
  * Its buttons are SModalButtons of its size: space-x the size's own,
- * space-y two steps below (sm: 24px), so they sit on the title's line
- * without making a one-line alert taller; on a solid alert, tinted to stay
+ * space-y a step below (sm: 28px), centred on the title's line without
+ * making a one-line alert taller; on a solid alert, tinted to stay
  * readable. The `actions` it is given and the X get these; an `#actions`
  * slot gets them as params, to bind on what it renders:
  *   <template #actions="{button, primary}">
@@ -61,24 +61,23 @@ const props = withDefaults(defineProps<StemScaleProps & {
 })
 
 // Scale props inherited from a parent when not given; sm by default, two
-// steps more space-x than its size and three more space-y (sm: 12 × 14px).
-const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3'})
+// steps more space-x than its size and three more space-y (sm: 12 × 14px),
+// the radius a step rounder (sm: md's, 8px).
+const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3', roundness: '+1'})
 
 // The buttons are SModalButtons of the alert's size, space-x the size's own
-// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall). The actions are pulled up by half their excess
-// over the title's line, so they sit centred on it.
-const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
-const buttonPull = computed(() => stemSpacePx(buttonSpaceY.value))
+// (no shift: sm 8px), space-y a step below it (sm: 6px, 28px tall).
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -1))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
-  '--s-alert-button-py': `${buttonPull.value}px`,
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
 // What the buttons inside inherit: the alert's size and type. Not its
-// space: that is the alert's own, the buttons keep SModalButton's, space-y two steps below the size.
+// space and radius: that is the alert's own, the buttons keep SModalButton's, space-y a step below the size.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
+  roundness: undefined,
   space: undefined,
   spaceX: undefined,
   spaceY: undefined,
@@ -148,9 +147,10 @@ const cells = computed(() => hasIcon.value
       body: 'col-start-1 col-end-3',
     })
 
-// The buttons overhang the title's line by their padding-y, above and below,
-// centred on it: a one-line alert is no taller for them.
-const actionsClass = '-my-(--s-alert-button-py)'
+// The actions' row is exactly the title's line, the buttons centred on it:
+// however tall they are, they overhang it equally above and below, and a
+// one-line alert is no taller for them.
+const actionsClass = 'my-0 h-(--s-icon-size) items-center content-center'
 // Between the buttons: a step below the alert's own space (sm: 10px).
 const actionsGap = 'gap-(--s-alert-button-gap)'
 

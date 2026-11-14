@@ -62,9 +62,10 @@ function settleSize(v: StemSizeValue | undefined): StemSize | undefined {
  * leaves it undefined, and Nuxt UI's own default (or a UFieldGroup's size)
  * applies.
  *
- * `size`, `space`, `space-x` and `space-y` also take a shift ('-1', '+2'):
- * steps from the value the component would have otherwise — its parent's,
- * else its own default (a space: its size's; a size: md). A shift on a container reaches its children still a shift, so each
+ * `size`, `roundness`, `space`, `space-x` and `space-y` also take a shift
+ * ('-1', '+2'): steps from the value the component would have otherwise —
+ * its parent's, else its own default (a space or a roundness: its size's;
+ * a size: md). A shift on a container reaches its children still a shift, so each
  * moves from its own size. A component's default shift (SModalButton's +1 x)
  * applies over what it inherits.
  *
@@ -82,11 +83,12 @@ export function useStemScale(
   const layered = computed(() => {
     const out: Record<string, unknown> = {}
     for (const k of stemScaleKeys) {
-      if (k === 'size' || k === 'space' || k === 'spaceX' || k === 'spaceY') continue
+      if (k === 'size' || k === 'roundness' || k === 'space' || k === 'spaceX' || k === 'spaceY') continue
       out[k] = props[k] ?? parent?.value[k] ?? defaults[k]
     }
     const p = parent?.value ?? {}
     out.size = layer(layerDefault(p.size, defaults.size, sizeStep), props.size, sizeStep)
+    out.roundness = layer(layerDefault(p.roundness, defaults.roundness, sizeStep), props.roundness, sizeStep)
     // The parent's, then the default's, then the component's own; on each
     // axis `space` first, the axis' own prop over it.
     const space = layer(layerDefault(p.space, defaults.space, spaceStep), props.space, spaceStep)
@@ -105,9 +107,12 @@ export function useStemScale(
   const resolved = computed(() => {
     const l = layered.value
     const size = settleSize(l.size)
+    const roundnessShift = stemSpaceShift(l.roundness)
     return {
       ...l,
       size,
+      // A roundness shift with no base left: from the size's own radius.
+      roundness: roundnessShift == null ? l.roundness : stemSizeStep(size ?? 'md', roundnessShift),
       space: settle(l.space, size),
       spaceX: settle(l.spaceX, size),
       spaceY: settle(l.spaceY, size),

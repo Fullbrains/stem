@@ -81,8 +81,8 @@ export interface StemScaleProps {
   spaceX?: StemSpaceValue
   /** Vertical padding. A step, or a shift ('-1', '+1'). */
   spaceY?: StemSpaceValue
-  /** Squircle radius. */
-  roundness?: StemSize
+  /** Squircle radius. A size, or a shift ('+1') from the size's own. */
+  roundness?: StemSizeValue
   /** Pill: fully round ends, never a squircle. */
   rounded?: boolean
   /**
@@ -95,8 +95,9 @@ export interface StemScaleProps {
 }
 
 /** The scale props once resolved: shifts settled into steps. */
-export type StemScaleResolved = Omit<StemScaleProps, 'size' | 'space' | 'spaceX' | 'spaceY'> & {
+export type StemScaleResolved = Omit<StemScaleProps, 'size' | 'roundness' | 'space' | 'spaceX' | 'spaceY'> & {
   size?: StemSize
+  roundness?: StemSize
   space?: StemSpace
   spaceX?: StemSpace
   spaceY?: StemSpace
