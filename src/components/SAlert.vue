@@ -54,15 +54,16 @@ const props = withDefaults(defineProps<StemScaleProps & {
 
 // Scale props inherited from a parent when not given; sm by default.
 const scale = useStemScale(props, {size: 'sm'})
-// The buttons' padding-y: two steps below the alert's own (sm: 2xs, 4px).
-const buttonSpaceY = computed(() => stemSpaceStep(scale.value.spaceY ?? scale.value.space ?? scale.value.size!, -2))
+// The buttons' padding-y: two steps below the size (sm: 2xs, 4px), whatever
+// the alert's own space: they stay compact.
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-py': `${stemSpacePx(buttonSpaceY.value)}px`,
 }))
 
 // What the buttons inside inherit: the alert's size and type, a pill, the
-// alert's padding-x and gap, a padding-y two steps below its own.
+// alert's padding-x and gap, the compact padding-y.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
   space: undefined,
