@@ -69,7 +69,8 @@ export const stemScaleDefaults = {opticalLabel: true} as const
 /**
  * The optical label shift (src/css/scale.css): the label pulled left by the
  * font's side bearing. Applied only where the eye compares an edge with the
- * first letter, on variants with a visible edge (not ghost, link, none):
+ * first letter, on variants with an edge, at rest or on hover (ghost too;
+ * not link, none):
  * - text at the padding of a field: input, textarea, input menu, select,
  *   select menu, the typing field of input tags;
  * - text after an icon, a box (checkbox, radio, switch) or another shape:
@@ -82,8 +83,8 @@ export const stemScaleDefaults = {opticalLabel: true} as const
  */
 export const stemLabelShift = 'ms-[calc(var(--s-label-shift,0em)*-1)]'
 
-/** Variants with a visible edge: where the shift applies. */
-export const stemBoundedVariants = ['solid', 'outline', 'soft', 'subtle', 'pill']
+/** Variants with an edge, at rest or on hover: where the shift applies. */
+export const stemBoundedVariants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'pill']
 
 function isToken(v: unknown): v is StemSize {
   return typeof v === 'string' && v in stemScale

@@ -53,7 +53,7 @@ export const fieldIconCompounds = [
  * padding-left, with or without a leading icon, less the shift. Only on
  * fields with an edge; after fieldIconCompounds, so they win.
  */
-const fieldEdged = ['outline', 'soft', 'subtle']
+const fieldEdged = ['outline', 'soft', 'subtle', 'ghost']
 export const fieldLabelCompounds = [
   {variant: fieldEdged, class: {base: 'ps-[calc(var(--s-px)-var(--s-label-shift,0em))]!'}},
   {variant: fieldEdged, leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-shift,0em))]!'}},

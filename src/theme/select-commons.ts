@@ -22,7 +22,7 @@ export const selectOpenRing = [
 // The optical label shift (stemLabelShift) on the chosen value and the
 // placeholder, on triggers with an edge.
 export const selectLabelCompound = {
-  variant: ['outline', 'soft', 'subtle'],
+  variant: ['outline', 'soft', 'subtle', 'ghost'],
   class: {value: stemLabelShift, placeholder: stemLabelShift},
 }
 
