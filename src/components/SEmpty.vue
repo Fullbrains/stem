@@ -6,7 +6,13 @@ type Orientation = 'vertical' | 'horizontal'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 const props = withDefaults(defineProps<{
+  /**
+   * What is missing. Alone, a muted line (as for a loading or error state);
+   * with a `description`, the state's title.
+   */
   label?: string
+  /** How to start: the line under the title. */
+  description?: string
   icon?: string
   loading?: boolean
   stroke?: number
@@ -59,6 +65,15 @@ const textSize: Record<Size, string> = {
   lg: 'text-lg',
   xl: 'text-xl',
 }
+
+// The description sits one step below the title.
+const descriptionSize: Record<Size, string> = {
+  xs: 'text-xs',
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-base',
+  xl: 'text-lg',
+}
 </script>
 
 <template>
@@ -73,7 +88,16 @@ const textSize: Record<Size, string> = {
     <SSpinner v-if="loading" :size="resolvedGlyphSize" :stroke="stroke ?? (orientation === 'vertical' ? 1.5 : undefined)" class="text-(--ui-text-muted) shrink-0"/>
     <UIcon v-else :name="resolvedIcon" :style="glyphStyle"
            class="text-(--ui-text-muted) shrink-0"/>
-    <div v-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
+    <div v-if="description || $slots.description" class="flex flex-col gap-1"
+         :class="orientation === 'vertical' ? 'items-center max-w-sm' : ''">
+      <div v-if="label || $slots.default" :class="textSize[size]" class="font-medium text-(--ui-text)">
+        <slot>{{ label }}</slot>
+      </div>
+      <div :class="descriptionSize[size]" class="text-(--ui-text-muted) text-pretty">
+        <slot name="description">{{ description }}</slot>
+      </div>
+    </div>
+    <div v-else-if="label || $slots.default" :class="size && textSize[size]" class="text-(--ui-text-muted)">
       <slot>{{ label }}</slot>
     </div>
     <slot name="after"/>

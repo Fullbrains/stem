@@ -1,6 +1,6 @@
 import {inputSlots, inputCompoundVariants, inputVariants} from './input-commons'
 import {selectOutlineHover, selectOpenRing, selectSizes} from './select-commons'
-import {menuItemSlots} from './menu-items'
+import {menuItemSlots, menuItemHighlight} from './menu-items'
 
 export default {
   slots: {
@@ -13,7 +13,7 @@ export default {
     ...inputVariants,
     active: {
       false: {
-        item: 'data-highlighted:not-data-disabled:before:bg-elevated before:transition-none',
+        item: menuItemHighlight,
       },
     },
     size: selectSizes,

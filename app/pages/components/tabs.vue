@@ -47,6 +47,7 @@ const controls: ShowcaseControl[] = [
 
   {group: 'Comportamento', key: 'activationMode', label: 'activation-mode', type: 'select', options: ['automatic', 'manual'], default: 'automatic'},
   {group: 'Comportamento', key: 'unmountOnHide', label: 'unmount-on-hide', type: 'boolean', default: true},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-tabs', {default: () => controlDefaults(controls)})
@@ -73,12 +74,12 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
 <template>
   <ShowcasePage
       title="Tabs"
-      wraps="UTabs"
+      wraps="STabs"
       description="UTabs con il tema di Stem: pill e link col cursore a mano, la pillola tutta tonda, il primary in grigio scuro e la size che segue la regola d'oro, con l'icona alta quanto il testo."
   >
-    <ShowcasePlayground v-model="state" tag="UTabs" :controls="controls" code-extra=':items="items"'>
+    <ShowcasePlayground v-model="state" tag="STabs" :controls="controls" code-extra=':items="items"'>
       <template #default="{props}">
-        <UTabs v-bind="props" :items="items" class="min-w-80" :class="props.orientation === 'vertical' && 'w-96'"/>
+        <STabs v-bind="props" :items="items" class="min-w-80" :class="props.orientation === 'vertical' && 'w-96'"/>
       </template>
     </ShowcasePlayground>
 
@@ -88,7 +89,7 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
     >
       <ShowcaseMatrix :rows="colors" :cols="variants">
         <template #cell="{row, col}">
-          <UTabs v-bind="without(current, 'variant', 'color', 'orientation')" :items="items" :content="false" :color="row as any" :variant="col as any"/>
+          <STabs v-bind="without(current, 'variant', 'color', 'orientation')" :items="items" :content="false" :color="row as any" :variant="col as any"/>
         </template>
       </ShowcaseMatrix>
     </ShowcaseSection>
@@ -99,7 +100,7 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
     >
       <ShowcaseScale :items="sizes">
         <template #item="{item}">
-          <UTabs v-bind="without(current, 'size', 'orientation')" :items="items" :content="false" :size="item as any"/>
+          <STabs v-bind="without(current, 'size', 'orientation')" :items="items" :content="false" :size="item as any"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -110,7 +111,7 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
     >
       <ShowcaseScale :items="orientations">
         <template #item="{item}">
-          <UTabs v-bind="without(current, 'orientation')" :items="items" :content="false" :orientation="item as any"/>
+          <STabs v-bind="without(current, 'orientation')" :items="items" :content="false" :orientation="item as any"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -121,7 +122,7 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
     >
       <ShowcaseStage body-class="flex flex-col items-center gap-5 p-8">
         <div v-for="(set, name) in itemSets" :key="name" class="flex flex-col items-center gap-1.5">
-          <UTabs v-bind="without(current, 'orientation')" :items="set" :content="false"/>
+          <STabs v-bind="without(current, 'orientation')" :items="set" :content="false"/>
           <span class="font-mono text-[11px] text-(--ui-text-muted)">{{ name }}</span>
         </div>
       </ShowcaseStage>
@@ -133,7 +134,7 @@ const items = computed(() => itemSets[state.value.items as string] ?? itemSets.i
     >
       <ShowcaseStage body-class="flex flex-wrap items-start justify-center gap-8 p-8">
         <div v-for="mode in ['automatic', 'manual']" :key="mode" class="flex w-80 flex-col gap-1.5">
-          <UTabs v-bind="without(current, 'orientation', 'content', 'activationMode')" :items="itemSets.icone" :activation-mode="mode as any" :ui="{content: 'text-sm text-(--ui-text-muted) pt-2'}"/>
+          <STabs v-bind="without(current, 'orientation', 'content', 'activationMode')" :items="itemSets.icone" :activation-mode="mode as any" :ui="{content: 'text-sm text-(--ui-text-muted) pt-2'}"/>
           <span class="font-mono text-[11px] text-(--ui-text-muted)">{{ mode }}</span>
         </div>
       </ShowcaseStage>

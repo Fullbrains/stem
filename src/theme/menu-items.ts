@@ -1,20 +1,35 @@
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
+import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
 
+/**
+ * Menu items on the Stem scale: an item is a control like any other — same
+ * text, icon, padding, gap and radius as a button of the same size. The menu
+ * floats in a portal, out of the trigger's reach, so the size class goes on
+ * the `content` itself; the menu's corners are the item's plus the group
+ * padding (s-corner-outer), so items and menu stay concentric.
+ *
+ * The highlight is the item's own background (squircle), not Nuxt UI's
+ * ::before (which can only be plainly rounded).
+ */
 export const menuItemSlots = {
-  content: 's-floating-menu s-corner [--s-radius:10px]',
+  content: 's-floating-menu s-corner-outer',
   group: 'p-1',
-  item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
+  item: 'cursor-pointer items-center font-normal s-corner before:hidden data-disabled:opacity-50',
   itemLeadingIcon: '',
 }
 
-// Ogni voce ha icona accanto a un'etichetta: l'icona segue il testo (1em).
-export const menuItemSizes = {
-  xs: {item: `p-[0.5em] text-xs gap-[0.5em] ${iconSizeFor()}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  // sm mirrors the metrics of a standard selectable row (36px box, px-2,
-  // gap-2): min-h instead of a fixed height so multi-line items can still
-  // grow, with py-1 as the guard for that case.
-  sm: {item: `min-h-9 px-2 py-1 text-sm gap-2 ${iconSizeFor()}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  md: {item: `p-[0.5em] text-base gap-[0.5em] ${iconSizeFor()}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  lg: {item: `p-[0.5em] text-lg gap-[0.5em] ${iconSizeFor()}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  xl: {item: `p-[0.5em] text-xl gap-[0.5em] ${iconSizeFor()}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
+/** The highlighted, not-yet-chosen item: what a pointer or the keyboard is on. */
+export const menuItemHighlight = 'data-highlighted:not-data-disabled:bg-elevated data-[state=open]:bg-elevated'
+
+function menuItemSize(token: StemSize) {
+  const row = 'text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-(--s-py) gap-(--s-gap)'
+  return {
+    content: stemSizeClass(token),
+    item: row,
+    label: row,
+    empty: row,
+    itemLeadingIcon: stemScaleIcon,
+    itemTrailingIcon: stemScaleIcon,
+  }
 }
+
+export const menuItemSizes = Object.fromEntries(stemSizes.map(s => [s, menuItemSize(s)])) as Record<StemSize, ReturnType<typeof menuItemSize>>

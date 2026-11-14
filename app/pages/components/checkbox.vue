@@ -13,12 +13,12 @@ const radioVariants = themeKeys(radioTheme, 'variant')
 const indicators = themeKeys(checkboxTheme, 'indicator')
 const orientations = themeKeys(radioTheme, 'orientation')
 
-const UCheckbox = resolveComponent('UCheckbox')
-const USwitch = resolveComponent('USwitch')
-const URadioGroup = resolveComponent('URadioGroup')
+const UCheckbox = resolveComponent('SCheckbox')
+const USwitch = resolveComponent('SSwitch')
+const URadioGroup = resolveComponent('SRadioGroup')
 const components = {UCheckbox, USwitch, URadioGroup} as Record<string, any>
-type Tag = 'UCheckbox' | 'USwitch' | 'URadioGroup'
-const tags: Tag[] = ['UCheckbox', 'USwitch', 'URadioGroup']
+type Tag = 'SCheckbox' | 'SSwitch' | 'SRadioGroup'
+const tags: Tag[] = ['SCheckbox', 'SSwitch', 'SRadioGroup']
 
 const plans = [
   {label: 'Base', value: 'base', description: 'Fino a 3 progetti.'},
@@ -35,7 +35,7 @@ const icons = [
 ]
 
 const common: ShowcaseControl[] = [
-  {group: 'Componente', key: 'component', label: 'componente', type: 'select', prop: false, default: 'UCheckbox', options: tags},
+  {group: 'Componente', key: 'component', label: 'componente', type: 'select', prop: false, default: 'SCheckbox', options: tags},
   {group: 'Aspetto', key: 'color', type: 'select', options: colors, default: 'primary'},
   {group: 'Aspetto', key: 'size', type: 'select', options: sizes, default: 'md'},
 ]
@@ -83,7 +83,7 @@ const allControls = [...byTag.UCheckbox, ...byTag.USwitch, ...byTag.URadioGroup]
 
 const state = useCookie<Record<string, any>>('showcase-checkbox', {default: () => controlDefaults(allControls)})
 
-const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'UCheckbox')
+const tag = computed<Tag>(() => (state.value.component as Tag) ?? 'SCheckbox')
 const controls = computed(() => byTag[tag.value])
 
 const checked = ref<boolean | 'indeterminate'>(true)
@@ -95,7 +95,7 @@ watch(() => state.value.indeterminate, (v) => {
 })
 
 const codeExtra = computed(() => {
-  if (tag.value === 'URadioGroup') return ':items="plans" v-model="plan"'
+  if (tag.value === 'SRadioGroup') return ':items="plans" v-model="plan"'
   return 'v-model="value"'
 })
 
@@ -142,9 +142,9 @@ const switchStates: Record<string, Record<string, unknown>> = {
   >
     <ShowcasePlayground v-model="state" :tag="tag" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">
-        <UCheckbox v-if="tag === 'UCheckbox'" v-bind="props" v-model="checked"/>
-        <USwitch v-else-if="tag === 'USwitch'" v-bind="props" v-model="on"/>
-        <URadioGroup v-else v-bind="props" v-model="plan" :items="state.descriptions ? plans : plainPlans"/>
+        <SCheckbox v-if="tag === 'SCheckbox'" v-bind="props" v-model="checked"/>
+        <SSwitch v-else-if="tag === 'SSwitch'" v-bind="props" v-model="on"/>
+        <SRadioGroup v-else v-bind="props" v-model="plan" :items="state.descriptions ? plans : plainPlans"/>
       </template>
     </ShowcasePlayground>
 
@@ -154,9 +154,9 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseMatrix :rows="tags" :cols="colors">
         <template #cell="{row, col}">
-          <UCheckbox v-if="row === 'UCheckbox'" :color="col as any" :size="current.size as any" :default-value="true"/>
-          <USwitch v-else-if="row === 'USwitch'" :color="col as any" :size="current.size as any" :default-value="true"/>
-          <URadioGroup v-else :color="col as any" :size="current.size as any" :items="[{label: '', value: 'a'}]" default-value="a" class="inline-block"/>
+          <SCheckbox v-if="row === 'SCheckbox'" :color="col as any" :size="current.size as any" :default-value="true"/>
+          <SSwitch v-else-if="row === 'SSwitch'" :color="col as any" :size="current.size as any" :default-value="true"/>
+          <SRadioGroup v-else :color="col as any" :size="current.size as any" :items="[{label: '', value: 'a'}]" default-value="a" class="inline-block"/>
         </template>
       </ShowcaseMatrix>
     </ShowcaseSection>
@@ -167,7 +167,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="sizes">
         <template #item="{item}">
-          <UCheckbox :size="item as any" :color="current.color as any" label="Etichetta" description="Descrizione" :default-value="true"/>
+          <SCheckbox :size="item as any" :color="current.color as any" label="Etichetta" description="Descrizione" :default-value="true"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -178,7 +178,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="switchSizes">
         <template #item="{item}">
-          <USwitch :size="item as any" :color="current.color as any" label="Etichetta" description="Descrizione" :default-value="true"/>
+          <SSwitch :size="item as any" :color="current.color as any" label="Etichetta" description="Descrizione" :default-value="true"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -189,7 +189,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="radioSizes">
         <template #item="{item}">
-          <URadioGroup :size="item as any" :color="current.color as any" :items="plainPlans" default-value="pro"/>
+          <SRadioGroup :size="item as any" :color="current.color as any" :items="plainPlans" default-value="pro"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -211,17 +211,17 @@ const switchStates: Record<string, Record<string, unknown>> = {
               <th class="pr-2 text-right font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ s }}</th>
               <td class="text-left align-middle">
                 <ShowcaseMeasure labels>
-                  <UCheckbox :size="s as any" :color="current.color as any" label="Etichetta" :default-value="true"/>
+                  <SCheckbox :size="s as any" :color="current.color as any" label="Etichetta" :default-value="true"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-left align-middle">
                 <ShowcaseMeasure labels>
-                  <USwitch :size="s as any" :color="current.color as any" label="Etichetta" :default-value="true"/>
+                  <SSwitch :size="s as any" :color="current.color as any" label="Etichetta" :default-value="true"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-left align-middle">
                 <ShowcaseMeasure labels>
-                  <URadioGroup :size="s as any" :color="current.color as any" :items="[{label: 'Etichetta', value: 'a'}]" default-value="a"/>
+                  <SRadioGroup :size="s as any" :color="current.color as any" :items="[{label: 'Etichetta', value: 'a'}]" default-value="a"/>
                 </ShowcaseMeasure>
               </td>
               <td class="text-left align-middle">
@@ -241,7 +241,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="Object.keys(checkStates)">
         <template #item="{item}">
-          <UCheckbox :key="item" :size="current.size as any" :color="current.color as any" label="Etichetta" v-bind="checkStates[item]"/>
+          <SCheckbox :key="item" :size="current.size as any" :color="current.color as any" label="Etichetta" v-bind="checkStates[item]"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -252,7 +252,7 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseScale :items="Object.keys(switchStates)">
         <template #item="{item}">
-          <USwitch :key="item" :size="current.size as any" :color="current.color as any" label="Etichetta" v-bind="switchStates[item]"/>
+          <SSwitch :key="item" :size="current.size as any" :color="current.color as any" label="Etichetta" v-bind="switchStates[item]"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -264,15 +264,15 @@ const switchStates: Record<string, Record<string, unknown>> = {
       <ShowcaseStage body-class="grid grid-cols-3 gap-6 p-8">
         <div v-for="v in radioVariants" :key="v" class="space-y-2">
           <p class="font-mono text-[10px] text-(--ui-text-dimmed)">radio {{ v }}</p>
-          <URadioGroup :variant="v as any" :size="current.size as any" :color="current.color as any" :items="plans" default-value="pro"/>
+          <SRadioGroup :variant="v as any" :size="current.size as any" :color="current.color as any" :items="plans" default-value="pro"/>
         </div>
         <div v-for="v in checkboxVariants" :key="`c-${v}`" class="space-y-2">
           <p class="font-mono text-[10px] text-(--ui-text-dimmed)">checkbox {{ v }}</p>
-          <UCheckbox :variant="v as any" :size="current.size as any" :color="current.color as any" label="Ricevi le notifiche" description="Una mail per ogni commento." :default-value="true"/>
+          <SCheckbox :variant="v as any" :size="current.size as any" :color="current.color as any" label="Ricevi le notifiche" description="Una mail per ogni commento." :default-value="true"/>
         </div>
         <div v-for="i in indicators" :key="`i-${i}`" class="space-y-2">
           <p class="font-mono text-[10px] text-(--ui-text-dimmed)">indicator {{ i }}</p>
-          <URadioGroup variant="card" :indicator="i as any" :size="current.size as any" :color="current.color as any" :items="plainPlans" default-value="pro"/>
+          <SRadioGroup variant="card" :indicator="i as any" :size="current.size as any" :color="current.color as any" :items="plainPlans" default-value="pro"/>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -282,8 +282,8 @@ const switchStates: Record<string, Record<string, unknown>> = {
         description="orientation horizontal, in list e in card."
     >
       <ShowcaseStage body-class="flex flex-col items-start gap-6 p-8">
-        <URadioGroup orientation="horizontal" :size="current.size as any" :color="current.color as any" :items="plainPlans" default-value="pro" legend="Piano"/>
-        <URadioGroup orientation="horizontal" variant="card" :size="current.size as any" :color="current.color as any" :items="plans" default-value="pro"/>
+        <SRadioGroup orientation="horizontal" :size="current.size as any" :color="current.color as any" :items="plainPlans" default-value="pro" legend="Piano"/>
+        <SRadioGroup orientation="horizontal" variant="card" :size="current.size as any" :color="current.color as any" :items="plans" default-value="pro"/>
       </ShowcaseStage>
     </ShowcaseSection>
 
@@ -293,13 +293,13 @@ const switchStates: Record<string, Record<string, unknown>> = {
     >
       <ShowcaseStage body-class="grid grid-cols-3 gap-6 p-8">
         <UFormField label="Termini" error="Devi accettare i termini." required>
-          <UCheckbox label="Accetto i termini di servizio" :size="current.size as any"/>
+          <SCheckbox label="Accetto i termini di servizio" :size="current.size as any"/>
         </UFormField>
         <UFormField label="Notifiche" description="Puoi cambiarle in ogni momento.">
-          <USwitch label="Email" :size="current.size as any" :color="current.color as any" :default-value="true"/>
+          <SSwitch label="Email" :size="current.size as any" :color="current.color as any" :default-value="true"/>
         </UFormField>
         <UFormField label="Piano" help="Il piano Team arriva presto.">
-          <URadioGroup :items="plainPlans" :size="current.size as any" :color="current.color as any" default-value="base"/>
+          <SRadioGroup :items="plainPlans" :size="current.size as any" :color="current.color as any" default-value="base"/>
         </UFormField>
       </ShowcaseStage>
     </ShowcaseSection>

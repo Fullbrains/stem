@@ -94,6 +94,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Stato', key: 'pinned', label: 'tieni aperto', type: 'boolean', prop: false},
   {group: 'Stato', key: 'modal', type: 'boolean', default: true},
   {group: 'Stato', key: 'disabled', type: 'boolean'},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-dropdown-menu', {default: () => controlDefaults(controls)})
@@ -140,30 +141,30 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
 <template>
   <ShowcasePage
       title="DropdownMenu"
-      wraps="UDropdownMenu"
+      wraps="SDropdownMenu"
       description="UDropdownMenu con il tema di Stem: il pannello ha l'ombra, il bordo e gli angoli superellittici dei menu fluttuanti, le voci seguono la regola d'oro delle size e l'icona è alta quanto il testo."
   >
-    <ShowcasePlayground v-model="state" tag="UDropdownMenu" :controls="controls" :code-extra="codeExtra">
+    <ShowcasePlayground v-model="state" tag="SDropdownMenu" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">
-        <UDropdownMenu
+        <SDropdownMenu
             v-bind="{...props, ...pinned}"
             :items="items"
             :content="{...content, onOpenAutoFocus: (e: Event) => state.pinned && e.preventDefault()} as any"
             :portal="false"
         >
           <SButton label="Azioni" variant="subtle" color="secondary" :size="props.size as any" trailing-icon="i-ph-caret-down" :disabled="props.disabled as boolean"/>
-        </UDropdownMenu>
+        </SDropdownMenu>
       </template>
     </ShowcasePlayground>
 
     <ShowcaseSection
         title="Size"
-        description="I menu aperti, uno per size, con le voci scelte sopra. Il padding delle voci è in em e scala col testo; sm ha le misure di una riga selezionabile standard (36px)."
+        description="I menu aperti, uno per size, con le voci scelte sopra. Ogni voce è un controllo della scala: alla stessa size è alta come un button."
     >
       <ShowcaseStage body-class="flex flex-wrap items-start justify-center gap-x-6 gap-y-4 p-8">
         <div v-for="size in sizes" :key="size" class="flex h-[22rem] w-44 flex-col items-start gap-1">
           <span class="font-mono text-[11px] font-medium text-(--ui-text-muted)">{{ size }}</span>
-          <UDropdownMenu
+          <SDropdownMenu
               v-bind="still"
               :items="items"
               :size="size as any"
@@ -172,7 +173,7 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
               :content="stillContent()"
           >
             <SButton :label="size.toUpperCase()" variant="subtle" color="secondary" :size="size as any" trailing-icon="i-ph-caret-down"/>
-          </UDropdownMenu>
+          </SDropdownMenu>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -183,9 +184,9 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
     >
       <ShowcaseStage body-class="flex justify-center p-8">
         <div class="flex h-[19rem] flex-col items-start">
-          <UDropdownMenu v-bind="still" :items="colorItems" :size="state.size" :content="stillContent()">
+          <SDropdownMenu v-bind="still" :items="colorItems" :size="state.size" :content="stillContent()">
             <SButton label="Colori" variant="subtle" color="secondary" :size="state.size" trailing-icon="i-ph-caret-down"/>
-          </UDropdownMenu>
+          </SDropdownMenu>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>
@@ -195,7 +196,7 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
         description="Gruppi con label e scorciatoie, descrizioni, checkbox, sottomenu, link esterni e caricamento. Clicca per aprirli."
     >
       <ShowcaseStage>
-        <UDropdownMenu
+        <SDropdownMenu
             v-for="(set, name) in itemSets"
             :key="name"
             :items="set"
@@ -204,7 +205,7 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
             :content="{align: 'start', sideOffset: 8}"
         >
           <SButton :label="name" variant="subtle" color="secondary" :size="state.size" trailing-icon="i-ph-caret-down"/>
-        </UDropdownMenu>
+        </SDropdownMenu>
       </ShowcaseStage>
     </ShowcaseSection>
 
@@ -214,7 +215,7 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
     >
       <ShowcaseStage>
         <template v-for="side in ['bottom', 'top', 'right', 'left']" :key="side">
-          <UDropdownMenu
+          <SDropdownMenu
               :items="itemSets.base"
               :size="state.size"
               :portal="false"
@@ -222,7 +223,7 @@ const colorItems = computed<DropdownMenuItem[]>(() => colors.map(c => ({
               :content="{side: side as any, align: 'center', sideOffset: 4}"
           >
             <SButton :label="side" variant="subtle" color="secondary" :size="state.size"/>
-          </UDropdownMenu>
+          </SDropdownMenu>
         </template>
       </ShowcaseStage>
     </ShowcaseSection>

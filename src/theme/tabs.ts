@@ -1,26 +1,42 @@
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
+import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
+
+/**
+ * Tabs on the Stem scale. A tab list is as tall as a button of the same size:
+ * the pill list has a 2px inset around its triggers, taken out of the
+ * triggers' own padding-y (icon + 2 × (py − 2) + 2 × 2 = icon + 2 × py).
+ * The list's corners are the scale's; the indicator's are 2px squarer
+ * (s-corner-inner), so the two stay concentric. Pill with `rounded`.
+ */
+function tabsSize(token: StemSize) {
+  return {
+    root: stemSizeClass(token),
+    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
+    leadingIcon: stemScaleIcon,
+  }
+}
 
 export default {
+  slots: {
+    root: '[--s-inset:2px]',
+    trigger: 's-corner-inner cursor-pointer',
+  },
   variants: {
     variant: {
       pill: {
-        list: 'rounded-full',
-        indicator: 'rounded-full shadow-none',
-        trigger: 'cursor-pointer',
+        list: 's-corner p-(--s-inset)',
+        indicator: 's-corner-inner shadow-none',
       },
       link: {
-        trigger: 'cursor-pointer',
+        list: 'p-0',
       },
     },
-    size: {
-      xs: {trigger: `px-2 py-1 text-xs gap-1 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
-      sm: {trigger: `px-2.5 py-1.5 text-sm gap-1.5 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
-      md: {trigger: `px-3 py-1.5 text-base gap-1.5 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
-      lg: {trigger: `px-3 py-2 text-lg gap-2 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
-      xl: {trigger: `px-3 py-2 text-xl gap-2 ${iconSizeFor()}`, leadingIcon: iconSizeClass},
-    },
+    size: Object.fromEntries(stemSizes.map(s => [s, tabsSize(s)])),
   },
   compoundVariants: [
+    {orientation: 'horizontal', variant: 'pill', class: {indicator: 'inset-y-(--s-inset)!'}},
+    {orientation: 'vertical', variant: 'pill', class: {indicator: 'inset-x-(--s-inset)!'}},
+    // Link: no inset around the triggers, so they take the whole padding.
+    {variant: 'link', class: {trigger: 'py-(--s-py)!'}},
     {
       color: 'primary',
       variant: 'pill',

@@ -3,6 +3,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
 
 const selectItems = ['Backlog', 'Todo', 'Done']
+const tabsItems = [{label: 'Uno', icon: 'i-ph-house'}, {label: 'Due'}]
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const selectItems = ['Backlog', 'Todo', 'Done']
 
     <ShowcaseSection
         title="Componenti alla stessa size"
-        description="Button, input, select, badge, disc e input-tags sulla stessa riga: a parità di size, stessa altezza."
+        description="Ogni componente con size, affiancato: a parità di size, stessa altezza."
     >
       <ShowcaseStage body-class="space-y-6 p-6">
         <div v-for="s in sizes" :key="s" class="flex flex-wrap items-start gap-5">
@@ -48,6 +49,21 @@ const selectItems = ['Backlog', 'Todo', 'Done']
           </ShowcaseMeasure>
           <ShowcaseMeasure labels>
             <SButton :size="s" icon="i-ph-gear" disc variant="soft"/>
+          </ShowcaseMeasure>
+          <ShowcaseMeasure labels>
+            <STabs :size="s" :items="tabsItems" :content="false"/>
+          </ShowcaseMeasure>
+          <ShowcaseMeasure labels>
+            <SCheckbox :size="s" label="Ricorda" :default-value="true"/>
+          </ShowcaseMeasure>
+          <ShowcaseMeasure labels>
+            <SSwitch :size="s" label="Attivo" :default-value="true"/>
+          </ShowcaseMeasure>
+          <ShowcaseMeasure labels>
+            <SColorPicker :size="s" model-value="#3b82f6" class="w-36"/>
+          </ShowcaseMeasure>
+          <ShowcaseMeasure labels>
+            <SSearchBar :size="s" placeholder="Cerca…" class="w-56"/>
           </ShowcaseMeasure>
           <ShowcaseMeasure labels>
             <SInputTags :size="s" :model-value="['Vue', 'Nuxt']" class="w-96"/>

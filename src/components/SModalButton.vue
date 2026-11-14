@@ -31,10 +31,12 @@ const props = withDefaults(defineProps<{
 
 // `pad`: with a label, room at the sides for the text; `bare`: icon only
 // (the X), the pill as narrow as it was.
+// Not on the Stem scale yet (the modal header is laid out around these
+// heights): the icon sizes are pinned in px, as they were before the scale.
 const sizes = {
-  md: {class: 'h-8 gap-1.5 text-sm', pad: 'px-4!', bare: 'px-3!', icon: 'xl'},
-  sm: {class: 'h-6 gap-1 text-xs', pad: 'px-3!', bare: 'px-2!', icon: 'md'},
-  xs: {class: 'h-5 gap-1 text-xs', pad: 'px-2.5!', bare: 'px-1.5!', icon: 'sm'},
+  md: {class: 'h-8 gap-1.5 text-sm', pad: 'px-4!', bare: 'px-3!', icon: '24px'},
+  sm: {class: 'h-6 gap-1 text-xs', pad: 'px-3!', bare: 'px-2!', icon: '16px'},
+  xs: {class: 'h-5 gap-1 text-xs', pad: 'px-2.5!', bare: 'px-1.5!', icon: '12px'},
 } as const
 
 const resolved = computed(() => sizes[props.size])

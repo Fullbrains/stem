@@ -269,9 +269,9 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
             <SModal v-model:open="nestedOpen[mode]" title="Prima modale" description="Da qui se ne apre un'altra." :footer="false">
               <template #body>
                 <div class="flex flex-wrap gap-3 p-6">
-                  <UDropdownMenu :items="[{label: 'Modifica', icon: 'i-ph-pencil-simple'}, {label: 'Duplica', icon: 'i-ph-copy'}, {type: 'separator'}, {label: 'Elimina', icon: 'i-ph-trash'}]">
+                  <SDropdownMenu :items="[{label: 'Modifica', icon: 'i-ph-pencil-simple'}, {label: 'Duplica', icon: 'i-ph-copy'}, {type: 'separator'}, {label: 'Elimina', icon: 'i-ph-trash'}]">
                     <SButton label="Menu" variant="soft" caret/>
-                  </UDropdownMenu>
+                  </SDropdownMenu>
                   <SButton label="Apri la seconda" icon="i-ph-stack" variant="soft" @click="innerOpen[mode] = true"/>
                 </div>
                 <SModal v-model:open="innerOpen[mode]" title="Seconda modale" size="sm">

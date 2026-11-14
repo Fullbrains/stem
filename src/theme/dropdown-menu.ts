@@ -1,4 +1,4 @@
-import {menuItemSlots, menuItemSizes} from './menu-items'
+import {menuItemSlots, menuItemSizes, menuItemHighlight} from './menu-items'
 
 export default {
   slots: {
@@ -8,7 +8,7 @@ export default {
   variants: {
     active: {
       false: {
-        item: 'data-highlighted:before:bg-elevated data-[state=open]:before:bg-elevated before:transition-none',
+        item: menuItemHighlight,
         itemLeadingIcon: [
           'text-default group-data-highlighted:text-default group-data-[state=open]:text-default',
           'transition-colors',

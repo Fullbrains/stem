@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, toRef, useSlots, defineComponent} from 'vue'
+import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, useSlots, defineComponent} from 'vue'
 import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize} from '../theme/scale'
 
 const modelValue = defineModel<string>({default: ''})
 
-const props = withDefaults(defineProps<{
+/**
+ * The search bar on the Stem scale: at a given `size` the bar is as tall as
+ * an SButton of that size, with its text, icon, padding, gap and radius. It
+ * is a pill by default (`rounded`, pass `:rounded="false"` for a squircle).
+ * `compact` is the sm size, kept for the chips that tighten inside it.
+ */
+const props = withDefaults(defineProps<StemScaleProps & {
+  size?: StemSize
   placeholder?: string
   minInputWidth?: number
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost'
@@ -25,7 +33,13 @@ const props = withDefaults(defineProps<{
   filtersLabel: 'Filters',
   compact: false,
   hideClear: false,
+  size: undefined,
+  rounded: true,
 })
+
+const resolvedSize = computed<StemSize>(() => props.size ?? (props.compact ? 'sm' : 'md'))
+const scaleClasses = computed(() => [`s-size-${resolvedSize.value}`, ...stemScaleClasses(props)])
+const scaleStyle = computed(() => stemScaleStyle(props))
 
 const appConfig = useAppConfig()
 
@@ -34,7 +48,8 @@ const appConfig = useAppConfig()
 // the prop stays as a per-instance override.
 const searchIcon = computed(() => props.icon ?? appConfig.ui?.icons?.search ?? 'i-ph-magnifying-glass')
 
-provide(SEARCH_BAR_COMPACT, toRef(props, 'compact'))
+// Chips tighten in a small bar (sm and below), where a full chip would fill it.
+provide(SEARCH_BAR_COMPACT, computed(() => resolvedSize.value === 'sm' || resolvedSize.value === 'xs'))
 
 const PanelScope = defineComponent({
   setup(_, {slots}) {
@@ -55,11 +70,11 @@ const filtersEl = ref<HTMLElement>()
 const mobileFiltersEl = ref<HTMLElement>()
 const inputFocus = ref(false)
 
-// Bordered variants use an INSET RING, not a border: a border adds 2px to the
-// box, making the collapsed bar 42px instead of an exact 40px (h-10).
-// The radius is half the bar height (pill shape): 20px on h-10, 16px on h-8.
+// Bordered variants use an INSET RING, not a border, and so does the focus:
+// neither adds a pixel to the bar. Radius from the scale (s-corner, pill by
+// default).
 const variantClasses = computed(() => {
-  const base = `${props.compact ? 'rounded-[16px]!' : 'rounded-[20px]!'} transition duration-200`
+  const base = 's-corner transition duration-200'
   const focused = inputFocus.value
   switch (props.variant) {
     case 'soft':
@@ -71,7 +86,7 @@ const variantClasses = computed(() => {
       return [
         `${base} ring ring-inset ring-iron-500/30 bg-iron-500/5`,
         focused
-            ? 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20'
+            ? 'ring-2! ring-iron-500/80!'
             : 'hover:ring-iron-500/50 hover:bg-iron-500/10',
       ]
     case 'ghost':
@@ -84,7 +99,7 @@ const variantClasses = computed(() => {
       return [
         `${base} ring ring-inset ring-iron-500/30`,
         focused
-            ? 'ring-iron-500/80! shadow-[0_0_0_3.5px] shadow-iron-500/20'
+            ? 'ring-2! ring-iron-500/80!'
             : 'hover:ring-iron-500/50',
       ]
   }
@@ -174,31 +189,29 @@ function clear() {
 <template>
   <div
       class="flex flex-col relative"
-      :class="variantClasses"
+      :class="[...scaleClasses, ...variantClasses]"
+      :style="scaleStyle"
   >
     <!-- Left padding lives on the input wrapper only (the row keeps just the
          right inset for chips and the funnel button), so the border→icon
-         distance is a single readable value: pl-4, or pl-2 in compact. -->
+         distance is a single readable value: the scale's padding-x. -->
     <div
         ref="rowEl"
-        class="flex items-center gap-1"
-        :class="{'h-8 pr-1': compact, 'h-10 pr-1.5': !compact}"
+        class="flex items-center gap-1 h-[calc(var(--s-icon-size)+2*var(--s-py))] pr-(--s-gap)"
     >
       <div
           ref="inputWrapperEl"
-          class="flex items-center pr-1 flex-1 min-w-0"
-          :class="{'pl-2 gap-2': compact, 'pl-4 gap-4': !compact}"
+          class="flex items-center pr-1 flex-1 min-w-0 ps-(--s-px) gap-(--s-gap)"
       >
         <UIcon
             :name="searchIcon"
-            class="size-4 text-iron-500/80 shrink-0"
+            class="size-(--s-icon-size) text-iron-500/80 shrink-0"
         />
         <input
             v-model="modelValue"
             type="text"
             :placeholder="placeholder ?? 'Search...'"
-            class="bg-transparent border-none outline-none placeholder:text-iron-500/80 flex-1 min-w-0"
-            :class="{'text-sm': compact, 'text-base': !compact}"
+            class="bg-transparent border-none outline-none placeholder:text-iron-500/80 flex-1 min-w-0 text-(length:--s-text) leading-(--s-icon-size)"
             @focus="inputFocus = true"
             @blur="inputFocus = false"
         >
@@ -250,7 +263,6 @@ function clear() {
             :variant="mobileExpanded ? 'solid' : 'soft'"
             size="sm"
             disc
-            compact
             class="select-none"
             @click="mobileExpanded = !mobileExpanded"
         />
