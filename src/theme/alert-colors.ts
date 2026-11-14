@@ -29,7 +29,10 @@ export const alertSlots = {
   // text's size.
   avatar: 'shrink-0 size-[calc(var(--s-icon-size)*2)] text-(length:--s-text)',
   title: 'text-(length:--s-text) leading-(--s-icon-size) font-medium',
-  description: 'text-(length:--s-text) leading-[calc(var(--s-icon-size)+4px)] opacity-100',
+  // The description's text on its own step (SAlert: a step below the
+  // alert's, --s-alert-description-*); a toast or a bare UAlert keeps the
+  // alert's.
+  description: 'text-[length:var(--s-alert-description-text,var(--s-text))] leading-[var(--s-alert-description-leading,calc(var(--s-icon-size)+4px))] opacity-100',
   icon: 'shrink-0 size-(--s-icon-size)',
   // The actions are UButtons Nuxt UI renders from `actions`, so a toast
   // cannot hand them SButton props: they are made SButton `sm rounded compact`

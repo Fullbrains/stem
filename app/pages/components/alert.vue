@@ -36,6 +36,7 @@ const controls: ShowcaseControl[] = [
 
   // L'alert resta squircle: niente pillola.
   ...scaleControls().filter(c => c.key !== 'rounded'),
+  {group: 'Scala', key: 'descriptionTextSize', label: 'description-text-size', type: 'select', options: ['-2', '-1', 'xs', 'sm', 'md', 'lg', 'xl'], default: '-1'},
 ]
 
 const state = useShowcaseState<Record<string, any>>('alert', () => controlDefaults(controls))

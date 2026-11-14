@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScaleVars, stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemScaleProps, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue, stemScaleDefaults} from '../theme/scale'
+import {stemScale, stemScaleVars, stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemScaleProps, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue, stemScaleDefaults} from '../theme/scale'
 import {alertClasses, alertSolidAction, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
@@ -56,12 +56,18 @@ const props = withDefaults(defineProps<StemScaleProps & {
    * below it). `{spaceY: '+1'}`: a step taller.
    */
   buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
+  /**
+   * The description's text size: a size, or a shift from the alert's text
+   * ('-1' by default: sm alert, xs description, 12px on 16px lines).
+   */
+  descriptionTextSize?: StemSizeValue
   closeIcon?: string
   ui?: Record<string, string | undefined>
 }>(), {
   close: false,
   closeIcon: undefined,
   buttons: undefined,
+  descriptionTextSize: '-1',
   ...stemScaleDefaults,
   description: undefined,
   orientation: undefined,
@@ -84,8 +90,13 @@ function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
 const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, scale.value.size!, stemSizeStep))
 const buttonSpaceX = computed(() => shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep))
 const buttonSpaceY = computed(() => shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep))
+// The description a step below the alert's text: that step's text, on
+// lines of its icon plus 4px, as the alert's own description.
+const descriptionSize = computed(() => shiftOr<StemSize>(props.descriptionTextSize, (scale.value.textSize ?? scale.value.size)!, stemSizeStep))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
+  '--s-alert-description-text': `${stemScale[descriptionSize.value].text}px`,
+  '--s-alert-description-leading': `${stemScale[descriptionSize.value].icon + 4}px`,
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
