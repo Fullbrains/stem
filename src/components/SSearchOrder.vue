@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleClasses, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
 
 const model = defineModel<string>({required: true})
 const open = defineModel<boolean>('open', {default: false})
@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   contentClass?: string
   chipClass?: string
 }>(), {
+  ...stemScaleDefaults,
   label: 'Order by',
   contentClass: 'min-w-36 w-full',
   size: 'sm',

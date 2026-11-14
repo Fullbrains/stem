@@ -1,5 +1,5 @@
 import {inputSlots, inputCompoundVariants, inputVariants} from './input-commons'
-import {selectOutlineHover, selectOpenRing, selectSizes} from './select-commons'
+import {selectOutlineHover, selectOpenRing, selectSizes, selectLabelCompound} from './select-commons'
 import {menuItemSlots, menuItemHighlight} from './menu-items'
 
 export default {
@@ -8,7 +8,7 @@ export default {
     ...menuItemSlots,
     base: `${inputSlots.base} cursor-pointer`,
   },
-  compoundVariants: [...inputCompoundVariants, ...selectOutlineHover, ...selectOpenRing],
+  compoundVariants: [...inputCompoundVariants, ...selectOutlineHover, ...selectOpenRing, selectLabelCompound],
   variants: {
     ...inputVariants,
     active: {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 /**
  * UCheckbox on the Stem scale — a checkbox: the row is as tall as a button of the same size, with the same text, icon, gap and radius.
@@ -11,7 +11,7 @@ import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/sc
  */
 defineOptions({inheritAttrs: false})
 
-const props = defineProps<StemScaleProps>()
+const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
 const scaleClasses = computed(() => stemScaleClasses(props))
 const resolvedStyle = computed(() => stemScaleStyle(props))

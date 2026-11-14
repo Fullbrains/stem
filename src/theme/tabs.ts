@@ -24,6 +24,8 @@ export default {
     variant: {
       pill: {
         list: 's-corner p-(--s-inset)',
+        // The optical label shift (stemLabelShift), after an icon only.
+        label: '[[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift,0em)*-1)]',
         indicator: 's-corner-inner shadow-none',
       },
       link: {

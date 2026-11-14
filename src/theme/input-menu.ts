@@ -1,3 +1,4 @@
+import {fieldLabelCompounds} from './sizes'
 import {inputSlots, inputCompoundVariants, inputVariants, singleLineHeight} from './input-commons'
 import {selectOpenRing, fieldSelectSizes} from './select-commons'
 import {menuItemSlots, menuItemHighlight} from './menu-items'
@@ -8,7 +9,7 @@ export default {
     ...menuItemSlots,
     base: `${inputSlots.base} ${singleLineHeight}`,
   },
-  compoundVariants: [...inputCompoundVariants, ...selectOpenRing],
+  compoundVariants: [...inputCompoundVariants, ...fieldLabelCompounds, ...selectOpenRing],
   variants: {
     ...inputVariants,
     active: {

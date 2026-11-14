@@ -1,3 +1,4 @@
+import {fieldLabelCompounds} from './sizes'
 import {inputSlots, inputCompoundVariants, inputVariants, singleLineHeight} from './input-commons'
 
 export default {
@@ -5,6 +6,6 @@ export default {
     ...inputSlots,
     base: `${inputSlots.base} ${singleLineHeight}`,
   },
-  compoundVariants: inputCompoundVariants,
+  compoundVariants: [...inputCompoundVariants, ...fieldLabelCompounds],
   variants: inputVariants,
 }

@@ -1,3 +1,4 @@
+import {fieldLabelCompounds} from './sizes'
 import {inputSlots, inputCompoundVariants, inputVariants} from './input-commons'
 
 export default {
@@ -6,6 +7,6 @@ export default {
     leading: 'top-(--s-py)! bottom-auto!',
     trailing: 'top-(--s-py)! bottom-auto!',
   },
-  compoundVariants: inputCompoundVariants,
+  compoundVariants: [...inputCompoundVariants, ...fieldLabelCompounds],
   variants: inputVariants,
 }

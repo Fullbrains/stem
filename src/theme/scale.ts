@@ -54,7 +54,36 @@ export interface StemScaleProps {
   roundness?: StemSize
   /** Pill: fully round ends, never a squircle. */
   rounded?: boolean
+  /**
+   * Pull the label left by the font's side bearing, so its first letter, not
+   * its box, sits at the padding or the gap. On by default, and it acts only
+   * where the eye compares an edge with the first letter (see stemLabelShift):
+   * false turns it off on this component.
+   */
+  opticalLabel?: boolean
 }
+
+/** Defaults of the scale props: pass to withDefaults in every wrapper. */
+export const stemScaleDefaults = {opticalLabel: true} as const
+
+/**
+ * The optical label shift (src/css/scale.css): the label pulled left by the
+ * font's side bearing. Applied only where the eye compares an edge with the
+ * first letter, on variants with a visible edge (not ghost, link, none):
+ * - text at the padding of a field: input, textarea, input menu, select,
+ *   select menu, the typing field of input tags;
+ * - text after an icon, a box (checkbox, radio, switch) or another shape:
+ *   buttons, badges and pill tabs with a leading icon, alerts;
+ * - text left-aligned with something on its right: a label followed by a
+ *   trailing icon or caret;
+ * - menu items and group labels.
+ * Not on a label alone, centred between equal paddings (a label-only button,
+ * badge or tab): its bearing is the same on both sides and balances itself.
+ */
+export const stemLabelShift = 'ms-[calc(var(--s-label-shift,0em)*-1)]'
+
+/** Variants with a visible edge: where the shift applies. */
+export const stemBoundedVariants = ['solid', 'outline', 'soft', 'subtle', 'pill']
 
 function isToken(v: unknown): v is StemSize {
   return typeof v === 'string' && v in stemScale
@@ -71,6 +100,7 @@ export function stemScaleClasses(p: StemScaleProps): string[] {
   if (isToken(p.iconSize)) out.push(`s-icon-${p.iconSize}`)
   if (p.roundness) out.push(`s-roundness-${p.roundness}`)
   if (p.rounded) out.push('s-pill')
+  out.push(p.opticalLabel === false ? 's-optical-label-off' : 's-optical-label')
   return out
 }
 
@@ -118,5 +148,6 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
     '--s-gap': `${sx != null ? spaceValue(sx) : base.space}px`,
     '--s-radius': p.rounded ? '9999px' : `${stemScale[p.roundness ?? size].radius}px`,
     ...(p.rounded ? {'--s-corner-shape': 'round'} : {}),
+    '--s-label-shift': p.opticalLabel === false ? '0em' : 'var(--s-label-bearing)',
   }
 }

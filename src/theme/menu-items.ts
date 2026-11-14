@@ -1,4 +1,4 @@
-import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
+import {stemLabelShift, stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
 
 /**
  * Menu items on the Stem scale: an item is a control like any other — same
@@ -15,6 +15,8 @@ export const menuItemSlots = {
   group: 'p-1',
   item: 'cursor-pointer items-center font-normal s-corner before:hidden data-disabled:opacity-50',
   itemLeadingIcon: '',
+  // The optical label shift (stemLabelShift): items sit on the menu's edge.
+  itemLabel: stemLabelShift,
 }
 
 /** The highlighted, not-yet-chosen item: what a pointer or the keyboard is on. */
@@ -25,7 +27,8 @@ function menuItemSize(token: StemSize) {
   return {
     content: stemSizeClass(token),
     item: row,
-    label: row,
+    // A group label is text at the padding: its padding-left less the shift.
+    label: `${row} ps-[calc(var(--s-px)-var(--s-label-shift,0em))]`,
     empty: row,
     itemLeadingIcon: stemScaleIcon,
     itemTrailingIcon: stemScaleIcon,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScaleClasses, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleClasses, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
 import {computed, inject, ref, useSlots} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   /** Chip text for a multi-selection past the threshold; `%` is replaced by the count. */
   selectedTemplate?: string
 }>(), {
+  ...stemScaleDefaults,
   multiple: true,
   placeholder: 'None selected',
   allLabel: 'All',

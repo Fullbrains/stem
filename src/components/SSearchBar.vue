@@ -2,7 +2,7 @@
 import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, useSlots, defineComponent} from 'vue'
 import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
 
 const modelValue = defineModel<string>({default: ''})
 
@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
    confonderebbero. */
   hideClear?: boolean
 }>(), {
+  ...stemScaleDefaults,
   minInputWidth: 280,
   variant: 'outline',
   activeFilterCount: 0,

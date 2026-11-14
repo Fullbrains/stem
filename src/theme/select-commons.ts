@@ -1,5 +1,6 @@
 import {sizes, fieldSizes} from './sizes'
 import {menuItemSizes} from './menu-items'
+import {stemLabelShift} from './scale'
 
 export const selectOutlineHover = [
   {color: 'primary', variant: 'outline', class: {base: 'hover:bg-iron-500/5'}},
@@ -17,6 +18,13 @@ export const selectOpenRing = [
   {color: 'error', variant: ['outline', 'subtle'], class: {base: `${openRing} focus:ring-rose-500/80! data-[state=open]:ring-rose-500/80! focus:shadow-rose-500/20 data-[state=open]:shadow-rose-500/20`}},
   {color: 'success', variant: ['outline', 'subtle'], class: {base: `${openRing} focus:ring-emerald-500/80! data-[state=open]:ring-emerald-500/80! focus:shadow-emerald-500/20 data-[state=open]:shadow-emerald-500/20`}},
 ]
+
+// The optical label shift (stemLabelShift) on the chosen value and the
+// placeholder, on triggers with an edge.
+export const selectLabelCompound = {
+  variant: ['outline', 'soft', 'subtle'],
+  class: {value: stemLabelShift, placeholder: stemLabelShift},
+}
 
 // USelect / USelectMenu: the trigger is the root; leading and trailing icons
 // sit inside it, absolutely positioned, one padding from the edge.

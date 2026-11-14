@@ -41,7 +41,8 @@ export default {
     itemDelete: 'rounded-full cursor-pointer hover:bg-iron-400/30 text-muto-800 dark:text-muto-200 p-0',
     // The typing field takes the space left on the row, instead of its
     // intrinsic ~20ch that pushed it onto a second line.
-    input: 'w-0 min-w-[4ch] leading-(--s-icon-size) h-(--s-icon-size) py-0',
+    // The optical label shift (stemLabelShift) on the typed text.
+    input: 'w-0 min-w-[4ch] leading-(--s-icon-size) h-(--s-icon-size) py-0 ms-[calc(var(--s-label-shift,0em)*-1)]',
   },
   compoundVariants: [...remappedBase, ...inputTagsFocusRing, ...fixedSizeOverrides, ...fieldIconCompounds],
   variants: {

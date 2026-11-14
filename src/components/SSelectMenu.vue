@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, useAttrs} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 /**
  * USelectMenu on the Stem scale — a select with search and multiple choice. At a given `size` the trigger is exactly as tall as an SButton; border
@@ -14,7 +14,7 @@ import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/sc
  */
 defineOptions({inheritAttrs: false})
 
-const props = defineProps<StemScaleProps>()
+const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 const attrs = useAttrs()
 
 const scaleClasses = computed(() => stemScaleClasses(props))

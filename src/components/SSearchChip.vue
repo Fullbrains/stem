@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
-import {stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
+import {stemScaleDefaults, stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
 
 /**
  * A filter chip: SButton soft, pill, with a caret. On the Stem scale: `size`
@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   allLabel?: string
   selectedTemplate?: string
 }>(), {
+  ...stemScaleDefaults,
   threshold: 3,
   allLabel: 'All',
   selectedTemplate: '% selected',
@@ -58,6 +59,7 @@ const displayValue = computed(() => {
       :space-x="resolvedSpaceX"
       :space-y="spaceY ?? (tight ? '2xs' : undefined)"
       :text-size="textSize"
+      :optical-label="opticalLabel"
       :icon-size="iconSize"
       :roundness="roundness"
       class="select-none"

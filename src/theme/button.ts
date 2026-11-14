@@ -1,4 +1,5 @@
 import {sizes} from './sizes'
+import {stemBoundedVariants, stemLabelShift} from './scale'
 
 export default {
   slots: {
@@ -10,6 +11,10 @@ export default {
     // as tall as the same control with a label — and square, since padding-x
     // and padding-y are equal unless space-x / space-y set them apart.
     {square: true, class: {base: 'px-(--s-px)! py-(--s-py)!'}},
+    // The optical label shift (stemLabelShift): a label after an icon, or
+    // with one on its right. Not on a label alone: centred, it balances.
+    {leading: true, variant: stemBoundedVariants, class: {label: stemLabelShift}},
+    {trailing: true, variant: stemBoundedVariants, class: {label: stemLabelShift}},
     {
       color: 'primary',
       variant: 'solid',

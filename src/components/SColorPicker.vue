@@ -2,7 +2,7 @@
 import {ref, computed, watch} from 'vue'
 import {inputContainerClasses, inputIconColors} from '../theme/input-container'
 import type {InputColor, InputVariant} from '../theme/input-container'
-import {stemScaleClasses, stemScaleIcon, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleIcon, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   color?: InputColor
   disabled?: boolean
 }>(), {
+  ...stemScaleDefaults,
   size: 'sm',
   variant: 'outline',
   color: 'primary',

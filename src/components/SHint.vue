@@ -5,7 +5,7 @@ export type HintSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 /**
  * A rule told where it applies, in one small line under or over what it is
@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   /** Another icon than the color's own. */
   icon?: string
 }>(), {
+  ...stemScaleDefaults,
   color: 'muted',
   size: 'xs',
   icon: undefined,

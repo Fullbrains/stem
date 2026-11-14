@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScale, stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScale, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 type Orientation = 'vertical' | 'horizontal'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   orientation?: Orientation
   size?: Size
 }>(), {
+  ...stemScaleDefaults,
   orientation: 'vertical',
   size: 'md',
 })

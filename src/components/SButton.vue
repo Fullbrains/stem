@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {computed, useAttrs, useSlots} from 'vue'
+import {stemBoundedVariants, stemLabelShift, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
 /**
@@ -11,7 +11,7 @@ import {useConfirmModal} from '../composables/useConfirmModal'
  * Without a label it is square (padding-y on every side) and as tall as with
  * one; add `rounded` for a circle.
  */
-const props = defineProps<StemScaleProps & {
+const props = withDefaults(defineProps<StemScaleProps & {
   icon?: string
   label?: string
   trailingIcon?: string
@@ -26,7 +26,7 @@ const props = defineProps<StemScaleProps & {
   confirmMatch?: string
   confirmPlaceholder?: string
   onConfirm?: () => Promise<void> | void
-}>()
+}>(), stemScaleDefaults)
 
 
 const emit = defineEmits<{
@@ -40,9 +40,23 @@ const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 const scaleClasses = computed(() => stemScaleClasses(props))
 const resolvedStyle = computed(() => stemScaleStyle(props))
 
+const attrs = useAttrs()
+const slots = useSlots()
+
+// The icon is drawn in SButton's own leading slot, so UButton does not know
+// it is there (its `leading` variant stays off): the optical label shift for a
+// label after the icon is set here. With a trailing icon or caret, UButton's
+// own compound variant applies it (see stemLabelShift).
+const labelShift = computed(() =>
+  !!(props.icon || props.loading)
+  && !!(props.label || slots.default)
+  && stemBoundedVariants.includes(String(attrs.variant ?? 'solid')),
+)
+
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.caret) ui.trailingIcon = 'ml-auto'
+  if (labelShift.value) ui.label = stemLabelShift
   return Object.keys(ui).length ? ui : undefined
 })
 
@@ -97,7 +111,10 @@ function handleClick(e: MouseEvent) {
       </span>
     </template>
     <template v-if="$slots.default" #default>
-      <slot/>
+      <span v-if="labelShift" data-slot="label" :class="stemLabelShift">
+        <slot/>
+      </span>
+      <slot v-else/>
     </template>
     <template v-if="$slots.trailing" #trailing>
       <slot name="trailing"/>

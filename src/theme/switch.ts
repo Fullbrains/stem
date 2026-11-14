@@ -18,7 +18,8 @@ function switchSize(token: StemSize) {
 export default {
   slots: {
     base: 'cursor-pointer',
-    wrapper: 'ms-(--s-gap)!',
+    // The gap less the optical label shift (stemLabelShift).
+    wrapper: 'ms-[calc(var(--s-gap)-var(--s-label-shift,0em))]!',
   },
   variants: {
     size: Object.fromEntries(stemSizes.map(s => [s, switchSize(s)])),

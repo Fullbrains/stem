@@ -62,7 +62,7 @@ export default defineAppConfig({
 
 ## Component Preference
 
-When a Stem component exists for a given purpose, always prefer it over the raw Nuxt UI equivalent. Every sized Stem component takes the **scale props** (see *The Stem scale*): `size`, `text-size`, `icon-size`, `space`, `space-x`, `space-y`, `roundness`, `rounded`.
+When a Stem component exists for a given purpose, always prefer it over the raw Nuxt UI equivalent. Every sized Stem component takes the **scale props** (see *The Stem scale*): `size`, `text-size`, `icon-size`, `space`, `space-x`, `space-y`, `roundness`, `rounded`, `optical-label`.
 
 | Instead of... | Use...       | Why |
 |---------------|--------------|-----|
@@ -175,6 +175,7 @@ Each axis moves on its own, defaulting to `size`:
 ```
 
 Rules that hold everywhere:
+- **Optical label** (`optical-label`, on by default). A letter carries air on its left inside its box (Vimana: 0.05em, `--s-label-bearing` on `:root`); where the eye compares an edge with the first letter the label is pulled left by that much (`--s-label-shift`). It acts only on variants with an edge (not ghost, link, none) and only in these cases: text at the padding of a field (input, textarea, select, select menu, input menu, input tags); a label after an icon, an avatar or a checkbox/radio/switch; a label with an icon or caret on its right; menu items and group labels; alerts. Never on a label alone, centred between equal paddings (it balances itself). `optical-label="false"` turns it off on one component, `--s-label-bearing: 0` on the whole app. The box drawn by the showcase's measures is the real one, so the shift shows.
 - **Squircle only.** Corners are `s-corner` (superellipse) with the size's radius; `rounded` makes a pill (round ends, never a squircle).
 - **Borders and focus never resize a field.** The border is a 1px inset ring; focus darkens it and adds a 3.5px halo outside (box-shadow).
 - **Icons align by their box.** Padding and gap are measured to the icon's box, with no hidden margin: an icon sits in the same place with or without a label, in every control.

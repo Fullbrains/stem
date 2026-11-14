@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 /**
  * UBadge on the Stem scale: at a given size, as tall as a button, with the
  * same text, icon, padding and radius. Icons on both sides (`icon`,
  * `trailing-icon`); no caret. `rounded` makes it a pill.
  */
-const props = defineProps<StemScaleProps>()
+const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
 const scaleClasses = computed(() => stemScaleClasses(props))
 const resolvedStyle = computed(() => stemScaleStyle(props))

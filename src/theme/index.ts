@@ -36,6 +36,8 @@ export {
   stemScaleStyle,
   stemScaleVars,
   stemSpaceStep,
+  stemScaleDefaults,
+  stemLabelShift,
   type StemSize,
   type StemSpace,
   type StemScaleProps,

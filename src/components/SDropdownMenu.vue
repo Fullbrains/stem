@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, useAttrs} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 
 /**
  * UDropdownMenu on the Stem scale — a menu of actions. Its items are controls on the scale: at a given `size`, as tall as an
@@ -13,7 +13,7 @@ import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/sc
  */
 defineOptions({inheritAttrs: false})
 
-const props = defineProps<StemScaleProps>()
+const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 const attrs = useAttrs()
 
 const scaleClasses = computed(() => stemScaleClasses(props))
