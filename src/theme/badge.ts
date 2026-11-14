@@ -10,6 +10,10 @@ export default {
     size: sizes,
   },
   compoundVariants: [
+    // Icon only (no label): Nuxt UI calls it `square` and gives it a smaller
+    // padding of its own. On the scale it keeps the padding-y on every side,
+    // so it is as tall as the same control with a label, and square.
+    {square: true, class: 'p-(--s-py)!'},
     {
       color: 'primary',
       variant: 'solid',

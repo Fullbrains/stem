@@ -28,6 +28,7 @@
     "dompurify": "^3.4.16"
   },
   "devDependencies": {
+    "@fullbrains/tailwindcss": "^1.11.0",
     "@fullbrains/vimana": "^1.1.1",
     "@iconify-json/ph": "^1.2.2",
     "@nuxt/eslint": "1.15.2",

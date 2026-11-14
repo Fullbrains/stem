@@ -62,6 +62,15 @@ const shapes: Record<string, Record<string, unknown>> = {
   'disc': {disc: true},
 }
 
+// Lo stesso pulsante con e senza label o icona: l'altezza non deve cambiare.
+const contents: Record<string, Record<string, unknown>> = {
+  'solo label': {label: 'Salva'},
+  'solo icona': {icon: 'i-ph-floppy-disk'},
+  'icona e label': {icon: 'i-ph-floppy-disk', label: 'Salva'},
+  'label e caret': {label: 'Salva', caret: true},
+  'disc': {icon: 'i-ph-floppy-disk', disc: true},
+}
+
 const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 </script>
 
@@ -86,6 +95,20 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
           <SButton v-bind="without(current, 'variant', 'color', 'destructive')" :variant="row as any" :color="col as any" :label="current.label ? col : undefined"/>
         </template>
       </ShowcaseMatrix>
+    </ShowcaseSection>
+
+    <ShowcaseSection
+        title="Ispezione"
+        description="Box del pulsante (magenta), dell'icona (lime) e della label (cyan). Solo label, solo icona, entrambe, caret, disc: a parità di size, stessa altezza."
+    >
+      <ShowcaseStage body-class="space-y-5 p-8">
+        <div v-for="s in sizes" :key="s" class="flex items-start gap-6">
+          <span class="w-8 pt-2 font-mono text-[11px] text-(--ui-text-muted)">{{ s }}</span>
+          <ShowcaseMeasure v-for="(c, name) in contents" :key="name" labels>
+            <SButton v-bind="{...without(current, 'size', 'label', 'icon', 'trailingIcon', 'disc', 'caret'), ...c}" :size="s as any" class="b [&_.iconify]:b1 [&_[data-slot=label]]:b2"/>
+          </ShowcaseMeasure>
+        </div>
+      </ShowcaseStage>
     </ShowcaseSection>
 
     <ShowcaseSection
