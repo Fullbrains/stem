@@ -31,7 +31,8 @@ function isIcon(c: ShowcaseControl) {
 }
 
 function isSegmented(c: ShowcaseControl) {
-  return c.type === 'select' && c.options.length <= 7
+  // A pulsanti fino a 12 opzioni (vanno a capo); oltre, a tendina.
+  return c.type === 'select' && c.options.length <= 12
 }
 </script>
 
