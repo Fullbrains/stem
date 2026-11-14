@@ -6,10 +6,11 @@ const colors = themeKeys(theme, 'color')
 const variants = themeKeys(theme, 'variant')
 const sizes = themeKeys(theme, 'size')
 
-const USelect = resolveComponent('SSelect')
-const USelectMenu = resolveComponent('SSelectMenu')
-const UInputMenu = resolveComponent('SInputMenu')
-const components = {USelect, USelectMenu, UInputMenu} as Record<string, any>
+const components = {
+  SSelect: resolveComponent('SSelect'),
+  SSelectMenu: resolveComponent('SSelectMenu'),
+  SInputMenu: resolveComponent('SInputMenu'),
+} as Record<string, any>
 type Tag = 'SSelect' | 'SSelectMenu' | 'SInputMenu'
 
 const items = [
