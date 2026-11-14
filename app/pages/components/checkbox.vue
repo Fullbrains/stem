@@ -13,10 +13,11 @@ const radioVariants = themeKeys(radioTheme, 'variant')
 const indicators = themeKeys(checkboxTheme, 'indicator')
 const orientations = themeKeys(radioTheme, 'orientation')
 
-const UCheckbox = resolveComponent('SCheckbox')
-const USwitch = resolveComponent('SSwitch')
-const URadioGroup = resolveComponent('SRadioGroup')
-const components = {UCheckbox, USwitch, URadioGroup} as Record<string, any>
+const components = {
+  SCheckbox: resolveComponent('SCheckbox'),
+  SSwitch: resolveComponent('SSwitch'),
+  SRadioGroup: resolveComponent('SRadioGroup'),
+} as Record<string, any>
 type Tag = 'SCheckbox' | 'SSwitch' | 'SRadioGroup'
 const tags: Tag[] = ['SCheckbox', 'SSwitch', 'SRadioGroup']
 
@@ -46,7 +47,7 @@ const stateControls: ShowcaseControl[] = [
 ]
 
 const byTag: Record<Tag, ShowcaseControl[]> = {
-  UCheckbox: [
+  SCheckbox: [
     ...common,
     {group: 'Aspetto', key: 'variant', type: 'select', options: checkboxVariants, default: 'list'},
     {group: 'Aspetto', key: 'indicator', type: 'select', options: indicators, default: 'start'},
@@ -57,7 +58,7 @@ const byTag: Record<Tag, ShowcaseControl[]> = {
     {group: 'Stato', key: 'highlight', type: 'boolean'},
     ...stateControls,
   ],
-  USwitch: [
+  SSwitch: [
     ...common,
     {group: 'Contenuto', key: 'label', type: 'text', initial: 'Ricevi le notifiche', placeholder: 'nessuna'},
     {group: 'Contenuto', key: 'description', type: 'text', placeholder: 'nessuna'},
@@ -67,7 +68,7 @@ const byTag: Record<Tag, ShowcaseControl[]> = {
     {group: 'Stato', key: 'highlight', type: 'boolean'},
     ...stateControls,
   ],
-  URadioGroup: [
+  SRadioGroup: [
     ...common,
     {group: 'Aspetto', key: 'variant', type: 'select', options: radioVariants, default: 'list'},
     {group: 'Aspetto', key: 'indicator', type: 'select', options: indicators, default: 'start'},
@@ -79,7 +80,7 @@ const byTag: Record<Tag, ShowcaseControl[]> = {
   ],
 }
 
-const allControls = [...byTag.UCheckbox, ...byTag.USwitch, ...byTag.URadioGroup]
+const allControls = [...byTag.SCheckbox, ...byTag.SSwitch, ...byTag.SRadioGroup]
 
 const state = useShowcaseState<Record<string, any>>('checkbox', () => controlDefaults(allControls))
 
