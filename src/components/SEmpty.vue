@@ -21,6 +21,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
   size?: Size
 }>(), {
   ...stemScaleDefaults,
+  // The spinner's stroke while loading: 1 in both orientations.
+  stroke: 1,
   orientation: 'vertical',
 })
 
@@ -90,7 +92,7 @@ const descriptionSize: Record<Size, string> = {
         : 'flex items-center',
     ]"
   >
-    <SSpinner v-if="loading" :size="resolvedGlyphSize" :stroke="stroke ?? (orientation === 'vertical' ? 1.5 : undefined)" class="text-(--ui-text-muted) shrink-0"/>
+    <SSpinner v-if="loading" :size="resolvedGlyphSize" :stroke="stroke" class="text-(--ui-text-muted) shrink-0"/>
     <UIcon v-else :name="resolvedIcon" :style="glyphStyle"
            class="text-(--ui-text-muted) shrink-0"/>
     <div v-if="description || $slots.description" class="flex flex-col gap-1"
