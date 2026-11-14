@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {computed} from 'vue'
+import {stemScale} from '../theme/scale'
 
 // Defaults to the ambient icon size so a spinner swapped in for an icon keeps
 // the same box, falling back to 1em where --s-icon-size is not set (the
 // component is standalone and must also work outside the Stem theme).
+// `size` takes a token of the Stem scale (xs…xl: the icon of that size) or
+// any CSS length.
 const props = withDefaults(defineProps<{
-  size?: string
+  size?: keyof typeof stemScale | (string & {})
   stroke?: number
   grow?: boolean
 }>(), {
@@ -16,7 +19,10 @@ const props = withDefaults(defineProps<{
 
 // Sized through CSS rather than the width/height attributes, which do not
 // accept var().
-const sizeStyle = computed(() => ({width: props.size, height: props.size}))
+const resolvedSize = computed(() => props.size in stemScale
+  ? `${stemScale[props.size as keyof typeof stemScale].icon}px`
+  : props.size)
+const sizeStyle = computed(() => ({width: resolvedSize.value, height: resolvedSize.value}))
 </script>
 
 <template>

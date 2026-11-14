@@ -1,10 +1,11 @@
 <script lang="ts">
 export type HintColor = 'muted' | 'primary' | 'info' | 'success' | 'warning' | 'danger'
-export type HintSize = 'xs' | 'sm' | 'md' | 'lg'
+export type HintSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 </script>
 
 <script setup lang="ts">
 import {computed} from 'vue'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
 
 /**
  * A rule told where it applies, in one small line under or over what it is
@@ -16,13 +17,14 @@ import {computed} from 'vue'
  *   `primary` is the default text color; `info` is sky, not the theme's
  *   info. In light mode info, success and warning are a 700 and danger a 600:
  *   the lightest that pass AA (4.5:1) as small text on white.
- * - `size`: `xs` (the default), `sm`, `md`, `lg`: the text's and the icon's.
+ * - `size`: on the Stem scale, `xs` (the default) to `xl`: text, icon (and
+ *   line height) and gap. `text-size`, `icon-size`, `space-x` (the gap)
+ *   move one of them.
  *
  * No padding nor margin of its own: where it stands is its container's. The
- * icon is centred on the first line (`h-[1lh]`), so a hint that wraps keeps
- * it at the top, at every size.
+ * icon sits on the first line, so a hint that wraps keeps it at the top.
  */
-const props = withDefaults(defineProps<{
+const props = withDefaults(defineProps<StemScaleProps & {
   color?: HintColor
   size?: HintSize
   /** Another icon than the color's own. */
@@ -42,22 +44,17 @@ const COLORS: Record<HintColor, {text: string, icon: string}> = {
   danger: {text: 'text-(--ui-color-error-600) dark:text-(--ui-error)', icon: 'i-ph-warning-circle'},
 }
 
-const SIZES: Record<HintSize, {text: string, icon: string, gap: string}> = {
-  xs: {text: 'text-xs', icon: 'size-3.5', gap: 'gap-1.5'},
-  sm: {text: 'text-sm', icon: 'size-4', gap: 'gap-1.5'},
-  md: {text: 'text-base', icon: 'size-4.5', gap: 'gap-2'},
-  lg: {text: 'text-lg', icon: 'size-5', gap: 'gap-2'},
-}
-
 const color = computed(() => COLORS[props.color])
-const size = computed(() => SIZES[props.size])
+const scaleClasses = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
+const scaleStyle = computed(() => stemScaleStyle(props))
 </script>
 
 <template>
-  <p :class="['flex items-start', size.gap, size.text, color.text]">
-    <span class="flex h-[1lh] shrink-0 items-center">
-      <UIcon :name="icon ?? color.icon" :class="size.icon"/>
-    </span>
+  <p
+      :class="['flex items-start gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)', scaleClasses, color.text]"
+      :style="scaleStyle"
+  >
+    <UIcon :name="icon ?? color.icon" class="size-(--s-icon-size) shrink-0"/>
     <span><slot/></span>
   </p>
 </template>

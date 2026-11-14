@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
+import {stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
 
-const props = withDefaults(defineProps<{
+/**
+ * A filter chip: SButton soft, pill, with a caret. On the Stem scale: `size`
+ * (sm by default) and the scale props are SButton's. Its one default: a
+ * step more air at the sides (space-x one step above size) unless `space`
+ * or `space-x` is given; inside a small SSearchBar it tightens to space-y 2xs.
+ */
+const props = withDefaults(defineProps<StemScaleProps & {
+  size?: StemSize
   leadingIcon?: string
   trailingIcon?: string
   active?: boolean
@@ -18,7 +26,11 @@ const props = withDefaults(defineProps<{
   threshold: 3,
   allLabel: 'All',
   selectedTemplate: '% selected',
+  size: 'sm',
+  rounded: true,
 })
+
+const resolvedSpaceX = computed(() => props.spaceX ?? (props.space != null ? undefined : stemSpaceStep(props.size, 1)))
 
 // Inside a compact SSearchBar the chips tighten too (see searchBarContext).
 const searchBarCompact = inject(SEARCH_BAR_COMPACT, null)
@@ -40,21 +52,25 @@ const displayValue = computed(() => {
       :icon="leadingIcon"
       caret
       variant="soft"
-      size="sm"
-      rounded
-      space-x="md"
+      :size="size"
+      :rounded="rounded"
+      :space="space"
+      :space-x="resolvedSpaceX"
+      :space-y="spaceY ?? (tight ? '2xs' : undefined)"
+      :text-size="textSize"
+      :icon-size="iconSize"
+      :roundness="roundness"
       class="select-none"
       :aria-label="labelIcon && label && displayValue !== null ? `${label}: ${displayValue}` : undefined"
       :class="[
         active ? 'bg-iron-400/30!' : '',
-        tight ? 's-space-y-2xs' : '',
       ]"
   >
     <template v-if="label && displayValue !== null">
       <UIcon
           v-if="labelIcon"
           :name="labelIcon"
-          class="size-4 shrink-0 text-(--ui-text-toned)"
+          class="size-(--s-icon-size) shrink-0 text-(--ui-text-toned)"
       />
       <span v-if="!labelIcon || coversAll" class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
       <span class="font-semibold truncate">{{ displayValue }}</span>

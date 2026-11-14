@@ -18,31 +18,35 @@
  */
 
 export const alertSlots = {
-  root: 's-corner [--s-radius:10px] p-3.5 gap-3',
+  // On the Stem scale (sm by default; SAlert's size and scale props set the
+  // variables inline). A container, not a control: its padding and gap are
+  // one and a half the scale's, so a sm alert has 12px around and between.
+  root: 's-size-sm s-corner p-[calc(var(--s-py)*1.5)] gap-[calc(var(--s-gap)*1.5)]',
   wrapper: 'min-w-0 flex-1 flex flex-col',
-  title: 'text-sm font-medium',
-  description: 'text-sm opacity-100',
-  icon: 'shrink-0 size-5',
+  title: 'text-(length:--s-text) leading-(--s-icon-size) font-medium',
+  description: 'text-(length:--s-text) leading-[calc(var(--s-icon-size)+4px)] opacity-100',
+  icon: 'shrink-0 size-(--s-icon-size)',
   // The actions are UButtons Nuxt UI renders from `actions`, so a toast
   // cannot hand them SButton props: they are made SButton `sm rounded compact`
   // here, whatever size an action asks for. The close pill is left alone.
   actions: `
     flex flex-wrap gap-1.5 shrink-0
-    [&>button:not([data-slot=close])]:text-sm
+    [&>button:not([data-slot=close])]:text-(length:--s-text)
+    [&>button:not([data-slot=close])]:leading-(--s-icon-size)
     [&>button:not([data-slot=close])]:rounded-full!
     [&>button:not([data-slot=close])]:[corner-shape:initial]!
-    [&>button:not([data-slot=close])]:py-[0.25em]!
-    [&>button:not([data-slot=close])]:px-[0.65em]!
-    [&>button:not([data-slot=close])]:min-h-[calc(1lh+0.5em)]!
+    [&>button:not([data-slot=close])]:py-[calc(var(--s-py)/2)]!
+    [&>button:not([data-slot=close])]:px-(--s-px)!
+    [&>button:not([data-slot=close])]:min-h-0!
   `,
   // The X is an action too: SButton `sm rounded compact soft`, the same pill
   // as the actions beside it, with a 1em icon.
   close: `
-    text-sm min-h-[calc(1lh+0.5em)]! py-[0.25em]! px-[0.65em]!
+    text-(length:--s-text) leading-(--s-icon-size) min-h-0! py-[calc(var(--s-py)/2)]! px-[calc(var(--s-py)/2)]!
     rounded-full! [corner-shape:initial]!
     bg-iron-400/20 hover:bg-iron-400/30 active:bg-iron-400/20
     text-muto-800 dark:text-muto-200 hover:text-muto-800 dark:hover:text-muto-200
-    [&_[data-slot=leadingIcon]]:size-[1em]
+    [&_[data-slot=leadingIcon]]:size-(--s-icon-size)
   `,
 }
 
@@ -52,7 +56,9 @@ export const alertSlots = {
 // they sit centred on it without making a one-line alert taller. In
 // `vertical` the X keeps the `horizontal` classes (Nuxt UI renders it there).
 export const alertOrientation = {
-  horizontal: {root: 'items-start', actions: 'items-start -my-[3.5px]'},
+  // The buttons are a padding-y taller than the title's line: they overhang
+  // it by half of it above and below, centred on it.
+  horizontal: {root: 'items-start', actions: 'items-start -my-[calc(var(--s-py)/2)]'},
   vertical: {root: 'items-start', actions: 'items-start mt-3'},
 }
 

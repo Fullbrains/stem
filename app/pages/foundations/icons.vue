@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import {stemIcons} from '../../../src/config'
-import {iconSizeScale} from '../../../src/theme/icon-sizes'
+import {stemScale} from '../../../src/theme/scale'
 
-const scale = Object.entries(iconSizeScale)
+const scale = Object.entries(stemScale).map(([k, v]) => [k, `${v.icon}px`] as const)
+const iconPx = Object.fromEntries(scale) as Record<string, string>
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
-const textClass: Record<string, string> = {
-  xs: 'text-xs', sm: 'text-sm', md: 'text-base', lg: 'text-lg', xl: 'text-xl',
-}
 const icons = Object.entries(stemIcons)
 const filter = ref('')
 const shown = computed(() => icons.filter(([k, v]) => !filter.value || `${k} ${v}`.includes(filter.value)))
@@ -15,23 +13,23 @@ const shown = computed(() => icons.filter(([k, v]) => !filter.value || `${k} ${v
 <template>
   <ShowcasePage
       title="Icone"
-      description="Phosphor. Accanto al testo l'icona è alta 1em e lo segue; da sola usa la scala fissa sm/md/lg/xl."
+      description="Phosphor, in sei pesi. L'icona fa parte della scala: a ogni size ha la sua misura, e il leading del testo è uguale."
   >
-    <ShowcaseSection title="Accanto al testo" description="1em: l'icona segue la size del testo.">
+    <ShowcaseSection title="Accanto al testo" description="Icona e testo della stessa size, sulla stessa riga.">
       <ShowcaseScale :items="[...sizes]">
         <template #item="{item}">
-          <span class="inline-flex items-center gap-[0.5em]" :class="textClass[item]">
-            <UIcon name="i-ph-floppy-disk" class="size-[1em] shrink-0"/>
+          <span class="inline-flex items-center gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)" :class="`s-size-${item}`">
+            <UIcon name="i-ph-floppy-disk" class="size-(--s-icon-size) shrink-0"/>
             Salva
           </span>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
 
-    <ShowcaseSection title="Scala fissa" description="Per le icone da sole: iconSizeScale in src/theme/icon-sizes.ts.">
+    <ShowcaseSection title="Scala delle icone" description="L'icona di ogni size della scala unica (stemScale in src/theme/scale.ts): 12, 16, 20, 24, 28px.">
       <ShowcaseScale :items="scale.map(([k]) => k)">
         <template #item="{item}">
-          <UIcon name="i-ph-floppy-disk" :style="{width: iconSizeScale[item as keyof typeof iconSizeScale], height: iconSizeScale[item as keyof typeof iconSizeScale]}"/>
+          <UIcon name="i-ph-floppy-disk" :style="{width: iconPx[item], height: iconPx[item]}"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>

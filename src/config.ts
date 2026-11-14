@@ -48,5 +48,6 @@ export const stemColors = {
   secondary: 'iron',
   neutral: 'muto',
   success: 'emerald',
+  info: 'sky',
   error: 'rose',
 }

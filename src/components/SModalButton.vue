@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {StemSize, StemSpace} from '../theme/scale'
+import {stemSpaceStep, type StemSize, type StemSpace} from '../theme/scale'
 
 /**
  * A button of a modal's header: SButton, soft and rounded — the pill the
@@ -28,15 +28,8 @@ const props = withDefaults(defineProps<{
   spaceY: undefined,
 })
 
-const steps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl']
-
-function step(from: StemSize, by: number): StemSpace {
-  const i = steps.indexOf(from)
-  return steps[Math.min(steps.length - 1, Math.max(0, i + by))]!
-}
-
-const resolvedSpaceX = computed(() => props.spaceX ?? (props.space != null ? undefined : step(props.size, 1)))
-const resolvedSpaceY = computed(() => props.spaceY ?? (props.space != null ? undefined : step(props.size, -1)))
+const resolvedSpaceX = computed(() => props.spaceX ?? (props.space != null ? undefined : stemSpaceStep(props.size, 1)))
+const resolvedSpaceY = computed(() => props.spaceY ?? (props.space != null ? undefined : stemSpaceStep(props.size, -1)))
 </script>
 
 <template>

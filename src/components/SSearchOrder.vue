@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
+import {stemScaleClasses, type StemScaleProps, type StemSize} from '../theme/scale'
 
 const model = defineModel<string>({required: true})
 const open = defineModel<boolean>('open', {default: false})
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(defineProps<StemScaleProps & {
+  /** On the Stem scale, for the chip and the menu: sm by default. */
+  size?: StemSize
   options: { value: string; label: string }[]
   /** The chip's name for what it chooses, in the app's language. */
   label?: string
@@ -14,7 +17,21 @@ const props = withDefaults(defineProps<{
 }>(), {
   label: 'Order by',
   contentClass: 'min-w-36 w-full',
+  size: 'sm',
+  rounded: true,
 })
+
+const scale = computed(() => ({
+  size: props.size,
+  textSize: props.textSize,
+  iconSize: props.iconSize,
+  space: props.space,
+  spaceX: props.spaceX,
+  spaceY: props.spaceY,
+  roundness: props.roundness,
+  rounded: props.rounded,
+}))
+const rootScale = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
 
 const inPanel = inject(SEARCH_BAR_PANEL, false)
 
@@ -34,17 +51,18 @@ const items = computed(() => [
 
 <template>
   <div
-    class="inline-flex items-center overflow-hidden rounded-full"
-    :class="chipClass"
+    class="inline-flex items-center overflow-hidden s-corner"
+    :class="[rootScale, chipClass]"
   >
-    <UDropdownMenu
+    <SDropdownMenu
       v-model:open="open"
       :items="items"
-      size="sm"
+      v-bind="scale"
       :content="{align: inPanel ? 'start' as const : 'end' as const, sideOffset: 3}"
       :ui="{content: contentClass}"
     >
       <SSearchChip
+        v-bind="scale"
         trailing-icon="i-ph-caret-down"
         :active="open"
         :label="label"
@@ -52,6 +70,6 @@ const items = computed(() => [
         :count="options.length"
         class="flex-1 min-w-0"
       />
-    </UDropdownMenu>
+    </SDropdownMenu>
   </div>
 </template>

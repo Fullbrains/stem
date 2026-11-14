@@ -27,6 +27,14 @@ export const stemSizes = Object.keys(stemScale) as StemSize[]
 /** The space scale: the sizes, plus 2xs (4px) and 0 (none) below xs. */
 export type StemSpace = 0 | '0' | '2xs' | StemSize
 
+const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl']
+
+/** The space `by` steps from a size, clamped to the scale (sm, +1 → md). */
+export function stemSpaceStep(from: StemSize, by: number): StemSpace {
+  const i = spaceSteps.indexOf(from)
+  return spaceSteps[Math.min(spaceSteps.length - 1, Math.max(0, i + by))]!
+}
+
 /**
  * The props every sized Stem component takes on top of `size`. Each one,
  * when missing, follows `size`.
@@ -92,4 +100,33 @@ export const stemIconOptical = '-mx-[calc(var(--s-icon-size)*0.09375)]'
 
 export function stemSizeClass(size: StemSize) {
   return `s-size-${size}`
+}
+
+const spacePx: Record<string, number> = {'0': 0, '2xs': 4}
+
+function spaceValue(v: StemSpace): number {
+  return String(v) in spacePx ? spacePx[String(v)]! : stemScale[v as StemSize].space
+}
+
+/**
+ * The scale as inline custom properties, for a root that already carries
+ * another size class it cannot drop (an alert, whose theme gives toasts and
+ * bare UAlerts a default): inline style beats any class.
+ */
+export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string, string> {
+  const base = stemScale[size]
+  const sx = p.spaceX ?? p.space
+  const sy = p.spaceY ?? p.space
+  const icon = p.iconSize
+    ? (isToken(p.iconSize) ? `${stemScale[p.iconSize].icon}px` : p.iconSize)
+    : `${base.icon}px`
+  return {
+    '--s-text': `${stemScale[p.textSize ?? size].text}px`,
+    '--s-icon-size': icon,
+    '--s-px': `${sx != null ? spaceValue(sx) : base.space}px`,
+    '--s-py': `${sy != null ? spaceValue(sy) : base.space}px`,
+    '--s-gap': `${sx != null ? spaceValue(sx) : base.space}px`,
+    '--s-radius': p.rounded ? '9999px' : `${stemScale[p.roundness ?? size].radius}px`,
+    ...(p.rounded ? {'--s-corner-shape': 'round'} : {}),
+  }
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {stemScaleClasses, type StemScaleProps, type StemSize} from '../theme/scale'
 import {computed, inject, ref, useSlots} from 'vue'
 import {SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 
@@ -27,7 +28,9 @@ const open = defineModel<boolean>('open')
 const rootEl = ref<HTMLElement>()
 const inPanel = inject(SEARCH_BAR_PANEL, false)
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(defineProps<StemScaleProps & {
+  /** On the Stem scale, for the chip, the menu and the reset: sm by default. */
+  size?: StemSize
   modelValue: Set<string>
   options: readonly SSearchFilterOption[]
   label: string
@@ -63,7 +66,23 @@ const props = withDefaults(defineProps<{
   threshold: 3,
   contentClass: 'min-w-48',
   resetLabel: 'Reset',
+  size: 'sm',
+  rounded: true,
 })
+
+// The scale props, forwarded to the chip and the menu as they are.
+const scale = computed(() => ({
+  size: props.size,
+  textSize: props.textSize,
+  iconSize: props.iconSize,
+  space: props.space,
+  spaceX: props.spaceX,
+  spaceY: props.spaceY,
+  roundness: props.roundness,
+  rounded: props.rounded,
+}))
+// The reset sits outside the chip, on the root: it reads the scale there.
+const rootScale = computed(() => [`s-size-${props.size}`, ...stemScaleClasses(props)])
 
 const emit = defineEmits<{
   'update:modelValue': [value: Set<string>]
@@ -297,14 +316,13 @@ const items = computed(() => {
     <div
         ref="rootEl"
         v-bind="$attrs"
-        class="flex items-stretch overflow-hidden rounded-full"
-        :class="chipClass"
+        class="flex items-stretch overflow-hidden s-corner"
+        :class="[rootScale, chipClass]"
     >
-      <!-- size sm: item metrics (36px box, px-2, gap-2, 16px icons) come from
-           the shared menu-items theme instead of local overrides. -->
-      <UDropdownMenu
+      <!-- The menu's items are controls of the same scale as the chip. -->
+      <SDropdownMenu
           v-model:open="open"
-          size="sm"
+          v-bind="scale"
           :items="(items as any)"
           :content="{align: alignEnd && !inPanel ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
           :ui="{
@@ -313,6 +331,7 @@ const items = computed(() => {
         }"
       >
         <SSearchChip
+            v-bind="scale"
             :active="open"
             :label="drawsSelection ? undefined : label"
             :label-icon="chipIcon"
@@ -322,7 +341,7 @@ const items = computed(() => {
             :count="multiple && isAllSelected ? totalOptions : Infinity"
             :threshold="threshold"
             class="flex-1 min-w-0 rounded-r-none!"
-            :class="showReset ? 'pr-1!' : ''"
+            :class="showReset ? 'pe-(--s-gap)!' : ''"
         >
           <!-- The chip slot replaces label and values together while something is
                filtered: an app that draws the selection itself (avatars,
@@ -336,30 +355,30 @@ const items = computed(() => {
         </SSearchChip>
 
         <template #filter-all="{item: _item}">
-          <div class="flex items-center gap-2 w-full">
-            <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
+          <div class="flex items-center gap-(--s-gap) w-full">
+            <span class="truncate mr-auto">{{ (_item as any).label }}</span>
             <span
                 v-if="(_item as any).count != null"
-                class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
+                class="text-(--ui-text-muted) tabular-nums ms-(--s-px)"
             >{{ (_item as any).count }}</span>
             <UIcon
                 v-if="(_item as any).checked"
                 name="i-ph-check"
-                class="size-4 shrink-0"
+                class="size-(--s-icon-size) shrink-0"
             />
-            <div v-else class="w-4"/>
+            <div v-else class="w-(--s-icon-size) shrink-0"/>
           </div>
         </template>
 
         <template #group-header="{item: _item}">
-          <div class="flex items-center gap-2 w-full cursor-pointer">
+          <div class="flex items-center gap-(--s-gap) w-full cursor-pointer">
             <span class="text-(--ui-text-highlighted) normal-case! flex-1 text-left">
               {{ (_item as any).label }}
             </span>
             <UIcon
                 v-if="(_item as any).checked"
                 name="i-ph-check"
-                class="size-4 shrink-0"
+                class="size-(--s-icon-size) shrink-0"
             />
           </div>
         </template>
@@ -367,48 +386,48 @@ const items = computed(() => {
         <template #filter-item="{item: _item}">
           <slot name="item" :option="(_item as any)" :checked="(_item as any).checked">
             <div
-                class="flex items-center gap-2 w-full"
+                class="flex items-center gap-(--s-gap) w-full"
                 :class="(_item as any).iconClass"
             >
               <slot name="leading" :option="_item">
                 <UIcon
                     v-if="(_item as any).icon"
                     :name="(_item as any).icon"
-                    class="size-4 shrink-0"
+                    class="size-(--s-icon-size) shrink-0"
                 />
               </slot>
-              <span class="truncate mr-auto h-5">{{ (_item as any).label }}</span>
+              <span class="truncate mr-auto">{{ (_item as any).label }}</span>
               <span
                   v-if="(_item as any).count != null"
-                  class="text-(--ui-text-muted) text-xs tabular-nums ml-6"
+                  class="text-(--ui-text-muted) tabular-nums ms-(--s-px)"
               >{{ (_item as any).count }}</span>
               <UIcon
                   v-if="(_item as any).checked"
                   name="i-ph-check"
-                  class="size-4 shrink-0"
+                  class="size-(--s-icon-size) shrink-0"
               />
-              <div v-else class="w-4"/>
+              <div v-else class="w-(--s-icon-size) shrink-0"/>
             </div>
           </slot>
         </template>
-      </UDropdownMenu>
+      </SDropdownMenu>
       <!-- The reset button animates its width; the menu keeps up because the
            popper uses updatePositionStrategy 'always' (repositioned every
            animation frame), so an open end-aligned menu glides with the pill
            instead of jumping. -->
       <div
           class="shrink-0 overflow-hidden flex transition-all duration-150"
-          :class="showReset ? 'w-6.5' : 'w-0'"
+          :class="showReset ? 'w-[calc(var(--s-icon-size)+var(--s-px))]' : 'w-0'"
       >
         <button
-            class="grow w-6.5 flex items-center justify-start rounded-r-full bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
+            class="grow w-[calc(var(--s-icon-size)+var(--s-px))] flex items-center justify-start bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
             :tabindex="showReset ? 0 : -1"
             :aria-label="resetLabel"
             @click.stop.prevent="selectAll()"
         >
           <UIcon
               name="i-ph-x"
-              class="size-3 shrink-0 ml-1"
+              class="size-[calc(var(--s-icon-size)*0.75)] shrink-0"
           />
         </button>
       </div>

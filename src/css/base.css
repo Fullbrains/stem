@@ -26,6 +26,15 @@
        palette: stem stays the dark-mode primary, while light mode reads as a
        plain neutral grey. */
     --ui-text: var(--color-gray-800);
+    /* The lightest grey that keeps WCAG AA (4.5:1) on white, on bg-muted and
+       on bg-elevated: 4.68:1 on elevated. */
+    --ui-text-muted: var(--color-smut-525);
+}
+
+.dark {
+    /* As light, the other way round: the darkest grey that keeps 4.5:1 on the
+       dark background and on elevated (4.65:1 on elevated). */
+    --ui-text-muted: var(--color-smut-400);
 }
 
 .s-overlay {

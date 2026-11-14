@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {stemScaleVars, type StemScaleProps, type StemSize} from '../theme/scale'
 import {computed, useAttrs, useSlots} from 'vue'
 
 /**
@@ -24,11 +25,20 @@ import {computed, useAttrs, useSlots} from 'vue'
  */
 defineOptions({inheritAttrs: false})
 
-const props = defineProps<{
+const props = withDefaults(defineProps<StemScaleProps & {
+  /** On the Stem scale: text, icon, padding (1.5 × space), gap and radius. */
+  size?: StemSize
   description?: string
   orientation?: 'horizontal' | 'vertical'
   ui?: Record<string, string | undefined>
-}>()
+}>(), {
+  size: 'sm',
+  description: undefined,
+  orientation: undefined,
+  ui: undefined,
+})
+
+const scaleStyle = computed(() => stemScaleVars(props.size, props))
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -84,13 +94,13 @@ const ui = computed(() => {
 
 const bodyClass = computed(() => {
   // A little air between the text and the content (the buttons, mostly).
-  if (!spread.value) return hasDescription.value ? 'mt-3.5' : 'mt-3'
-  return [cells.value.body, hasDescription.value ? 'row-start-3 mt-3.5' : 'row-start-2 mt-3']
+  if (!spread.value) return hasDescription.value ? 'mt-[calc(var(--s-py)*1.5)]' : 'mt-(--s-py)'
+  return [cells.value.body, hasDescription.value ? 'row-start-3 mt-[calc(var(--s-py)*1.5)]' : 'row-start-2 mt-(--s-py)']
 })
 </script>
 
 <template>
-  <UAlert v-bind="$attrs" :description="description" :orientation="orientation" :ui="ui">
+  <UAlert v-bind="$attrs" :description="description" :orientation="orientation" :ui="ui" :style="scaleStyle">
     <template v-for="name in forwarded" :key="name" #[name]="scope">
       <slot :name="name" v-bind="scope ?? {}"/>
     </template>

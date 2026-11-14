@@ -2,18 +2,18 @@
 export { stem } from './theme'
 export { stemIcons, stemColors } from './config'
 
-// Icon sizing scale
+// The Stem scale: one size for every control (text, icon, padding, gap, radius)
 export {
-  iconSizeScale,
-  iconSizeTokens,
-  iconSizes,
-  iconSizeVar,
-  iconSizeClass,
-  iconSizeFor,
-  resolveIconSize,
-  iconSizeStyle,
-  type IconSizeToken,
-} from './theme/icon-sizes'
+  stemScale,
+  stemSizes,
+  stemScaleClasses,
+  stemScaleStyle,
+  stemScaleVars,
+  stemSpaceStep,
+  type StemSize,
+  type StemSpace,
+  type StemScaleProps,
+} from './theme/scale'
 
 // Alert classes — UAlert and UToast share them; a toast takes another
 // variant than its own through `ui: alertClasses(color, variant)`.

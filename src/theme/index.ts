@@ -28,23 +28,14 @@ export {
   type AlertVariant,
 } from './alert-colors'
 
-export {
-  iconSizeScale,
-  iconSizeTokens,
-  iconSizes,
-  iconSizeVar,
-  iconSizeClass,
-  iconSizeFor,
-  resolveIconSize,
-  iconSizeStyle,
-  type IconSizeToken,
-} from './icon-sizes'
 
 export {
   stemScale,
   stemSizes,
   stemScaleClasses,
   stemScaleStyle,
+  stemScaleVars,
+  stemSpaceStep,
   type StemSize,
   type StemSpace,
   type StemScaleProps,

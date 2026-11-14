@@ -30,16 +30,19 @@ defineEmits<{
 const descriptionHtml = computed(() => safeHtml(props.description))
 
 /**
- * Each part of the header, compact, full, or compact below sm only. The
- * compact one is 18px above and below a one-line title (20px): 56px, the
- * close button's 32px centred on it at its 12px from the top, and the title
- * with it.
+ * Each part of the header, compact, full, or compact below sm only.
+ *
+ * Compact: 18px above and below a one-line title (22.5px line). The header
+ * buttons (SModalButton sm: 28px) are centred on that line — the close at
+ * 18 + (22.5 − 28) / 2 ≈ 15px from the top, the actions pulled up as much.
+ * Full: the close stays pinned 12px into the corner.
  */
 const compactClasses = computed(() => {
   if (props.compact === 'mobileOnly') {
     return {
       header: 'py-6 max-sm:py-4.5',
-      actions: '-my-1 max-sm:self-start max-sm:-my-1.5',
+      actions: '-my-1 max-sm:self-start max-sm:-my-[2.75px]',
+      close: 'top-3 max-sm:top-[15.25px]',
       title: 'text-2xl max-sm:text-lg',
       blockIcon: 'max-sm:hidden',
       inlineIcon: 'sm:hidden',
@@ -47,8 +50,8 @@ const compactClasses = computed(() => {
   }
 
   return props.compact
-      ? {header: 'py-4.5', title: 'text-lg', blockIcon: 'hidden', inlineIcon: '', actions: 'self-start -my-1.5'}
-      : {header: 'py-6', title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden', actions: '-my-1'}
+      ? {header: 'py-4.5', title: 'text-lg', blockIcon: 'hidden', inlineIcon: '', actions: 'self-start -my-[2.75px]', close: 'top-[15.25px]'}
+      : {header: 'py-6', title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden', actions: '-my-1', close: 'top-3'}
 })
 
 const slots = defineSlots<{
@@ -114,7 +117,8 @@ const slots = defineSlots<{
     </div>
     <SCloseButton
         v-if="closeable"
-        class="absolute top-3 right-3"
+        class="absolute right-3"
+        :class="compactClasses.close"
         :disabled="disabled"
         @click="$emit('close')"
     />
