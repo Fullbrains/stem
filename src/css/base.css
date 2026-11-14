@@ -58,7 +58,7 @@
 
 @supports (corner-shape: squircle) {
     .s-outline {
-        border-radius: calc(6px * var(--s-squircle));
+        border-radius: calc(6px * var(--s-squircle-radius));
         corner-shape: superellipse(var(--s-squircle));
     }
 }
