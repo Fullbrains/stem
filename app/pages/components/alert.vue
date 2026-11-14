@@ -22,6 +22,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Aspetto', key: 'variant', type: 'select', options: variants, default: 'solid'},
   {group: 'Aspetto', key: 'color', type: 'select', options: colors, default: 'primary'},
   {group: 'Aspetto', key: 'orientation', type: 'select', options: orientations, default: 'vertical'},
+  {group: 'Aspetto', key: 'size', type: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'], default: 'sm'},
 
   {group: 'Contenuto', key: 'title', type: 'text', initial: 'Modifiche salvate', placeholder: 'nessuno'},
   {group: 'Contenuto', key: 'description', type: 'text', initial: 'Le vedranno tutti i membri del progetto.', placeholder: 'nessuna'},
@@ -32,6 +33,9 @@ const controls: ShowcaseControl[] = [
     {label: 'nessuna', value: 0}, {label: 'una', value: 1}, {label: 'due', value: 2},
   ]},
   {group: 'Azioni', key: 'close', type: 'boolean'},
+
+  // L'alert resta squircle: niente pillola.
+  ...scaleControls().filter(c => c.key !== 'rounded'),
 ]
 
 const state = useShowcaseState<Record<string, any>>('alert', () => controlDefaults(controls))
