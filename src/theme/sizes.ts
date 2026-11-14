@@ -1,4 +1,4 @@
-import {stemIconOptical, stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes, type StemSize} from './scale'
+import {stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes, type StemSize} from './scale'
 
 /**
  * Size variants built on the Stem scale (see scale.ts).
@@ -16,8 +16,8 @@ import {stemIconOptical, stemScaleIcon, stemScalePadding, stemScaleText, stemSiz
 function size(token: StemSize) {
   return {
     base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding}`,
-    leadingIcon: `${stemScaleIcon} ${stemIconOptical}`,
-    trailingIcon: `${stemScaleIcon} ${stemIconOptical}`,
+    leadingIcon: stemScaleIcon,
+    trailingIcon: stemScaleIcon,
   }
 }
 
@@ -27,8 +27,8 @@ function fieldSize(token: StemSize) {
     base: `${stemScaleText} px-(--s-px)! py-(--s-py)! gap-(--s-gap)`,
     leading: 'ps-(--s-px)!',
     trailing: 'pe-(--s-px)!',
-    leadingIcon: `${stemScaleIcon} ${stemIconOptical}`,
-    trailingIcon: `${stemScaleIcon} ${stemIconOptical}`,
+    leadingIcon: stemScaleIcon,
+    trailingIcon: stemScaleIcon,
   }
 }
 
@@ -38,13 +38,12 @@ export const fieldSizes = Object.fromEntries(stemSizes.map(s => [s, fieldSize(s)
 
 /**
  * With an icon inside the field, the text starts after it: padding + icon +
- * gap, the same distance as in a button — measured on the icon's drawing,
- * not its box (stemIconOptical: 3/32 of the icon off each side, so the icon
- * counts as 26/32 = 0.8125 of its size). Compound variants, not variants:
+ * gap, the same distance as in a button, measured on the icon's box.
+ * Compound variants, not variants:
  * they come after the size's `px-(--s-px)!`, which tailwind-merge would
  * otherwise let win over an earlier `ps-*`.
  */
 export const fieldIconCompounds = [
-  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)*0.8125+var(--s-gap))]!'}},
-  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)*0.8125+var(--s-gap))]!'}},
+  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
+  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
 ]

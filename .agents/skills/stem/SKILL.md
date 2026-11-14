@@ -177,7 +177,7 @@ Each axis moves on its own, defaulting to `size`:
 Rules that hold everywhere:
 - **Squircle only.** Corners are `s-corner` (superellipse) with the size's radius; `rounded` makes a pill (round ends, never a squircle).
 - **Borders and focus never resize a field.** The border is a 1px inset ring; focus darkens it and adds a 3.5px halo outside (box-shadow).
-- **Icons align by their drawing.** Phosphor draws in a 256 grid with 24 units of air per side, so beside a label an icon takes a negative margin of 3/32 of its size (`stemIconOptical`): padding and gap are measured to the drawing. Icon-only controls keep the box (they stay square).
+- **Icons align by their box.** Padding and gap are measured to the icon's box, with no hidden margin: an icon sits in the same place with or without a label, in every control.
 
 How it works: `src/css/scale.css` defines `s-size-*` (all variables) and `s-text-*`, `s-icon-*`, `s-space-*`, `s-space-x-*`, `s-space-y-*`, `s-roundness-*`, `s-pill` (one axis each), in `@layer components`. Themes read the variables: `--s-text`, `--s-icon-size`, `--s-px`, `--s-py`, `--s-gap`, `--s-radius`. The wrappers turn the props into those classes.
 

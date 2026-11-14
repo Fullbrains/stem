@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemIconOptical, stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
+import {stemScaleClasses, stemScaleStyle, type StemScaleProps} from '../theme/scale'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
 /**
@@ -90,9 +90,6 @@ function handleClick(e: MouseEvent) {
           class="inline-flex overflow-hidden transition-all duration-300 ease-out"
           :class="[
             loading || icon ? 'max-w-(--s-icon-size) opacity-100' : 'max-w-0 opacity-0 -mr-(--s-gap)',
-            // Beside a label, the icon's drawing aligns to the padding and the
-            // gap, not its box (see stemIconOptical). Icon only: box-exact.
-            (loading || icon) && (label || $slots.default) && stemIconOptical,
           ]"
       >
         <SSpinner v-if="loading"/>

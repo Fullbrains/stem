@@ -2,7 +2,7 @@
  * The Stem scale: one table for every control with a `size`.
  *
  * At a given size every control — button, badge, input, select… — has the
- * same text, icon, padding, gap and radius, so they line up optically
+ * same text, icon, padding, gap and radius, so they line up
  * wherever they sit side by side. The line height equals the icon size: text
  * and icon share one row, and a control is exactly `icon + 2 × padding-y`
  * tall (sm: 16 + 2 × 8 = 32px). Padding and gap are half the icon; the space scale
@@ -87,16 +87,6 @@ export function stemScaleStyle(p: StemScaleProps): Record<string, string> | unde
 export const stemScaleText = 'text-(length:--s-text) leading-(--s-icon-size)'
 export const stemScalePadding = 'px-(--s-px) py-(--s-py) gap-(--s-gap)'
 export const stemScaleIcon = 'size-(--s-icon-size) shrink-0'
-
-/**
- * Optical alignment of an icon beside text. Phosphor draws inside a 256 grid
- * with 24 units of air on each side (3/32 of the icon), so a box-exact gap or
- * padding looks wider next to an icon than next to text. A negative margin of
- * that much on the icon's sides brings the drawing, not its box, to the
- * padding and the gap. Off when the control is icon only (`square`): there
- * the box is what must stay square.
- */
-export const stemIconOptical = '-mx-[calc(var(--s-icon-size)*0.09375)]'
 
 export function stemSizeClass(size: StemSize) {
   return `s-size-${size}`
