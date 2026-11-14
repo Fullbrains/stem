@@ -24,7 +24,7 @@ import {computed, provide, useAttrs, useSlots} from 'vue'
  * already, and the slot stays in the text's column.
  *
  * Its buttons are SModalButtons of its size: space-x the size's own,
- * space-y two steps below (sm: 24px), centred on the title's line without
+ * space-y a step below (sm: 28px), centred on the title's line without
  * making a one-line alert taller; on a solid alert, tinted to stay
  * readable. The `actions` it is given and the X get these; an `#actions`
  * slot gets them as params, to bind on what it renders:
@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
   /**
    * The buttons' scale, all of them at once (the X, the actions, the slot's
    * params): `size`, `spaceX`, `spaceY`, each a step or a shift from their
-   * default (size: the alert's; space-x: their size's; space-y: two steps
+   * default (size: the alert's; space-x: their size's; space-y: a step
    * below it). `{spaceY: '+1'}`: a step taller.
    */
   buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
@@ -74,7 +74,7 @@ const props = withDefaults(defineProps<StemScaleProps & {
 const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3', roundness: '+1'})
 
 // The buttons are SModalButtons of the alert's size, space-x the size's own
-// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall); the
+// (no shift: sm 8px), space-y a step below it (sm: 6px, 28px tall); the
 // `buttons` prop moves the group from there.
 function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
   if (v == null) return base
@@ -83,14 +83,14 @@ function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
 }
 const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, scale.value.size!, stemSizeStep))
 const buttonSpaceX = computed(() => shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep))
-const buttonSpaceY = computed(() => shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -2), stemSpaceStep))
+const buttonSpaceY = computed(() => shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
 // What the buttons inside inherit: the alert's size and type. Not its
-// space and radius: that is the alert's own, the buttons keep SModalButton's, space-y two steps below the size.
+// space and radius: that is the alert's own, the buttons keep SModalButton's, space-y a step below the size.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
   roundness: undefined,

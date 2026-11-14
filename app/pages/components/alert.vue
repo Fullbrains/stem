@@ -171,7 +171,7 @@ function showToast(extra: Record<string, unknown> = {}) {
 
     <ShowcaseSection
         title="Feedback"
-        description="Un alert su misura: space-y +4 (space-x quello di sempre, +2), la X a destra e due azioni primary con i parametri dello slot. Tutti i pulsanti, X compresa, un gradino più alti del default con buttons: {spaceY: '+1'}."
+        description="Un alert su misura: space-y +4 (space-x quello di sempre, +2), la X a destra e due azioni primary con i parametri dello slot."
     >
       <ShowcaseStage body-class="grid gap-4 p-8">
         <SAlert
@@ -180,7 +180,6 @@ function showToast(extra: Record<string, unknown> = {}) {
             icon="i-ph-chat-circle"
             orientation="horizontal"
             space-y="+4"
-            :buttons="{spaceY: '+1'}"
             close
         >
           <template #actions="{primary}">
