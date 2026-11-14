@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
+import {stemScaleVars, stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemScaleProps, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue, stemScaleDefaults} from '../theme/scale'
 import {alertClasses, alertSolidAction, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
@@ -49,11 +49,19 @@ const props = withDefaults(defineProps<StemScaleProps & {
   orientation?: 'horizontal' | 'vertical'
   /** The X: true, or the SModalButton props it takes. */
   close?: boolean | Record<string, unknown>
+  /**
+   * The buttons' scale, all of them at once (the X, the actions, the slot's
+   * params): `size`, `spaceX`, `spaceY`, each a step or a shift from their
+   * default (size: the alert's; space-x: their size's; space-y: two steps
+   * below it). `{spaceY: '+1'}`: a step taller.
+   */
+  buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
   closeIcon?: string
   ui?: Record<string, string | undefined>
 }>(), {
   close: false,
   closeIcon: undefined,
+  buttons: undefined,
   ...stemScaleDefaults,
   description: undefined,
   orientation: undefined,
@@ -66,8 +74,16 @@ const props = withDefaults(defineProps<StemScaleProps & {
 const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3', roundness: '+1'})
 
 // The buttons are SModalButtons of the alert's size, space-x the size's own
-// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall).
-const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
+// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall); the
+// `buttons` prop moves the group from there.
+function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
+  if (v == null) return base
+  const by = stemSpaceShift(v)
+  return by == null ? v as T : step(base, by)
+}
+const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, scale.value.size!, stemSizeStep))
+const buttonSpaceX = computed(() => shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep))
+const buttonSpaceY = computed(() => shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -2), stemSpaceStep))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
@@ -102,7 +118,7 @@ function actionTint(action: Record<string, unknown>) {
 
 // The buttons' props: what the generated ones get, and the #actions slot's
 // params (`button`, `primary`).
-const buttonScale = computed(() => ({size: scale.value.size, spaceX: scale.value.size, spaceY: buttonSpaceY.value}))
+const buttonScale = computed(() => ({size: buttonSize.value, spaceX: buttonSpaceX.value, spaceY: buttonSpaceY.value}))
 const primaryAction = {color: 'primary', variant: 'solid'} as const
 const actionParams = computed(() => ({
   button: {...buttonScale.value, class: actionTint({})},

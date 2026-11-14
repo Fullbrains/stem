@@ -171,7 +171,7 @@ function showToast(extra: Record<string, unknown> = {}) {
 
     <ShowcaseSection
         title="Feedback"
-        description="Un alert su misura: space-y +4 (space-x quello di sempre, +2), la X a destra e due azioni primary con i parametri dello slot. Il loro space-y è un gradino sopra il default (xs invece di 2xs a sm): un valore fisso, perché un salto partirebbe dal −1 di SModalButton e non dai parametri."
+        description="Un alert su misura: space-y +4 (space-x quello di sempre, +2), la X a destra e due azioni primary con i parametri dello slot. Tutti i pulsanti, X compresa, un gradino più alti del default con buttons: {spaceY: '+1'}."
     >
       <ShowcaseStage body-class="grid gap-4 p-8">
         <SAlert
@@ -180,11 +180,12 @@ function showToast(extra: Record<string, unknown> = {}) {
             icon="i-ph-chat-circle"
             orientation="horizontal"
             space-y="+4"
+            :buttons="{spaceY: '+1'}"
             close
         >
           <template #actions="{primary}">
-            <SModalButton v-bind="primary" space-y="xs" icon="i-ph-thumbs-up" label="Sì"/>
-            <SModalButton v-bind="primary" space-y="xs" icon="i-ph-thumbs-down" label="No"/>
+            <SModalButton v-bind="primary" icon="i-ph-thumbs-up" label="Sì"/>
+            <SModalButton v-bind="primary" icon="i-ph-thumbs-down" label="No"/>
           </template>
         </SAlert>
       </ShowcaseStage>
