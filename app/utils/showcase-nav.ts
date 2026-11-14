@@ -14,66 +14,66 @@ export const showcaseNav: ShowcaseNavGroup[] = [
   {
     label: 'Fondamenta',
     items: [
-      {label: 'Colori', to: '/foundations/colors', soon: true},
-      {label: 'Dimensioni', to: '/foundations/sizes', soon: true},
-      {label: 'Raggi e angoli', to: '/foundations/radius', soon: true},
-      {label: 'Icone', to: '/foundations/icons', soon: true},
+      {label: 'Colori', to: '/foundations/colors'},
+      {label: 'Dimensioni', to: '/foundations/sizes'},
+      {label: 'Raggi e angoli', to: '/foundations/radius'},
+      {label: 'Icone', to: '/foundations/icons'},
     ],
   },
   {
     label: 'Azioni',
     items: [
       {label: 'Button', to: '/components/button'},
-      {label: 'CopyButton', to: '/components/copy-button', soon: true},
-      {label: 'CloseButton', to: '/components/close-button', soon: true},
-      {label: 'DropdownMenu', to: '/components/dropdown-menu', soon: true},
+      {label: 'CopyButton', to: '/components/copy-button'},
+      {label: 'CloseButton', to: '/components/close-button'},
+      {label: 'DropdownMenu', to: '/components/dropdown-menu'},
     ],
   },
   {
     label: 'Campi',
     items: [
-      {label: 'Input', to: '/components/input', soon: true},
-      {label: 'Textarea', to: '/components/textarea', soon: true},
-      {label: 'Select', to: '/components/select', soon: true},
-      {label: 'InputTags', to: '/components/input-tags', soon: true},
-      {label: 'Checkbox e Switch', to: '/components/checkbox', soon: true},
-      {label: 'ColorPicker', to: '/components/color-picker', soon: true},
+      {label: 'Input', to: '/components/input'},
+      {label: 'Textarea', to: '/components/textarea'},
+      {label: 'Select', to: '/components/select'},
+      {label: 'InputTags', to: '/components/input-tags'},
+      {label: 'Checkbox e Switch', to: '/components/checkbox'},
+      {label: 'ColorPicker', to: '/components/color-picker'},
     ],
   },
   {
     label: 'Feedback',
     items: [
-      {label: 'Alert', to: '/components/alert', soon: true},
-      {label: 'Badge', to: '/components/badge', soon: true},
-      {label: 'Hint', to: '/components/hint', soon: true},
-      {label: 'Empty', to: '/components/empty', soon: true},
-      {label: 'Spinner', to: '/components/spinner', soon: true},
+      {label: 'Alert', to: '/components/alert'},
+      {label: 'Badge', to: '/components/badge'},
+      {label: 'Hint', to: '/components/hint'},
+      {label: 'Empty', to: '/components/empty'},
+      {label: 'Spinner', to: '/components/spinner'},
     ],
   },
   {
     label: 'Navigazione',
     items: [
-      {label: 'Tabs', to: '/components/tabs', soon: true},
+      {label: 'Tabs', to: '/components/tabs'},
     ],
   },
   {
     label: 'Overlay',
     items: [
-      {label: 'Modal', to: '/components/modal', soon: true},
-      {label: 'Popover', to: '/components/popover', soon: true},
+      {label: 'Modal', to: '/components/modal'},
+      {label: 'Popover', to: '/components/popover'},
     ],
   },
   {
     label: 'Ricerca',
     items: [
-      {label: 'SearchBar', to: '/components/search-bar', soon: true},
-      {label: 'SearchFilter', to: '/components/search-filter', soon: true},
+      {label: 'SearchBar', to: '/components/search-bar'},
+      {label: 'SearchFilter', to: '/components/search-filter'},
     ],
   },
   {
     label: 'Contenitori',
     items: [
-      {label: 'ScrollArea', to: '/components/scroll-area', soon: true},
+      {label: 'ScrollArea', to: '/components/scroll-area'},
     ],
   },
 ]

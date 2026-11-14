@@ -35,7 +35,7 @@ function reset() {
 <template>
   <div class="grid grid-cols-[minmax(0,1fr)_15rem] items-start gap-4">
     <div class="space-y-3">
-      <ShowcaseStage body-class="flex min-h-36 items-center justify-center p-10">
+      <ShowcaseStage body-class="flex min-h-36 items-center justify-center-safe overflow-x-auto p-10">
         <template #default="{mode}">
           <ShowcaseMeasure>
             <slot :props="componentProps" :state="state" :mode="mode"/>

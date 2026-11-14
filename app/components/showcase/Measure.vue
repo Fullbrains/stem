@@ -26,7 +26,16 @@ function read() {
   if (!wrap || !el) return
   const wr = wrap.getBoundingClientRect()
   const er = el.getBoundingClientRect()
-  const cs = getComputedStyle(el)
+  // Negli input il padding sta sul campo interno, non sul contenitore:
+  // se il primo figlio non ne ha, lo si legge dal primo discendente che ne ha.
+  const padded = (e: Element) => {
+    const c = getComputedStyle(e)
+    return parseFloat(c.paddingTop) + parseFloat(c.paddingLeft) > 0
+  }
+  const inner = padded(el)
+    ? el
+    : [...el.querySelectorAll('input, textarea, button, [data-slot="base"], *')].find(padded) ?? el
+  const cs = getComputedStyle(inner)
   const icon = el.querySelector('.iconify, svg')
   m.value = {
     x: er.left - wr.left,
