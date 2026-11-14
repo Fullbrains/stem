@@ -15,7 +15,9 @@ import {stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes
  */
 function size(token: StemSize) {
   return {
-    base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding}`,
+    // A pill's extra padding comes back as a negative margin (--s-pill-x):
+    // its content lines up with a squircle's, its ends spill over the sides.
+    base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding} mx-[calc(var(--s-pill-x,0px)*-1)]`,
     leadingIcon: stemScaleIcon,
     trailingIcon: stemScaleIcon,
   }
@@ -23,7 +25,8 @@ function size(token: StemSize) {
 
 function fieldSize(token: StemSize) {
   return {
-    root: stemSizeClass(token),
+    // The pill's negative margin goes on the root, the field's box.
+    root: `${stemSizeClass(token)} mx-[calc(var(--s-pill-x,0px)*-1)]`,
     base: `${stemScaleText} px-[calc(var(--s-px)+var(--s-pill-x,0px))]! py-(--s-py)! gap-(--s-gap)`,
     leading: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px))]!',
     trailing: 'pe-[calc(var(--s-px)+var(--s-pill-x,0px))]!',

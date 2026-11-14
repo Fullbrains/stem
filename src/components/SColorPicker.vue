@@ -136,7 +136,7 @@ const popoverContentStyle = computed(() => {
   >
     <div
         ref="containerRef"
-        class="relative flex items-center w-full text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-(--s-py) gap-(--s-gap) h-[calc(var(--s-icon-size)+2*var(--s-py))]"
+        class="relative flex items-center w-full text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] mx-[calc(var(--s-pill-x,0px)*-1)] py-(--s-py) gap-(--s-gap) h-[calc(var(--s-icon-size)+2*var(--s-py))]"
         :style="resolvedIconStyle"
         :class="[
           ...scaleClasses,

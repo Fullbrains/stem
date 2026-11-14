@@ -17,7 +17,7 @@ export default {
     // padding of its own. On the scale it keeps the size's padding, so it is
     // as tall as the same control with a label — and square, since padding-x
     // and padding-y are equal unless space-x / space-y set them apart.
-    {square: true, class: {base: 'px-(--s-px)! py-(--s-py)!'}},
+    {square: true, class: {base: 'px-(--s-px)! py-(--s-py)! mx-0!'}},
     {
       color: 'primary',
       variant: 'solid',

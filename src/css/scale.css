@@ -77,8 +77,10 @@
      * content looks closer to the edge at the same padding. --s-pill-x adds
      * the difference to the horizontal padding: the area the round ends lose
      * over the squircle's, spread over the height, about 8% of it (sm 2.6px,
-     * xl 4.5px). Padding, not margin: the height stays, the box grows by
-     * twice that in width, and an icon-only pill (padding-x = padding-y)
+     * xl 4.5px), and takes it back as a negative margin-x. The layout box and
+     * the content stay where a squircle's would be (icons and text line up
+     * with a squircle above or below); only the pill's ends spill over the
+     * sides. The height never changes; an icon-only pill gets neither, and
      * stays a circle. Every sized root resets it, so a control inside a pill
      * does not inherit it.
      */

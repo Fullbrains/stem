@@ -9,8 +9,10 @@ import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
  */
 function tabsSize(token: StemSize) {
   return {
-    root: stemSizeClass(token),
-    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
+    // A pill list: the extra padding on its ends (--s-pill-x), given back
+    // as a negative margin, so the tabs line up with squircle ones.
+    root: `${stemSizeClass(token)} mx-[calc(var(--s-pill-x,0px)*-1)]`,
+    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
     leadingIcon: stemScaleIcon,
   }
 }
@@ -26,7 +28,7 @@ export default {
   variants: {
     variant: {
       pill: {
-        list: 's-corner p-(--s-inset)',
+        list: 's-corner p-(--s-inset) px-[calc(var(--s-inset)+var(--s-pill-x,0px))]',
         indicator: 's-corner-inner shadow-none',
       },
       link: {
