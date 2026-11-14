@@ -81,8 +81,8 @@
      *
      *   --s-label-bearing-start  0.09em: Vimana's stems (H, E, B, D, P…), the
      *                            common first letter of a label
-     *   --s-label-bearing-end    0.05em: the median of the lowercase endings
-     *                            (n 0.07, e 0.05, t 0.02, y 0.005)
+     *   --s-label-bearing-end    the same as the start, by choice (the
+     *                            lowercase endings vary: n 0.07, e 0.05, t 0.02)
      *
      * optical-label: auto (default) trims only on the side of an icon; always
      * also labels without icons, on both sides (a field's text, a label
@@ -90,7 +90,7 @@
      * theme reads --s-label-icon-* and --s-label-alone-*; set a bearing to 0
      * to turn that side off app-wide. In em, it follows the text.
      */
-    :root { --s-label-bearing-start: 0.09em; --s-label-bearing-end: 0.05em; }
+    :root { --s-label-bearing-start: 0.09em; --s-label-bearing-end: var(--s-label-bearing-start); }
     :root, .s-optical-label-auto {
         --s-label-icon-start: var(--s-label-bearing-start);
         --s-label-icon-end: var(--s-label-bearing-end);
