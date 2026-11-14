@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
-import {alertClasses, type AlertColor, type AlertVariant} from '../theme/alert-colors'
+import {alertClasses, alertSolidAction, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
 import {useLocale} from '@nuxt/ui/composables'
@@ -53,8 +53,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
 })
 
 // Scale props inherited from a parent when not given; sm by default, two
-// steps more space than its size (sm: 12px).
-const scale = useStemScale(props, {size: 'sm', space: '+2'})
+// steps more space-x than its size and three more space-y (sm: 12 × 14px).
+const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3'})
 
 // The buttons are SModalButtons of the alert's size, space-y two steps below
 // it (sm: 4px, 24px tall). The actions are pulled up by half their excess
@@ -83,11 +83,15 @@ const {t} = useLocale()
 // The X: an icon-only SModalButton.
 const closeIcon = computed(() => props.closeIcon ?? appConfig.ui?.icons?.close ?? 'i-ph-x')
 const closeProps = computed(() => typeof props.close === 'object' ? props.close : {})
-// On a solid alert the X keeps the tone's own tint (the iron pill would vanish).
-const closeTint = computed(() => {
-  const variant = (attrs.variant as AlertVariant) ?? 'outline'
-  return variant === 'solid' ? alertClasses(((attrs.color as AlertColor) ?? 'primary'), 'solid').close : undefined
-})
+// On a solid alert the X and the soft actions take the tone's own tint (the
+// iron pill would vanish), a solid action the ground's opposite (it would
+// melt into it).
+const solidColor = computed(() => ((attrs.variant as AlertVariant) ?? 'outline') === 'solid' ? ((attrs.color as AlertColor) ?? 'primary') : null)
+const closeTint = computed(() => solidColor.value ? alertClasses(solidColor.value, 'solid').close : undefined)
+function actionTint(action: Record<string, unknown>) {
+  if (!solidColor.value) return undefined
+  return action.variant === 'solid' ? alertSolidAction(solidColor.value) || undefined : closeTint.value
+}
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -166,7 +170,7 @@ const bodyClass = computed(() => {
     </template>
     <template v-if="hasActions" #actions>
       <slot name="actions">
-        <SModalButton v-for="(action, index) in actions" :key="index" :space-y="buttonSpaceY" v-bind="action"/>
+        <SModalButton v-for="(action, index) in actions" :key="index" :space-y="buttonSpaceY" v-bind="action" :class="actionTint(action)"/>
       </slot>
     </template>
     <template v-if="close" #close>

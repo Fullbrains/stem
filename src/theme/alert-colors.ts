@@ -82,8 +82,16 @@ type Tone = {
   solid: string
   /** Text color of solid, for title and description. */
   onSolid: string
+  /** The description's on solid, where it is muted (primary, secondary); else onSolid at 90%. */
+  mutedSolid?: string
   /** The close pill on solid: the iron pill would vanish on a colored ground. */
   closeSolid: string
+  /**
+   * A solid action (the default one, primary) on solid: the ground's
+   * opposite, so it stands out of it instead of melting in. '' where the
+   * ground is light and the plain solid button already does.
+   */
+  actionSolid: string
 }
 
 const tones: Record<AlertColor, Tone> = {
@@ -93,7 +101,9 @@ const tones: Record<AlertColor, Tone> = {
     ring: 'ring-gray-800/20 dark:ring-stem-100/20',
     solid: 'bg-gray-800 dark:bg-stem-100',
     onSolid: 'text-white dark:text-stem-900',
+    mutedSolid: 'text-white/70 dark:text-stem-900/70',
     closeSolid: 'bg-white/20 hover:bg-white/30 active:bg-white/20 text-white hover:text-white dark:bg-stem-900/10 dark:hover:bg-stem-900/15 dark:text-stem-900 dark:hover:text-stem-900',
+    actionSolid: 'bg-white hover:bg-white/90 active:bg-white text-gray-800 hover:text-gray-800 dark:bg-stem-900 dark:hover:bg-stem-800 dark:text-stem-100 dark:hover:text-stem-100',
   },
   secondary: {
     icon: 'text-iron-600 dark:text-iron-300',
@@ -101,7 +111,9 @@ const tones: Record<AlertColor, Tone> = {
     ring: 'ring-iron-500/25 dark:ring-iron-400/25',
     solid: 'bg-white dark:bg-iron-800',
     onSolid: 'text-(--ui-text) dark:text-iron-100',
+    mutedSolid: 'text-muted',
     closeSolid: '',
+    actionSolid: '',
   },
   neutral: {
     icon: 'text-muted',
@@ -110,6 +122,7 @@ const tones: Record<AlertColor, Tone> = {
     solid: 'bg-stem-600',
     onSolid: 'text-white',
     closeSolid: 'bg-white/20 hover:bg-white/30 active:bg-white/20 text-white hover:text-white dark:text-white dark:hover:text-white',
+    actionSolid: 'bg-white hover:bg-white/90 active:bg-white text-gray-800 hover:text-gray-800 dark:bg-white dark:hover:bg-white/90 dark:text-gray-800 dark:hover:text-gray-800',
   },
   info: {
     icon: 'text-sky-700 dark:text-sky-400',
@@ -118,6 +131,7 @@ const tones: Record<AlertColor, Tone> = {
     solid: 'bg-sky-700 dark:bg-sky-600',
     onSolid: 'text-white',
     closeSolid: 'bg-white/20 hover:bg-white/30 active:bg-white/20 text-white hover:text-white dark:text-white dark:hover:text-white',
+    actionSolid: 'bg-white hover:bg-white/90 active:bg-white text-gray-800 hover:text-gray-800 dark:bg-white dark:hover:bg-white/90 dark:text-gray-800 dark:hover:text-gray-800',
   },
   success: {
     icon: 'text-(--ui-color-success-700) dark:text-(--ui-success)',
@@ -126,6 +140,7 @@ const tones: Record<AlertColor, Tone> = {
     solid: 'bg-(--ui-color-success-700) dark:bg-(--ui-color-success-600)',
     onSolid: 'text-white',
     closeSolid: 'bg-white/20 hover:bg-white/30 active:bg-white/20 text-white hover:text-white dark:text-white dark:hover:text-white',
+    actionSolid: 'bg-white hover:bg-white/90 active:bg-white text-gray-800 hover:text-gray-800 dark:bg-white dark:hover:bg-white/90 dark:text-gray-800 dark:hover:text-gray-800',
   },
   warning: {
     icon: 'text-(--ui-color-warning-700) dark:text-(--ui-warning)',
@@ -134,6 +149,7 @@ const tones: Record<AlertColor, Tone> = {
     solid: 'bg-(--ui-color-warning-400)',
     onSolid: 'text-(--ui-color-warning-950)',
     closeSolid: 'bg-black/10 hover:bg-black/15 active:bg-black/10 text-(--ui-color-warning-950) hover:text-(--ui-color-warning-950) dark:text-(--ui-color-warning-950) dark:hover:text-(--ui-color-warning-950)',
+    actionSolid: 'bg-(--ui-color-warning-950) hover:bg-(--ui-color-warning-900) active:bg-(--ui-color-warning-950) text-white hover:text-white dark:bg-(--ui-color-warning-950) dark:hover:bg-(--ui-color-warning-900) dark:text-white dark:hover:text-white',
   },
   error: {
     icon: 'text-(--ui-color-error-600) dark:text-(--ui-error)',
@@ -142,6 +158,7 @@ const tones: Record<AlertColor, Tone> = {
     solid: 'bg-(--ui-color-error-600)',
     onSolid: 'text-white',
     closeSolid: 'bg-white/20 hover:bg-white/30 active:bg-white/20 text-white hover:text-white dark:text-white dark:hover:text-white',
+    actionSolid: 'bg-white hover:bg-white/90 active:bg-white text-gray-800 hover:text-gray-800 dark:bg-white dark:hover:bg-white/90 dark:text-gray-800 dark:hover:text-gray-800',
   },
 }
 
@@ -151,6 +168,11 @@ export const alertVariants: AlertVariant[] = ['outline', 'soft', 'subtle', 'soli
 type SlotClasses = {root: string, icon: string, title: string, description: string, close?: string}
 
 const text = {title: 'text-highlighted', description: 'text-muted'}
+
+/** A solid action's classes on a solid alert of a color ('' on a light ground). */
+export function alertSolidAction(color: AlertColor): string {
+  return tones[color].actionSolid
+}
 
 /** The slot classes of one color × variant, for UAlert and UToast alike. */
 export function alertClasses(color: AlertColor, variant: AlertVariant): SlotClasses {
@@ -167,7 +189,7 @@ export function alertClasses(color: AlertColor, variant: AlertVariant): SlotClas
         root: `${t.solid} bg-none ${t.onSolid} ring-0`,
         icon: t.onSolid,
         title: t.onSolid,
-        description: `${t.onSolid} opacity-90`,
+        description: t.mutedSolid ?? `${t.onSolid} opacity-90`,
         close: t.closeSolid,
       }
   }
