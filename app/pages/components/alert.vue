@@ -93,9 +93,9 @@ function showToast(extra: Record<string, unknown> = {}) {
       wraps="UAlert"
       description="Un messaggio dentro la pagina. Stem ritocca solo i colori primary, secondary e neutral; gli altri restano quelli di Nuxt UI. I toast usano le stesse opzioni."
   >
-    <ShowcasePlayground v-model="state" tag="UAlert" :controls="controls" :code-extra="codeExtra">
+    <ShowcasePlayground v-model="state" tag="SAlert" :controls="controls" :code-extra="codeExtra">
       <template #default="{props}">
-        <UAlert v-bind="props" :actions="actions" :avatar="avatar" class="w-[28rem]"/>
+        <SAlert v-bind="props" :actions="actions" :avatar="avatar" class="w-[28rem]"/>
       </template>
     </ShowcasePlayground>
 
@@ -105,7 +105,7 @@ function showToast(extra: Record<string, unknown> = {}) {
     >
       <ShowcaseMatrix :rows="colors" :cols="variants">
         <template #cell="{row, col}">
-          <UAlert
+          <SAlert
               v-bind="without(current, 'variant', 'color', 'title', 'orientation')"
               :color="row as any"
               :variant="col as any"
@@ -121,7 +121,7 @@ function showToast(extra: Record<string, unknown> = {}) {
         description="vertical mette le azioni sotto il testo, horizontal a destra, centrate."
     >
       <ShowcaseStage body-class="grid gap-4 p-8">
-        <UAlert
+        <SAlert
             v-for="o in orientations"
             :key="o"
             v-bind="without(current, 'orientation')"
@@ -138,10 +138,10 @@ function showToast(extra: Record<string, unknown> = {}) {
         description="Solo titolo, solo descrizione, con avatar al posto dell'icona, testo lungo che va a capo."
     >
       <ShowcaseStage body-class="grid gap-4 p-8 sm:grid-cols-2">
-        <UAlert v-bind="without(current, 'description')" title="Solo il titolo"/>
-        <UAlert v-bind="without(current, 'title')" description="Solo la descrizione, senza titolo."/>
-        <UAlert v-bind="without(current, 'icon')" :avatar="{src: 'https://i.pravatar.cc/96?img=12', alt: 'Anna'}" title="Anna ti ha invitato" description="Progetto Stem, ruolo editor."/>
-        <UAlert
+        <SAlert v-bind="without(current, 'description')" title="Solo il titolo"/>
+        <SAlert v-bind="without(current, 'title')" description="Solo la descrizione, senza titolo."/>
+        <SAlert v-bind="without(current, 'icon')" :avatar="{src: 'https://i.pravatar.cc/96?img=12', alt: 'Anna'}" title="Anna ti ha invitato" description="Progetto Stem, ruolo editor."/>
+        <SAlert
             v-bind="current"
             title="Un titolo abbastanza lungo da andare a capo su due righe"
             description="Molti documenti hanno solo l'anno: cercare per date esatte li lascia fuori dai risultati, quindi conviene allargare l'intervallo."
@@ -154,7 +154,7 @@ function showToast(extra: Record<string, unknown> = {}) {
         description="title, description e actions accettano markup."
     >
       <ShowcaseStage body-class="grid gap-4 p-8">
-        <UAlert v-bind="without(current, 'title', 'description')">
+        <SAlert v-bind="without(current, 'title', 'description')">
           <template #title>Import <strong>completato</strong></template>
           <template #description>
             128 righe importate, 3 scartate. <a href="#" class="underline underline-offset-2">Vedi il report</a>
@@ -162,7 +162,28 @@ function showToast(extra: Record<string, unknown> = {}) {
           <template #actions>
             <SButton label="Apri" size="xs" variant="outline" color="neutral"/>
           </template>
-        </UAlert>
+        </SAlert>
+      </ShowcaseStage>
+    </ShowcaseSection>
+
+    <ShowcaseSection
+        title="Contenuto sotto il testo"
+        description="Lo slot di default di SAlert: parte dove parte il testo e, in orizzontale, corre fino al bordo destro, sotto le azioni."
+    >
+      <ShowcaseStage body-class="grid gap-4 p-8">
+        <SAlert
+            v-for="o in ['horizontal', 'vertical']"
+            :key="o"
+            v-bind="without(current, 'orientation', 'title', 'description')"
+            :orientation="o as any"
+            title="Scegli il formato"
+            description="Lo useremo per tutti gli export di questo progetto."
+            :actions="actions"
+        >
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            <SButton v-for="f in ['PDF', 'DOCX', 'Markdown', 'CSV']" :key="f" :label="f" size="xs" variant="soft" rounded/>
+          </div>
+        </SAlert>
       </ShowcaseStage>
     </ShowcaseSection>
 
