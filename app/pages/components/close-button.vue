@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type {ShowcaseControl} from '~/utils/showcase-controls'
 
-// Le size di SModalButton: non vengono dal tema di Nuxt UI.
-const sizes = ['xs', 'sm', 'md']
+// La scala di Stem: SCloseButton → SModalButton → SButton.
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 
 const controls: ShowcaseControl[] = [
-  {group: 'Aspetto', key: 'size', type: 'select', options: sizes, default: 'md'},
+  {group: 'Aspetto', key: 'size', type: 'select', options: sizes, default: 'sm'},
   {group: 'Contenuto', key: 'label', label: 'label (aria)', type: 'text', placeholder: 'modal.close del locale'},
   {group: 'Stato', key: 'disabled', type: 'boolean'},
+  ...scaleControls(),
 ]
 
 const state = useCookie<Record<string, any>>('showcase-close-button', {default: () => controlDefaults(controls)})
@@ -22,9 +23,9 @@ const current = computed(() => {
 })
 
 const surfaces = [
-  {size: 'md', title: 'Modifica progetto', where: 'Header di un modal', box: 'w-96 rounded-2xl px-5 py-4', text: 'text-lg'},
-  {size: 'sm', title: 'Filtri', where: 'Popover', box: 'w-72 rounded-xl px-3 py-2.5', text: 'text-sm'},
-  {size: 'xs', title: 'Suggerimento', where: 'Card accanto a un link', box: 'w-60 rounded-lg px-2.5 py-2', text: 'text-xs'},
+  {size: 'sm', title: 'Modifica progetto', where: 'Header di un modal', box: 'w-96 rounded-2xl px-5 py-4', text: 'text-lg'},
+  {size: 'xs', title: 'Filtri', where: 'Popover', box: 'w-72 rounded-xl px-3 py-2.5', text: 'text-sm'},
+  {size: 'xs', space: '2xs', title: 'Suggerimento', where: 'Card accanto a un link', box: 'w-60 rounded-lg px-2.5 py-2', text: 'text-xs'},
 ] as const
 
 </script>
@@ -78,9 +79,9 @@ const surfaces = [
               :class="s.box"
           >
             <span class="font-medium" :class="s.text">{{ s.title }}</span>
-            <SCloseButton :size="s.size"/>
+            <SCloseButton :size="s.size" :space="s.space"/>
           </div>
-          <span class="font-mono text-[11px] text-(--ui-text-muted)">{{ s.where }} · {{ s.size }}</span>
+          <span class="font-mono text-[11px] text-(--ui-text-muted)">{{ s.where }} · {{ s.size }}{{ s.space ? ` space ${s.space}` : '' }}</span>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>

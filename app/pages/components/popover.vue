@@ -78,7 +78,7 @@ const actions = [
               <div v-else-if="s.example === 'form'" class="w-72 space-y-3 p-4">
                 <div class="flex items-center justify-between">
                   <p class="text-sm font-semibold text-(--ui-text-highlighted)">Invita</p>
-                  <SCloseButton size="sm" @click="close"/>
+                  <SCloseButton size="xs" @click="close"/>
                 </div>
                 <SInput placeholder="Nome" size="sm" class="w-full"/>
                 <SInput placeholder="Email" size="sm" class="w-full"/>
@@ -195,7 +195,7 @@ const actions = [
                 <div class="w-72 space-y-3 p-4">
                   <div class="flex items-center justify-between">
                     <p class="text-sm font-semibold text-(--ui-text-highlighted)">Invita</p>
-                    <SCloseButton size="sm" @click="close"/>
+                    <SCloseButton size="xs" @click="close"/>
                   </div>
                   <SInput placeholder="Nome" size="sm" class="w-full"/>
                   <SInput placeholder="Email" size="sm" class="w-full"/>

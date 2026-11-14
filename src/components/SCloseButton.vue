@@ -3,45 +3,28 @@ import {computed} from 'vue'
 import {useLocale} from '@nuxt/ui/composables'
 
 /**
- * The close button of Stem's surfaces: a soft pill with an X, the one SModal
- * shows in its header — SModalButton, the pill every header button is. Standalone so that every panel, drawer or slideover
- * closes with the same control instead of an approximation of it.
+ * The close button of Stem's surfaces: SModalButton with an X, the one
+ * SModal shows in its header. Standalone so that every panel, drawer or
+ * slideover closes with the same control.
  *
- * Icon-only, so `label` is its accessible name (aria-label), never shown.
+ * Icon only, so `label` is its accessible name (aria-label), never shown.
  * Without one it takes Nuxt UI's own word for "close" (`modal.close`), in
  * the locale the app gives UApp — the same the Nuxt UI overlays read.
  *
- * `size` is SModalButton's: `sm` and `xs` for a popover or a card.
- *
- * Placement is the caller's: SModalHeader pins it to its corner.
+ * Everything else — `size`, the scale props, `disabled`, `@click` — passes
+ * through to SModalButton and SButton. Placement is the caller's:
+ * SModalHeader pins it to its corner.
  */
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   /** Accessible name (aria-label). Not rendered. */
   label?: string
-  disabled?: boolean
-  size?: 'xs' | 'sm' | 'md'
-}>(), {
-  label: undefined,
-  disabled: false,
-  size: 'md',
-})
+}>()
 
 const {t} = useLocale()
 
 const ariaLabel = computed(() => props.label ?? t('modal.close'))
-
-defineEmits<{
-  click: [event: MouseEvent]
-}>()
 </script>
 
 <template>
-  <!-- SModalButton with an X: the header's other buttons are the same pill. -->
-  <SModalButton
-    icon="i-ph-x"
-    :aria-label="ariaLabel"
-    :disabled="disabled"
-    :size="size"
-    @click="$emit('click', $event)"
-  />
+  <SModalButton icon="i-ph-x" :aria-label="ariaLabel"/>
 </template>

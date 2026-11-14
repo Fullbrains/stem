@@ -99,7 +99,7 @@ const headers: {label: string, props: Record<string, unknown>, actions?: boolean
   {label: 'senza close', props: {title: 'Impostazioni', closeable: false}},
 ]
 
-const modalButtonSizes = ['xs', 'sm', 'md']
+const modalButtonSizes = ['xs', 'sm', 'md', 'lg', 'xl']
 
 const confirmCode = `const {confirm} = useConfirmModal()
 
@@ -180,7 +180,7 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
 
     <ShowcaseSection
         title="ModalButton"
-        description="Il pulsante dell'header, la stessa pillola del close: md per la modale, sm e xs per popover e card."
+        description="Il pulsante dell'header: un SButton soft e rounded, sm (32px) di default come l'header della modale; size e scala sono quelle di SButton."
     >
       <ShowcaseScale :items="modalButtonSizes">
         <template #item="{item}">
