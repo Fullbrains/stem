@@ -9,10 +9,12 @@ import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
  */
 function tabsSize(token: StemSize) {
   return {
-    // A pill list: the extra padding on its ends (--s-pill-x), given back
-    // as a negative margin, so the tabs line up with squircle ones.
+    // A pill list: its triggers, pills too, take the extra padding-x
+    // (--s-pill-x), given back as the root's negative margin, so the tabs line
+    // up with squircle ones. The list's inset stays the same on every side,
+    // so the active pill is concentric with the list's.
     root: `${stemSizeClass(token)} mx-[calc(var(--s-pill-x,0px)*-1)]`,
-    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
+    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
     leadingIcon: stemScaleIcon,
   }
 }
@@ -28,7 +30,7 @@ export default {
   variants: {
     variant: {
       pill: {
-        list: 's-corner p-(--s-inset) px-[calc(var(--s-inset)+var(--s-pill-x,0px))]',
+        list: 's-corner p-(--s-inset)',
         indicator: 's-corner-inner shadow-none',
       },
       link: {
