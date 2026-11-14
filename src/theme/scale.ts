@@ -29,9 +29,9 @@ export type StemSpace = 0 | '0' | '2xs' | StemSize
 
 const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl']
 
-/** The space `by` steps from a size, clamped to the scale (sm, +1 → md). */
-export function stemSpaceStep(from: StemSize, by: number): StemSpace {
-  const i = spaceSteps.indexOf(from)
+/** The space `by` steps from a size or space, clamped to the scale (sm, +1 → md). */
+export function stemSpaceStep(from: StemSpace, by: number): StemSpace {
+  const i = spaceSteps.indexOf(String(from) as StemSpace)
   return spaceSteps[Math.min(spaceSteps.length - 1, Math.max(0, i + by))]!
 }
 

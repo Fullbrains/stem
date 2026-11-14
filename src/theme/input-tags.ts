@@ -31,7 +31,8 @@ const remappedBase = baseCompoundVariants.map((cv) => {
 // smaller, two steps below the size (sm: 4px, so 24px in a 32px field), as a
 // chip in a search bar; the field takes that much off its own padding-y
 // (--s-tag-py), so it is as tall with tags as without. Literal per size, so
-// Tailwind sees them.
+// Tailwind sees them; SInputTags overrides --s-tag-py inline from its space
+// (two steps below its space-y), so the tags follow it.
 //
 // The X is an SButton of its own, icon only and rounded: the size below the
 // tag's, space 2xs (sm: a 12px X in a 20px circle). It sits at the pill's
@@ -53,10 +54,12 @@ function tagSize(token: string) {
     // height): more padding-x, given back as a negative margin.
     // On the right the X's circle takes over: padding-right is its inset from
     // the pill's end, the gap is the button's less the circle's padding.
-    item: 'py-(--s-tag-py) ps-[calc(var(--s-px)+(var(--s-icon-size)+2*var(--s-tag-py))*0.08)] ms-[calc((var(--s-icon-size)+2*var(--s-tag-py))*-0.08)] pe-[calc((var(--s-icon-size)+2*var(--s-tag-py)-var(--s-tag-x)-2*var(--s-tag-x-pad))/2)] gap-[calc(var(--s-gap)-var(--s-tag-x-pad))] text-(length:--s-text) leading-(--s-icon-size)',
+    item: '[--s-tag-xp:min(var(--s-tag-x-pad),max(0px,calc((var(--s-icon-size)+2*var(--s-tag-py)-var(--s-tag-x))/2)))] py-(--s-tag-py) ps-[calc(var(--s-px)+(var(--s-icon-size)+2*var(--s-tag-py))*0.08)] ms-[calc((var(--s-icon-size)+2*var(--s-tag-py))*-0.08)] pe-[max(0px,calc((var(--s-icon-size)+2*var(--s-tag-py)-var(--s-tag-x)-2*var(--s-tag-xp))/2))] gap-[calc(var(--s-gap)-var(--s-tag-xp))] text-(length:--s-text) leading-(--s-icon-size)',
+    // The circle's padding shrinks when the tag is too short for it (a
+    // small space), so the circle never outgrows the tag (--s-tag-xp).
     // As tall as the text's line in the flow (a negative margin-y), so the
     // circle does not make the tag taller.
-    itemDelete: 'size-[calc(var(--s-tag-x)+2*var(--s-tag-x-pad))] -my-[calc((var(--s-tag-x)+2*var(--s-tag-x-pad)-var(--s-icon-size))/2)] justify-center shrink-0',
+    itemDelete: 'size-[calc(var(--s-tag-x)+2*var(--s-tag-xp))] -my-[calc((var(--s-tag-x)+2*var(--s-tag-xp)-var(--s-icon-size))/2)] justify-center shrink-0',
     itemDeleteIcon: 'size-(--s-tag-x) shrink-0',
   }
 }

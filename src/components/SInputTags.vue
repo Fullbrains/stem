@@ -17,7 +17,18 @@ defineOptions({inheritAttrs: false})
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
 const scale = useStemScale(props)
-const scaleClasses = computed(() => stemScaleClasses(scale.value))
+const scaleClasses = computed(() => {
+  const from = scale.value.spaceY ?? scale.value.space ?? scale.value.size
+  return [...stemScaleClasses(scale.value), from != null && tagPyClass[String(from)]]
+})
+// The tags' padding-y: two steps below the field's own, so they follow its
+// space as a button does (the theme has it per size, for a bare field). A
+// class, since UInputTags gives its style to the inner input. Literal, so
+// Tailwind sees them.
+const tagPyClass: Record<string, string> = {
+  '0': '[--s-tag-py:0px]', '2xs': '[--s-tag-py:0px]', 'xs': '[--s-tag-py:0px]',
+  'sm': '[--s-tag-py:4px]', 'md': '[--s-tag-py:6px]', 'lg': '[--s-tag-py:8px]', 'xl': '[--s-tag-py:10px]',
+}
 const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 </script>
 
