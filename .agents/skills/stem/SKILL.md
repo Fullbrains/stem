@@ -72,7 +72,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `USelect`, `USelectMenu`, `UInputMenu` | `SSelect`, `SSelectMenu`, `SInputMenu` | Scale props, on the trigger and on the menu's items |
 | `UInputTags` | `SInputTags` | Scale props; tags one line tall, so the field keeps its height |
 | `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale |
-| `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall). A tab's badge: the tab's size, text a step below, pill, 2px padding-y given back as a negative margin-y, so the tab keeps its height (sm: 20px in a 32px tab) |
+| `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall). A tab's badge is an SBadge of the tab's size with its defaults (pill, space-y -1), its padding-y given back as a negative margin-y, so the tab keeps its height (sm: 28px in a 32px tab) |
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
 | `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SModalButton actions and X, content slot under the text |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
