@@ -5,18 +5,18 @@
  * same text, icon, padding, gap and radius, so they line up optically
  * wherever they sit side by side. The line height equals the icon size: text
  * and icon share one row, and a control is exactly `icon + 2 × padding-y`
- * tall (sm: 16 + 2 × 4 = 24px). Borders and focus rings are drawn inside.
+ * tall (sm: 16 + 2 × 8 = 32px). Padding and gap are half the icon. Borders and focus rings are drawn inside.
  *
  * The values live as CSS classes in src/css/scale.css (`s-size-*`,
  * `s-space-*`, `s-text-*`, `s-icon-*`, `s-roundness-*`, `s-pill`): keep the
  * two in step.
  */
 export const stemScale = {
-  xs: {text: 12, icon: 12, space: 2, radius: 4},
-  sm: {text: 14, icon: 16, space: 4, radius: 6},
-  md: {text: 16, icon: 20, space: 8, radius: 8},
+  xs: {text: 12, icon: 12, space: 6, radius: 4},
+  sm: {text: 14, icon: 16, space: 8, radius: 6},
+  md: {text: 16, icon: 20, space: 10, radius: 8},
   lg: {text: 18, icon: 24, space: 12, radius: 10},
-  xl: {text: 20, icon: 28, space: 16, radius: 12},
+  xl: {text: 20, icon: 28, space: 14, radius: 12},
 } as const
 
 export type StemSize = keyof typeof stemScale
