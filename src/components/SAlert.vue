@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScale, stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
+import {stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {alertClasses, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
@@ -56,14 +56,11 @@ const props = withDefaults(defineProps<StemScaleProps & {
 // steps more space than its size (sm: 12px).
 const scale = useStemScale(props, {size: 'sm', space: '+2'})
 
-// The buttons are SModalButtons of the alert's size, space-y a step below
-// it (SModalButton's own default: sm, 28px tall). The actions are pulled up
-// by half their excess over the title's line, so they sit centred on it.
-const buttonPull = computed(() => {
-  const size = scale.value.size!
-  const height = stemScale[size].icon + 2 * stemSpacePx(stemSpaceStep(size, -1))
-  return (height - stemScale[size].icon) / 2
-})
+// The buttons are SModalButtons of the alert's size, space-y two steps below
+// it (sm: 4px, 24px tall). The actions are pulled up by half their excess
+// over the title's line, so they sit centred on it.
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
+const buttonPull = computed(() => stemSpacePx(buttonSpaceY.value))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-py': `${buttonPull.value}px`,
@@ -71,7 +68,7 @@ const scaleStyle = computed(() => ({
 }))
 
 // What the buttons inside inherit: the alert's size and type. Not its
-// space: that is the alert's own, the buttons keep SModalButton's (space-y -1).
+// space: that is the alert's own, the buttons keep SModalButton's, space-y two steps below the size.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
   space: undefined,
@@ -169,13 +166,14 @@ const bodyClass = computed(() => {
     </template>
     <template v-if="hasActions" #actions>
       <slot name="actions">
-        <SModalButton v-for="(action, index) in actions" :key="index" v-bind="action"/>
+        <SModalButton v-for="(action, index) in actions" :key="index" :space-y="buttonSpaceY" v-bind="action"/>
       </slot>
     </template>
     <template v-if="close" #close>
       <slot name="close">
         <SModalButton
             :icon="closeIcon"
+            :space-y="buttonSpaceY"
             :aria-label="t('alert.close')"
             v-bind="closeProps"
             data-slot="close"
