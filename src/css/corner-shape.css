@@ -6,7 +6,7 @@
    circle, so the corner looks smaller: the radius grows by the same factor.
    --s-squircle is global (:root), one number for every corner. */
 :root {
-    --s-squircle: 1.6;
+    --s-squircle: 1.5;
 }
 
 .s-corner {

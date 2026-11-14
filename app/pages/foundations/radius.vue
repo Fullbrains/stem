@@ -14,7 +14,7 @@ const superellipse = ref(true)
 <template>
   <ShowcasePage
       title="Raggi e angoli"
-      description="Gli angoli di Stem: --s-radius sull'elemento e la classe s-corner. Dove il browser supporta corner-shape il raggio cresce di --s-squircle (1.6) e diventa una superellisse dello stesso esponente."
+      description="Gli angoli di Stem: --s-radius sull'elemento e la classe s-corner. Dove il browser supporta corner-shape il raggio cresce di --s-squircle (1.5) e diventa una superellisse dello stesso esponente."
   >
     <ShowcaseSection title="Scala" description="Ogni raggio in uso, su un riquadro e su un elemento vero.">
       <div class="mb-2 flex justify-end">
