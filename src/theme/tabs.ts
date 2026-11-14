@@ -10,7 +10,7 @@ import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
 function tabsSize(token: StemSize) {
   return {
     root: stemSizeClass(token),
-    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
+    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
     leadingIcon: stemScaleIcon,
   }
 }

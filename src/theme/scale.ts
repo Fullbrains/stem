@@ -116,7 +116,7 @@ export function stemScaleStyle(p: StemScaleProps): Record<string, string> | unde
  * component's root and these on the element that holds the text.
  */
 export const stemScaleText = 'text-(length:--s-text) leading-(--s-icon-size)'
-export const stemScalePadding = 'px-(--s-px) py-(--s-py) gap-(--s-gap)'
+export const stemScalePadding = 'px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-(--s-py) gap-(--s-gap)'
 export const stemScaleIcon = 'size-(--s-icon-size) shrink-0'
 
 export function stemSizeClass(size: StemSize) {

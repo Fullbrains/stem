@@ -28,7 +28,7 @@ export const selectLabelCompounds = [
 
 // USelect / USelectMenu: the trigger is the root; leading and trailing icons
 // sit inside it, absolutely positioned, one padding from the edge.
-const selectEdges = {leading: 'ps-(--s-px)!', trailing: 'pe-(--s-px)!'}
+const selectEdges = {leading: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px))]!', trailing: 'pe-[calc(var(--s-px)+var(--s-pill-x,0px))]!'}
 
 export const selectSizes = {
   xs: {...sizes.xs, ...selectEdges, ...menuItemSizes.xs},

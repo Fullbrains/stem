@@ -24,9 +24,9 @@ function size(token: StemSize) {
 function fieldSize(token: StemSize) {
   return {
     root: stemSizeClass(token),
-    base: `${stemScaleText} px-(--s-px)! py-(--s-py)! gap-(--s-gap)`,
-    leading: 'ps-(--s-px)!',
-    trailing: 'pe-(--s-px)!',
+    base: `${stemScaleText} px-[calc(var(--s-px)+var(--s-pill-x,0px))]! py-(--s-py)! gap-(--s-gap)`,
+    leading: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px))]!',
+    trailing: 'pe-[calc(var(--s-px)+var(--s-pill-x,0px))]!',
     leadingIcon: stemScaleIcon,
     trailingIcon: stemScaleIcon,
   }
@@ -44,8 +44,8 @@ export const fieldSizes = Object.fromEntries(stemSizes.map(s => [s, fieldSize(s)
  * otherwise let win over an earlier `ps-*`.
  */
 export const fieldIconCompounds = [
-  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
-  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap))]!'}},
+  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px)+var(--s-icon-size)+var(--s-gap))]!'}},
+  {trailing: true, class: {base: 'pe-[calc(var(--s-px)+var(--s-pill-x,0px)+var(--s-icon-size)+var(--s-gap))]!'}},
 ]
 
 /**
@@ -54,6 +54,6 @@ export const fieldIconCompounds = [
  * icon (`icon`), or with none (`alone`, always mode only). After fieldIconCompounds, so they win.
  */
 export const fieldLabelCompounds = [
-  {class: {base: 'ps-[calc(var(--s-px)-var(--s-label-alone-start,0em))]!'}},
-  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-icon-start,0em))]!'}},
+  {class: {base: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px)-var(--s-label-alone-start,0em))]!'}},
+  {leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-pill-x,0px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-icon-start,0em))]!'}},
 ]

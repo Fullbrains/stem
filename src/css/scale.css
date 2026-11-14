@@ -70,7 +70,24 @@
     .s-roundness-xl { --s-radius: 12px; }
 
     /* Pill: a round end whatever the height, never a squircle. */
-    .s-pill { --s-radius: 9999px; --s-corner-shape: round; }
+    /*
+     * Pill: a round end whatever the height, never a squircle.
+     *
+     * Its round ends take more of the corners than a squircle does, so the
+     * content looks closer to the edge at the same padding. --s-pill-x adds
+     * the difference to the horizontal padding: the area the round ends lose
+     * over the squircle's, spread over the height, about 8% of it (sm 2.6px,
+     * xl 4.5px). Padding, not margin: the height stays, the box grows by
+     * twice that in width, and an icon-only pill (padding-x = padding-y)
+     * stays a circle. Every sized root resets it, so a control inside a pill
+     * does not inherit it.
+     */
+    [class*="s-size-"] { --s-pill-x: 0px; }
+    .s-pill {
+        --s-radius: 9999px;
+        --s-corner-shape: round;
+        --s-pill-x: calc((var(--s-icon-size) + 2 * var(--s-py)) * 0.08);
+    }
 
     /*
      * Optical label: a letter carries air inside its own box (the font's side
