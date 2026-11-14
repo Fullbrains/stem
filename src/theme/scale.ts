@@ -24,8 +24,8 @@ export type StemSize = keyof typeof stemScale
 
 export const stemSizes = Object.keys(stemScale) as StemSize[]
 
-/** The space scale: the sizes, plus 2xs (4px) below xs. */
-export type StemSpace = '2xs' | StemSize
+/** The space scale: the sizes, plus 2xs (4px) and 0 (none) below xs. */
+export type StemSpace = 0 | '0' | '2xs' | StemSize
 
 /**
  * The props every sized Stem component takes on top of `size`. Each one,
@@ -55,9 +55,10 @@ function isToken(v: unknown): v is StemSize {
 /** The classes that move each axis off `size`. Plain CSS, not Tailwind. */
 export function stemScaleClasses(p: StemScaleProps): string[] {
   const out: string[] = []
-  if (p.space) out.push(`s-space-${p.space}`)
-  if (p.spaceX) out.push(`s-space-x-${p.spaceX}`)
-  if (p.spaceY) out.push(`s-space-y-${p.spaceY}`)
+  // `!= null`, not truthiness: 0 is a value of the space scale.
+  if (p.space != null) out.push(`s-space-${p.space}`)
+  if (p.spaceX != null) out.push(`s-space-x-${p.spaceX}`)
+  if (p.spaceY != null) out.push(`s-space-y-${p.spaceY}`)
   if (p.textSize) out.push(`s-text-${p.textSize}`)
   if (isToken(p.iconSize)) out.push(`s-icon-${p.iconSize}`)
   if (p.roundness) out.push(`s-roundness-${p.roundness}`)
