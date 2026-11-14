@@ -23,10 +23,18 @@ import {computed, provide, useAttrs, useSlots} from 'vue'
  * and the actions' columns. In `vertical` the actions are under the text
  * already, and the slot stays in the text's column.
  *
- * Its buttons are SButtons on the alert's scale: the `actions` it is given,
- * the X, and any Stem control in its slots take its size, a pill, and a
- * padding-y two steps below (sm: 24px), so they sit on the title's line
- * without making a one-line alert taller. A button's own props win.
+ * Its buttons are SModalButtons of its size: space-x the size's own,
+ * space-y two steps below (sm: 24px), so they sit on the title's line
+ * without making a one-line alert taller; on a solid alert, tinted to stay
+ * readable. The `actions` it is given and the X get these; an `#actions`
+ * slot gets them as params, to bind on what it renders:
+ *   <template #actions="{button, primary}">
+ *     <SModalButton v-bind="button" label="Annulla"/>
+ *     <SDropdownMenu :items="items"><SModalButton v-bind="button" label="Altro" caret/></SDropdownMenu>
+ *     <SModalButton v-bind="primary" label="OK"/>
+ *   </template>
+ * `button` is a plain one, `primary` the default action (primary, solid).
+ * Any other Stem control in its slots takes its size. A button's own props win.
  *
  * A toast has no such slot: its `description` takes a render function, and
  * holds the content in the text's column.
@@ -92,6 +100,15 @@ function actionTint(action: Record<string, unknown>) {
   if (!solidColor.value) return undefined
   return action.variant === 'solid' ? alertSolidAction(solidColor.value) || undefined : closeTint.value
 }
+
+// The buttons' props: what the generated ones get, and the #actions slot's
+// params (`button`, `primary`).
+const buttonScale = computed(() => ({size: scale.value.size, spaceX: scale.value.size, spaceY: buttonSpaceY.value}))
+const primaryAction = {color: 'primary', variant: 'solid'} as const
+const actionParams = computed(() => ({
+  button: {...buttonScale.value, class: actionTint({})},
+  primary: {...buttonScale.value, ...primaryAction, class: actionTint(primaryAction)},
+}))
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -169,18 +186,16 @@ const bodyClass = computed(() => {
       <slot :name="name" v-bind="scope ?? {}"/>
     </template>
     <template v-if="hasActions" #actions>
-      <slot name="actions">
-        <SModalButton v-for="(action, index) in actions" :key="index" :space-x="scale.size" :space-y="buttonSpaceY" v-bind="action" :class="actionTint(action)"/>
+      <slot name="actions" v-bind="actionParams">
+        <SModalButton v-for="(action, index) in actions" :key="index" v-bind="{...buttonScale, ...action}" :class="actionTint(action)"/>
       </slot>
     </template>
     <template v-if="close" #close>
       <slot name="close">
         <SModalButton
             :icon="closeIcon"
-            :space-x="scale.size"
-            :space-y="buttonSpaceY"
             :aria-label="t('alert.close')"
-            v-bind="closeProps"
+            v-bind="{...buttonScale, ...closeProps}"
             data-slot="close"
             :class="closeTint"
             @click="emit('update:open', false)"
