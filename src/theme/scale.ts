@@ -75,6 +75,16 @@ export const stemScaleText = 'text-(length:--s-text) leading-(--s-icon-size)'
 export const stemScalePadding = 'px-(--s-px) py-(--s-py) gap-(--s-gap)'
 export const stemScaleIcon = 'size-(--s-icon-size) shrink-0'
 
+/**
+ * Optical alignment of an icon beside text. Phosphor draws inside a 256 grid
+ * with 24 units of air on each side (3/32 of the icon), so a box-exact gap or
+ * padding looks wider next to an icon than next to text. A negative margin of
+ * that much on the icon's sides brings the drawing, not its box, to the
+ * padding and the gap. Off when the control is icon only (`square`): there
+ * the box is what must stay square.
+ */
+export const stemIconOptical = '-mx-[calc(var(--s-icon-size)*0.09375)]'
+
 export function stemSizeClass(size: StemSize) {
   return `s-size-${size}`
 }

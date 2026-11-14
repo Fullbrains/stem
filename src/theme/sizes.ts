@@ -1,4 +1,4 @@
-import {stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes, type StemSize} from './scale'
+import {stemIconOptical, stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes, type StemSize} from './scale'
 
 /**
  * Size variants built on the Stem scale (see scale.ts).
@@ -16,8 +16,8 @@ import {stemScaleIcon, stemScalePadding, stemScaleText, stemSizeClass, stemSizes
 function size(token: StemSize) {
   return {
     base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding}`,
-    leadingIcon: stemScaleIcon,
-    trailingIcon: stemScaleIcon,
+    leadingIcon: `${stemScaleIcon} ${stemIconOptical}`,
+    trailingIcon: `${stemScaleIcon} ${stemIconOptical}`,
   }
 }
 
