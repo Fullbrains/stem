@@ -8,7 +8,8 @@ const controls: ShowcaseControl[] = [
   {group: 'Aspetto', key: 'size', type: 'select', options: sizes, default: 'sm'},
   {group: 'Contenuto', key: 'label', label: 'label (aria)', type: 'text', placeholder: 'modal.close del locale'},
   {group: 'Stato', key: 'disabled', type: 'boolean'},
-  ...scaleControls(),
+  // rounded è il default di SModalButton (e quindi di SCloseButton).
+  ...scaleControls().map(c => c.key === 'rounded' ? {...c, default: true} : c),
 ]
 
 const state = useShowcaseState<Record<string, any>>('close-button', () => controlDefaults(controls))
