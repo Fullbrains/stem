@@ -5,14 +5,15 @@
  * same text, icon, padding, gap and radius, so they line up optically
  * wherever they sit side by side. The line height equals the icon size: text
  * and icon share one row, and a control is exactly `icon + 2 × padding-y`
- * tall (sm: 16 + 2 × 8 = 32px). Padding and gap are half the icon, except xs (4px). Borders and focus rings are drawn inside.
+ * tall (sm: 16 + 2 × 8 = 32px). Padding and gap are half the icon; the space scale
+ * has one more step below xs, 2xs (4px), for tighter controls. Borders and focus rings are drawn inside.
  *
  * The values live as CSS classes in src/css/scale.css (`s-size-*`,
  * `s-space-*`, `s-text-*`, `s-icon-*`, `s-roundness-*`, `s-pill`): keep the
  * two in step.
  */
 export const stemScale = {
-  xs: {text: 12, icon: 12, space: 4, radius: 4},
+  xs: {text: 12, icon: 12, space: 6, radius: 4},
   sm: {text: 14, icon: 16, space: 8, radius: 6},
   md: {text: 16, icon: 20, space: 10, radius: 8},
   lg: {text: 18, icon: 24, space: 12, radius: 10},
@@ -22,6 +23,9 @@ export const stemScale = {
 export type StemSize = keyof typeof stemScale
 
 export const stemSizes = Object.keys(stemScale) as StemSize[]
+
+/** The space scale: the sizes, plus 2xs (4px) below xs. */
+export type StemSpace = '2xs' | StemSize
 
 /**
  * The props every sized Stem component takes on top of `size`. Each one,
@@ -33,11 +37,11 @@ export interface StemScaleProps {
   /** Icon size (and line height). A token, or any CSS length. */
   iconSize?: StemSize | (string & {})
   /** Padding on both axes, and gap. */
-  space?: StemSize
+  space?: StemSpace
   /** Horizontal padding, and gap. */
-  spaceX?: StemSize
+  spaceX?: StemSpace
   /** Vertical padding. */
-  spaceY?: StemSize
+  spaceY?: StemSpace
   /** Squircle radius. */
   roundness?: StemSize
   /** Pill: fully round ends, never a squircle. */

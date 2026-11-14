@@ -46,6 +46,7 @@ export {
   stemScaleClasses,
   stemScaleStyle,
   type StemSize,
+  type StemSpace,
   type StemScaleProps,
 } from './scale'
 

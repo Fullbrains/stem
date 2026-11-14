@@ -10,8 +10,11 @@
  *   --s-text       font size
  *   --s-icon-size  icon size, and the line height: text and icon share one
  *                  row, so a control is exactly icon + 2 × padding-y tall
- *   --s-px/--s-py  padding: half the icon (xs: 4px)
- *   --s-gap        gap between icon and label: half the icon (xs: 4px), follows space-x
+ *   --s-px/--s-py  padding: half the icon
+ *   --s-gap        gap between icon and label: half the icon, follows space-x
+ *
+ * The space scale has one step below xs, 2xs (4px), for tighter controls:
+ * size="xs" space="2xs" is 20px tall.
  *   --s-radius     squircle radius (s-corner)
  *
  * In @layer components: a Tailwind utility on the same element still wins.
@@ -21,24 +24,27 @@
  * Source of the numbers: src/theme/scale.ts (keep the two in step).
  */
 @layer components {
-    .s-size-xs { --s-text: 12px; --s-icon-size: 12px; --s-px: 4px; --s-py: 4px; --s-gap: 4px; --s-radius: 4px; }
+    .s-size-xs { --s-text: 12px; --s-icon-size: 12px; --s-px: 6px; --s-py: 6px; --s-gap: 6px; --s-radius: 4px; }
     .s-size-sm { --s-text: 14px; --s-icon-size: 16px; --s-px: 8px; --s-py: 8px; --s-gap: 8px; --s-radius: 6px; }
     .s-size-md { --s-text: 16px; --s-icon-size: 20px; --s-px: 10px; --s-py: 10px; --s-gap: 10px; --s-radius: 8px; }
     .s-size-lg { --s-text: 18px; --s-icon-size: 24px; --s-px: 12px; --s-py: 12px; --s-gap: 12px; --s-radius: 10px; }
     .s-size-xl { --s-text: 20px; --s-icon-size: 28px; --s-px: 14px; --s-py: 14px; --s-gap: 14px; --s-radius: 12px; }
 
-    .s-space-xs { --s-px: 4px; --s-py: 4px; --s-gap: 4px; }
+    .s-space-2xs { --s-px: 4px; --s-py: 4px; --s-gap: 4px; }
+    .s-space-xs { --s-px: 6px; --s-py: 6px; --s-gap: 6px; }
     .s-space-sm { --s-px: 8px; --s-py: 8px; --s-gap: 8px; }
     .s-space-md { --s-px: 10px; --s-py: 10px; --s-gap: 10px; }
     .s-space-lg { --s-px: 12px; --s-py: 12px; --s-gap: 12px; }
     .s-space-xl { --s-px: 14px; --s-py: 14px; --s-gap: 14px; }
 
-    .s-space-x-xs { --s-px: 4px; --s-gap: 4px; }
+    .s-space-x-2xs { --s-px: 4px; --s-gap: 4px; }
+    .s-space-x-xs { --s-px: 6px; --s-gap: 6px; }
     .s-space-x-sm { --s-px: 8px; --s-gap: 8px; }
     .s-space-x-md { --s-px: 10px; --s-gap: 10px; }
     .s-space-x-lg { --s-px: 12px; --s-gap: 12px; }
     .s-space-x-xl { --s-px: 14px; --s-gap: 14px; }
-    .s-space-y-xs { --s-py: 4px; }
+    .s-space-y-2xs { --s-py: 4px; }
+    .s-space-y-xs { --s-py: 6px; }
     .s-space-y-sm { --s-py: 8px; }
     .s-space-y-md { --s-py: 10px; }
     .s-space-y-lg { --s-py: 12px; }

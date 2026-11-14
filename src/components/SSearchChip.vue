@@ -47,7 +47,7 @@ const displayValue = computed(() => {
       :aria-label="labelIcon && label && displayValue !== null ? `${label}: ${displayValue}` : undefined"
       :class="[
         active ? 'bg-iron-400/30!' : '',
-        tight ? 's-space-y-xs' : '',
+        tight ? 's-space-y-2xs' : '',
       ]"
   >
     <template v-if="label && displayValue !== null">

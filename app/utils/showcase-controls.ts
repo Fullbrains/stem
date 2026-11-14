@@ -75,12 +75,13 @@ const followsSize = {label: 'da size', value: undefined}
  */
 export function scaleControls(group = 'Scala'): ShowcaseControl[] {
   const opts = [followsSize, ...scaleTokens]
+  const spaceOpts = [followsSize, '2xs', ...scaleTokens]
   return [
     {group, key: 'textSize', label: 'text-size', type: 'select', options: opts},
     {group, key: 'iconSize', label: 'icon-size', type: 'select', options: opts},
-    {group, key: 'space', type: 'select', options: opts},
-    {group, key: 'spaceX', label: 'space-x', type: 'select', options: opts},
-    {group, key: 'spaceY', label: 'space-y', type: 'select', options: opts},
+    {group, key: 'space', type: 'select', options: spaceOpts},
+    {group, key: 'spaceX', label: 'space-x', type: 'select', options: spaceOpts},
+    {group, key: 'spaceY', label: 'space-y', type: 'select', options: spaceOpts},
     {group, key: 'roundness', type: 'select', options: opts},
     {group, key: 'rounded', label: 'rounded (pillola)', type: 'boolean'},
   ]
@@ -92,7 +93,7 @@ export const scaleShapes: Record<string, Record<string, unknown>> = {
   'space-x md': {spaceX: 'md'},
   'space-y md': {spaceY: 'md'},
   'space md': {space: 'md'},
-  'space xs': {space: 'xs'},
+  'space 2xs': {space: '2xs'},
   'roundness xl': {roundness: 'xl'},
   'rounded': {rounded: true},
 }
