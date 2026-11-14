@@ -1,11 +1,11 @@
 import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
 
 /**
- * Tabs on the Stem scale. A tab list is as tall as a button of the same size:
- * the pill list has a 2px inset around its triggers, taken out of the
- * triggers' own padding-y (icon + 2 × (py − 2) + 2 × 2 = icon + 2 × py).
- * The list's corners are the scale's; the indicator's are 2px squarer
- * (s-corner-inner), so the two stay concentric. Pill with `rounded`.
+ * Tabs on the Stem scale. A trigger is a button of the same size in every
+ * way: its text, icon, padding, height and squircle (sm: 32px, 6px). The pill
+ * list wraps them with a 2px inset (--s-inset) on every side, so it is a
+ * button plus 4px tall, its corners rounder by the inset (s-corner-outer) and
+ * concentric with the active tab's. Pill with `rounded`.
  */
 function tabsSize(token: StemSize) {
   return {
@@ -14,7 +14,7 @@ function tabsSize(token: StemSize) {
     // up with squircle ones. The list's inset stays the same on every side,
     // so the active pill is concentric with the list's.
     root: `${stemSizeClass(token)} mx-[calc(var(--s-pill-x,0px)*-1)]`,
-    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-[max(0px,calc(var(--s-py)-var(--s-inset)))] gap-(--s-gap)',
+    trigger: 'text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-(--s-py) gap-(--s-gap)',
     leadingIcon: stemScaleIcon,
   }
 }
@@ -22,7 +22,7 @@ function tabsSize(token: StemSize) {
 export default {
   slots: {
     root: '[--s-inset:2px]',
-    trigger: 's-corner-inner cursor-pointer',
+    trigger: 's-corner cursor-pointer font-normal',
     // The optical label trim on the side of an icon or avatar; `alone`
     // without icons. The siblings decide; the more specific selectors win.
     label: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [&:has(+[data-slot=trailingIcon])]:me-[calc(var(--s-label-icon-end,0em)*-1)]',
@@ -30,8 +30,8 @@ export default {
   variants: {
     variant: {
       pill: {
-        list: 's-corner p-(--s-inset)',
-        indicator: 's-corner-inner shadow-none',
+        list: 's-corner-outer p-(--s-inset)',
+        indicator: 's-corner shadow-none',
       },
       link: {
         list: 'p-0',
