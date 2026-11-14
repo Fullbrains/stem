@@ -10,9 +10,8 @@ import {useStemScale} from '../composables/useStemScale'
  * one axis off `size`; `rounded` makes it a pill. Every UTabs prop, event and
  * slot passes through.
  *
- * A tab's badge is an SBadge of the tab's size, with its defaults (a pill,
- * space-y a step below the size) and the text a step below the tab's
- * (sm: 12px on a 16px line, 28px tall). Its padding-y comes back as a
+ * A tab's badge is an SBadge a size below the tab's, with its defaults (a
+ * pill, space-y a step below its size): in an sm tab an xs badge, 20px tall. Its padding-y comes back as a
  * negative margin-y: in the layout it is as tall as the line, so a tab with
  * a badge is as tall as one without.
  */
@@ -28,11 +27,11 @@ const attrs = useAttrs()
 const resolvedUi = computed(() => {
   const ui = (attrs.ui ?? {}) as Record<string, unknown>
   const size = scale.value.size ?? 'md'
-  const text = stemSizeStep(scale.value.textSize ?? size, -1)
+  const badge = stemSizeStep(size, -1)
   return {
     ...ui,
-    trailingBadgeSize: ui.trailingBadgeSize ?? size,
-    trailingBadge: [`s-text-${text} s-pill s-space-y-${stemSpaceStep(size, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
+    trailingBadgeSize: ui.trailingBadgeSize ?? badge,
+    trailingBadge: [`s-pill s-space-y-${stemSpaceStep(badge, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
   }
 })
 </script>
