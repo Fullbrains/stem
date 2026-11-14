@@ -33,7 +33,6 @@ const controls: ShowcaseControl[] = [
   ]},
 
   ...scaleControls(),
-  {group: 'Forma', key: 'disc', type: 'boolean'},
 
   {group: 'Stato', key: 'disabled', type: 'boolean'},
 ]
@@ -58,7 +57,8 @@ const current = computed(() => {
 
 const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
-  'disc': {disc: true},
+  'solo icona': {label: undefined},
+  'solo icona rounded': {label: undefined, rounded: true},
 }
 
 const lastCopied = ref<string>()
@@ -123,7 +123,7 @@ const snippets = [
     >
       <ShowcaseScale :items="Object.keys(shapes)">
         <template #item="{item}">
-          <SCopyButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'disc'), ...shapes[item]} as any"/>
+          <SCopyButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded'), ...shapes[item]} as any"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>
@@ -155,7 +155,7 @@ const snippets = [
 
     <ShowcaseSection
         title="Accanto a un valore"
-        description="L'uso tipico: un comando o un identificativo con il pulsante al fianco, ghost e disc per non pesare sulla riga."
+        description="L'uso tipico: un comando o un identificativo con il pulsante al fianco, ghost e rounded per non pesare sulla riga."
     >
       <ShowcaseStage body-class="flex flex-col gap-2 p-8">
         <div
@@ -164,7 +164,7 @@ const snippets = [
             class="flex items-center gap-2 rounded-lg bg-(--ui-bg-elevated) py-1 pr-1 pl-3"
         >
           <code class="flex-1 truncate font-mono text-xs">{{ s }}</code>
-          <SCopyButton :text="s" label="Copia il comando" variant="ghost" size="sm" disc/>
+          <SCopyButton :text="s" label="Copia il comando" variant="ghost" size="sm" rounded/>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>

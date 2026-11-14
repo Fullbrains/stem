@@ -26,7 +26,6 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'icon', type: 'select', options: icons, initial: 'i-ph-floppy-disk'},
   {group: 'Contenuto', key: 'trailingIcon', label: 'trailing-icon', type: 'select', options: icons},
 
-  {group: 'Forma', key: 'disc', type: 'boolean'},
   {group: 'Forma', key: 'caret', type: 'boolean'},
   {group: 'Forma', key: 'block', type: 'boolean'},
 
@@ -59,7 +58,8 @@ const current = computed(() => {
 const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
   'caret': {caret: true},
-  'disc': {disc: true},
+  'solo icona': {label: undefined},
+  'solo icona rounded': {label: undefined, rounded: true},
 }
 
 // Lo stesso pulsante con e senza label o icona: l'altezza non deve cambiare.
@@ -68,7 +68,7 @@ const contents: Record<string, Record<string, unknown>> = {
   'solo icona': {icon: 'i-ph-floppy-disk'},
   'icona e label': {icon: 'i-ph-floppy-disk', label: 'Salva'},
   'label e caret': {label: 'Salva', caret: true},
-  'disc': {icon: 'i-ph-floppy-disk', disc: true},
+  'solo icona rounded': {icon: 'i-ph-floppy-disk', rounded: true},
 }
 
 const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
@@ -78,7 +78,7 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
   <ShowcasePage
       title="Button"
       wraps="UButton"
-      description="Il pulsante di Stem, sulla scala unica: size decide testo, icona, padding, gap e raggio; text-size, icon-size, space e roundness ne spostano uno. Aggiunge spinner, conferma, caret, disc e pillola."
+      description="Il pulsante di Stem, sulla scala unica: size decide testo, icona, padding, gap e raggio; text-size, icon-size, space e roundness ne spostano uno. Aggiunge spinner, conferma, caret e pillola; senza label è quadrato, con rounded un cerchio."
   >
     <ShowcasePlayground v-model="state" tag="SButton" :controls="controls">
       <template #default="{props}">
@@ -99,13 +99,13 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 
     <ShowcaseSection
         title="Ispezione"
-        description="Box del pulsante (magenta), dell'icona (lime) e della label (cyan). Solo label, solo icona, entrambe, caret, disc: a parità di size, stessa altezza."
+        description="Box del pulsante (magenta), dell'icona (lime) e della label (cyan). Solo label, solo icona, entrambe, caret, cerchio: a parità di size, stessa altezza."
     >
       <ShowcaseStage body-class="space-y-5 p-8">
         <div v-for="s in sizes" :key="s" class="flex items-start gap-6">
           <span class="w-8 pt-2 font-mono text-[11px] text-(--ui-text-muted)">{{ s }}</span>
           <ShowcaseMeasure v-for="(c, name) in contents" :key="name" labels>
-            <SButton v-bind="{...without(current, 'size', 'label', 'icon', 'trailingIcon', 'disc', 'caret'), ...c}" :size="s as any" class="b [&_.iconify]:b1 [&_[data-slot=label]]:b2"/>
+            <SButton v-bind="{...without(current, 'size', 'label', 'icon', 'trailingIcon', 'caret'), ...c}" :size="s as any" class="b [&_.iconify]:b1 [&_[data-slot=label]]:b2"/>
           </ShowcaseMeasure>
         </div>
       </ShowcaseStage>
@@ -128,7 +128,7 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
     >
       <ShowcaseScale :items="Object.keys(shapes)">
         <template #item="{item}">
-          <SButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'disc', 'caret'), ...shapes[item]}"/>
+          <SButton v-bind="{...without(current, 'space', 'spaceX', 'spaceY', 'roundness', 'rounded', 'caret'), ...shapes[item]}"/>
         </template>
       </ShowcaseScale>
     </ShowcaseSection>

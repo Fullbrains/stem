@@ -33,7 +33,7 @@ const superellipse = ref(true)
         <div class="flex w-32 flex-col items-center gap-2 text-center">
           <div class="size-24 rounded-full bg-(--ui-bg-elevated) ring-1 ring-(--ui-border-accented)"/>
           <span class="font-mono text-[11px] text-(--ui-text-highlighted)">full</span>
-          <span class="text-[10px] leading-snug text-(--ui-text-muted)">disc, rounded, badge pill: mai superellisse</span>
+          <span class="text-[10px] leading-snug text-(--ui-text-muted)">rounded (pillola e cerchio): mai superellisse</span>
         </div>
       </ShowcaseStage>
     </ShowcaseSection>

@@ -8,15 +8,14 @@ import {useConfirmModal} from '../composables/useConfirmModal'
  * together; `text-size`, `icon-size`, `space`, `space-x`, `space-y` and
  * `roundness` move one of them; `rounded` makes it a pill.
  *
- * `disc`: icon only, square (padding-y on every side), round. No label,
- * trailing icon or caret.
+ * Without a label it is square (padding-y on every side) and as tall as with
+ * one; add `rounded` for a circle.
  */
 const props = defineProps<StemScaleProps & {
   icon?: string
   label?: string
   trailingIcon?: string
   caret?: boolean
-  disc?: boolean
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -38,19 +37,16 @@ const {confirm} = useConfirmModal()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
-const scaleClasses = computed(() => stemScaleClasses({...props, rounded: props.rounded || props.disc}))
+const scaleClasses = computed(() => stemScaleClasses(props))
 const resolvedStyle = computed(() => stemScaleStyle(props))
 
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
-  // Square: the vertical padding on every side, so width = height.
-  if (props.disc) ui.base = 'aspect-square justify-center p-(--s-py)!'
   if (props.caret) ui.trailingIcon = 'ml-auto'
   return Object.keys(ui).length ? ui : undefined
 })
 
 const resolvedTrailingIcon = computed(() => {
-  if (props.disc) return undefined
   if (props.caret) return 'i-ph-caret-down'
   return props.trailingIcon
 })
@@ -78,7 +74,7 @@ function handleClick(e: MouseEvent) {
 
 <template>
   <UButton
-      :label="disc ? undefined : label"
+      :label="label"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"
@@ -98,7 +94,7 @@ function handleClick(e: MouseEvent) {
         <UIcon v-else-if="icon" :name="icon" class="size-(--s-icon-size) shrink-0"/>
       </span>
     </template>
-    <template v-if="$slots.default && !disc" #default>
+    <template v-if="$slots.default" #default>
       <slot/>
     </template>
     <template v-if="$slots.trailing" #trailing>
