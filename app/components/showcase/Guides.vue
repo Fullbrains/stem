@@ -3,8 +3,9 @@
  * Linee guida verticali sopra un confronto: una linea rossa trasparente a
  * ogni bordo dei controlli che contiene (button, badge…) e dei loro pezzi
  * (icone, label), così controlli impilati uno sotto l'altro mostrano subito
- * dove i bordi e il contenuto combaciano e dove no.
+ * dove i bordi e il contenuto combaciano e dove no. Solo con "Misure" attivo.
  */
+const {measure} = useShowcase()
 const root = ref<HTMLElement>()
 const lines = ref<number[]>([])
 
@@ -38,11 +39,13 @@ onBeforeUnmount(() => ro?.disconnect())
 <template>
   <div ref="root" class="relative">
     <slot/>
-    <div
-        v-for="(x, i) in lines"
-        :key="i"
-        class="pointer-events-none absolute inset-y-0 w-px bg-red-500/40"
-        :style="{left: `${x - 0.5}px`}"
-    />
+    <template v-if="measure">
+      <div
+          v-for="(x, i) in lines"
+          :key="i"
+          class="pointer-events-none absolute inset-y-0 w-px bg-red-500/40"
+          :style="{left: `${x - 0.5}px`}"
+      />
+    </template>
   </div>
 </template>
