@@ -56,13 +56,12 @@ const current = computed(() => {
   return out
 })
 
-const allActions = [
-  {label: 'Annulla', color: 'neutral' as const, variant: 'outline' as const},
-  {label: 'Riprova', color: 'neutral' as const, variant: 'subtle' as const},
-]
+// L'azione di default (OK) è primary; le altre restano SModalButton com'è.
+const okAction = {label: 'OK', color: 'primary' as const, variant: 'solid' as const}
+const allActions = [{label: 'Annulla'}, okAction]
 
 function actionsFor(n: number | undefined) {
-  return n ? allActions.slice(0, n) : undefined
+  return n ? (n === 1 ? [okAction] : allActions) : undefined
 }
 
 const actions = computed(() => actionsFor(state.value.actions))
