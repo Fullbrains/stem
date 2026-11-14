@@ -11,7 +11,8 @@ import {useStemScale} from '../composables/useStemScale'
  * slot passes through.
  *
  * A tab's badge is an SBadge a size below the tab's, with its defaults (a
- * pill, space-y a step below its size): in an sm tab an xs badge, 20px tall. Its padding-y comes back as a
+ * pill, space-y a step below its size) and space-x two steps below: in an
+ * sm tab an xs badge, 20px tall, space-x 0 (only the pill's --s-pill-x). Its padding-y comes back as a
  * negative margin-y: in the layout it is as tall as the line, so a tab with
  * a badge is as tall as one without.
  */
@@ -31,7 +32,7 @@ const resolvedUi = computed(() => {
   return {
     ...ui,
     trailingBadgeSize: ui.trailingBadgeSize ?? badge,
-    trailingBadge: [`s-pill s-space-y-${stemSpaceStep(badge, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
+    trailingBadge: [`s-pill s-space-x-${stemSpaceStep(badge, -2)} s-space-y-${stemSpaceStep(badge, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
   }
 })
 </script>
