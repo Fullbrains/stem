@@ -12,7 +12,8 @@ import {useStemScale} from '../composables/useStemScale'
  *
  * A tab's badge is an SBadge a size below the tab's, with its defaults (a
  * pill, space-y a step below its size) and space-x a step below too: in an
- * sm tab an xs badge, 20px tall, 4px padding-x. Its padding-y comes back as a
+ * sm tab an xs badge, 20px tall, 4px padding-x. Soft, without a border; in
+ * the active tab its text takes the tab's (on a solid ground). Its padding-y comes back as a
  * negative margin-y: in the layout it is as tall as the line, so a tab with
  * a badge is as tall as one without.
  */
@@ -32,13 +33,23 @@ const resolvedUi = computed(() => {
   return {
     ...ui,
     trailingBadgeSize: ui.trailingBadgeSize ?? badge,
-    trailingBadge: [`s-pill s-space-x-${stemSpaceStep(badge, -1)} s-space-y-${stemSpaceStep(badge, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
+    trailingBadge: [`group-data-[state=active]:text-current s-pill s-space-x-${stemSpaceStep(badge, -1)} s-space-y-${stemSpaceStep(badge, -1)} my-[calc(var(--s-py)*-1)]`, ui.trailingBadge].filter(Boolean).join(' '),
   }
+})
+
+// Soft by default (UTabs draws it outline); an item's own badge props win.
+const resolvedItems = computed(() => {
+  const items = attrs.items as Record<string, unknown>[] | undefined
+  return items?.map((item) => {
+    const b = item.badge
+    if (b == null || b === false) return item
+    return {...item, badge: {variant: 'soft', ...(typeof b === 'object' ? b : {label: b})}}
+  })
 })
 </script>
 
 <template>
-  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle" :ui="resolvedUi">
+  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle" :ui="resolvedUi" :items="resolvedItems">
     <template v-for="(_, slot) in $slots" #[slot]="slotProps">
       <slot :name="slot" v-bind="slotProps ?? {}"/>
     </template>
