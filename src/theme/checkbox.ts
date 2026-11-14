@@ -20,8 +20,9 @@ export default {
   slots: {
     base: 'cursor-pointer s-corner-inner [--s-inset:calc(var(--s-radius)/2)]',
     label: 'cursor-pointer',
-    // The gap less the optical label shift (stemLabelShift).
-    wrapper: 'ms-[calc(var(--s-gap)-var(--s-label-shift,0em))]!',
+    // The gap less the optical label shift, `edge`: the box is drawn edge
+    // to edge, with no air to balance the letter's.
+    wrapper: 'ms-[calc(var(--s-gap)-var(--s-label-shift-edge,0em))]!',
   },
   variants: {
     size: Object.fromEntries(stemSizes.map(s => [s, checkboxSize(s)])),

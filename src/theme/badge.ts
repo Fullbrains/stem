@@ -5,10 +5,10 @@ export default {
   // with the same text, icon, padding and radius. Squircle; pill via `rounded`.
   slots: {
     base: 's-corner font-normal',
-    // The optical label shift (stemLabelShift): a label after an icon or an
-    // avatar, or with an icon on its right. UBadge has no leading/trailing
-    // variants, so the siblings decide. Not on a label alone: it balances.
-    label: '[[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-shift,0em)*-1)] [&:has(+[data-slot=trailingIcon])]:ms-[calc(var(--s-label-shift,0em)*-1)]',
+    // The optical label shift: `center` on a label alone, `icon` beside an
+    // icon or avatar. UBadge has no leading/trailing variants, so the
+    // siblings decide (the more specific selectors win).
+    label: 'ms-[calc(var(--s-label-shift-center,0em)*-1)] [[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)] [&:has(+[data-slot=trailingIcon])]:ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
   },
   variants: {
     size: sizes,

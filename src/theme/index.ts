@@ -38,6 +38,7 @@ export {
   stemSpaceStep,
   stemScaleDefaults,
   stemLabelShift,
+  type StemOpticalLabel,
   type StemSize,
   type StemSpace,
   type StemScaleProps,

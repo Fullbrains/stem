@@ -19,12 +19,13 @@ export const selectOpenRing = [
   {color: 'success', variant: ['outline', 'subtle'], class: {base: `${openRing} focus:ring-emerald-500/80! data-[state=open]:ring-emerald-500/80! focus:shadow-emerald-500/20 data-[state=open]:shadow-emerald-500/20`}},
 ]
 
-// The optical label shift (stemLabelShift) on the chosen value and the
-// placeholder, on triggers with an edge.
-export const selectLabelCompound = {
-  variant: ['outline', 'soft', 'subtle', 'ghost'],
-  class: {value: stemLabelShift, placeholder: stemLabelShift},
-}
+// The optical label shift on the chosen value and the placeholder: `edge`
+// at the padding, `icon` after a leading icon. On triggers with an edge.
+const selectEdged = ['outline', 'soft', 'subtle', 'ghost']
+export const selectLabelCompounds = [
+  {variant: selectEdged, class: {value: stemLabelShift.edge, placeholder: stemLabelShift.edge}},
+  {variant: selectEdged, leading: true, class: {value: stemLabelShift.icon, placeholder: stemLabelShift.icon}},
+]
 
 // USelect / USelectMenu: the trigger is the root; leading and trailing icons
 // sit inside it, absolutely positioned, one padding from the edge.

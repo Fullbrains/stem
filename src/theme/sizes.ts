@@ -49,12 +49,12 @@ export const fieldIconCompounds = [
 ]
 
 /**
- * The optical label shift on a field's text (stemLabelShift): its
- * padding-left, with or without a leading icon, less the shift. Only on
- * fields with an edge; after fieldIconCompounds, so they win.
+ * The optical label shift on a field's text: its padding-left less the
+ * shift, `edge` at the padding, `icon` after a leading icon. Only on fields
+ * with an edge, at rest or on hover; after fieldIconCompounds, so they win.
  */
 const fieldEdged = ['outline', 'soft', 'subtle', 'ghost']
 export const fieldLabelCompounds = [
-  {variant: fieldEdged, class: {base: 'ps-[calc(var(--s-px)-var(--s-label-shift,0em))]!'}},
-  {variant: fieldEdged, leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-shift,0em))]!'}},
+  {variant: fieldEdged, class: {base: 'ps-[calc(var(--s-px)-var(--s-label-shift-edge,0em))]!'}},
+  {variant: fieldEdged, leading: true, class: {base: 'ps-[calc(var(--s-px)+var(--s-icon-size)+var(--s-gap)-var(--s-label-shift-icon,0em))]!'}},
 ]

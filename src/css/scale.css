@@ -74,19 +74,40 @@
 
     /*
      * Optical label: a letter carries air on its left inside its own box (the
-     * font's side bearing), so a label set at the padding looks further from
-     * the edge than it is. The label is pulled left by that much: Vimana's
-     * left bearing on stems (H, E, B, D, P…), the most common first letter of
-     * a label: 0.09em (rounds 0.05, diagonals 0.01).
+     * font's side bearing): Vimana's stems (H, E, B, D, P…), the most common
+     * first letter of a label, 0.09em (rounds 0.05, diagonals 0.01).
+     * Pulling the label left by that much brings the letter, not its box, to
+     * the edge. Whether it should depends on what is on the other side, so
+     * each case has its own variable, to tune one without touching the others:
      *
-     *   --s-label-bearing  the font's bearing; 0 turns the compensation off app-wide
-     *   --s-label-shift    what the theme reads: on by default, off with
-     *                      .s-optical-label-off (prop optical-label=false)
+     *   --s-label-shift-edge    text aligned to an edge with nothing to balance
+     *                           its air: a field's text, a menu item or alert
+     *                           without icon, the label after a checkbox,
+     *                           radio or switch (their box is drawn edge to edge)
+     *   --s-label-shift-icon    a label beside an icon, before or after it: the
+     *                           icon's own air balances the letter's
+     *   --s-label-shift-center  a label alone, centred between equal paddings:
+     *                           the last letter's air balances the first's
      *
-     * The theme subtracts --s-label-shift where the text starts: margin on a
-     * label slot, padding-left on a field. Written in em, it follows the text.
+     * optical-label: auto (default) shifts only `edge`; always shifts all
+     * three; never none. --s-label-bearing: 0 turns it off app-wide. Written
+     * in em, the shift follows the text. The theme reads the variables where
+     * the text starts: margin on a label, padding-left on a field.
      */
-    :root { --s-label-bearing: 0.09em; --s-label-shift: var(--s-label-bearing); }
-    .s-optical-label { --s-label-shift: var(--s-label-bearing); }
-    .s-optical-label-off { --s-label-shift: 0em; }
+    :root { --s-label-bearing: 0.09em; }
+    :root, .s-optical-label-auto {
+        --s-label-shift-edge: var(--s-label-bearing);
+        --s-label-shift-icon: 0em;
+        --s-label-shift-center: 0em;
+    }
+    .s-optical-label-always {
+        --s-label-shift-edge: var(--s-label-bearing);
+        --s-label-shift-icon: var(--s-label-bearing);
+        --s-label-shift-center: var(--s-label-bearing);
+    }
+    .s-optical-label-never {
+        --s-label-shift-edge: 0em;
+        --s-label-shift-icon: 0em;
+        --s-label-shift-center: 0em;
+    }
 }

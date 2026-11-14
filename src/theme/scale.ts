@@ -56,35 +56,34 @@ export interface StemScaleProps {
   rounded?: boolean
   /**
    * Pull the label left by the font's side bearing, so its first letter, not
-   * its box, sits at the padding or the gap. On by default, and it acts only
-   * where the eye compares an edge with the first letter (see stemLabelShift):
-   * false turns it off on this component.
+   * its box, sits at the edge. `auto` (default): only where nothing balances
+   * the letter's air (a field's text, a menu item or alert without icon, the
+   * label after a checkbox, radio or switch); `always`: also beside an icon
+   * and on a label alone; `never`: off. See src/css/scale.css.
    */
-  opticalLabel?: boolean
+  opticalLabel?: StemOpticalLabel
 }
 
 /** Defaults of the scale props: pass to withDefaults in every wrapper. */
-export const stemScaleDefaults = {opticalLabel: true} as const
+export type StemOpticalLabel = 'auto' | 'always' | 'never'
+
+export const stemScaleDefaults = {opticalLabel: 'auto'} as const
+
+/** The mode of `optical-label`; the old boolean still reads: true → auto, false → never. */
+export function stemOpticalMode(v: unknown): StemOpticalLabel {
+  if (v === false || v === 'false') return 'never'
+  return v === 'always' || v === 'never' ? v : 'auto'
+}
 
 /**
- * The optical label shift (src/css/scale.css): the label pulled left by the
- * font's side bearing. Applied only where the eye compares an edge with the
- * first letter, on variants with an edge, at rest or on hover (ghost too;
- * not link, none):
- * - text at the padding of a field: input, textarea, input menu, select,
- *   select menu, the typing field of input tags;
- * - text after an icon, a box (checkbox, radio, switch) or another shape:
- *   buttons, badges and pill tabs with a leading icon, alerts;
- * - text left-aligned with something on its right: a label followed by a
- *   trailing icon or caret;
- * - menu items and group labels.
- * Not on a label alone, centred between equal paddings (a label-only button,
- * badge or tab): its bearing is the same on both sides and balances itself.
+ * The optical label shift, one class per case (src/css/scale.css): on a
+ * label slot, the margin that pulls it left by its case's variable.
  */
-export const stemLabelShift = 'ms-[calc(var(--s-label-shift,0em)*-1)]'
-
-/** Variants with an edge, at rest or on hover: where the shift applies. */
-export const stemBoundedVariants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'pill']
+export const stemLabelShift = {
+  edge: 'ms-[calc(var(--s-label-shift-edge,0em)*-1)]',
+  icon: 'ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
+  center: 'ms-[calc(var(--s-label-shift-center,0em)*-1)]',
+} as const
 
 function isToken(v: unknown): v is StemSize {
   return typeof v === 'string' && v in stemScale
@@ -101,7 +100,7 @@ export function stemScaleClasses(p: StemScaleProps): string[] {
   if (isToken(p.iconSize)) out.push(`s-icon-${p.iconSize}`)
   if (p.roundness) out.push(`s-roundness-${p.roundness}`)
   if (p.rounded) out.push('s-pill')
-  out.push(p.opticalLabel === false ? 's-optical-label-off' : 's-optical-label')
+  out.push(`s-optical-label-${stemOpticalMode(p.opticalLabel)}`)
   return out
 }
 
@@ -149,6 +148,16 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
     '--s-gap': `${sx != null ? spaceValue(sx) : base.space}px`,
     '--s-radius': p.rounded ? '9999px' : `${stemScale[p.roundness ?? size].radius}px`,
     ...(p.rounded ? {'--s-corner-shape': 'round'} : {}),
-    '--s-label-shift': p.opticalLabel === false ? '0em' : 'var(--s-label-bearing)',
+    ...stemOpticalVars(stemOpticalMode(p.opticalLabel)),
+  }
+}
+
+/** The optical label variables of a mode, inline (see stemScaleVars). */
+function stemOpticalVars(mode: StemOpticalLabel): Record<string, string> {
+  const on = 'var(--s-label-bearing)'
+  return {
+    '--s-label-shift-edge': mode === 'never' ? '0em' : on,
+    '--s-label-shift-icon': mode === 'always' ? on : '0em',
+    '--s-label-shift-center': mode === 'always' ? on : '0em',
   }
 }

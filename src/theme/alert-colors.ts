@@ -22,8 +22,9 @@ export const alertSlots = {
   // variables inline). A container, not a control: its padding and gap are
   // one and a half the scale's, so a sm alert has 12px around and between.
   root: 's-size-sm s-corner p-[calc(var(--s-py)*1.5)] gap-[calc(var(--s-gap)*1.5)]',
-  // The optical label shift (stemLabelShift): title and description.
-  wrapper: 'min-w-0 flex-1 flex flex-col text-(length:--s-text) ms-[calc(var(--s-label-shift,0em)*-1)]',
+  // The optical label shift on title and description: `edge` without icon,
+  // `icon` after the icon or avatar.
+  wrapper: 'min-w-0 flex-1 flex flex-col text-(length:--s-text) ms-[calc(var(--s-label-shift-edge,0em)*-1)] [[data-slot=icon]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)] [[data-slot=avatar]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
   title: 'text-(length:--s-text) leading-(--s-icon-size) font-medium',
   description: 'text-(length:--s-text) leading-[calc(var(--s-icon-size)+4px)] opacity-100',
   icon: 'shrink-0 size-(--s-icon-size)',

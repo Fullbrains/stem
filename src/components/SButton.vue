@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed, useAttrs, useSlots} from 'vue'
-import {stemBoundedVariants, stemLabelShift, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {computed, useSlots} from 'vue'
+import {stemLabelShift, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 import {useConfirmModal} from '../composables/useConfirmModal'
 
 /**
@@ -40,23 +40,20 @@ const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 const scaleClasses = computed(() => stemScaleClasses(props))
 const resolvedStyle = computed(() => stemScaleStyle(props))
 
-const attrs = useAttrs()
 const slots = useSlots()
 
 // The icon is drawn in SButton's own leading slot, so UButton does not know
-// it is there (its `leading` variant stays off): the optical label shift for a
-// label after the icon is set here. With a trailing icon or caret, UButton's
-// own compound variant applies it (see stemLabelShift).
+// it is there (its `leading` variant stays off, and it would take the label
+// for one alone): the optical label shift for a label after the icon, `icon`,
+// is set here. Every other case is UButton's own (theme/button.ts).
 const labelShift = computed(() =>
-  !!(props.icon || props.loading)
-  && !!(props.label || slots.default)
-  && stemBoundedVariants.includes(String(attrs.variant ?? 'solid')),
+  !!(props.icon || props.loading) && !!(props.label || slots.default),
 )
 
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
   if (props.caret) ui.trailingIcon = 'ml-auto'
-  if (labelShift.value) ui.label = stemLabelShift
+  if (labelShift.value) ui.label = stemLabelShift.icon
   return Object.keys(ui).length ? ui : undefined
 })
 
@@ -111,7 +108,7 @@ function handleClick(e: MouseEvent) {
       </span>
     </template>
     <template v-if="$slots.default" #default>
-      <span v-if="labelShift" data-slot="label" :class="stemLabelShift">
+      <span v-if="labelShift" data-slot="label" :class="stemLabelShift.icon">
         <slot/>
       </span>
       <slot v-else/>

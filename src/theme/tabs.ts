@@ -19,13 +19,14 @@ export default {
   slots: {
     root: '[--s-inset:2px]',
     trigger: 's-corner-inner cursor-pointer',
+    // The optical label shift: `center` on a label alone, `icon` after an
+    // icon or avatar.
+    label: 'ms-[calc(var(--s-label-shift-center,0em)*-1)] [[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)] [[data-slot=leadingAvatar]+&]:ms-[calc(var(--s-label-shift-icon,0em)*-1)]',
   },
   variants: {
     variant: {
       pill: {
         list: 's-corner p-(--s-inset)',
-        // The optical label shift (stemLabelShift), after an icon only.
-        label: '[[data-slot=leadingIcon]+&]:ms-[calc(var(--s-label-shift,0em)*-1)]',
         indicator: 's-corner-inner shadow-none',
       },
       link: {

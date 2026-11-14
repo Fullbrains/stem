@@ -84,7 +84,7 @@ export function scaleControls(group = 'Scala'): ShowcaseControl[] {
     {group, key: 'spaceY', label: 'space-y', type: 'select', options: spaceOpts},
     {group, key: 'roundness', type: 'select', options: opts},
     {group, key: 'rounded', label: 'rounded (pillola)', type: 'boolean'},
-    {group, key: 'opticalLabel', label: 'optical-label', type: 'boolean', default: true},
+    {group, key: 'opticalLabel', label: 'optical-label', type: 'select', options: ['auto', 'always', 'never'], default: 'auto'},
   ]
 }
 
