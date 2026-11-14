@@ -13,7 +13,8 @@
     background-color: white;
 }
 
-.dark .checkerboard {
+.dark .checkerboard,
+.checkerboard.dark {
     background-image: linear-gradient(45deg, #1a1a1a 25%, transparent 25%),
     linear-gradient(-45deg, #1a1a1a 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #1a1a1a 75%),
