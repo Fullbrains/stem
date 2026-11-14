@@ -1,4 +1,4 @@
-import {stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
+import {stemIconOptical, stemScaleIcon, stemSizeClass, stemSizes, type StemSize} from './scale'
 
 /**
  * Menu items on the Stem scale: an item is a control like any other — same
@@ -27,8 +27,10 @@ function menuItemSize(token: StemSize) {
     item: row,
     label: row,
     empty: row,
-    itemLeadingIcon: stemScaleIcon,
-    itemTrailingIcon: stemScaleIcon,
+    // Beside a label, like a button's: the drawing, not the box, on the
+    // padding and the gap (see stemIconOptical).
+    itemLeadingIcon: `${stemScaleIcon} ${stemIconOptical}`,
+    itemTrailingIcon: `${stemScaleIcon} ${stemIconOptical}`,
   }
 }
 
