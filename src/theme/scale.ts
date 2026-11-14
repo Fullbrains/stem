@@ -196,7 +196,7 @@ export function stemSpacePx(v: StemSpace): number {
  * another size class it cannot drop (an alert, whose theme gives toasts and
  * bare UAlerts a default): inline style beats any class.
  */
-export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string, string> {
+export function stemScaleVars(size: StemSize, p: StemScaleResolved): Record<string, string> {
   const base = stemScale[size]
   const sx = p.spaceX ?? p.space
   const sy = p.spaceY ?? p.space

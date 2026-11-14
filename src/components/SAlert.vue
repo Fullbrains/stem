@@ -24,7 +24,7 @@ import {computed, provide, useAttrs, useSlots} from 'vue'
  * already, and the slot stays in the text's column.
  *
  * Its buttons are SModalButtons of its size: space-x the size's own,
- * space-y a step below (sm: 28px), centred on the title's line without
+ * space-y two steps below (sm: 24px), centred on the title's line without
  * making a one-line alert taller; on a solid alert, tinted to stay
  * readable. The `actions` it is given and the X get these; an `#actions`
  * slot gets them as params, to bind on what it renders:
@@ -66,15 +66,15 @@ const props = withDefaults(defineProps<StemScaleProps & {
 const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+3', roundness: '+1'})
 
 // The buttons are SModalButtons of the alert's size, space-x the size's own
-// (no shift: sm 8px), space-y a step below it (sm: 6px, 28px tall).
-const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -1))
+// (no shift: sm 8px), space-y two steps below it (sm: 4px, 24px tall).
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
 const scaleStyle = computed(() => ({
   ...stemScaleVars(scale.value.size!, scale.value),
   '--s-alert-button-gap': `${stemSpacePx(stemSpaceStep(scale.value.spaceX ?? scale.value.space ?? scale.value.size!, -1))}px`,
 }))
 
 // What the buttons inside inherit: the alert's size and type. Not its
-// space and radius: that is the alert's own, the buttons keep SModalButton's, space-y a step below the size.
+// space and radius: that is the alert's own, the buttons keep SModalButton's, space-y two steps below the size.
 provide(STEM_SCALE, computed(() => ({
   ...scale.value,
   roundness: undefined,
