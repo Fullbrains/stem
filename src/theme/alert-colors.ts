@@ -21,7 +21,8 @@ export const alertSlots = {
   // On the Stem scale (sm by default; SAlert's size and scale props set the
   // variables inline). A container, not a control: its padding and gap are
   // one and a half the scale's, so a sm alert has 12px around and between.
-  root: 's-size-sm s-corner p-[calc(var(--s-py)*1.5)] gap-[calc(var(--s-gap)*1.5)]',
+  // As a button of the same size: its squircle, its padding, its gap.
+  root: 's-size-sm s-corner px-(--s-px) py-(--s-py) gap-(--s-gap)',
   // The optical label trim on title and description, on the side of the
   // icon or avatar; `alone` without.
   wrapper: 'min-w-0 flex-1 flex flex-col text-(length:--s-text) ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-alone-end,0em)*-1)] [[data-slot=icon]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)] [[data-slot=avatar]+&]:ms-[calc(var(--s-label-icon-start,0em)*-1)]',
@@ -32,14 +33,14 @@ export const alertSlots = {
   // cannot hand them SButton props: they are made SButton `sm rounded compact`
   // here, whatever size an action asks for. The close pill is left alone.
   actions: `
-    flex flex-wrap gap-1.5 shrink-0
-    [&>button:not([data-slot=close])]:text-(length:--s-text)
-    [&>button:not([data-slot=close])]:leading-(--s-icon-size)
-    [&>button:not([data-slot=close])]:rounded-full!
-    [&>button:not([data-slot=close])]:[corner-shape:initial]!
-    [&>button:not([data-slot=close])]:py-[calc(var(--s-py)/2)]!
-    [&>button:not([data-slot=close])]:px-(--s-px)!
-    [&>button:not([data-slot=close])]:min-h-0!
+    flex flex-wrap gap-(--s-gap) shrink-0
+    [&>button:not([data-slot=close]):not(.s-control)]:text-(length:--s-text)
+    [&>button:not([data-slot=close]):not(.s-control)]:leading-(--s-icon-size)
+    [&>button:not([data-slot=close]):not(.s-control)]:rounded-full!
+    [&>button:not([data-slot=close]):not(.s-control)]:[corner-shape:initial]!
+    [&>button:not([data-slot=close]):not(.s-control)]:py-[calc(var(--s-py)/2)]!
+    [&>button:not([data-slot=close]):not(.s-control)]:px-(--s-px)!
+    [&>button:not([data-slot=close]):not(.s-control)]:min-h-0!
   `,
   // The X is an action too: SButton `sm rounded compact soft`, the same pill
   // as the actions beside it, with a 1em icon.

@@ -74,7 +74,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale |
 | `UTabs` | `STabs` | Tab list as tall as a button of the same size |
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
-| `UAlert` | `SAlert` | Scale props (padding and gap 1.5x), content slot under the text |
+| `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SButton actions and X, content slot under the text |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
 | header buttons | `SModalButton`, `SCloseButton` | Thin wrappers of SButton: soft, pill, space-x one step above size and space-y one below |
 | custom spinner | `SSpinner`  | Follows the ambient icon size; `size` takes a scale token |
@@ -341,7 +341,7 @@ An alert inline (`UAlert`) and an alert arriving as a toast (`UToast`) look the 
 - **Colors:** `neutral`, `primary`, `secondary`, `info` (sky), `success`, `warning`, `error`.
 - **Variants:** `outline` (default: surface + colored ring, color in the icon only), `soft` (light tint over the surface), `subtle` (tint + ring), `solid` (color as ground).
 - **Orientation:** `horizontal` (actions beside the text) or `vertical` (actions under it). Icon, actions and X always line up with the title.
-- **Actions and X** are pills on the alert's scale (half its padding-y above and below), whatever size an action asks for. SAlert takes the scale props: padding and gap are 1.5× the scale's (sm: 12px); toasts and bare UAlerts are sm.
+- **Actions and X** are SButtons on the alert's scale: its size, a pill, padding-y two steps below (sm: 24px tall, the X a 24px circle), centred on the title's line; any Stem control in its slots inherits the same. SAlert takes the scale props: radius, padding and gap are a button's of the same size (sm: 6px, 8px); toasts and bare UAlerts are sm.
 - `UToast` has no `variant` prop: pass `ui: alertClasses(color, variant)` (exported from `@fullbrains/stem`) to `toast.add()` for a soft/subtle/solid toast.
 
 `SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). In `horizontal` it spans to the alert's right edge, under the actions and the X too. Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.

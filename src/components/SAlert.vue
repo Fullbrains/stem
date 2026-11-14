@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import {stemScaleVars, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
-import {useStemScale} from '../composables/useStemScale'
-import {computed, useAttrs, useSlots} from 'vue'
+import {stemScaleVars, stemSpacePx, stemSpaceStep, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
+import {alertClasses, type AlertColor, type AlertVariant} from '../theme/alert-colors'
+import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
+import {useAppConfig} from '#imports'
+import {useLocale} from '@nuxt/ui/composables'
+import {computed, provide, useAttrs, useSlots} from 'vue'
 
 /**
  * UAlert with a place for content under the text: chips to pick from, a
@@ -20,6 +23,11 @@ import {computed, useAttrs, useSlots} from 'vue'
  * and the actions' columns. In `vertical` the actions are under the text
  * already, and the slot stays in the text's column.
  *
+ * Its buttons are SButtons on the alert's scale: the `actions` it is given,
+ * the X, and any Stem control in its slots take its size, a pill, and a
+ * padding-y two steps below (sm: 24px), so they sit on the title's line
+ * without making a one-line alert taller. A button's own props win.
+ *
  * A toast has no such slot: its `description` takes a render function, and
  * holds the content in the text's column.
  *   toast.add({title, description: () => h('div', [text, h(Body)])})
@@ -27,12 +35,17 @@ import {computed, useAttrs, useSlots} from 'vue'
 defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<StemScaleProps & {
-  /** On the Stem scale: text, icon, padding (1.5 × space), gap and radius. */
+  /** On the Stem scale: text, icon, padding, gap and radius, as a button's. */
   size?: StemSize
   description?: string
   orientation?: 'horizontal' | 'vertical'
+  /** The X: true, or the SButton props it takes. */
+  close?: boolean | Record<string, unknown>
+  closeIcon?: string
   ui?: Record<string, string | undefined>
 }>(), {
+  close: false,
+  closeIcon: undefined,
   ...stemScaleDefaults,
   description: undefined,
   orientation: undefined,
@@ -41,7 +54,35 @@ const props = withDefaults(defineProps<StemScaleProps & {
 
 // Scale props inherited from a parent when not given; sm by default.
 const scale = useStemScale(props, {size: 'sm'})
-const scaleStyle = computed(() => stemScaleVars(scale.value.size!, scale.value))
+// The buttons' padding-y: two steps below the size (sm: 2xs, 4px).
+const buttonSpaceY = computed(() => stemSpaceStep(scale.value.size!, -2))
+const scaleStyle = computed(() => ({
+  ...stemScaleVars(scale.value.size!, scale.value),
+  '--s-alert-button-py': `${stemSpacePx(buttonSpaceY.value)}px`,
+}))
+
+// What the buttons inside inherit: the alert's size and type, a pill, the
+// tighter padding-y. Not the alert's space: that is its own.
+provide(STEM_SCALE, computed(() => ({
+  ...scale.value,
+  space: undefined,
+  spaceX: undefined,
+  spaceY: buttonSpaceY.value,
+  rounded: true,
+})))
+
+const emit = defineEmits<{'update:open': [value: boolean]}>()
+const appConfig = useAppConfig()
+const {t} = useLocale()
+
+// The X: an icon-only button, so a circle (space on both axes, not only y).
+const closeIcon = computed(() => props.closeIcon ?? appConfig.ui?.icons?.close ?? 'i-ph-x')
+const closeProps = computed(() => typeof props.close === 'object' ? props.close : {})
+// On a solid alert the X keeps the tone's own tint (the iron pill would vanish).
+const closeTint = computed(() => {
+  const variant = (attrs.variant as AlertVariant) ?? 'outline'
+  return variant === 'solid' ? alertClasses(((attrs.color as AlertColor) ?? 'primary'), 'solid').close : undefined
+})
 
 const slots = useSlots()
 const attrs = useAttrs()
@@ -49,7 +90,10 @@ const attrs = useAttrs()
 // The slots UAlert gets as they are: all but the default one, and but the
 // description when the default one rebuilds it.
 const forwarded = computed(() => Object.keys(slots)
-  .filter(name => name !== 'default' && !(slots.default && name === 'description')))
+  .filter(name => name !== 'default' && name !== 'actions' && name !== 'close' && !(slots.default && name === 'description')))
+
+const actions = computed(() => (attrs.actions as Record<string, unknown>[] | undefined) ?? [])
+const hasActions = computed(() => actions.value.length > 0 || !!slots.actions)
 
 const hasDescription = computed(() => !!props.description || !!slots.description)
 
@@ -78,9 +122,15 @@ const cells = computed(() => hasIcon.value
       body: 'col-start-1 col-end-3',
     })
 
+// The buttons overhang the title's line by their padding-y, above and below,
+// centred on it: a one-line alert is no taller for them.
+const actionsClass = '-my-(--s-alert-button-py)'
+
 const ui = computed(() => {
-  if (!spread.value) return props.ui
   const own = props.ui ?? {}
+  if (!spread.value) {
+    return {...own, actions: [props.orientation === 'vertical' ? '' : actionsClass, own.actions].filter(Boolean).join(' ')}
+  }
   const c = cells.value
   return {
     ...own,
@@ -88,7 +138,7 @@ const ui = computed(() => {
     icon: [c.icon, own.icon].filter(Boolean).join(' '),
     avatar: [c.icon, own.avatar].filter(Boolean).join(' '),
     title: [c.title, own.title].filter(Boolean).join(' '),
-    actions: [c.actions, own.actions].filter(Boolean).join(' '),
+    actions: [c.actions, actionsClass, own.actions].filter(Boolean).join(' '),
     // Wrapper and description step aside: their children are the grid's.
     wrapper: ['contents', own.wrapper].filter(Boolean).join(' '),
     description: ['contents', own.description].filter(Boolean).join(' '),
@@ -97,15 +147,34 @@ const ui = computed(() => {
 
 const bodyClass = computed(() => {
   // A little air between the text and the content (the buttons, mostly).
-  if (!spread.value) return hasDescription.value ? 'mt-[calc(var(--s-py)*1.5)]' : 'mt-(--s-py)'
-  return [cells.value.body, hasDescription.value ? 'row-start-3 mt-[calc(var(--s-py)*1.5)]' : 'row-start-2 mt-(--s-py)']
+  if (!spread.value) return 'mt-(--s-py)'
+  return [cells.value.body, hasDescription.value ? 'row-start-3 mt-(--s-py)' : 'row-start-2 mt-(--s-py)']
 })
 </script>
 
 <template>
-  <UAlert v-bind="$attrs" :description="description" :orientation="orientation" :ui="ui" :style="scaleStyle">
+  <UAlert v-bind="$attrs" :description="description" :orientation="orientation" :close="!!close" :ui="ui" :style="scaleStyle">
     <template v-for="name in forwarded" :key="name" #[name]="scope">
       <slot :name="name" v-bind="scope ?? {}"/>
+    </template>
+    <template v-if="hasActions" #actions>
+      <slot name="actions">
+        <SButton v-for="(action, index) in actions" :key="index" v-bind="action"/>
+      </slot>
+    </template>
+    <template v-if="close" #close>
+      <slot name="close">
+        <SButton
+            :icon="closeIcon"
+            variant="soft"
+            :space="buttonSpaceY"
+            :aria-label="t('alert.close')"
+            v-bind="closeProps"
+            data-slot="close"
+            :class="closeTint"
+            @click="emit('update:open', false)"
+        />
+      </slot>
     </template>
     <template v-if="slots.default" #description>
       <p v-if="spread && hasDescription" :class="[cells.description, 'mt-1']">

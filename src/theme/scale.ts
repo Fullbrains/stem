@@ -122,6 +122,9 @@ export function stemScaleClasses(p: StemScaleProps): string[] {
   if (p.roundness) out.push(`s-roundness-${p.roundness}`)
   if (p.rounded) out.push('s-pill')
   out.push(`s-optical-label-${stemOpticalMode(p.opticalLabel)}`)
+  // Marks a Stem control: themes that size bare Nuxt UI children (an alert's
+  // or a toast's buttons) leave these alone.
+  out.push('s-control')
   return out
 }
 
@@ -145,7 +148,8 @@ export function stemSizeClass(size: StemSize) {
 
 const spacePx: Record<string, number> = {'0': 0, '2xs': 4}
 
-function spaceValue(v: StemSpace): number {
+/** A step of the space scale in px (0, 2xs 4, xs 6 … xl 14). */
+export function stemSpacePx(v: StemSpace): number {
   return String(v) in spacePx ? spacePx[String(v)]! : stemScale[v as StemSize].space
 }
 
@@ -164,9 +168,9 @@ export function stemScaleVars(size: StemSize, p: StemScaleProps): Record<string,
   return {
     '--s-text': `${stemScale[p.textSize ?? size].text}px`,
     '--s-icon-size': icon,
-    '--s-px': `${sx != null ? spaceValue(sx) : base.space}px`,
-    '--s-py': `${sy != null ? spaceValue(sy) : base.space}px`,
-    '--s-gap': `${sx != null ? spaceValue(sx) : base.space}px`,
+    '--s-px': `${sx != null ? stemSpacePx(sx) : base.space}px`,
+    '--s-py': `${sy != null ? stemSpacePx(sy) : base.space}px`,
+    '--s-gap': `${sx != null ? stemSpacePx(sx) : base.space}px`,
     '--s-radius': p.rounded ? '9999px' : `${stemScale[p.roundness ?? size].radius}px`,
     ...(p.rounded ? {'--s-corner-shape': 'round'} : {}),
     ...stemOpticalVars(stemOpticalMode(p.opticalLabel)),
