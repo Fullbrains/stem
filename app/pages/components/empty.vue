@@ -30,7 +30,7 @@ const controls: ShowcaseControl[] = [
 
   {group: 'Stato', key: 'loading', type: 'boolean'},
   {group: 'Stato', key: 'stroke', type: 'select', options: [
-    {label: 'auto', value: undefined}, {label: '1', value: 1}, {label: '1.5', value: 1.5}, {label: '2', value: 2}, {label: '3', value: 3},
+    {label: '1 (default)', value: undefined}, {label: '1.5', value: 1.5}, {label: '2', value: 2}, {label: '3', value: 3},
   ]},
 ]
 
