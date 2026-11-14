@@ -76,7 +76,8 @@
      * Optical label: a letter carries air on its left inside its own box (the
      * font's side bearing), so a label set at the padding looks further from
      * the edge than it is. The label is pulled left by that much: Vimana's
-     * median left bearing, 0.05em (stems 0.09, rounds 0.05, diagonals 0.01).
+     * left bearing on stems (H, E, B, D, P…), the most common first letter of
+     * a label: 0.09em (rounds 0.05, diagonals 0.01).
      *
      *   --s-label-bearing  the font's bearing; 0 turns the compensation off app-wide
      *   --s-label-shift    what the theme reads: on by default, off with
@@ -85,7 +86,7 @@
      * The theme subtracts --s-label-shift where the text starts: margin on a
      * label slot, padding-left on a field. Written in em, it follows the text.
      */
-    :root { --s-label-bearing: 0.05em; --s-label-shift: var(--s-label-bearing); }
+    :root { --s-label-bearing: 0.09em; --s-label-shift: var(--s-label-bearing); }
     .s-optical-label { --s-label-shift: var(--s-label-bearing); }
     .s-optical-label-off { --s-label-shift: 0em; }
 }
