@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, inject} from 'vue'
-import {SEARCH_BAR_COMPACT} from '../composables/searchBarContext'
+import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 import {stemScaleDefaults, stemSpaceStep, type StemScaleProps, type StemSize} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
@@ -8,7 +8,8 @@ import {useStemScale} from '../composables/useStemScale'
  * A filter chip: SButton soft, pill, with a caret. On the Stem scale: `size`
  * (sm by default) and the scale props are SButton's. Its one default: a
  * step more air at the sides (space-x one step above size) unless `space`
- * or `space-x` is given; inside a small SSearchBar it tightens to space-y 2xs.
+ * or `space-x` is given; inside an SSearchBar it takes the bar's size and
+ * tightens to space-y two steps below.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
   size?: StemSize
@@ -35,9 +36,11 @@ const scale = useStemScale(props, {size: 'sm', rounded: true})
 
 const resolvedSpaceX = computed(() => scale.value.spaceX ?? (scale.value.space != null ? undefined : stemSpaceStep(scale.value.size!, 1)))
 
-// Inside a compact SSearchBar the chips tighten too (see searchBarContext).
-const searchBarCompact = inject(SEARCH_BAR_COMPACT, null)
-const tight = computed(() => !!searchBarCompact?.value)
+// Inside an SSearchBar (not its panel of extra filters) a chip takes the
+// bar's size and tightens: space-y two steps below, so it sits 4px inside the
+// bar at every size (sm: 24 in 32, md: 32 in 40).
+const inBar = inject(SEARCH_BAR_COMPACT, null) !== null && !inject(SEARCH_BAR_PANEL, false)
+const tightSpaceY = computed(() => inBar ? stemSpaceStep(scale.value.size!, -2) : undefined)
 
 const coversAll = computed(() => !!props.selectedValues && props.selectedValues.length === props.count)
 
@@ -59,7 +62,7 @@ const displayValue = computed(() => {
       :rounded="scale.rounded"
       :space="scale.space"
       :space-x="resolvedSpaceX"
-      :space-y="scale.spaceY ?? (tight ? '2xs' : undefined)"
+      :space-y="scale.spaceY ?? tightSpaceY"
       :text-size="scale.textSize"
       :optical-label="scale.opticalLabel"
       :icon-size="scale.iconSize"

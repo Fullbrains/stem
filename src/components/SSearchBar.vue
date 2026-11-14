@@ -3,7 +3,7 @@ import {ref, computed, watch, nextTick, onMounted, onUnmounted, provide, useSlot
 import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, stemScaleDefaults} from '../theme/scale'
-import {useStemScale} from '../composables/useStemScale'
+import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 
 const modelValue = defineModel<string>({default: ''})
 
@@ -44,6 +44,12 @@ const scale = useStemScale(props, {rounded: true})
 const resolvedSize = computed<StemSize>(() => scale.value.size ?? (props.compact ? 'sm' : 'md'))
 const scaleClasses = computed(() => [`s-size-${resolvedSize.value}`, ...stemScaleClasses(scale.value)])
 const scaleStyle = computed(() => stemScaleStyle(scale.value))
+
+// Its scale passes to what it holds (the chips, the filters, the menus) with
+// the size it resolved, so a chip with no size of its own matches the bar's
+// text. Not its space: that is the bar's own; a chip inside tightens by
+// itself (SSearchChip).
+provide(STEM_SCALE, computed(() => ({...scale.value, size: resolvedSize.value, space: undefined, spaceX: undefined, spaceY: undefined})))
 
 const appConfig = useAppConfig()
 
