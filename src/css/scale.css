@@ -134,3 +134,16 @@
         --s-label-alone-end: 0em;
     }
 }
+
+/*
+ * s-pill-full: a pill as wide as its container that spills over both sides.
+ * A pill takes its extra padding back as a negative margin (--s-pill-x), which
+ * widens a box only when its content sets the width; a box with a set width
+ * (w-full) would just shift left. This makes it the container's width plus
+ * the two spills. On a squircle it is plain w-full (--s-pill-x is 0).
+ * Outside the layers, so it beats a w-* utility on the same element.
+ */
+.s-pill-full {
+    width: calc(100% + 2 * var(--s-pill-x, 0px));
+    max-width: none;
+}
