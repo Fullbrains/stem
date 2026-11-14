@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import {computed} from 'vue'
+import {stemScaleDefaults, type StemScaleProps} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
-type Size = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | number
+type Width = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | number
 
-const props = withDefaults(defineProps<{
+const props = withDefaults(defineProps<StemScaleProps & {
   title?: string
   description?: string
   icon?: string
   side?: 'top' | 'right' | 'bottom' | 'left'
-  size?: Size
+  /** The panel's width: a Tailwind max-width step, full, or pixels. */
+  width?: Width
   header?: boolean
   closeable?: boolean
   footer?: boolean
@@ -24,8 +27,9 @@ const props = withDefaults(defineProps<{
   /** Classes added to the slideover's own, per slot. */
   ui?: Partial<Record<'content' | 'header' | 'body' | 'footer', string>>
 }>(), {
+  ...stemScaleDefaults,
   side: 'top',
-  size: 'xl',
+  width: 'xl',
   header: true,
   closeable: true,
   footer: true,
@@ -50,9 +54,13 @@ const emit = defineEmits<{
   'update:open': [value: boolean]
 }>()
 
+// The scale props (size, space…) pass to everything inside: header buttons,
+// body, footer. Not set, they come from a parent SScale.
+useStemScale(props, {}, {provide: true})
+
 const sizeClasses = computed(() => {
-  if (typeof props.size === 'number') {
-    return {width: `${props.size}px`}
+  if (typeof props.width === 'number') {
+    return {width: `${props.width}px`}
   }
 
   const sizeMap = {
@@ -69,7 +77,7 @@ const sizeClasses = computed(() => {
     full: 'w-full max-w-full',
   }
 
-  return sizeMap[props.size] || sizeMap.md
+  return sizeMap[props.width] || sizeMap.md
 })
 
 const uiConfig = computed(() => {

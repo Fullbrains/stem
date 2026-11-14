@@ -24,7 +24,9 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'afterHeader', label: 'slot after-header', type: 'boolean', prop: false},
 
   {group: 'Posizione', key: 'side', type: 'select', options: sides, default: 'top'},
-  {group: 'Posizione', key: 'size', type: 'select', default: 'xl', options: [...sizes, {label: '480 (px)', value: 480}]},
+  {group: 'Posizione', key: 'width', type: 'select', default: 'xl', options: [...sizes, {label: '480 (px)', value: 480}]},
+  {group: 'Scala', key: 'size', type: 'select', options: [{label: 'dal parent', value: undefined}, 'xs', 'sm', 'md', 'lg', 'xl']},
+  ...scaleControls(),
 
   {group: 'Header', key: 'header', type: 'boolean', default: true},
   {group: 'Header', key: 'headerCompact', label: 'header-compact', type: 'select', default: false, options: [
@@ -213,15 +215,15 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
     </ShowcaseSection>
 
     <ShowcaseSection
-        title="Size"
-        description="La larghezza massima, da sm a full; un numero la fissa in px."
+        title="Width"
+        description="La larghezza massima, da sm a full; un numero la fissa in px. size è la scala, che passa a tutto il contenuto."
     >
       <ShowcaseStage>
         <template #default="{mode}">
           <PortalScope :mode="mode">
             <template v-for="s in [...sizes, 480]" :key="s">
               <SButton :label="String(s)" variant="soft" size="sm" @click="sizeOpen[`${mode}-${s}`] = true"/>
-              <SModal v-model:open="sizeOpen[`${mode}-${s}`]" :size="s as any" :title="`size ${s}`" description="La larghezza cambia, header e footer restano uguali.">
+              <SModal v-model:open="sizeOpen[`${mode}-${s}`]" :width="s as any" :title="`width ${s}`" description="La larghezza cambia, header e footer restano uguali.">
                 <template #body>
                   <p class="p-6 text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
                 </template>
@@ -274,7 +276,7 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                   </SDropdownMenu>
                   <SButton label="Apri la seconda" icon="i-ph-stack" variant="soft" @click="innerOpen[mode] = true"/>
                 </div>
-                <SModal v-model:open="innerOpen[mode]" title="Seconda modale" size="sm">
+                <SModal v-model:open="innerOpen[mode]" title="Seconda modale" width="sm">
                   <template #body>
                     <p class="p-6 text-sm text-(--ui-text-muted)">Sopra la prima.</p>
                   </template>

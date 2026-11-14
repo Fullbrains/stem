@@ -169,7 +169,8 @@ Slide-over modal built on Nuxt UI's `USlideover`. Provides a structured layout w
 | `description` | `string` | — | Description text below title |
 | `icon` | `string` | — | Icon displayed above title |
 | `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Slide direction |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl' \| '5xl' \| '6xl' \| '7xl' \| 'full' \| number` | `'xl'` | Modal width. Number = exact pixels |
+| `width` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl' \| '5xl' \| '6xl' \| '7xl' \| 'full' \| number` | `'xl'` | Modal width. Number = exact pixels (was `size`) |
+| `size` and the scale props | Stem scale | — | Passed to everything inside (header buttons, body, footer), like an SScale |
 | `header` | `boolean` | `true` | Show header section |
 | `headerCompact` | `boolean` | `false` | Compact header: reduced padding (py-3), smaller title (text-lg), icon inline beside title at 1em |
 | `closeable` | `boolean` | `true` | Show close button |

@@ -28,7 +28,7 @@ const nestedOpen = ref(false)
   <SModal
       :title="title ?? 'Example Modal'"
       :description="description ?? 'This is a basic SModal powered by USlideover.'"
-      :size="size"
+      :width="size"
       :side="side"
       :header-compact="headerCompact"
       @close="emit('close')"
