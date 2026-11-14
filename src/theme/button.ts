@@ -10,7 +10,11 @@ export default {
     // padding of its own. On the scale it keeps the size's padding, so it is
     // as tall as the same control with a label — and square, since padding-x
     // and padding-y are equal unless space-x / space-y set them apart.
-    {square: true, class: {base: 'px-(--s-px)! py-(--s-py)! mx-0!'}},
+    // A round one wider than tall (space-x above space-y) is a pill, and takes
+    // the pill's compensation as a label does (--s-pill-x, more padding-x
+    // given back as a negative margin); a circle (px = py) takes none, so it
+    // stays a circle. --s-pill-sq: --s-pill-x where px > py, else 0.
+    {square: true, class: {base: '[--s-pill-sq:min(var(--s-pill-x,0px),max(0px,calc((var(--s-px)-var(--s-py))*1000)))] px-[calc(var(--s-px)+var(--s-pill-sq))]! py-(--s-py)! mx-[calc(var(--s-pill-sq)*-1)]!'}},
     // The optical label trim on the side of an icon; `alone` on a side without
     // (SButton draws its own leading icon and sets that side itself).
     {leading: false, trailing: false, class: {label: stemLabelShift.alone}},
