@@ -26,8 +26,8 @@ const remappedBase = baseCompoundVariants.map((cv) => {
   return cv
 })
 
-// A tag is a button of the field's size with an X on its right: the same
-// text, icon, padding-x, gap, radius and label trim. Only its padding-y is
+// A tag is a rounded button of the field's size with an X on its right:
+// the same text, icon, padding-x, gap, pill and label trim. Only its padding-y is
 // smaller, two steps below the size (sm: 4px, so 24px in a 32px field), as a
 // chip in a search bar; the field takes that much off its own padding-y
 // (--s-tag-py), so it is as tall with tags as without. Literal per size, so
@@ -43,7 +43,9 @@ const tagPy: Record<string, string> = {
 function tagSize(token: string) {
   return {
     root: tagPy[token]!,
-    item: 'py-(--s-tag-py) px-(--s-px) gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)',
+    // A pill, compensated as a rounded button's (--s-pill-x, 8% of its
+    // height): more padding-x, given back as a negative margin.
+    item: 'py-(--s-tag-py) px-[calc(var(--s-px)+(var(--s-icon-size)+2*var(--s-tag-py))*0.08)] mx-[calc((var(--s-icon-size)+2*var(--s-tag-py))*-0.08)] gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)',
     itemDeleteIcon: stemScaleIcon,
   }
 }
@@ -57,9 +59,8 @@ export default {
   slots: {
     base: inputBase,
     trailingIcon: 'text-(--ui-text)!',
-    // As an SButton soft: squircle with the size's radius (a pill in a
-    // rounded field), same tint and text.
-    item: 's-corner ring-0 font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200',
+    // As an SButton soft and rounded: always a pill, same tint and text.
+    item: 'rounded-full ring-0 font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200',
     // The label trim of a label with an icon on its right (stemLabelShift).
     itemText: 'ms-[calc(var(--s-label-alone-start,0em)*-1)] me-[calc(var(--s-label-icon-end,0em)*-1)]',
     itemDelete: 'rounded-full cursor-pointer hover:bg-iron-400/30 text-muto-800 dark:text-muto-200 p-0',
