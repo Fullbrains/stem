@@ -154,7 +154,7 @@ For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAle
 
 ### The Stem scale
 
-At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon. **Controls (button, menus, tab, checkbox/switch/radio row) default to space-y a step below their size**: padding-y is the step below's, so a control is `icon + 2 × padding-y(size − 1)` tall (the height column). **Inputs (input, select, select menu, input menu, tags, color picker) keep the size's own space-y**, a step taller (md: 40px against a button's 36); a textarea one above its size's. A one-line `<input>` places its text as a button's label: line-height normal, padding-top (height − 1lh) / 2 rounded down to the device pixel (`--s-device-px`: 1px, 0.5px at 2x), padding-bottom the rest, the height unchanged. Left to centre it, the browser rounded up and the text sat half a pixel lower where the half falls between pixels (sm, lg). The rule is `singleLineText` (`src/theme/sizes.ts`, class `s-line-text`), also on the search bar's and the color picker's own inputs; it needs CSS `round()` and `lh`, and without them the browser centres the text as before.
+At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon. **Controls (button, tab, checkbox/switch/radio row) default to space-y a step below their size**: padding-y is the step below's, so a control is `icon + 2 × padding-y(size − 1)` tall (the height column). **Inputs (input, select, select menu, input menu, tags, color picker) keep the size's own space-y**, a step taller (md: 40px against a button's 36); a textarea one above its size's. A one-line `<input>` places its text as a button's label: line-height normal, padding-top (height − 1lh) / 2 rounded down to the device pixel (`--s-device-px`: 1px, 0.5px at 2x), padding-bottom the rest, the height unchanged. Left to centre it, the browser rounded up and the text sat half a pixel lower where the half falls between pixels (sm, lg). The rule is `singleLineText` (`src/theme/sizes.ts`, class `s-line-text`), also on the search bar's and the color picker's own inputs; it needs CSS `round()` and `lh`, and without them the browser centres the text as before.
 
 | size | text | icon (= leading) | padding / gap | radius | height |
 |------|------|------------------|---------------|--------|--------|
@@ -444,7 +444,7 @@ Responsive search bar with collapsible inline filters. Uses `ResizeObserver` to 
 
 Supports the same `variant` prop as Stem inputs (`outline`, `soft`, `subtle`, `ghost`), always with primary (slate) color. Focus ring matches input behavior exactly.
 
-On the Stem scale: `size` (md by default, sm with `compact`) makes the bar as tall as an SButton of that size. Its chips take the bar's size, space-y two steps below (md: 32px in 40; one step at xs, 20px in 24), 4px apart and 4px from the bar's right edge. A filter's menu is a plain Stem menu (the chip's scale, not its pill).
+On the Stem scale: `size` (md by default, sm with `compact`) makes the bar as tall as an input of that size (md: 40px). Its chips take the bar's size, space-y two steps below (md: 32px in 40; one step at xs, 20px in 24), 4px apart and 4px from the bar's right edge. A filter's menu is a plain Stem menu (the chip's scale, not its pill).
 
 ### SSearchChip
 
@@ -528,7 +528,7 @@ The empty-state glyph is an illustration, not an inline icon, so it keeps a scal
 | lg   | 28px      | 56px     |
 | xl   | 32px      | 64px     |
 
-Vertical uses the light icon variant for visual weight. `iconSize` overrides either orientation. Text and icon use `text-(--ui-text-muted)` color. Gap defaults to `gap-3`, overridable via `class`.
+Vertical uses the light icon variant for visual weight. `iconSize` overrides either orientation. Text and icon use `text-(--ui-text-muted)` color. Gap is the scale's (`--s-gap`).
 
 ### SColorPicker
 
@@ -551,7 +551,7 @@ Hex color input with inline swatch, text input, and popover `UColorPicker`. Supp
 
 Variant/color classes come from shared `input-container.ts` (same visual appearance as UInput). The swatch opens the popover on click; the caret toggles it. Focus ring, placeholder color, and icon colors all follow the semantic color.
 
-The caret and reset icons follow `--s-icon-size` (set on the container by the size variant, overridable with `iconSize`). The swatch is a colour sample rather than an icon, so it sits one step above the icon scale: xs=16px, sm=16px, md=20px, lg=24px, xl=28px.
+The caret and reset icons follow `--s-icon-size` (set on the container by the size variant, overridable with `iconSize`). The swatch is as big as the size's icon.
 
 ### SScrollArea
 

@@ -186,7 +186,8 @@ const actionsGap = 'gap-(--s-alert-button-gap)'
 const ui = computed(() => {
   const own = props.ui ?? {}
   if (!spread.value) {
-    return {...own, actions: [props.orientation === 'vertical' ? actionsGap : `${actionsClass} ${actionsGap}`, own.actions].filter(Boolean).join(' ')}
+    // Vertical unless told horizontal: UAlert's own default.
+    return {...own, actions: [props.orientation === 'horizontal' ? `${actionsClass} ${actionsGap}` : actionsGap, own.actions].filter(Boolean).join(' ')}
   }
   const c = cells.value
   return {

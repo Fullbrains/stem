@@ -1,898 +1,835 @@
-> **Note (redesign, 2026-11):** sizes now follow the Stem scale — see "The Stem scale" in SKILL.md. Where this file mentions `compact`, `disc`, `em` padding or the old icon scale (`icon-sizes.ts`), SKILL.md wins.
-
 # Stem Components Reference
 
-Detailed API for all custom components provided by `@fullbrains/stem`.
+Detailed API of every component and composable in `@fullbrains/stem`. Conventions and the reasons behind them are in `SKILL.md`; how the theme is built is in `theming.md`.
 
-## SBadge
+Every file in `src/components/` is auto-registered by the Nuxt module, and every export of `src/composables/` is auto-imported. "Passes through" means the wrapper declares only the props listed here: every other prop, attribute and listener reaches the wrapped component.
 
-Enhanced badge wrapping Nuxt UI's `UBadge`. Adds compact mode for reduced padding.
+## The scale props
 
-### Props
+Every sized Stem component takes these (`StemScaleProps`, `src/theme/scale.ts`). The sections below say "scale props" and list only what is specific to the component.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `compact` | `boolean \| 'x' \| 'y'` | `false` | Reduce padding. `true` = both axes, `'x'` = horizontal only, `'y'` = vertical only |
-| `iconSize` | `string` | — | Override the icon size for this badge. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'24px'`, `'1.5em'`). Sets `--s-icon-size`, so leading and trailing icons change together |
+| Prop | Type | Meaning |
+|------|------|---------|
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` or a shift | Text, icon, padding, gap and radius at once |
+| `textSize` | `StemSize` | Font size only |
+| `iconSize` | `StemSize` or any CSS length | Icon size (and line height). A length is set inline as `--s-icon-size` |
+| `space` | `0 \| '2xs' \| 'xs' … 'xl' \| '2xl' … '5xl'` or a shift | Padding on both axes, and gap |
+| `spaceX` | same as `space` | Horizontal padding, and gap |
+| `spaceY` | same as `space` | Vertical padding |
+| `roundness` | `StemSize` or a shift | Squircle radius |
+| `rounded` | `boolean` | Pill: round ends, never a squircle |
+| `opticalLabel` | `'auto' \| 'always' \| 'never'` | Label trim beside an icon (`auto` when absent; the old boolean reads `true` → `auto`, `false` → `never`) |
 
-### Slots
+All default to `undefined`: an absent prop stays absent and can be inherited.
 
-| Slot | Description |
-|------|-------------|
-| `leading` | Custom leading content |
-| `default` | Custom badge content |
-| `trailing` | Custom trailing content |
+**Values.** Space steps in px: `0` 0, `2xs` 4, `xs` 6, `sm` 8, `md` 10, `lg` 12, `xl` 14, `2xl` 16, `3xl` 18, `4xl` 20, `5xl` 22. A **shift** is a signed string (`'-1'`, `'+2'`, up to ±6) or a non-zero number (`:space-y="-1"`): that many steps from the value the component would have otherwise, clamped at the ends of the scale. `0` is always the absolute "none".
 
-### Inherited
+**Resolution** (`useStemScale`), per prop:
 
-All `UBadge` props are passed through via `$attrs` (e.g., `label`, `icon`, `variant`, `size`, `color`, `avatar`, `leadingIcon`, `trailingIcon`).
+1. the component's own prop;
+2. else the nearest parent that provides a scale: `SScale`, `SModal`, `SModalFooter`, `SAlert`, `SSearchBar`;
+3. else the component's default (table below);
+4. else nothing: Nuxt UI's own default applies (`md`, or a `UFieldGroup`'s size).
 
-### Compact Details
+An absolute value replaces what is below it; a shift moves it. A component's default shift is applied over what it inherits; an absolute default stands only where nothing came down (and a shift that came down moves it). A shift with no base left settles from `md` (`size`), from the size's own space (`space*`), from the size's own radius (`roundness`). On each axis `space` is applied first, then `spaceX` / `spaceY` over it. A shift on a container reaches its children still a shift, so each child moves from its own size.
 
-- `compact` or `compact="true"` — `py-[0.15em]! px-[0.5em]!`
-- `compact="x"` — `px-[0.5em]!`
-- `compact="y"` — `py-[0.15em]!`
+Only components pass a scale down (provide/inject): a plain `<div>` cannot. Use `<SScale>`.
 
-### Examples
+**Defaults per component**
+
+| Component | `size` | Other defaults | Result at the default size |
+|-----------|--------|----------------|----------------------------|
+| SButton | — (md) | `spaceY: '-1'` | 10 × 8px padding, 36px tall |
+| SBadge | — (md) | `rounded`, `spaceY: '-1'` | pill, 36px tall (sm: 28px) |
+| SModalButton, SCloseButton | sm | `spaceY: '-1'`, soft, `rounded` | 8 × 6px, 28px tall |
+| SInput, SSelect, SSelectMenu, SInputMenu, SInputTags | — (md) | none | 40px tall |
+| STextarea | — (md) | `spaceY: '+1'` | 12px padding-y |
+| SDropdownMenu | — (md) | none | items 40px tall |
+| STabs, SCheckbox, SSwitch, SRadioGroup | — (md) | `spaceY: '-1'` | tab / row 36px tall |
+| SAlert | sm | `spaceX: '+2'`, `spaceY: '+4'`, `roundness: '+1'` | 12 × 16px padding, 8px radius |
+| SHint | xs | none | 12px text and icon |
+| SEmpty | md | none | |
+| SColorPicker | sm | none | 32px tall |
+| SSearchBar | md (sm with `compact`) | `rounded` | 40px tall |
+| SSearchChip | sm | `rounded`, `spaceX: '-1'`; in a bar also `spaceY: '-2'` (`'-1'` at xs) | 6px padding-x, 28px tall |
+| SSearchFilter | sm | `rounded`, `spaceX: '-1'` | |
+| SSearchOrder | sm | `rounded` | |
+
+A control is `icon + 2 × padding-y` tall: md is 20 + 2 × 8 = 36px with `spaceY: '-1'`, 20 + 2 × 10 = 40px without.
 
 ```vue
-<!-- Normal -->
-<SBadge label="Status" icon="i-ph-tag" />
-
-<!-- Compact both axes -->
-<SBadge label="Compact" icon="i-ph-tag" compact />
-
-<!-- Compact horizontal only -->
-<SBadge label="Compact X" compact="x" />
-
-<!-- Compact vertical only -->
-<SBadge label="Compact Y" compact="y" />
-
-<!-- All UBadge props work -->
-<SBadge label="Error" color="error" variant="soft" size="lg" compact />
-
-<!-- Icon size override -->
-<SBadge label="Tag" icon="i-ph-tag" icon-size="24px" />
-<SBadge label="Tag" icon="i-ph-tag" icon-size="lg" />
+<SButton size="sm" label="Save" icon="i-ph-floppy-disk"/>      <!-- 28px -->
+<SButton size="sm" space-x="lg" space-y="xs" label="Wide"/>    <!-- 12 × 6px -->
+<SInput size="md" text-size="sm" icon-size="lg"/>
+<SBadge size="sm" :rounded="false" roundness="xl"/>           <!-- squircle, xl radius -->
+<SScale size="-1" space-y="-1"><SButton label="A"/><SModalButton label="B"/></SScale>
 ```
+
+## SScale
+
+A scale for everything inside it. Renders one plain element carrying the scale's classes, so plain content inside can read the CSS variables too.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | | Passed to every Stem component inside that does not set its own |
+| `as` | `string` | `'div'` | The element it renders |
+
+**Slots:** `default`.
+
+- Nested SScales override one another prop by prop.
+- `<SScale size="-1">` makes an SButton sm and an SModalButton xs: the shift reaches each child and moves its own default.
+- The element gets `s-size-{size}` (when a size is resolved), the single-axis classes, `s-optical-label-*` and `s-control`.
 
 ## SButton
 
-Enhanced button wrapping Nuxt UI's `UButton`. Provides loading states with animated spinner, confirmation dialogs, disc mode, caret mode, and rounded mode.
+`UButton` on the scale, plus confirm dialogs, a loading spinner, a caret and a 1:1 mode.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `spaceY: '-1'` | |
+| `icon` | `string` | — | Leading icon, drawn in SButton's own `leading` slot |
+| `label` | `string` | — | Label; with `square`, the accessible name only |
+| `trailingIcon` | `string` | — | Trailing icon |
+| `caret` | `boolean` | — | Trailing `i-ph-caret-down`, pushed to the right edge (`ml-auto`); wins over `trailingIcon` |
+| `square` | `boolean` | — | 1:1: padding-y on every side, icon only |
+| `loading` | `boolean` | — | Spinner in place of the icon; the button is disabled and ignores clicks |
+| `destructive` | `boolean` | — | `color="error"` (an explicit `color` still wins), and passed to the confirm dialog |
+| `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmCancelLabel`, `confirmMatch`, `confirmPlaceholder` | `string` | — | The confirm dialog's options (see `useConfirmModal`). `confirmLabel` falls back to `label` |
+| `onConfirm` | `() => Promise<void> \| void` | — | When set, a click opens the confirm dialog instead of emitting `click` |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `icon` | `string` | — | Leading icon name (e.g., `i-ph-check`) |
-| `label` | `string` | — | Button text label |
-| `trailingIcon` | `string` | — | Trailing icon name |
-| `iconSize` | `string` | — | Override the icon size for this button. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'32px'`, `'1.5em'`). Sets `--s-icon-size`, so leading icon, trailing icon and the loading spinner all change together |
-| `caret` | `boolean` | `false` | Show a caret (chevron-down) as trailing icon, pushed to the right with `ml-auto` |
-| `rounded` | `boolean` | `false` | Make button pill-shaped (`rounded-full`) |
-| ~~`disc`~~ | — | — | Removed: an icon-only button is square; add `rounded` for a circle. Was: Circular icon-only button. Removes min-height, hides label and trailing icon, applies uniform `p-[0.3em]` padding |
-| `compact` | `boolean` | `false` | Reduced vertical padding (`py-[0.25em]`) and no min-height. Useful for inline/toolbar contexts |
-| `loading` | `boolean` | `false` | Show spinner instead of icon, disable click |
-| `destructive` | `boolean` | `false` | Use error color |
-| `confirmTitle` | `string` | — | Title for confirmation dialog |
-| `confirmMessage` | `string` | — | Message for confirmation dialog |
-| `confirmIcon` | `string` | — | Icon for confirmation dialog |
-| `confirmLabel` | `string` | — | Confirm button label (falls back to `label`) |
-| `confirmMatch` | `string` | — | Exact string user must type to enable confirm (type-to-confirm pattern) |
-| `confirmPlaceholder` | `string` | — | Placeholder for the type-to-confirm input |
-| `onConfirm` | `() => Promise<void> \| void` | — | Callback when confirmed. When provided, clicking the button opens a confirmation dialog instead of emitting `click` |
+**Emits:** `click: [e: MouseEvent]` — not while `loading`, and not when `onConfirm` is set.
 
-### Emits
+**Slots:** `leading` (replaces icon and spinner), `default` (label content; not rendered with `square`), `trailing`.
 
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `click` | `MouseEvent` | Emitted on click when `onConfirm` is not set |
+**Passes through:** every other `UButton` prop and attribute (`color`, `variant`, `to`, `disabled`, `type`, `block`, `class`…).
 
-### Slots
-
-| Slot | Description |
-|------|-------------|
-| `leading` | Custom leading content (replaces icon/spinner) |
-| `default` | Custom button content (replaces label) |
-
-### Inherited
-
-All `UButton` props are passed through via `$attrs` (e.g., `variant`, `size`, `color`, `disabled`, `to`).
-
-### Behavior Details
-
-- **Loading**: When `loading` is true, the icon slot shows an `SSpinner` with a smooth grow-in animation. Click events are suppressed. The spinner defaults to `var(--s-icon-size, 1em)`, so it occupies exactly the box of the icon it replaces.
-- **Icon sizing**: Icons are rendered with `size-(--s-icon-size) shrink-0` — no hardcoded size. The size variant sets the variable; `iconSize` overrides it per instance.
-- **Icon animation**: The leading icon/spinner container uses `max-w` transition, expanding to `max-w-(--s-icon-size)`. When no icon and not loading, it collapses to `max-w-0` with negative margin to eliminate gap.
-- **Confirm flow**: When `onConfirm` is provided, click is intercepted with `stopPropagation()`, and `useConfirmModal()` opens a modal. The `click` event is NOT emitted.
-- **Disc mode**: Sets `rounded-full`, `min-h-0!`, `p-[0.3em]!`. Label and trailing icon are not passed to `UButton`.
-
-### Examples
+- Without a label it keeps padding-x and padding-y, so it is wider than tall (md: 40 × 36). `square` makes it 1:1 (md: 36 × 36); with `rounded`, a circle. Unlike UButton's `square`, it never turns on by itself.
+- `square` drops the trailing icon and the caret, hides `label` and sets it as `aria-label`.
+- The icon's wrapper animates its width, so an icon or a spinner arriving does not jump.
+- With `onConfirm` the click's propagation is stopped before the dialog opens.
 
 ```vue
-<!-- All sizes -->
-<SButton label="Extra small" size="xs" />
-<SButton label="Small" size="sm" />
-<SButton label="Medium" size="md" />
-<SButton label="Large" size="lg" />
-<SButton label="Extra large" size="xl" />
+<SButton label="Save" icon="i-ph-floppy-disk" trailing-icon="i-ph-arrow-right"/>
+<SButton label="Options" caret variant="soft"/>
+<SButton icon="i-ph-plus" label="Add" square rounded/>            <!-- circle, aria-label "Add" -->
+<SButton label="Delete" destructive
+         confirm-title="Delete it?" confirm-message="This cannot be undone."
+         :on-confirm="remove"/>
+```
 
-<!-- Variants -->
-<SButton label="Solid" variant="solid" />
-<SButton label="Soft" variant="soft" />
-<SButton label="Subtle" variant="subtle" />
-<SButton label="Ghost" variant="ghost" />
-<SButton label="Link" variant="link" />
-<SButton label="Outline" variant="outline" />
+## SModalButton
 
-<!-- Disc buttons (different sizes) -->
-<SButton rounded icon="i-ph-plus" size="xs" />
-<SButton rounded icon="i-ph-plus" size="sm" />
-<SButton rounded icon="i-ph-plus" size="md" />
-<SButton rounded icon="i-ph-plus" size="lg" />
-<SButton rounded icon="i-ph-plus" size="xl" />
+`SButton`, soft and a pill: the button of a header, an alert, a toolbar.
 
-<!-- Destructive with confirm -->
-<SButton
-  label="Delete account"
-  destructive
-  icon="i-ph-trash"
-  confirm-title="Delete account?"
-  confirm-message="This action is irreversible. All data will be lost."
-  confirm-icon="i-ph-warning"
-  :on-confirm="deleteAccount"
-/>
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `size` | size or shift | `'sm'` (inherited first) | |
+| `space`, `spaceX`, `spaceY` | space or shift | `spaceY: '-1'` | Given by the caller they win, or shift it further when relative |
 
-<!-- Dropdown trigger with caret -->
-<SButton label="Select option" caret />
+**Passes through:** every other SButton prop and event (`label`, `icon`, `caret`, `color`, `variant`, `loading`, `to`, `text-size`, `icon-size`…); a `variant` given by the caller wins over soft. It forwards no slots: use `label` and `icon`.
 
-<!-- Icon size: follows the component size by default -->
-<SButton icon="i-ph-plus" />
+- sm: 8 × 6px, 28px tall. Icon only, pass `aria-label`.
+- It resolves size and space itself and hands SButton absolute values.
 
-<!-- Icon size: scale token -->
-<SButton icon="i-ph-plus" icon-size="lg" />   <!-- 20px -->
+```vue
+<SModalButton label="Remove" icon="i-ph-trash"/>
+<SModalButton icon="i-ph-arrow-square-out" aria-label="Open" size="md"/>
+```
 
-<!-- Icon size: any CSS length -->
-<SButton icon="i-ph-plus" icon-size="32px" />
-<SButton icon="i-ph-plus" icon-size="1.5em" />
+## SCloseButton
+
+`SModalButton` with an X (`i-ph-x`): the close control of every Stem surface.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `label` | `string` | Nuxt UI's `modal.close` in the app's locale | Accessible name (`aria-label`), never shown |
+
+**Passes through:** everything else, to SModalButton and SButton (`size`, scale props, `disabled`, `@click`). No slots. Placement is the caller's.
+
+```vue
+<SCloseButton @click="open = false"/>
+```
+
+## SCopyButton
+
+Copies a text to the clipboard and shows a check in place of its icon while the copy is fresh. An icon-only `SButton`.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `text` | `string \| (() => string \| null \| Promise<string \| null>)` | required | What to copy. A function is called on click; `null` copies nothing |
+| `label` | `string` | `'Copy'` | Accessible name (`aria-label`), never shown |
+| `color` | `ButtonProps['color']` | `'neutral'` | |
+| `variant` | `ButtonProps['variant']` | `'soft'` | |
+| `size` | `ButtonProps['size']` | — | |
+| `icon` | `string` | `'i-ph-copy'` | |
+| `copiedIcon` | `string` | `'i-ph-check'` | |
+| `duration` | `number` | `1500` | How long the check stays, in ms |
+
+**Emits:** `copied: [text: string]`, `error: [error: unknown]`.
+
+**Passes through:** everything else SButton takes (`space`, `square`, `rounded`, `class`…). No slots.
+
+- Falls back to `document.execCommand('copy')` where the Clipboard API is refused.
+- A failure is emitted as `error` and leaves the icon alone.
+
+```vue
+<SCopyButton :text="url" label="Copy link" square/>
+<SCopyButton :text="() => fetchSecret()" @copied="toast.add({title: 'Copied'})"/>
+```
+
+## SBadge
+
+`UBadge` on the scale: same text, icon, padding-x and gap as an SButton of the size.
+
+**Props:** the scale props only (defaults `rounded`, `spaceY: '-1'`).
+
+**Slots:** `leading`, `default`, `trailing`.
+
+**Passes through:** every `UBadge` prop (`label`, `icon`, `trailingIcon`, `avatar`, `color`, `variant`…).
+
+- A pill by default; `:rounded="false"` for a squircle. A parent SScale's `rounded` wins over the default.
+- sm: 6px padding-y, 28px tall; `space-y="sm"` gives the size's own (32px). No caret.
+
+```vue
+<SBadge label="Draft" icon="i-ph-file" size="sm"/>
+<SBadge label="Draft" size="sm" :rounded="false" space-y="sm" variant="subtle"/>
+```
+
+## SInput
+
+`UInput` on the scale.
+
+**Props:** the scale props only (no default shift). **Slots, events, other props:** all `UInput`'s, passed through (`inheritAttrs: false`, every slot forwarded with its params).
+
+- md is 40px tall: a step taller than a button, whose space-y is a step below.
+- Border and focus are drawn as an inset ring and an outer shadow: neither changes the field's size.
+- The text is placed as a button's label (see `singleLineText` in `theming.md`).
+
+```vue
+<SInput v-model="name" placeholder="Name" icon="i-ph-user"/>
+<SInput v-model="q" size="sm" variant="soft" trailing-icon="i-ph-magnifying-glass"/>
+```
+
+## STextarea
+
+`UTextarea` on the scale.
+
+**Props:** the scale props only (default `spaceY: '+1'`). Everything else is `UTextarea`'s, passed through with every slot.
+
+- md: 12px padding-y, 10px padding-x.
+- Leading and trailing icons sit at the top, one padding-y from the edge.
+
+```vue
+<STextarea v-model="notes" :rows="4" placeholder="Notes"/>
+```
+
+## SSelect, SSelectMenu, SInputMenu
+
+`USelect`, `USelectMenu` and `UInputMenu` on the scale: the trigger and the menu's items.
+
+**Props:** the scale props only (no default shift). Everything else passes through with every slot.
+
+- The trigger is as tall as an SInput (md: 40px); the items are controls of the same size.
+- The menu floats in a portal, out of reach of the trigger's classes: the scale classes are added to `ui.content` as well (a `ui.content` given by the caller is kept).
+- An `iconSize` given as a CSS length is set inline on the trigger only; the menu takes tokens.
+
+```vue
+<SSelect v-model="status" :items="['Todo', 'Done']" placeholder="Status"/>
+<SSelectMenu v-model="owner" :items="people" value-key="id" size="sm" icon="i-ph-user"/>
+<SInputMenu v-model="city" :items="cities" placeholder="City"/>
+```
+
+## SInputTags
+
+`UInputTags` on the scale.
+
+**Props:** the scale props only. Everything else is `UInputTags`'s, passed through with every slot.
+
+- A tag is a soft pill with the field's text, icon size, padding-x and gap; its padding-y is two steps below the field's (sm: 4px, a 24px tag in a 32px field).
+- The field gives that padding-y back, so it is as tall with tags as without.
+- The wrapper sets `--s-tag-py` from `spaceY ?? space ?? size` (0px at xs and below, sm 4, md 6, lg 8, xl 10); steps above xl have no entry and keep the size's own.
+
+```vue
+<SInputTags v-model="tags" placeholder="Add a tag"/>
+```
+
+## SCheckbox, SSwitch, SRadioGroup
+
+`UCheckbox`, `USwitch` and `URadioGroup` on the scale.
+
+**Props:** the scale props only (default `spaceY: '-1'`). Everything else passes through with every slot.
+
+- Box, track and dot are as big as the size's icon (md: 20px); the switch's track is 1.75 times as wide.
+- The row has the size's text, gap and padding-y, no padding-x: md is 36px tall, as a button.
+- Radio options side by side are a padding-x apart.
+
+```vue
+<SCheckbox v-model="agree" label="I agree"/>
+<SSwitch v-model="enabled" label="Enabled" size="sm"/>
+<SRadioGroup v-model="plan" :items="['Free', 'Pro']" orientation="horizontal"/>
+```
+
+## SDropdownMenu
+
+`UDropdownMenu` on the scale: its items are controls of the size.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | none | For the items |
+| `arrow` | `boolean \| Record<string, unknown>` | — | `true`: Stem's arrow; an object is Reka's arrow props laid over it |
+| `content` | `Record<string, unknown>` | — | Reka's content props; with an arrow, `arrowPadding: 16` is added unless given |
+
+**Passes through:** every other `UDropdownMenu` prop, event and slot (`items`, `v-model:open`, item slots…).
+
+- The scale classes go on `ui.content` (the menu is in a portal); the trigger is whatever the default slot holds and is not touched.
+- An item is as tall as an input of the size (md: 40px): the menu has no space-y shift of its own.
+- Only scale tokens reach the menu: an `iconSize` given as a CSS length is not applied.
+
+```vue
+<SDropdownMenu :items="items" arrow size="sm">
+  <SButton label="Actions" caret variant="soft" size="sm"/>
+</SDropdownMenu>
+```
+
+## SPopover, STooltip
+
+`UPopover` and `UTooltip` with Stem's arrow.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `arrow` | `boolean \| Record<string, unknown>` | — | `true`: Stem's arrow; an object is Reka's arrow props laid over it |
+| `content` | `Record<string, unknown>` | — | Reka's content props; with an arrow, `arrowPadding: 16` is added unless given |
+
+**Passes through:** every other prop, event and slot.
+
+- Without `arrow` they are the Nuxt UI components as themed.
+- A bare Nuxt UI overlay takes the same arrow as `:arrow="stemArrow"`.
+
+```vue
+<SPopover arrow>
+  <SButton label="Open"/>
+  <template #content><div class="p-4">Content</div></template>
+</SPopover>
+<STooltip text="Copy" arrow><SButton icon="i-ph-copy" label="Copy" square/></STooltip>
+```
+
+## SArrow
+
+The SVG Reka renders as the arrow of a popover, tooltip or menu. Not used directly: it is the `as` of `stemArrow`.
+
+**Props:** none. It reads `class`, `width`, `height` and `data-slot` from its attributes (Reka's), and draws `STEM_ARROW_SHAPE`.
+
+- Reka's arrow points down: the shape, drawn pointing up, is flipped.
+- The fill and stroke come from the overlay theme's `arrow` slot: Stem sets `fill-(--ui-bg) stroke-black/10 dark:stroke-white/10` for popover, dropdown menu and context menu; a tooltip keeps Nuxt UI's own.
+- The outline is a 2px line under the fill, clipped above the surface's own ring.
+
+## STabs
+
+`UTabs` on the scale: each tab is a button of the size.
+
+**Props:** the scale props only (default `spaceY: '-1'`). Everything else passes through with every slot.
+
+- A tab has a button's text, icon, padding, height and squircle (md: 36px). The pill list wraps the tabs with a 2px inset, so it is 4px taller and concentric with the active tab.
+- `rounded` makes the list and the tabs pills.
+- An item's `badge` becomes a soft badge (`{variant: 'soft', …}`; the item's own badge props win), a size below the tab's (`ui.trailingBadgeSize`, unless given), a pill, with space-x and space-y a step below that size's. Its padding-y comes back as a negative margin, so a tab with a badge is as tall as one without. In the active tab its text takes the tab's colour.
+
+```vue
+<STabs v-model="tab" :items="[{label: 'All', value: 'all', badge: 12}, {label: 'Mine', value: 'mine'}]"/>
+<STabs :items="items" variant="link" size="sm"/>
+```
+
+## SAlert
+
+`UAlert` on the scale, with a content slot under the text and SModalButton actions.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'sm'`, `spaceX: '+2'`, `spaceY: '+4'`, `roundness: '+1'` | Set inline on the root (`stemScaleVars`) |
+| `description` | `string` | — | |
+| `orientation` | `'horizontal' \| 'vertical'` | — (UAlert's: vertical) | |
+| `close` | `boolean \| Record<string, unknown>` | `false` | The X: `true`, or the SModalButton props it takes |
+| `closeIcon` | `string` | `appConfig.ui.icons.close`, else `i-ph-x` | |
+| `buttons` | `{size?, spaceX?, spaceY?}` | — | The scale of all the buttons at once (X, actions, slot params); each a step or a shift from its default |
+| `descriptionTextSize` | size or shift | `'-1'` | The description's text, from the alert's |
+| `ui` | `Record<string, string \| undefined>` | — | Classes per UAlert slot, merged with SAlert's own |
+
+**Emits:** `update:open: [value: boolean]` — `false` when the X is clicked.
+
+**Slots:** `default` (content under the description), `actions` (params `{button, primary}`), `close`, `description`; every other UAlert slot (`leading`, `title`) is forwarded.
+
+**Passes through:** every other `UAlert` prop (`title`, `icon`, `avatar`, `color`, `variant`, `actions`…).
+
+- Colours `neutral`, `primary`, `secondary`, `info`, `success`, `warning`, `error`; variants `outline` (default), `soft`, `subtle`, `solid`.
+- sm: 12 × 16px padding, 8px radius. Its children inherit its size and type, not its space or radius.
+- Actions (from `actions`) and the X are SModalButtons of the alert's size with their own defaults (sm: 28px tall), a step below the alert's space-x apart (sm: 10px). In `horizontal` their row is exactly the title's line and they are centred on it, so a one-line alert is no taller for them.
+- In the `#actions` slot bind `button` on a plain SModalButton and `primary` on the default action (primary, solid); each carries size, the `buttons` space and the solid tint.
+- On a solid alert the X and the soft actions take the tone's tint, a solid action the ground's opposite.
+- The description is a text step below the title, on lines of that step's icon plus 4px (sm alert: 12px on 16px lines).
+- With `orientation="horizontal"` and a default slot the alert is laid out as a grid and the slot spans the text's and the actions' columns; otherwise the slot stays under the description in the text's column.
+- The avatar is twice the icon (sm: 32px).
+- Without `orientation` the alert is vertical (UAlert's default), and SAlert lays its buttons out accordingly.
+
+```vue
+<SAlert title="Upload failed" description="The file is too large." icon="i-ph-warning-circle"
+        color="error" orientation="horizontal" close :actions="[{label: 'Retry'}]"/>
+
+<SAlert title="What went wrong?" orientation="horizontal" close>
+  <template #actions="{button, primary}">
+    <SModalButton v-bind="button" label="Skip"/>
+    <SModalButton v-bind="primary" label="Send"/>
+  </template>
+  <ReasonChips/>
+</SAlert>
+```
+
+A toast has no such slot: its `description` takes a render function. `UToast` has no `variant` either: pass `ui: alertClasses(color, variant)` to `toast.add()`.
+
+## SHint
+
+One small line telling where a rule applies.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'xs'` | `spaceX` is the gap |
+| `color` | `'muted' \| 'primary' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'muted'` | The whole line's colour, and its icon |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'xs'` (inherited first) | |
+| `icon` | `string` | the colour's own | `i-ph-info` (muted, primary, info), `i-ph-check-circle`, `i-ph-warning`, `i-ph-warning-circle` |
+
+**Slots:** `default` (the text). Types `HintColor`, `HintSize` are exported.
+
+- A `<p>` with no padding or margin of its own.
+- The icon sits on the first line. `iconSize` changes the icon alone: the lines stay as tall as the size's icon (`--s-hint-line`) and the icon stays centred on the first one.
+- `info` is sky, not the theme's info.
+
+```vue
+<SHint>You can save it in many folders at once.</SHint>
+<SHint color="warning" size="sm">This link expires in 24 hours.</SHint>
+```
+
+## SEmpty
+
+Empty state: a glyph, a label, an optional description and an action.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'md'` | Text and gap; `iconSize` sets the glyph (a token: that size's icon; or a CSS length) |
+| `label` | `string` | — | Alone, a muted line; with a description, the title |
+| `description` | `string` | — | The line under the title, a text step below, muted |
+| `icon` | `string` | `i-ph-empty-light` (vertical), `i-ph-empty` (horizontal) | |
+| `loading` | `boolean` | — | An SSpinner of the glyph's size instead of the icon |
+| `stroke` | `number` | `1` | The spinner's stroke |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` (inherited first) | |
+
+**Slots:** `default` (replaces the label), `description`, `after` (e.g. a button).
+
+- The glyph is an illustration with a scale of its own: horizontal 16 / 20 / 24 / 28 / 32px, vertical 32 / 40 / 48 / 56 / 64px (xs … xl).
+- The gap is the size's (`--s-gap`); vertical is centred, and with a description the text block is at most `max-w-sm` wide.
+- Glyph and muted text are `--ui-text-muted`; a title over a description is `--ui-text`, medium.
+
+```vue
+<SEmpty label="No results"/>
+<SEmpty label="Nothing here yet" description="Create your first project." icon="i-ph-folder-open">
+  <template #after><SButton label="Create" icon="i-ph-plus" size="sm" variant="soft"/></template>
+</SEmpty>
+<SEmpty label="Loading" loading orientation="horizontal" size="sm"/>
+```
+
+## SSpinner
+
+Animated SVG spinner. Self-contained (its keyframes are in its own `<style>`): usable without the Stem module, from `@fullbrains/stem/components/SSpinner`.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `size` | `StemSize` or any CSS length | `'var(--s-icon-size, 1em)'` | A token is that size's icon in px |
+| `stroke` | `number` | `1` | Stroke width, in the 24-unit viewBox |
+| `grow` | `boolean` | `false` | Animates in from zero width (500ms) |
+
+- By default it follows the ambient icon size, so a spinner swapped in for an icon keeps the same box.
+- Sized through CSS `width` / `height`; the colour is `currentColor`.
+
+```vue
+<SSpinner/>
+<SSpinner size="lg" :stroke="2"/>
+<SSpinner size="2em" grow/>
+```
+
+## SIcon
+
+A local SVG rendered inline, so it takes `currentColor`. Usable without the Stem module, from `@fullbrains/stem/components/SIcon`.
+
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `name` | `string` | required | The icon's name for the injected loader: with the module, its path under the icons directory without `.svg` (`logo`, `brand/wordmark`) |
+| `proportional` | `boolean` | `false` | The SVG fills its container (100% × 100%) |
+| `constrained` | `boolean` | `false` | With `proportional`: `width: auto` (Safari, in flex containers) |
+
+**Emits:** `ready` — after the SVG is in the DOM, and also when loading fails.
+
+- The source comes from the `StemIconLoader` injected with `STEM_ICON_LOADER`; without a loader, or when it returns `null`, nothing is rendered.
+- The module (or `@fullbrains/stem/standalone`) provides a loader built from `<srcDir>/<iconsDir>/**/*.svg`; `iconsDir` defaults to `assets/icons`.
+- Fills and strokes set to `black`, `#000` or `#000000` are remapped to `currentColor`.
+- The SVG is injected with `v-html`: only trusted sources.
+
+```vue
+<SIcon name="logo" class="w-24"/>
+<SIcon name="brand/wordmark" proportional constrained class="h-6"/>
 ```
 
 ## SModal
 
-Slide-over modal built on Nuxt UI's `USlideover`. Provides a structured layout with header, body, and footer sections. Opens from the top on desktop (with slide animation) and from the bottom on mobile.
+A sheet built on `USlideover`, with a header, a body and a footer.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | none | Passed to everything inside; the padding is three steps above the size's space |
+| `title`, `description`, `icon` | `string` | — | The header's (`description` is sanitized HTML) |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | |
+| `width` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' … '7xl' \| 'full' \| number` | `'xl'` | A Tailwind `max-w-*` step, `full`, or pixels |
+| `header` | `boolean` | `true` | Render the header |
+| `closeable` | `boolean` | `true` | The X in the header |
+| `footer` | `boolean` | `true` | Render the footer |
+| `headerCompact` | `boolean \| 'mobileOnly'` | — | Icon inline with the title; `'mobileOnly'`: below sm only |
+| `headerWrap` | `boolean` | — | The title wraps instead of being cut |
+| `headerSeparator` | `boolean` | — | A line under the header |
+| `footerSeparator` | `boolean` | `true` | A line over the footer |
+| `buttons` | `{size?, spaceX?, spaceY?}` | — | The footer buttons' scale (SModalFooter's `buttons`) |
+| `disabled` | `boolean` | `false` | Not dismissible, and the X disabled |
+| `open` | `boolean` | `undefined` | Controlled state (`v-model:open`) |
+| `defaultOpen` | `boolean` | — | |
+| `ui` | `Partial<Record<'content' \| 'header' \| 'body' \| 'footer', string>>` | — | Classes added to the slideover's own |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | — | Modal title |
-| `description` | `string` | — | Description text below title |
-| `icon` | `string` | — | Icon displayed above title |
-| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Slide direction |
-| `width` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl' \| '5xl' \| '6xl' \| '7xl' \| 'full' \| number` | `'xl'` | Modal width. Number = exact pixels (was `size`) |
-| `size` and the scale props | Stem scale | — | Passed to everything inside (header buttons, body, footer), like an SScale |
-| `header` | `boolean` | `true` | Show header section |
-| `headerCompact` | `boolean` | `false` | Compact header: reduced padding (py-3), smaller title (text-lg), icon inline beside title at 1em |
-| `closeable` | `boolean` | `true` | Show close button |
-| `footer` | `boolean` | `true` | Show footer section |
-| `headerSeparator` | `boolean` | `undefined` | Show separator line below header |
-| `footerSeparator` | `boolean` | `true` | Show separator line above footer |
-| `disabled` | `boolean` | `false` | Prevent closing (useful during async operations) |
-| `open` | `boolean` | — | Control open state (v-model:open) |
-| `defaultOpen` | `boolean` | — | Initial open state (uncontrolled) |
+**Emits:** `close`, `update:open: [value: boolean]` (closing emits both).
 
-### Size Map
+**Slots:** `default` (the trigger; optional), `title`, `description`, `actions` (header buttons beside the X), `after-header`, `body`, `footer` (params `{button, primary}`).
 
-| Size | CSS Class | Width |
-|------|-----------|-------|
-| `sm` | `max-w-sm` | 24rem (384px) |
-| `md` | `max-w-md` | 28rem (448px) |
-| `lg` | `max-w-lg` | 32rem (512px) |
-| `xl` | `max-w-xl` | 36rem (576px) |
-| `2xl` | `max-w-2xl` | 42rem (672px) |
-| `3xl` | `max-w-3xl` | 48rem (768px) |
-| `4xl` | `max-w-4xl` | 56rem (896px) |
-| `5xl` | `max-w-5xl` | 64rem (1024px) |
-| `6xl` | `max-w-6xl` | 72rem (1152px) |
-| `7xl` | `max-w-7xl` | 80rem (1280px) |
-| `full` | `w-full max-w-full` | 100% |
-| number | `width: {n}px` | exact pixels |
-
-### Emits
-
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `close` | — | Emitted when modal is closed |
-| `update:open` | `boolean` | For v-model:open binding |
-
-### Slots
-
-| Slot | Description |
-|------|-------------|
-| `title` | Custom title content |
-| `after-header` | Content between header and body |
-| `body` | Main content area |
-| `footer` | Footer buttons/actions |
-
-### Layout
-
-- On desktop: slides from top, centered horizontally with `mx-auto mt-4`, max-height `calc(100vh - 2rem)`, rounded `2xl`
-- On mobile: slides from bottom, full width, no bottom rounding, sticks to bottom
-
-### Example
+- Padding, all around header, body and footer: md 16px (sm 14, lg 18). It is on the panel as `--s-modal-p`: the body is padded already; `after-header` content adds its own (`px-(--s-modal-p)`). `ui.body: 'p-0 sm:p-0'` for a body that runs edge to edge.
+- Without `v-model:open` it opens by itself: from its default slot (the trigger) or with `default-open`.
+- The panel's radius is twice the size's (md: 16px, before the squircle factor).
+- With `side="top"` (default) it slides from the bottom below sm, where it is a bottom sheet with square lower corners, and from the top from sm.
+- The header's title is a text step above the modal's size (md: 18px; the size's own when compact), semibold; the description a step below, muted.
+- Header buttons are a size below the modal's, never below sm; `#actions` content inherits it. They sit at the top, centred on a row as tall as the title's line.
+- Footer buttons: see SModalFooter.
 
 ```vue
-<script setup>
-const isOpen = ref(false)
-const loading = ref(false)
-
-async function save() {
-  loading.value = true
-  await api.save(form)
-  loading.value = false
-  isOpen.value = false
-}
-</script>
-
-<template>
-  <SButton label="Open" @click="isOpen = true" />
-
-  <SModal
-    v-model:open="isOpen"
-    title="Edit Profile"
-    description="Update your personal information"
-    icon="i-ph-user-circle"
-    size="md"
-    :disabled="loading"
-  >
-    <template #body>
-      <div class="p-6">
-        <!-- form fields -->
-      </div>
-    </template>
-    <template #footer>
-      <SButton label="Save" :loading="loading" @click="save" />
-      <SButton label="Cancel" variant="soft" :disabled="loading" @click="isOpen = false" />
-    </template>
-  </SModal>
-</template>
+<SModal v-model:open="open" title="Edit profile" description="Update your details." icon="i-ph-user" width="lg">
+  <template #body><SInput v-model="name" class="w-full"/></template>
+  <template #footer="{button, primary}">
+    <SButton v-bind="primary" label="Save" @click="save"/>
+    <SButton v-bind="button" label="Cancel" @click="open = false"/>
+  </template>
+</SModal>
 ```
 
 ## SModalHeader
 
-Internal component used by `SModal`. Renders title, description, icon, and close button.
+The modal's header. Used by SModal; reads the scale from its parent (it takes no scale props).
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `title` | `string` | — | |
+| `description` | `string` | — | HTML, sanitized (DOMPurify; escaped to text on the server) |
+| `icon` | `string` | — | 40px above the title; 24px inline when compact |
+| `compact` | `boolean \| 'mobileOnly'` | — | The icon inline with the title |
+| `closeable` | `boolean` | `true` | Shows an SCloseButton |
+| `disabled` | `boolean` | `false` | Disables the close button |
+| `wrap` | `boolean` | — | The title on as many lines as it needs |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | — | Header title |
-| `description` | `string` | — | Description (rendered as HTML) |
-| `icon` | `string` | — | Large icon (size-10) above title |
-| `compact` | `boolean` | `false` | Compact mode: py-3 instead of py-6, text-lg instead of text-2xl, icon inline beside title at `size-6` |
-| `closeable` | `boolean` | `true` | Show close button |
-| `disabled` | `boolean` | `false` | Disable close button |
+**Emits:** `close`. **Slots:** `title`, `description`, `actions`.
 
-### Slots
-
-| Slot | Description |
-|------|-------------|
-| `title` | Custom title content |
-
-## SCloseButton
-
-The close control of Stem's surfaces — the soft pill with an X that `SModalHeader` pins to its corner. Use it for any panel, drawer or slideover, so every surface closes with the same button. Placement is the caller's.
-
-### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `label` | `string` | `'Close'` | Accessible name (`aria-label`), not rendered. Pass the app's own wording |
-| `disabled` | `boolean` | `false` | Disable the button |
-
-### Emits
-
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `click` | `MouseEvent` | The button was pressed |
-
-### Example
-
-```vue
-<SCloseButton label="Chiudi il documento" @click="close" />
-```
+- The actions and the close sit in an `SScale` of the buttons' size, a step above that size's space apart (md modal: sm buttons, 10px).
 
 ## SModalFooter
 
-Internal component used by `SModal`. Renders footer with responsive button layout.
+The modal's footer. Used by SModal; reads the scale from its parent.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `separator` | `boolean` | `true` | A line above |
+| `buttons` | `{size?, spaceX?, spaceY?}` | — | Each a step or a shift, replacing the default (size: the modal's; spaceX: `'+1'`; spaceY: a button's own) |
 
-| Prop | Type | Default |
-|------|------|---------|
-| `separator` | `boolean` | `true` |
+**Slots:** `default`, with params `{button, primary}`: `button` is `{size, spaceX, variant: 'soft'}`, `primary` is `{size, spaceX, color: 'primary', variant: 'solid'}`.
 
-### Button Layout
-
-- Mobile: buttons are full-width, stacked vertically
-- Desktop (sm+): buttons are inline, auto-width, with horizontal padding `1.5em`
+- Buttons bound to them are SButtons of the modal's size, md: 12 × 8px, 36px tall.
+- The gap between its children is four steps below its padding (md: 8px).
+- Other Stem controls inside inherit the modal's size and type, with their own space.
 
 ## SConfirmModal
 
-Confirmation dialog used internally by `SButton` when `onConfirm` is provided. Can also be used programmatically via `useConfirmModal()`.
+The confirmation dialog `useConfirmModal()` and SButton's `onConfirm` open. An SModal with a confirm and a cancel button.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `title` | `string` | `'Confirm'` | |
+| `message` | `string` | `'Are you sure?'` | HTML, sanitized |
+| `label` | `string` | `'Confirm'` | The confirm button |
+| `cancelLabel` | `string` | `'Cancel'` | |
+| `icon` | `string` | — | |
+| `destructive` | `boolean` | — | The confirm button in `error` |
+| `confirmMatch` | `string` | — | The user must type this exact text to enable the confirm button |
+| `confirmPlaceholder` | `string` | — | The typing field's placeholder |
+| `headerSeparator` | `boolean` | — | A line under the title; the message then moves into the body |
+| `headerCompact` | `boolean \| 'mobileOnly'` | — | SModal's compact header |
+| `onConfirm` | `() => Promise<void> \| void` | — | Awaited before closing; the dialog is disabled and the button loading meanwhile |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | `'Confirm'` | Dialog title |
-| `message` | `string` | `'Are you sure?'` | Confirmation message |
-| `label` | `string` | `'Confirm'` | Confirm button label |
-| `cancelLabel` | `string` | `'Cancel'` | Cancel button label |
-| `icon` | `string` | — | Dialog icon |
-| `destructive` | `boolean` | `false` | Use error color for confirm button |
-| `confirmMatch` | `string` | — | Exact string the user must type to enable the confirm button |
-| `confirmPlaceholder` | `string` | — | Placeholder for the type-to-confirm input |
-| `onConfirm` | `() => Promise<void> \| void` | — | Async callback executed on confirm |
+**Emits:** `close: [confirmed: boolean]`.
 
-### Behavior
-
-- While `onConfirm` runs, a loading state prevents closing the dialog
-- On confirm success, emits `close(true)`
-- On cancel or close, emits `close(false)`
-- When `confirmMatch` is provided, a `UInput` appears between the description and footer. The confirm button stays disabled until the typed value matches exactly (case-sensitive). Enter key submits when match is valid.
+- Enter in the typing field confirms, once the text matches.
+- If `onConfirm` throws, the dialog stays open.
 
 ## SAlertModal
 
-Simple message modal with a single OK button. Used programmatically via `useAlertModal()`.
+A message with one button, opened by `useAlertModal()`.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `title` | `string` | `'Info'` | |
+| `message` | `string` | — | The header's description (sanitized HTML) |
+| `icon` | `string` | — | |
+| `confirmLabel` | `string` | `'OK'` | |
+| `confirmColor` | `string` | — (primary) | |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | `'Info'` | Modal title |
-| `message` | `string` | — | Message body |
-| `icon` | `string` | — | Modal icon |
-| `confirmLabel` | `string` | `'OK'` | Button label |
-| `confirmColor` | `string` | — | Button color |
-
-### Behavior
-
-- Emits `close` when the user clicks OK or closes the modal
-- No loading state, no cancel button — purely informational
-
-## useAlertModal
-
-Composable for programmatic alert/message modals via Nuxt UI's overlay system.
-
-### Usage
-
-```ts
-const { alert } = useAlertModal()
-
-// Simple string message
-await alert('Operation completed')
-
-// Full options
-await alert({
-  title: 'Error',
-  message: 'Something went wrong.',
-  icon: 'i-ph-warning',
-  confirmColor: 'error',
-})
-```
-
-### Options
-
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `title` | `string` | No | Modal title |
-| `message` | `string` | No | Message body |
-| `icon` | `string` | No | Modal icon |
-| `confirmLabel` | `string` | No | Button label (default: 'OK') |
-| `confirmColor` | `string` | No | Button color |
-
-When called with a string, it is used as the `message`.
-
-### Implementation
-
-Uses `useOverlay()` from Nuxt UI to create and open an `SAlertModal` instance with `destroyOnClose: true`.
-
-## SSpinner
-
-SVG-based animated loading spinner. Uses CSS keyframe animations for rotation and dash offset.
-
-### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `size` | `string` | `'var(--s-icon-size, 1em)'` | Width and height (supports any CSS unit) |
-| `stroke` | `number` | `1` | Stroke width of the circle |
-| `grow` | `boolean` | `false` | Animate in from 0 width (used by SButton) |
-
-### Sizing
-
-The default reads the ambient `--s-icon-size`, so a spinner swapped in for an icon (as `SButton` does when `loading`) keeps exactly the same box. The `1em` fallback keeps the component standalone-safe: outside the Stem theme, where the variable is unset, it still sizes to the text.
-
-Size is applied via a CSS `style` binding rather than the SVG `width`/`height` attributes, which do not accept `var()`.
-
-### Animations
-
-- `s-spinner-rotate`: Continuous 360 rotation (1.4s linear)
-- `s-spinner-dash`: Stroke dash animation (expanding/contracting arc)
-- `s-spinner-grow-in`: Width expansion from 0 (500ms ease-out, used with `grow` prop)
-
-## SIcon
-
-Renders a local SVG file inline, inheriting `currentColor`. Fills/strokes set to `black`/`#000`/`#000000` are automatically remapped to `currentColor`.
-
-SIcon does not bundle any icons and does not read from any fixed directory. The host application provides a `StemIconLoader` via the `STEM_ICON_LOADER` Vue injection key. SIcon calls that loader with the `name` prop and renders whatever SVG string it returns.
-
-Does not depend on Nuxt UI or the Stem module — can be imported standalone in any Vue/Nuxt project.
-
-### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | (required) | Icon identifier passed to the injected loader. Typically a path relative to `assets/icons/` without the `.svg` extension, including subdirectories (e.g., `brand/logo`) |
-| `proportional` | `boolean` | `false` | SVG fills its container (width: 100%, height: 100%) |
-| `constrained` | `boolean` | `false` | Prevents SVG expansion in flex containers (Safari fix — sets width: auto) |
-
-### Emits
-
-| Event | Description |
-|-------|-------------|
-| `ready` | Emitted after SVG loads successfully, or on error (to avoid blocking dependent logic) |
-
-### How it works
-
-`SIcon` injects a loader function from the Vue context using the `STEM_ICON_LOADER` key exported by `@fullbrains/stem/icon-loader`. When `name` changes, SIcon awaits `loader(name)` and inlines the returned SVG string. If no loader is provided, SIcon renders nothing and still emits `ready`.
-
-This indirection lets the host project own the icon folder and its Vite glob, so SVGs are resolved relative to the consumer (not to the Stem package).
-
-### Providing a loader (Nuxt example)
-
-```ts
-// app/plugins/stem-icons.ts
-import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
-
-const icons = import.meta.glob('~/assets/icons/**/*.svg', {
-  query: '?raw',
-  import: 'default',
-}) as Record<string, () => Promise<string>>
-
-export default defineNuxtPlugin((nuxtApp) => {
-  const loader: StemIconLoader = async (name) => {
-    const match = Object.entries(icons).find(([path]) => path.endsWith(`/${name}.svg`))
-    return match ? await match[1]() : null
-  }
-  nuxtApp.vueApp.provide(STEM_ICON_LOADER, loader)
-})
-```
-
-### Examples
-
-```vue
-<!-- Simple icon -->
-<SIcon name="logo" />
-
-<!-- Icon in subdirectory -->
-<SIcon name="brand/wordmark" />
-
-<!-- Proportional: fills parent container -->
-<div class="size-8">
-  <SIcon name="logo" proportional />
-</div>
-
-<!-- Proportional + constrained (Safari flex fix) -->
-<div class="flex items-center size-8">
-  <SIcon name="logo" proportional constrained />
-</div>
-```
-
-### Standalone usage
-
-```ts
-import SIcon from '@fullbrains/stem/components/SIcon'
-import { STEM_ICON_LOADER, type StemIconLoader } from '@fullbrains/stem/icon-loader'
-```
-
-No CSS import needed. Works in any Vue/Nuxt project once a loader is provided via `STEM_ICON_LOADER`.
-
-## useConfirmModal
-
-Composable for programmatic confirmation dialogs via Nuxt UI's overlay system.
-
-### Usage
-
-```ts
-const { confirm } = useConfirmModal()
-
-// In an event handler or function:
-await confirm({
-  title: 'Delete item?',
-  message: 'This cannot be undone.',
-  label: 'Delete',
-  icon: 'i-ph-trash',
-  destructive: true,
-  onConfirm: async () => {
-    await api.delete(itemId)
-  },
-})
-```
-
-### Options
-
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `title` | `string` | No | Dialog title |
-| `message` | `string` | No | Confirmation message |
-| `label` | `string` | No | Confirm button label |
-| `cancelLabel` | `string` | No | Cancel button label |
-| `icon` | `string` | No | Dialog icon |
-| `destructive` | `boolean` | No | Error color for confirm button |
-| `confirmMatch` | `string` | No | Exact string user must type to enable confirm button |
-| `confirmPlaceholder` | `string` | No | Placeholder for the type-to-confirm input |
-| `onConfirm` | `() => Promise<void> \| void` | Yes | Action to execute on confirmation |
-
-### Implementation
-
-Uses `useOverlay()` from Nuxt UI to create and open an `SConfirmModal` instance with `destroyOnClose: true`.
+**Emits:** `close`.
 
 ## SScrollArea
 
-Wraps Nuxt UI's `UScrollArea` with gradient fade overlays at top/bottom edges when content overflows. The fades are the global `.s-scroll-fade` classes (see SKILL.md, Scroll Fade), usable outside it. Gradient appears/disappears based on scroll position with a 300ms opacity transition. Uses `position: sticky` inside the scroll viewport so the gradient does not cover the scrollbar.
+`UScrollArea` with fades at the top and bottom edges while there is more to scroll.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| `fade` | `boolean` | `true` | |
+| `fadeSize` | `string` | `'1.5rem'` | The fade's height |
+| `fadeColor` | `string` | the first non-transparent background up the DOM, else `var(--ui-bg)` | `color` mode only |
+| `fadeMode` | `'color' \| 'mask'` | `'color'` | `color` paints a gradient of the surface over the content; `mask` fades the content itself to transparent |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `fade` | `boolean` | `true` | Enable/disable the gradient fades |
-| `fadeSize` | `string` | `'1.5rem'` | Height of the gradient overlay |
-| `fadeColor` | `string` | `'var(--ui-bg)'` | Gradient color (defaults to page background, auto dark mode) |
+**Slots:** `default`. **Passes through:** every `UScrollArea` prop and attribute (`class`, `orientation`, `ui`…).
 
-All other props/attrs are forwarded to `UScrollArea` (e.g., `items`, `virtualize`, `orientation`, `ui`, `class`).
-
-### Usage
+- Give it a height: a fade shows only while the content overflows and is not at that edge (300ms transition).
+- `color` needs a surface of one colour. The fades are sticky inside the viewport and compensate the scroller's padding.
+- `mask` (`.s-scroll-mask`) lets whatever is behind show through, and leaves a strip whole along the scrollbar.
 
 ```vue
-<!-- Basic: give it a fixed height, gradient fades appear automatically -->
-<SScrollArea class="h-64">
-  <div v-for="item in items" :key="item.id">{{ item.name }}</div>
-</SScrollArea>
+<SScrollArea class="h-64"><Row v-for="r in rows" :key="r.id" :row="r"/></SScrollArea>
+<SScrollArea class="h-48" fade-mode="mask" fade-size="3rem">…</SScrollArea>
+```
 
-<!-- Custom fade size -->
-<SScrollArea class="h-48" fade-size="3rem">
-  <slot />
-</SScrollArea>
+## SColorPicker
 
-<!-- On a colored background: override fade color -->
-<div class="bg-neutral-100 dark:bg-neutral-900">
-  <SScrollArea class="h-40" fade-color="var(--color-neutral-100)">
-    <slot />
-  </SScrollArea>
-</div>
+A hex colour field: swatch, text input, reset and a popover `UColorPicker`.
 
-<!-- Disable fade -->
-<SScrollArea class="h-48" :fade="false">
-  <slot />
-</SScrollArea>
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'sm'` | |
+| `modelValue` | `string` | required | `v-model`, a lowercase `#rrggbb` (or `''` with `allowEmpty`) |
+| `defaultValue` | `string` | — | Shows a reset button while the value differs |
+| `allowEmpty` | `boolean` | — | An empty field is valid and emits `''` |
+| `placeholder` | `string` | — | |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` (inherited first) | |
+| `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'none'` | `'outline'` | |
+| `color` | `'primary' \| 'error' \| 'success'` | `'primary'` | |
+| `disabled` | `boolean` | `false` | |
 
-<!-- With UScrollArea virtualization -->
-<SScrollArea class="h-96" :items="bigList" virtualize>
-  <template #default="{ item }">
-    <div>{{ item.name }}</div>
-  </template>
-</SScrollArea>
+**Emits:** `update:modelValue: [value: string]`.
+
+- As tall as an input of the size (sm: 32px), from `inputContainerClasses`: same border, hover and focus as a Stem input.
+- The swatch is a circle as big as the size's icon; clicking it opens the popover, the caret toggles it.
+- The typed text is validated on blur and on Enter: six hex digits, with or without `#`, emitted lowercase. Invalid text turns the ring rose and emits nothing.
+- The popover is as wide as the field and takes the field's scale classes.
+
+```vue
+<SColorPicker v-model="color" placeholder="#hex"/>
+<SColorPicker v-model="color" default-value="#3b82f6" size="md" variant="soft"/>
 ```
 
 ## SSearchBar
 
-Responsive search bar with collapsible inline filters. Uses `ResizeObserver` to monitor row width and collapse filters into a funnel dropdown when the input area falls below `minInputWidth`.
+A search field that holds filter chips and collapses them into a funnel panel when the input runs out of room.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `rounded`; size md | |
+| `modelValue` | `string` | `''` | `v-model` |
+| `placeholder` | `string` | `'Search...'` | |
+| `minInputWidth` | `number` | `280` | Below this input width, in px, the filters collapse |
+| `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost'` | `'outline'` | |
+| `activeFilterCount` | `number` | `0` | Shown as a count on the funnel button when above 0 |
+| `filtersLabel` | `string` | `'Filters'` | The funnel button's accessible name |
+| `compact` | `boolean` | `false` | The sm size, when no `size` is given or inherited |
+| `icon` | `string` | `appConfig.ui.icons.search`, else `i-ph-magnifying-glass` | |
+| `hideClear` | `boolean` | `false` | Hides the button that empties the field |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `modelValue` | `string` | `''` | Search text (v-model) |
-| `placeholder` | `string` | `'Search...'` | Input placeholder |
-| `minInputWidth` | `number` | `280` | Minimum input width before filters collapse |
-| `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost'` | `'outline'` | Visual variant, matches Stem input variants |
-| `activeFilterCount` | `number` | `0` | Number of active filters — shows count on funnel button |
+**Slots:** `filters` (inline; moved into the panel when collapsed), `more` (always in the panel), `trailing` (always visible, after the filters).
 
-### Slots
-
-| Slot | Description |
-|------|-------------|
-| `filters` | Inline filters (collapse into funnel on small widths) |
-| `more` | Extra filters always shown only in funnel dropdown |
-| `trailing` | Always visible after input (e.g., action buttons) |
-
-### Behavior
-
-- Supports same variants as Stem inputs (outline, soft, subtle, ghost), always primary (slate) color
-- `ResizeObserver` monitors the row element; when input space < `minInputWidth`, filters collapse
-- A funnel button appears when collapsed or when `#more` slot is provided
-- Funnel panel animates open/closed via height transition
-
-### Example
+- md is 40px tall, as an input; a pill unless `:rounded="false"`. Border and focus are inset rings, as an input's.
+- The funnel button shows when the filters are collapsed or `#more` has content; it opens a panel under the row.
+- It passes its size and type to what it holds, not its space. Chips in the row take the bar's size and tighten (space-y two steps below: 32px in a 40px bar, 24 in 32); chips in the panel do not, and their menus open from the chip's left edge. Chips in the row are 4px apart and 4px from the bar's right edge.
+- The clear button shows while there is text.
 
 ```vue
-<SSearchBar v-model="query" placeholder="Search projects...">
+<SSearchBar v-model="query" placeholder="Search projects" :active-filter-count="status.size">
   <template #filters>
-    <SSearchFilter v-model="statusFilter" :options="statusOptions" label="Status" />
-    <SSearchOrder v-model="sortOrder" :options="sortOptions" />
+    <SSearchFilter v-model="status" :options="statusOptions" label="Status"/>
+    <SSearchOrder v-model="order" :options="orderOptions"/>
   </template>
 </SSearchBar>
 ```
 
 ## SSearchChip
 
-Filter chip that wraps `SButton` (variant="soft", size="sm", rounded, compact). Displays a label with selected values summary.
+A filter chip: `SButton` soft, pill, with a caret.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'sm'`, `rounded`, `spaceX: '-1'` | |
+| `leadingIcon` | `string` | — | The button's leading icon |
+| `trailingIcon` | `string` | — | Declared; the chip always draws its caret |
+| `active` | `boolean` | — | A darker ground (the menu is open) |
+| `label` | `string` | — | |
+| `labelIcon` | `string` | — | Drawn before the label, which then shows only while everything is selected; label and value become the `aria-label` |
+| `selectedValues` | `string[]` | — | |
+| `count` | `number` | — | The total number of options |
+| `threshold` | `number` | `3` | Above it, the values are replaced by `selectedTemplate` |
+| `allLabel` | `string` | `'All'` | Shown when `selectedValues.length === count` |
+| `selectedTemplate` | `string` | `'% selected'` | `%` is replaced by the count |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `leadingIcon` | `string` | — | Leading icon |
-| `trailingIcon` | `string` | — | Trailing icon |
-| `active` | `boolean` | `false` | Active/pressed state (darker bg) |
-| `label` | `string` | — | Label text |
-| `labelIcon` | `string` | — | Icon drawn before the label, which then shows only while everything is selected; the label becomes the accessible name |
-| `selectedValues` | `string[]` | — | Selected value labels |
-| `count` | `number` | — | Total option count |
-| `threshold` | `number` | `3` | Max values to list before showing "N selected" |
-| `allLabel` | `string` | `'All'` | Label when all are selected |
-| `selectedTemplate` | `string` | `'% selected'` | Template for count display (`%` = count) |
+**Slots:** `default` — rendered instead of the label and value when `label`, `selectedValues` or `count` is missing.
 
-### Behavior
+- sm: 6px padding-x and gap, 28px tall; inside an SSearchBar's row it takes the bar's size, with space-y two steps below (one at xs).
+- Every other SButton prop and event passes through.
 
-- When `selectedValues.length === count` → shows `allLabel`
-- When `selectedValues.length <= threshold` → shows comma-joined values
-- Otherwise → shows `selectedTemplate` with count
+```vue
+<SSearchChip label="Status" :selected-values="['Active', 'Pending']" :count="5"/>
+```
 
 ## SSearchFilter
 
-Dropdown filter with `SSearchChip` trigger, optional groups, nullable option, counts, and animated reset button. Supports multi-select (default) and single-select modes.
+A dropdown filter: a chip, a menu of options and a reset button.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'sm'`, `rounded`, `spaceX: '-1'` | For the chip, the menu and the reset |
+| `modelValue` | `Set<string>` | required | `v-model`. Empty means "all" |
+| `options` | `readonly SSearchFilterOption[]` | required | `{value, label, icon?, iconClass?, group?}` |
+| `label` | `string` | required | |
+| `icon` | `string` | — | Drawn before the label; one selected option shows its own icon |
+| `multiple` | `boolean` | `true` | `false`: one value, the menu closes on select |
+| `placeholder` | `string` | `'None selected'` | Single mode, nothing selected |
+| `allLabel` | `string` | `'All'` | |
+| `groups` | `readonly SSearchFilterGroup[]` | — | `{value, label}`; options join one by `group` |
+| `nullable` | `boolean` | `false` | Adds a "no value" option |
+| `nullLabel` | `string` | `'Not Contacted'` | |
+| `nullValue` | `string` | `'not_contacted'` | |
+| `nullIcon` | `string` | `'i-ph-dots-three'` | |
+| `nullIconClass` | `string` | `'text-(--ui-text-muted)'` | |
+| `counts` | `Record<string, number>` | — | A count beside each option; "all" shows their sum |
+| `chipClass` | `string` | — | Classes for the root pill |
+| `threshold` | `number` | `3` | The chip's |
+| `contentClass` | `string` | `'min-w-48'` | Classes for the menu |
+| `alignEnd` | `boolean` | — | The menu aligned to the pill's end (inline in a bar only) |
+| `resetLabel` | `string` | `'Reset'` | The reset button's accessible name |
+| `selectedTemplate` | `string` | — (the chip's) | |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `modelValue` | `Set<string>` | (required) | Selected values (v-model). Empty Set = all selected (multi) or none (single) |
-| `options` | `SSearchFilterOption[]` | (required) | Available options |
-| `label` | `string` | (required) | Filter label |
-| `icon` | `string` | — | Icon drawn before the label, which then shows only while everything is selected; otherwise the label is the accessible name and shows in a tooltip at once. With one option selected, that option's icon takes its place |
-| `multiple` | `boolean` | `true` | Multi-select mode. When `false`: single select, no checkbox, no "All", no reset button, dropdown closes on select |
-| `placeholder` | `string` | `'None selected'` | Placeholder shown in single mode when nothing is selected |
-| `allLabel` | `string` | `'All'` | Label for "select all" (multi mode only) |
-| `groups` | `SSearchFilterGroup[]` | — | Option groups |
-| `nullable` | `boolean` | `false` | Show a "null" option |
-| `nullLabel` | `string` | `'Not Contacted'` | Null option label |
-| `nullValue` | `string` | `'not_contacted'` | Null option value |
-| `nullIcon` | `string` | `'i-ph-dots-three'` | Null option icon |
-| `nullIconClass` | `string` | `'text-(--ui-text-muted)'` | Null option icon class |
-| `counts` | `Record<string, number>` | — | Count per option value |
-| `chipClass` | `string` | — | Class on outer wrapper |
-| `threshold` | `number` | `3` | Max values to list in chip |
-| `contentClass` | `string` | `'min-w-48'` | Dropdown content class |
-| `alignEnd` | `boolean` | `false` | Align dropdown to end (right) instead of start |
+**Models:** `v-model` (`Set<string>`), `v-model:open` (`boolean`). **Emits:** `update:modelValue: [value: Set<string>]`.
 
-### Models
+**Slots:** `chip` (params `{values: string[]}`; replaces label and values while something is filtered), `item` (params `{option, checked}`; a whole row), `leading` (params `{option}`; the row's icon).
 
-| Model | Type | Description |
-|-------|------|-------------|
-| `modelValue` | `Set<string>` | Selected values |
-| `open` | `boolean` | Dropdown open state |
+**Types:** `SSearchFilterOption`, `SSearchFilterGroup` (exported).
 
-### Types
+- Multiple: selecting every option resets to the empty set, unless there is only one option. A group header toggles its whole group.
+- The reset (X) shows on a partial multiple selection and animates its width; the menu is anchored to the whole pill, so it does not move.
+- Without its label text (an `icon` or the `chip` slot, while filtering) the chip shows the label in a tooltip.
+- Attributes land on the root pill (`inheritAttrs: false`).
 
-```ts
-interface SSearchFilterOption {
-  readonly value: string
-  readonly label: string
-  readonly icon?: string
-  readonly iconClass?: string
-  readonly group?: string
-}
-
-interface SSearchFilterGroup {
-  readonly value: string
-  readonly label: string
-}
+```vue
+<SSearchFilter v-model="status" label="Status" :counts="{active: 12, done: 5}"
+               :options="[{value: 'active', label: 'Active', icon: 'i-ph-circle'}, {value: 'done', label: 'Done'}]"/>
+<SSearchFilter v-model="owner" label="Owner" :options="people" :multiple="false" align-end/>
 ```
-
-### Slots
-
-| Slot | Props | Description |
-|------|-------|-------------|
-| `item` | `{ option, checked }` | Replace the entire menu item content |
-| `leading` | `{ option }` | Custom leading content for filter items (inside default item layout) |
-| `chip` | `{ values }` | Draws the selection in place of the label and value text, the label moving into a tooltip. With everything selected the chip shows its default text instead |
-
-### Behavior
-
-- **Multi mode** (default): Empty `Set` = all selected. When all options toggled on, resets to empty Set, unless there is only one option, which stays checkable. Groups: clicking header toggles all in group. Reset button (×) animates in/out.
-- **Single mode** (`multiple=false`): No checkbox, no "All" option, no reset button. Dropdown closes on selection. Chip shows selected label or placeholder.
 
 ## SSearchOrder
 
-Single-select dropdown for sort order, using `SSearchChip` as trigger.
+A single-choice dropdown for the sort order, with an SSearchChip as trigger.
 
-### Props
+| Prop | Type | Default | Meaning |
+|------|------|---------|---------|
+| scale props | | `size: 'sm'`, `rounded` | For the chip and the menu (the menu is never a pill) |
+| `modelValue` | `string` | required | `v-model` |
+| `options` | `{value: string, label: string}[]` | required | |
+| `label` | `string` | `'Order by'` | The chip's label |
+| `contentClass` | `string` | `'min-w-36 w-full'` | Classes for the menu |
+| `chipClass` | `string` | — | Classes for the root |
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `modelValue` | `string` | (required) | Selected sort value (v-model) |
-| `options` | `{value: string, label: string}[]` | (required) | Sort options |
-| `contentClass` | `string` | `'min-w-36 w-full'` | Dropdown content class |
-| `chipClass` | `string` | — | Class on outer wrapper |
+**Models:** `v-model` (`string`), `v-model:open` (`boolean`, default `false`).
 
-### Example
-
-```vue
-<SSearchOrder
-  v-model="sortOrder"
-  :options="[
-    {value: 'newest', label: 'Newest first'},
-    {value: 'oldest', label: 'Oldest first'},
-  ]"
-/>
-```
-
-## SEmpty
-
-Empty state placeholder with icon, label, and optional action slot. Supports vertical and horizontal orientation.
-
-### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `icon` | `string` | `i-ph-empty-light` (vertical) / `i-ph-empty` (horizontal) | Icon name |
-| `label` | `string` | — | Text label |
-| `loading` | `boolean` | `false` | Show SSpinner instead of icon (same size) |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Text size (golden rule) and glyph size (dedicated scale below) |
-| `iconSize` | `string` | — | Override the glyph size. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length (`'48px'`, `'3em'`). Applies to both orientations, and to the spinner in `loading` state |
-| `stroke` | `number` | — | Spinner stroke width when `loading` (defaults to `1.5` in vertical orientation) |
-
-### Slots
-
-| Slot | Description |
-|------|-------------|
-| `default` | Replaces label for custom text content |
-| `after` | Content after text (e.g., action button) |
-
-### Glyph Scale
-
-The empty-state glyph is an illustration, not an inline icon, so it does **not** follow `--s-icon-size` — it keeps a scale of its own. Horizontal reads as an oversized inline icon; vertical as a proper graphic. Both are built on the same 4px step as the icon scale.
-
-| size | horizontal | vertical |
-|------|-----------|----------|
-| `xs` | 16px | 32px |
-| `sm` | 20px | 40px |
-| `md` | 24px | 48px |
-| `lg` | 28px | 56px |
-| `xl` | 32px | 64px |
-
-`iconSize` overrides either.
-
-### Behavior
-
-- Vertical: `flex-col items-center text-center`, uses light icon variant
-- Horizontal: `flex items-center`, uses regular icon
-- Text and icon use `text-(--ui-text-muted)` color
-- Gap defaults to `gap-3`, overridable via `class`
-- CSS class `s-empty` on root element
-
-### Examples
+- The menu aligns to the end inline, to the start in a search bar's panel.
 
 ```vue
-<!-- Simple -->
-<SEmpty label="No results found" />
-
-<!-- With action -->
-<SEmpty label="Nothing here yet" icon="i-ph-folder-open">
-  <template #after>
-    <SButton label="Create new" size="sm" variant="soft" icon="i-ph-plus" />
-  </template>
-</SEmpty>
-
-<!-- Horizontal -->
-<SEmpty label="Empty list" orientation="horizontal" />
-
-<!-- Loading state -->
-<SEmpty loading label="Loading..." />
-
-<!-- Explicit glyph size -->
-<SEmpty label="No results" icon-size="80px" />
+<SSearchOrder v-model="order" :options="[{value: 'new', label: 'Newest'}, {value: 'old', label: 'Oldest'}]"/>
 ```
 
-## SColorPicker
+## Composables
 
-Hex color input with inline swatch, text input, and popover `UColorPicker`. Supports the same `variant`, `color`, `size`, and `disabled` props as Stem inputs via shared `input-container.ts`.
-
-### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `modelValue` | `string` | — | Hex color value (v-model) |
-| `placeholder` | `string` | — | Input placeholder text |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Size following golden rule |
-| `iconSize` | `string` | — | Override the icon size. Accepts an icon scale token (`'sm'`, `'md'`, `'lg'`, `'xl'`) or any CSS length. Sets `--s-icon-size` on the container, so the caret and reset icons change together. Does not affect the swatch |
-| `variant` | `'outline' \| 'soft' \| 'subtle' \| 'ghost' \| 'none'` | `'outline'` | Visual variant matching Stem inputs |
-| `color` | `'primary' \| 'error' \| 'success'` | `'primary'` | Semantic color |
-| `disabled` | `boolean` | `false` | Disable interaction |
-| `defaultValue` | `string` | — | Default hex value. When set, shows a reset button if current value differs |
-| `allowEmpty` | `boolean` | `false` | Allow empty string as valid value |
-
-### Behavior
-
-- **Swatch**: colored circle on the left, clickable to open color picker popover. It is a colour sample rather than an icon, so it sits one step above the icon scale — still on the same 4px grid: `xs` 16px, `sm` 16px, `md` 20px, `lg` 24px, `xl` 28px
-- **Icons**: the caret and reset icons read `--s-icon-size`, set on the container by the size variant and overridable with `iconSize`
-- **Text input**: editable hex value, validates on blur/enter. Auto-prepends `#` if missing
-- **Caret**: dropdown toggle button on the right, color follows semantic color (primary=slate, error=rose, success=emerald)
-- **Reset button**: appears when `defaultValue` is set and current value differs; neutral color (not themed)
-- **Popover**: anchored to the full container (`align: 'start'`), width matches input width
-- **Error state**: red border + swatch outline when invalid hex is entered
-- **Variant/color classes**: imported from `src/theme/input-container.ts` (shared lookup, no duplication)
-
-### Usage
-
-```vue
-<!-- Basic -->
-<SColorPicker v-model="color" placeholder="#hex" />
-
-<!-- With variant, color, size -->
-<SColorPicker v-model="color" variant="soft" color="error" size="lg" />
-
-<!-- With default value (shows reset button) -->
-<SColorPicker v-model="color" default-value="#3b82f6" />
-
-<!-- Allow empty -->
-<SColorPicker v-model="color" allow-empty placeholder="Optional" />
-
-<!-- Disabled -->
-<SColorPicker v-model="color" disabled />
-```
-
-## Package Exports
+### useStemScale
 
 ```ts
-// Main entry (@fullbrains/stem)
-export { stem } from './theme'              // Theme objects
-export { stemIcons, stemColors } from './config' // Config
-
-// Icon sizing scale
-export {
-  iconSizeScale,      // {sm: '12px', md: '16px', lg: '20px', xl: '24px'}
-  iconSizeTokens,     // ['sm', 'md', 'lg', 'xl']
-  iconSizes,          // iconSizeScale + xs alias (12px)
-  iconSizeVar,        // '--s-icon-size'
-  iconSizeClass,      // 'size-(--s-icon-size) shrink-0'
-  iconSizeFor,        // (size) => '[--s-icon-size:20px]'
-  resolveIconSize,    // (token | CSS length) => CSS length
-  iconSizeStyle,      // (value) => {'--s-icon-size': '...'} | undefined
-  type IconSizeToken,
-} from './theme/icon-sizes'
-export { SBadge, SModal, SModalHeader, SModalFooter, SButton, SConfirmModal, SAlertModal, SSpinner, SIcon } from './components'
-export { SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SColorPicker, SScrollArea } from './components'
-export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
-export { useConfirmModal } from './composables'
-export { useAlertModal } from './composables'
-export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
-
-// Nuxt module (@fullbrains/stem/nuxt)
-// Auto-registers everything above
-
-// Theme only (@fullbrains/stem/theme)
-export { stem } from './theme'
-// re-exports the full icon-sizes API listed above
-
-// Icon loader only (@fullbrains/stem/icon-loader)
-export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'
-
-// Standalone components (no Nuxt module required)
-import SIcon from '@fullbrains/stem/components/SIcon'
-import SSpinner from '@fullbrains/stem/components/SSpinner'
+function useStemScale(
+  props: StemScaleProps,
+  defaults: StemScaleProps = {},
+  options: {provide?: boolean} = {},
+): ComputedRef<StemScaleResolved>
 ```
+
+Resolves a component's scale props as described in *The scale props*: own prop, else the injected parent's, else `defaults`, with shifts settled into steps. With `{provide: true}` it provides what it layered (shifts with no base kept as shifts) to its children under `STEM_SCALE`. `defaults` may use getters to stay reactive.
+
+Also exported from the file: `STEM_SCALE` (`InjectionKey<ComputedRef<StemScaleProps>>`) and `stemScaleKeys`. A container that passes only part of its scale provides its own value:
+
+```ts
+const scale = useStemScale(props, {size: 'sm', spaceY: '-1'})
+provide(STEM_SCALE, computed(() => ({...scale.value, space: undefined, spaceX: undefined, spaceY: undefined})))
+```
+
+### useConfirmModal
+
+```ts
+const {confirm} = useConfirmModal()
+await confirm({
+  title: 'Delete bot?',
+  message: 'Type <b>My Bot</b> to confirm.',   // sanitized HTML
+  label: 'Delete', cancelLabel: 'Keep',
+  icon: 'i-ph-trash',
+  destructive: true,
+  confirmMatch: 'My Bot', confirmPlaceholder: 'Bot name',
+  headerSeparator: false, headerCompact: 'mobileOnly',
+  onConfirm: () => api.delete(id),             // required
+})
+```
+
+Opens an `SConfirmModal` through Nuxt UI's `useOverlay` (destroyed on close). The promise resolves when the dialog closes, with no value: do the work in `onConfirm`.
+
+### useAlertModal
+
+```ts
+const {alert} = useAlertModal()
+await alert('Saved')
+await alert({title: 'Error', message: 'Something went wrong', icon: 'i-ph-warning', confirmLabel: 'Close', confirmColor: 'error'})
+```
+
+Opens an `SAlertModal`; a string is the `message`. Resolves when it closes.
+
+### searchBarContext
+
+`SEARCH_BAR_COMPACT` (`InjectionKey<Ref<boolean>>`, true in an sm or xs bar) and `SEARCH_BAR_PANEL` (`InjectionKey<boolean>`, true inside the funnel panel): what SSearchBar provides to the chips in its slots.
+
+## Package exports
+
+`@fullbrains/stem` exports the theme (`stem`, `stemColors`, `stemIcons`), the scale helpers (`stemScale`, `stemSizes`, `stemScaleClasses`, `stemScaleStyle`, `stemScaleVars`, `stemSpaceStep`, types `StemSize`, `StemSpace`, `StemScaleProps`), `alertClasses`, `alertColors`, `alertVariants`, `inputContainerClasses`, `inputIconColors`, the arrow (`stemArrow`, `stemArrowProps`, `arrowShape`, `STEM_ARROW_SHAPE`, `STEM_ARROW_PADDING`), `useConfirmModal`, `useAlertModal`, `STEM_ICON_LOADER` and these components: SModal, SModalHeader, SModalFooter, SBadge, SButton, SInput, STextarea, SSelect, SSelectMenu, SInputMenu, SInputTags, SDropdownMenu, STabs, SCheckbox, SSwitch, SRadioGroup, SCloseButton, SConfirmModal, SAlertModal, SSpinner, SIcon, SSearchBar, SSearchChip, SSearchFilter, SSearchOrder, SEmpty, SHint, SColorPicker, SScrollArea, SPopover, STooltip.
+
+SAlert, SArrow, SCopyButton, SModalButton, SScale and `useStemScale` (with `STEM_SCALE`, `stemScaleKeys`) are exported from `src/index.ts` too.
+
+Subpaths: `@fullbrains/stem/nuxt`, `/standalone`, `/theme`, `/icon-loader`, `/components/SIcon`, `/components/SSpinner`.
+
+## Removed
+
+- `compact` on SButton and SBadge → `space`, `space-x`, `space-y` (a step or a shift).
+- `disc` on SButton → `square` with `rounded`.
+- SModal `size` as the panel's width → `width`; `size` is now the scale.

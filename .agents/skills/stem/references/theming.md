@@ -1,578 +1,467 @@
-> **Note (redesign, 2026-11):** the size variants now come from `src/theme/sizes.ts` on the Stem scale (`src/css/scale.css`, `src/theme/scale.ts`); field borders and focus are inset rings plus an outer halo. Where this file shows `em` paddings, `[--s-radius:Npx]` per component or `icon-sizes.ts`, SKILL.md and the source win.
-
 # Stem Theming Reference
 
-Complete theme configuration for every component overridden by `@fullbrains/stem`.
+How the theme of `@fullbrains/stem` is built: the scale, its CSS, the corners, the colours, each Nuxt UI theme override and the module that injects them. Component APIs are in `components.md`.
 
-## Custom Color Palettes
+| Where | What |
+|-------|------|
+| `src/theme/scale.ts` | The scale's numbers, types and helpers |
+| `src/css/scale.css` | The same numbers as CSS classes and variables |
+| `src/theme/sizes.ts` | Size variants shared by the themes |
+| `src/theme/*.ts` | One Nuxt UI theme override per file, collected in `src/theme/index.ts` as `stem` |
+| `src/css/*.css` | Runtime CSS, imported by `base.css` |
+| `src/config.ts`, `src/stem-config.ts` | `stemColors`, `stemIcons`, and the `appConfig.ui` object |
+| `src/module.ts`, `src/standalone.ts` | The Nuxt modules |
 
-Stem defines three custom color palettes with different light/dark mappings. The `@theme static` block is in `src/css/colors-theme.css` and injected into `ui.css` by the module at build time. Dark overrides are in `src/css/colors.css` (runtime CSS).
+## The scale
 
-| Palette | Role | Light | Dark |
-|---------|------|-------|------|
-| **stem** | primary | tar (custom oklch) | zinc |
-| **iron** | secondary, UI surfaces, borders | slate | zinc |
-| **muto** | neutral text | gray | zinc |
+One table for every control with a `size` (`stemScale`, px):
 
-```ts
-// src/config.ts
-export const stemColors = {
-  primary: 'stem',
-  secondary: 'iron',
-  neutral: 'muto',
-  success: 'emerald',
-  error: 'rose',
-}
-```
+| size | text | icon (= line height) | space (padding, gap) | radius |
+|------|------|----------------------|----------------------|--------|
+| xs | 12 | 12 | 6 | 4 |
+| sm | 14 | 16 | 8 | 6 |
+| md | 16 | 20 | 10 | 8 |
+| lg | 18 | 24 | 12 | 10 |
+| xl | 20 | 28 | 14 | 12 |
 
-Stem bypasses Nuxt UI's CSS-variable-based semantic colors with hardcoded palette classes. This ensures that `primary` always renders as stem-900/stem-100 regardless of Nuxt UI's internal color resolution.
+The line height equals the icon, so text and icon share one row and a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon.
 
-## Avatar Theme
+**The space scale** (`StemSpace`) runs past the sizes at both ends:
 
-```ts
-// src/theme/avatar.ts
-{
-  slots: {
-    root: 'bg-iron-500/10',
-    fallback: 'leading-normal',
-  },
-}
-```
+| step | `0` | `2xs` | `xs` | `sm` | `md` | `lg` | `xl` | `2xl` | `3xl` | `4xl` | `5xl` |
+|------|-----|-------|------|------|------|------|------|-------|-------|-------|-------|
+| px | 0 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 |
 
-## Icon Mappings
+`2xs` and `0` are for tighter controls, `2xl`–`5xl` for containers (an alert's or a modal's padding). There is no text, icon or radius step outside xs–xl.
 
-```ts
-// src/config.ts — complete stemIcons map
-export const stemIcons = {
-  arrowDown: 'i-ph-arrow-down',
-  arrowLeft: 'i-ph-arrow-left',
-  arrowRight: 'i-ph-arrow-right',
-  arrowUp: 'i-ph-arrow-up',
-  caution: 'i-ph-warning-circle',
-  check: 'i-ph-check',
-  chevronDoubleLeft: 'i-ph-caret-double-left',
-  chevronDoubleRight: 'i-ph-caret-double-right',
-  chevronDown: 'i-ph-caret-down',
-  chevronLeft: 'i-ph-caret-left',
-  chevronRight: 'i-ph-caret-right',
-  chevronUp: 'i-ph-caret-up',
-  close: 'i-ph-x',
-  copy: 'i-ph-copy',
-  copyCheck: 'i-ph-check-circle',
-  dark: 'i-ph-moon',
-  drag: 'i-ph-dots-six-vertical',
-  ellipsis: 'i-ph-dots-three',
-  error: 'i-ph-x-circle',
-  external: 'i-ph-arrow-up-right',
-  eye: 'i-ph-eye',
-  eyeOff: 'i-ph-eye-slash',
-  file: 'i-ph-file',
-  folder: 'i-ph-folder',
-  folderOpen: 'i-ph-folder-open',
-  hash: 'i-ph-hash',
-  info: 'i-ph-info',
-  light: 'i-ph-sun',
-  loading: 'i-ph-circle-notch',
-  menu: 'i-ph-list',
-  minus: 'i-ph-minus',
-  panelClose: 'i-ph-caret-left',
-  panelOpen: 'i-ph-caret-right',
-  plus: 'i-ph-plus',
-  reload: 'i-ph-arrow-counter-clockwise',
-  search: 'i-ph-magnifying-glass',
-  stop: 'i-ph-square',
-  success: 'i-ph-check-circle',
-  system: 'i-ph-monitor',
-  tip: 'i-ph-lightbulb',
-  upload: 'i-ph-upload',
-  warning: 'i-ph-warning',
-}
-```
+**Default heights.** The numbers above are a control with the size's own space. Most controls default to space-y one step below (`useStemScale(props, {spaceY: '-1'})` in the wrapper); fields keep the size's own.
 
-## Icon Size Scale
+| | xs | sm | md | lg | xl |
+|--|----|----|----|----|----|
+| Button, badge, tab, checkbox / switch / radio row (`spaceY: '-1'`) | 20 | 28 | 36 | 44 | 52 |
+| Input, select, select menu, input menu, tags, colour picker, search bar, menu item (own space) | 24 | 32 | 40 | 48 | 56 |
+| Textarea padding-y (`spaceY: '+1'`) | 8 | 10 | 12 | 14 | 16 |
 
-Icon size is decoupled from the component's text size: a size token maps to a fixed pixel value, not a multiple of the font size. One scale, shared by every component.
+These defaults live in the `S*` wrappers, not in the theme: a bare `UButton` gets the size's own space (md: 40px).
 
-| token | text | icon |
-|-------|------|------|
-| sm | text-sm | 12px |
-| md | text-base | 16px |
-| lg | text-lg | 20px |
-| xl | text-xl | 24px |
-
-`xs` is not part of the public scale, but is kept as an alias of `sm` (12px) so `size="xs"` — which Nuxt UI still accepts — never ends up with no icon class at all.
+### `scale.ts`
 
 ```ts
-// src/theme/icon-sizes.ts
-export const iconSizeScale = {
-  sm: '12px',
-  md: '16px',
-  lg: '20px',
-  xl: '24px',
-} as const
-
-export type IconSizeToken = keyof typeof iconSizeScale
-
-/** Public tokens, in ascending order. Excludes the `xs` compatibility alias. */
-export const iconSizeTokens = Object.keys(iconSizeScale) as IconSizeToken[]
-
-/** Every size key a component may receive, including the `xs` alias. */
-export const iconSizes = {
-  xs: iconSizeScale.sm,
-  ...iconSizeScale,
-} as const
-
-export const iconSizeVar = '--s-icon-size'
-
-/** Class that makes an element read its dimensions from `--s-icon-size`. */
-export const iconSizeClass = 'size-(--s-icon-size) shrink-0'
-
-/** Sets `--s-icon-size` for a given size token, as a Tailwind arbitrary property. */
-export function iconSizeFor(size: keyof typeof iconSizes): string {
-  return `[${iconSizeVar}:${iconSizes[size]}]`
-}
-
-/** Resolves an `iconSize` prop (token or CSS length) to a CSS length. */
-export function resolveIconSize(value: string | undefined): string | undefined {
-  if (!value) return undefined
-  return value in iconSizes ? iconSizes[value as keyof typeof iconSizes] : value
-}
-
-/** Inline style that overrides `--s-icon-size`, or undefined when unset. */
-export function iconSizeStyle(value: string | undefined): Record<string, string> | undefined {
-  const resolved = resolveIconSize(value)
-  return resolved ? {[iconSizeVar]: resolved} : undefined
-}
+export type StemSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+export type StemSpace = 0 | '0' | '2xs' | StemSize | '2xl' | '3xl' | '4xl' | '5xl'
+export type StemSpaceShift = '+1' | … | '+6' | '-1' | … | '-6' | number
+export type StemOpticalLabel = 'auto' | 'always' | 'never'
 ```
 
-### Mechanism
+The types are written out as literals, not derived (`keyof typeof stemScale`, template types): Vue reads a prop's runtime type from its TS type and cannot resolve those.
 
-Components size their icons off the `--s-icon-size` custom property rather than a hardcoded `size-*` class: a single declaration on the root cascades to leading icon, trailing icon and spinner together — and can be overridden per instance via the `iconSize` prop (`SButton`, `SBadge`, `SEmpty`, `SColorPicker`).
+| Export | What it does |
+|--------|--------------|
+| `stemScale`, `stemSizes` | The table and its keys |
+| `stemScaleDefaults` | Every scale prop `undefined`, for `withDefaults`: an absent prop stays absent, so it can be inherited |
+| `stemSizeStep(from, by)`, `stemSpaceStep(from, by)` | A size / space `by` steps away, clamped to the scale |
+| `stemSpaceShift(v)` | The shift of a relative value in steps, `null` for an absolute one (a signed string or a non-zero number is a shift) |
+| `stemSpacePx(v)` | A space step in px |
+| `stemSizeClass(size)` | `s-size-{size}` |
+| `stemScaleClasses(props)` | The single-axis classes: `s-space-*`, `s-space-x-*`, `s-space-y-*`, `s-text-*`, `s-icon-*` (tokens only), `s-roundness-*`, `s-pill`, then always `s-optical-label-{mode}` and `s-control` |
+| `stemScaleStyle(props)` | `{'--s-icon-size': …}` for an `iconSize` that is not a token, else `undefined` |
+| `stemScaleVars(size, props)` | The whole scale as inline custom properties, for a root that cannot drop its size class (SAlert) |
+| `stemOpticalMode(v)` | The mode of `optical-label`; `false` → `never`, anything else unknown → `auto` |
+| `stemLabelShift` | The label trim classes: `iconStart`, `iconEnd`, `aloneStart`, `aloneEnd`, `alone` |
 
-Everything above is re-exported from both `@fullbrains/stem` and `@fullbrains/stem/theme`.
+`s-control` marks a Stem control: the alert theme sizes the bare `UButton`s Nuxt UI renders in a toast, and leaves `.s-control` ones alone.
 
-## Shared Sizing System
-
-All components with `size` follow the Golden Rule for text; icons come from the scale above. The shared `sizes` object:
+The Tailwind classes that read the scale, shared by every theme:
 
 ```ts
-// src/theme/sizes.ts
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
-
-const base = 'px-[1em] py-[0.5em] gap-[0.5em] leading-normal min-h-[calc(1lh+1em)]'
-
-function size(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
-  return {
-    // The size token sets --s-icon-size on the root; leading and trailing icons
-    // read it, so an `iconSize` override on the component overrides both at once.
-    base: `${base} ${text} ${iconSizeFor(token)}`,
-    leadingIcon: iconSizeClass,
-    trailingIcon: iconSizeClass,
-  }
-}
-
-export const sizes = {
-  xs: size('xs', 'text-xs'),
-  sm: size('sm', 'text-sm'),
-  md: size('md', 'text-base'),
-  lg: size('lg', 'text-lg'),
-  xl: size('xl', 'text-xl'),
-}
+export const stemScaleText = 'text-(length:--s-text) leading-(--s-icon-size)'
+export const stemScalePadding = 'px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-(--s-py) gap-(--s-gap)'
+export const stemScaleIcon = 'size-(--s-icon-size) shrink-0'
 ```
 
-## Checkbox Theme
+## `scale.css`
 
-```ts
-// src/theme/checkbox.ts
-{
-  compoundVariants: [
-    {
-      color: 'primary',
-      class: {
-        indicator: 'bg-stem-900 dark:bg-stem-100',
-        base: 'focus-visible:outline-iron-500',
-      },
-    },
-  ],
-}
-```
+Each class declares custom properties on the component's root; the theme reads them, so an element nested inside the root (the `<input>` of UInput) inherits them. Everything is in `@layer components` (a Tailwind utility on the same element still wins) except `s-pill-full`, `--s-device-px` and `s-line-text`.
 
-## Button Theme
+| Variable | Meaning |
+|----------|---------|
+| `--s-text` | Font size |
+| `--s-icon-size` | Icon size, and the line height |
+| `--s-px`, `--s-py` | Padding |
+| `--s-gap` | Gap between icon and label; follows space-x |
+| `--s-radius` | Squircle radius (read by `s-corner`) |
+| `--s-pill-x` | A pill's extra horizontal padding; `0px` on every `[class*="s-size-"]` |
+| `--s-corner-shape` | `round` on a pill; unset otherwise |
+| `--s-device-px` | The device pixel in CSS px: `1px`, `0.5px` at 2dppx, `1px / 3` at 3dppx |
 
-```ts
-// src/theme/button.ts
-{
-  slots: {
-    base: 'cursor-pointer select-none s-corner [--s-radius:8px] transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
-  },
-  compoundVariants: [
-    // primary solid
-    { color: 'primary', variant: 'solid', class: 'text-white dark:text-stem-900 bg-stem-900 dark:bg-stem-100 hover:bg-stem-800 dark:hover:bg-stem-300 active:bg-stem-900 dark:active:bg-stem-100 disabled:bg-stem-900 dark:disabled:bg-stem-100 focus-visible:outline-iron-500' },
-    // neutral solid
-    { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-muto-600 dark:bg-muto-600 hover:bg-muto-500 dark:hover:bg-muto-700 active:bg-muto-600 dark:active:bg-muto-600 disabled:bg-muto-600 dark:disabled:bg-muto-300 focus-visible:outline-muto-400' },
-    // secondary solid (inverse of primary: white bg in light, dark bg in dark)
-    { color: 'secondary', variant: 'solid', class: 'text-(--ui-text) dark:text-iron-100 bg-white dark:bg-iron-800 hover:bg-iron-50 dark:hover:bg-iron-700 active:bg-white dark:active:bg-iron-800 disabled:bg-white dark:disabled:bg-iron-800 focus-visible:outline-iron-400' },
-    // error solid
-    { color: 'error', variant: 'solid', class: 'bg-rose-600 dark:bg-rose-400 hover:bg-rose-700 dark:hover:bg-rose-500 active:bg-rose-600 dark:active:bg-rose-400' },
-    // soft (shared)
-    { color: ['primary', 'neutral', 'secondary'], variant: 'soft', class: 'text-muto-800 dark:text-muto-200 bg-iron-400/20 hover:bg-iron-400/30 active:bg-iron-400/20' },
-    // subtle primary/neutral
-    { color: ['primary', 'neutral'], variant: 'subtle', class: 'text-muto-800 dark:text-muto-200 bg-iron-400/20 hover:bg-iron-400/30 active:bg-iron-400/20 ring-muto-500/30 dark:ring-muto-300/20' },
-    // subtle secondary (white bg + inset border)
-    { color: 'secondary', variant: 'subtle', class: 'text-(--ui-text) dark:text-iron-100 bg-white dark:bg-iron-800 hover:bg-iron-50 dark:hover:bg-iron-700 active:bg-white dark:active:bg-iron-800 ring-inset ring-(--ui-border)' },
-  ],
-  variants: { size: sizes },
-  defaultVariants: { color: 'primary', variant: 'solid', size: 'md' },
-}
-```
+| Class | Sets |
+|-------|------|
+| `.s-size-{xs…xl}` | All six: `--s-text`, `--s-icon-size`, `--s-px`, `--s-py`, `--s-gap`, `--s-radius` |
+| `.s-space-{0, 2xs … 5xl}` | `--s-px`, `--s-py`, `--s-gap` |
+| `.s-space-x-*` | `--s-px`, `--s-gap` |
+| `.s-space-y-*` | `--s-py` |
+| `.s-text-{xs…xl}` | `--s-text` |
+| `.s-icon-{xs…xl}` | `--s-icon-size` |
+| `.s-roundness-{xs…xl}` | `--s-radius` |
+| `.s-pill` | `--s-radius: 9999px`, `--s-corner-shape: round`, `--s-pill-x` |
+| `.s-optical-label-{auto, always, never}` | The four `--s-label-*` trims |
+| `.s-pill-full` | `width: calc(100% + 2 * var(--s-pill-x, 0px)); max-width: none` |
+| `.s-line-text` | `--s-line-room`, `--s-line-top`, `--s-line-bottom` |
 
-## Input Commons (shared by input, textarea, select, selectMenu, inputMenu, inputTags)
+Order matters: the single-axis classes come after `s-size-*` and `s-space-*` in the file, so they override them. Keep the numbers in step with `scale.ts`.
 
-```ts
-// src/theme/input-commons.ts
-const inputBase = 'placeholder:text-iron-500/80 placeholder:select-none s-corner [--s-radius:6px] py-[0.5em]! transition duration-200'
-
-const inputSlots = {
-  base: inputBase,
-  leading: 'ml-[0.1em]!',
-  trailing: 'mr-[0.1em]!',
-  trailingIcon: 'text-(--ui-text)!',
-}
-```
-
-### Input Focus Ring (shadow-based, not outline)
-
-```ts
-// Focus ring for primary/error/success with outline and subtle variants
-{ color: 'primary', variant: ['outline', 'subtle'], class: { base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-iron-500/80 focus-visible:shadow-iron-500/20' } },
-{ color: 'error', variant: ['outline', 'subtle'], class: { base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-rose-500/80 focus-visible:shadow-rose-500/20' } },
-{ color: 'success', variant: ['outline', 'subtle'], class: { base: 'focus-visible:shadow-[0_0_0_3.5px]! focus:border-emerald-500/80 focus-visible:shadow-emerald-500/20' } },
-```
-
-### Outline Variant
-
-Uses `border` + `ring-0!` instead of Nuxt UI's default ring-based outline. Border colors: `iron-500/30`, `rose-500/30`, `emerald-500/30`.
-
-### Fixed Size Overrides
-
-Neutralizes Nuxt UI's responsive `md:text-*` classes that would override the golden rule on desktop:
-
-```ts
-{ fixed: false, size: 'xs', class: 'md:text-xs' },
-{ fixed: false, size: 'sm', class: 'md:text-sm' },
-{ fixed: false, size: 'md', class: 'md:text-base' },
-{ fixed: false, size: 'lg', class: 'md:text-lg' },
-```
-
-## Badge Theme
-
-```ts
-// src/theme/badge.ts
-import {iconSizeClass, iconSizeFor} from './icon-sizes'
-
-const badgeBase = 'rounded-full px-[0.75em] py-[0.35em] gap-[0.5em]'
-
-function badgeSize(token: 'xs' | 'sm' | 'md' | 'lg' | 'xl', text: string) {
-  return {
-    base: `${badgeBase} ${text} ${iconSizeFor(token)}`,
-    leadingIcon: iconSizeClass,
-    trailingIcon: iconSizeClass,
-  }
-}
-
-{
-  slots: { base: 'rounded-full font-normal' },
-  variants: {
-    size: {
-      xs: badgeSize('xs', 'text-xs'),
-      sm: badgeSize('sm', 'text-sm'),
-      md: badgeSize('md', 'text-base'),
-      lg: badgeSize('lg', 'text-lg'),
-      xl: badgeSize('xl', 'text-xl'),
-    },
-  },
-  compoundVariants: [
-    { color: 'primary', variant: 'solid', class: 'text-white dark:text-stem-900 bg-stem-900 dark:bg-stem-100' },
-    { color: 'neutral', variant: 'solid', class: 'text-white dark:text-white bg-stem-600 dark:bg-stem-600' },
-    { color: 'secondary', variant: 'solid', class: 'text-(--ui-text) dark:text-iron-100 bg-white dark:bg-iron-800' },
-    { color: 'error', variant: 'solid', class: 'bg-rose-600 dark:bg-rose-600' },
-    { color: 'primary', variant: 'outline', class: 'text-stem-900 dark:text-stem-100 ring-stem-900/50 dark:ring-stem-100/50' },
-    { color: 'neutral', variant: 'outline', class: 'text-stem-600 dark:text-stem-400 ring-iron-500/30 dark:ring-iron-400/30' },
-    { color: ['primary', 'neutral', 'secondary'], variant: 'soft', class: 'text-muto-800 dark:text-muto-200 bg-iron-400/20' },
-    { color: ['primary', 'neutral'], variant: 'subtle', class: 'text-muto-800 dark:text-muto-200 bg-iron-400/20 ring-muto-500/30 dark:ring-muto-300/20' },
-    { color: 'secondary', variant: 'subtle', class: 'text-(--ui-text) dark:text-iron-100 bg-white dark:bg-iron-800 ring-inset ring-(--ui-border)' },
-  ],
-}
-```
-
-Note: `rounded-full` must be in each size variant to override Nuxt UI's per-size `rounded-sm`/`rounded-md`.
-
-## Alert Theme
-
-```ts
-// src/theme/alert.ts
-{
-  compoundVariants: [
-    { color: 'primary', variant: 'solid', class: { root: 'text-white dark:text-stem-900 bg-stem-900 dark:bg-stem-100' } },
-    { color: 'neutral', variant: 'solid', class: { root: 'text-white dark:text-white bg-stem-600 dark:bg-stem-600' } },
-    { color: 'primary', variant: 'outline', class: { root: 'text-stem-900 dark:text-stem-100 ring-stem-900/25 dark:ring-stem-100/25' } },
-    { color: 'neutral', variant: 'outline', class: { root: 'text-stem-600 dark:text-stem-400 ring-iron-500/25 dark:ring-iron-400/25' } },
-    { color: 'primary', variant: 'soft', class: { root: 'text-muto-800 dark:text-muto-200 bg-iron-400/20' } },
-    { color: 'neutral', variant: 'soft', class: { root: 'text-muto-800 dark:text-muto-200 bg-iron-400/10' } },
-    { color: 'primary', variant: 'subtle', class: { root: 'text-muto-800 dark:text-muto-200 bg-iron-400/20 ring-muto-500/30 dark:ring-muto-300/20' } },
-    { color: 'neutral', variant: 'subtle', class: { root: 'text-muto-800 dark:text-muto-200 bg-iron-400/10 ring-muto-500/20 dark:ring-muto-300/15' } },
-  ],
-}
-```
-
-Alert has no `size` prop in Nuxt UI, so the golden rule does not apply.
-
-## Tabs Theme
-
-```ts
-// src/theme/tabs.ts
-{
-  variants: {
-    variant: {
-      pill: { list: 'rounded-full', indicator: 'rounded-full shadow-none', trigger: 'cursor-pointer' },
-      link: { trigger: 'cursor-pointer' },
-    },
-    size: {
-      xs: { trigger: `px-2 py-1 text-xs gap-1 ${iconSizeFor('xs')}`, leadingIcon: iconSizeClass },
-      sm: { trigger: `px-2.5 py-1.5 text-sm gap-1.5 ${iconSizeFor('sm')}`, leadingIcon: iconSizeClass },
-      md: { trigger: `px-3 py-1.5 text-base gap-1.5 ${iconSizeFor('md')}`, leadingIcon: iconSizeClass },
-      lg: { trigger: `px-3 py-2 text-lg gap-2 ${iconSizeFor('lg')}`, leadingIcon: iconSizeClass },
-      xl: { trigger: `px-3 py-2 text-xl gap-2 ${iconSizeFor('xl')}`, leadingIcon: iconSizeClass },
-    },
-  },
-  compoundVariants: [
-    { color: 'primary', variant: 'pill', class: { indicator: 'bg-stem-900 dark:bg-stem-100', trigger: 'data-[state=active]:text-white dark:data-[state=active]:text-stem-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-iron-500' } },
-    { color: 'primary', variant: 'link', class: { indicator: 'bg-stem-900 dark:bg-stem-100', trigger: 'data-[state=active]:text-stem-900 dark:data-[state=active]:text-stem-100 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-iron-500' } },
-  ],
-}
-```
-
-## InputTags Theme
-
-```ts
-// src/theme/input-tags.ts
-{
-  slots: {
-    base: inputBase,
-    leading: 'ml-[0.1em]!',
-    trailing: 'mr-[0.1em]!',
-    trailingIcon: 'text-(--ui-text)!',
-    item: 'rounded-full ring-0 pl-[0.6em] leading-none pr-[3px] py-0.5 gap-[0.25em] font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200',
-    itemDelete: 'rounded-full cursor-pointer hover:bg-iron-400/30 text-muto-800 dark:text-muto-200 p-0.5',
-  },
-  variants: {
-    size: {
-      xs: { ...sizes.xs, item: 'text-xs', itemDeleteIcon: iconSizeClass },
-      sm: { ...sizes.sm, item: 'text-sm', itemDeleteIcon: iconSizeClass },
-      md: { ...sizes.md, item: 'text-base', itemDeleteIcon: iconSizeClass },
-      lg: { ...sizes.lg, item: 'text-lg', itemDeleteIcon: iconSizeClass },
-      xl: { ...sizes.xl, item: 'text-xl', itemDeleteIcon: iconSizeClass },
-    },
-  },
-}
-```
-
-Focus ring uses `has-focus-visible:` instead of `focus-visible:` since focus is on the inner input, not the root element.
-
-## Menu Items (shared by dropdownMenu, contextMenu, select, selectMenu, inputMenu)
-
-```ts
-// src/theme/menu-items.ts
-const menuItemSlots = {
-  content: 's-floating-menu s-corner [--s-radius:10px]',
-  group: 'p-1',
-  item: 'cursor-pointer items-center font-normal data-disabled:opacity-50 before:transition-none',
-  itemLeadingIcon: '',
-}
-
-const menuItemSizes = {
-  xs: {item: `p-[0.5em] text-xs gap-[0.5em] ${iconSizeFor('xs')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  // sm mirrors the metrics of a standard selectable row (36px box, px-2,
-  // gap-2): min-h instead of a fixed height so multi-line items can still
-  // grow, with py-1 as the guard for that case.
-  sm: {item: `min-h-9 px-2 py-1 text-sm gap-2 ${iconSizeFor('sm')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  md: {item: `p-[0.5em] text-base gap-[0.5em] ${iconSizeFor('md')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  lg: {item: `p-[0.5em] text-lg gap-[0.5em] ${iconSizeFor('lg')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-  xl: {item: `p-[0.5em] text-xl gap-[0.5em] ${iconSizeFor('xl')}`, itemLeadingIcon: iconSizeClass, itemTrailingIcon: iconSizeClass},
-}
-```
-
-Note: menu item icons use the same shared icon scale as every other component — `sm` = 12px, `md` = 16px, and so on.
-
-**Highlight background** is NOT in menuItemSlots (to avoid CSS specificity conflicts with Nuxt UI compound variants for colored items like `color: 'error'`). Instead, each component adds it in its own `active: false` variant:
-- **dropdownMenu**: `data-highlighted:before:bg-elevated` (same selector as Nuxt UI compound variants, so `bg-error/10` wins)
-- **contextMenu**: the dropdownMenu theme, unchanged
-- **select, selectMenu, inputMenu**: `data-highlighted:not-data-disabled:before:bg-elevated`
-
-## Select Commons
-
-Select and SelectMenu add on top of input commons:
-
-- `cursor-pointer` on base
-- Open-state ring: `data-[state=open]:shadow-[0_0_0_3.5px]!` matching the focus ring
-- Outline hover: subtle background on hover (`hover:bg-iron-500/5`)
-- Combined sizes: merges input sizes with menu item sizes
-
-## FieldGroup Theme
-
-```ts
-// src/theme/field-group.ts
-{
-  base: 's-field-group',
-}
-```
-
-Adds the `s-field-group` class so that `corner-shape.css` can zero out inner corners on grouped elements automatically.
-
-## FormField Theme
-
-```ts
-// src/theme/form-field.ts
-{
-  slots: {
-    error: 'mt-1 text-error text-xs',
-    label: 'text-iron-600',
-  },
-}
-```
-
-## Popover Theme
-
-```ts
-// src/theme/popover.ts
-{
-  slots: { content: 's-floating-menu s-corner [--s-radius:10px] ring-0' },
-}
-```
-
-## Slideover Theme (used by SModal)
-
-```ts
-// src/theme/slideover.ts
-{
-  slots: {
-    overlay: 'fixed inset-0 bg-neutral-800/90 backdrop-blur-sm',
-    content: 'p-0 divide-y-0 s-corner [--s-radius:12px]',
-    body: '!p-0',
-    header: 'flex-shrink-0',
-    footer: 'flex-shrink-0',
-  },
-  compoundVariants: [
-    { transition: true, side: 'top', class: {
-      content: 'data-[state=open]:animate-[slide-soft-from-bottom_500ms...] sm:data-[state=open]:animate-[slide-soft-from-top_500ms...]',
-      overlay: 'data-[state=open]:animate-[fade-in_500ms...] data-[state=closed]:animate-[fade-out_500ms...]',
-    }},
-  ],
-}
-```
-
-## Corner Shape — superellipse via `s-corner` + `--s-radius`
-
-`src/css/corner-shape.css` provides the `s-corner` class system for superellipse corners via `@supports (corner-shape: squircle)`.
-
-### How it works
-
-Add class `s-corner` and set `--s-radius` on the element:
-
-```html
-<div class="s-corner [--s-radius:8px]">...</div>
-```
-
-- **Base**: `border-radius: var(--s-radius)`
-- **@supports**: `border-radius: calc(var(--s-radius) * 1.5); corner-shape: superellipse(1.5);`
-
-The ×1.5 multiplier compensates for superellipse's tighter visual curve.
-
-### Usage in Stem themes
-
-| Component | Radius |
-|-----------|--------|
-| Button | `s-corner [--s-radius:8px]` |
-| Inputs (input, select, textarea, inputTags) | `s-corner [--s-radius:6px]` |
-| Input container (SColorPicker) | `s-corner [--s-radius:6px]` |
-| Floating menus (dropdown, select, inputMenu) | `s-corner [--s-radius:10px]` |
-| Popover | `s-corner [--s-radius:10px]` |
-| Slideover | `s-corner [--s-radius:12px]` |
-| SModal | `s-corner [--s-radius:16px]` |
-| SColorPicker popover | `s-corner [--s-radius:8px]` |
-
-### UFieldGroup support — `s-field-group`
-
-The `fieldGroup` theme adds `s-field-group` to the base class automatically. CSS in `corner-shape.css` handles zeroing inner corners for grouped elements:
+### Pill
 
 ```css
+.s-pill {
+    --s-radius: 9999px;
+    --s-corner-shape: round;
+    --s-pill-x: calc((var(--s-icon-size) + 2 * var(--s-py)) * 0.08);
+}
+```
+
+A pill's round ends take more of the corners than a squircle's, so the content would look closer to the edge. `--s-pill-x` (8% of the height) is added to the horizontal padding and taken back as a negative margin-x (`mx-[calc(var(--s-pill-x,0px)*-1)]` in `sizes.ts`): the layout box and the content stay where a squircle's would be, only the ends spill over the sides. Every sized root resets it to 0, so a control inside a pill does not inherit it.
+
+A negative margin widens only a box whose content sets its width. For a full-width pill use `s-pill-full` instead of `w-full`; on a squircle it is plain `w-full`.
+
+### Optical label
+
+A letter carries air inside its box, so the gap between a label and an icon looks wider than it is; an icon carries air too (a Phosphor icon: 24/256 = 0.09375 of its size).
+
+```css
+:root { --s-label-bearing-start: 0.09em; --s-label-bearing-end: var(--s-label-bearing-start); }
+:root, .s-optical-label-auto {
+    --s-label-icon-start: var(--s-label-bearing-start);
+    --s-label-icon-end: var(--s-label-bearing-end);
+    --s-label-alone-start: calc(var(--s-icon-size) * -0.09375);
+    --s-label-alone-end: calc(var(--s-icon-size) * -0.09375);
+}
+```
+
+| Variable | Used on | `auto` | `always` | `never` |
+|----------|---------|--------|----------|---------|
+| `--s-label-icon-start` / `-end` | The label's side facing an icon | the bearing | the bearing | 0 |
+| `--s-label-alone-start` / `-end` | A side without an icon | minus the icon's air (space added) | bearing − icon's air | 0 |
+
+The themes apply them as negative margins on the label (`stemLabelShift`), e.g. `ms-[calc(var(--s-label-icon-start,0em)*-1)]`; a negative trim is added space. On a field, where the text has no element of its own, they go into the padding-left (`fieldLabelCompounds`). Setting a bearing to 0 on `:root` turns that side off app-wide.
+
+## `sizes.ts`
+
+Size variants built on the scale, shared by the themes.
+
+- **`sizes`** — for components whose root holds the text (UButton, UBadge, USelect, USelectMenu):
+
+  ```ts
+  base: `${stemSizeClass(token)} ${stemScaleText} ${stemScalePadding} mx-[calc(var(--s-pill-x,0px)*-1)]`,
+  leadingIcon: stemScaleIcon, trailingIcon: stemScaleIcon,
+  ```
+
+- **`fieldSizes`** — for components with a `root` around the field (UInput, UTextarea, UInputMenu, UInputTags). The scale is declared on `root`, where the wrapper's classes land too, and read on `base`. Paddings carry `!`: Nuxt UI's own size and leading / trailing compound variants would otherwise win.
+- **`fieldIconCompounds`** — with an icon inside the field the text starts after it: `padding + icon + gap`, as in a button. Compound variants, so they come after the size's padding.
+- **`fieldLabelCompounds`** — the optical label trim on the field's start, after `fieldIconCompounds` so they win.
+- **`singleLineText`** / **`singleLineFieldCompounds`** — the one-line input text placement rule.
+
+### One-line input text (`singleLineText`)
+
+A button places its label at `(height − text box) / 2` rounded **down** to the screen's pixel; an `<input>` centres its text itself and rounds **up**. Where that half is not on a pixel (sm 7.25, lg 12.75) the input's text sat lower than a button's. So the input gets no centring to do:
+
+```ts
+export const singleLineText = 's-line-text py-0! supports-[padding:round(down,1lh,1px)]:leading-[normal]! supports-[padding:round(down,1lh,1px)]:pt-(--s-line-top)! supports-[padding:round(down,1lh,1px)]:pb-(--s-line-bottom)!'
+```
+
+```css
+.s-line-text {
+    --s-line-room: calc(var(--s-line-h, calc(var(--s-icon-size) + 2 * var(--s-py))) - 1lh);
+    --s-line-top: round(down, calc(var(--s-line-room) / 2), var(--s-device-px, 1px));
+    --s-line-bottom: calc(var(--s-line-room) - var(--s-line-top));
+}
+```
+
+Line-height `normal` makes the content box exactly the text's; padding-top is half the room left, rounded down to the device pixel; padding-bottom is the rest; the field's height does not change. `--s-line-h` is the field's height (icon + 2 × padding-y unless set). Without CSS `round()` and the `lh` unit the input keeps no padding-y and the browser centres the text. Used by the `input` and `inputMenu` themes, and on Stem's own bare inputs (SSearchBar, SColorPicker).
+
+## Corners (`corner-shape.css`)
+
+Stem's corners are squircles: `s-corner` plus `--s-radius` on the element (from the scale, or set by hand: `s-corner [--s-radius:10px]`).
+
+```css
+:root { --s-squircle: 1.5; --s-squircle-radius: 1.6; }
+
+.s-corner { border-radius: var(--s-radius); }
+
 @supports (corner-shape: squircle) {
-    /* s-corner elements */
-    .s-field-group > :not(:only-child):first-child .s-corner { border-start-end-radius: 0; border-end-end-radius: 0; }
-    .s-field-group > :not(:only-child):last-child .s-corner { border-start-start-radius: 0; border-end-start-radius: 0; }
-    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .s-corner { border-radius: 0; }
-    /* rounded-full elements (e.g. SButton rounded/disc) — !important to beat global reset */
-    .s-field-group > :not(:only-child):first-child .rounded-full { border-start-end-radius: 0 !important; border-end-end-radius: 0 !important; }
-    .s-field-group > :not(:only-child):last-child .rounded-full { border-start-start-radius: 0 !important; border-end-start-radius: 0 !important; }
-    .s-field-group > :not(:only-child):not(:first-child):not(:last-child) .rounded-full { border-radius: 0 !important; }
+    .s-corner {
+        border-radius: calc(var(--s-radius) * var(--s-squircle-radius));
+        corner-shape: var(--s-corner-shape, superellipse(var(--s-squircle)));
+    }
 }
 ```
 
-### rounded-full protection
+A superellipse leaves the side later than a circle, so the corner looks smaller: where `corner-shape` is supported the radius grows by `--s-squircle-radius` (sm: 6 × 1.6 = 9.6px). Elsewhere it is a plain radius. Both variables are global: one pair for every corner.
 
-`.rounded-full` is explicitly reset inside `@supports` so circles/pills (badges, disc buttons, rounded buttons, tags) are never affected:
+| Class | Radius (before the squircle factor) | For |
+|-------|--------------------------------------|-----|
+| `s-corner` | `--s-radius` | A control |
+| `s-corner-outer` | `--s-radius + --s-inset` | A surface around controls: a menu around its items, a tab list around its tabs |
+| `s-corner-inner` | `max(0, --s-radius − --s-inset)` | A part inside a control: a checkbox's box |
+
+`--s-inset` is the gap between the two, 4px by default (a menu's group padding, `p-1`); the tabs set 2px, the checkbox half its radius. Nested corners stay concentric.
+
+- **Pill.** `.s-pill` sets `--s-corner-shape: round`, so `s-corner` draws a plain round end.
+- **`.rounded-full`** is reset outside `@supports`, with `!important`: `border-radius: 9999px; corner-shape: initial`. A circle or a pill written with Tailwind never becomes a squircle, in every browser.
+- **`s-field-group`** (the `fieldGroup` theme's `base`) squares the inner corners of grouped controls: first child loses its end corners, last child its start corners, middle children all four. For `.s-corner` inside `@supports`, for `.rounded-full` always.
+- **`.max-sm:rounded-b-none`** is re-declared with `!important` below 40rem, so SModal's bottom sheet keeps its square lower corners over `s-corner`.
+- **Standalone utilities** (inside `@supports`): `s-corner-squircle`, `-bevel`, `-scoop`, `-notch`, `-round`, `s-corner-superellipse-{2,3,4,5,6,8,10}`.
+
+## Colours
+
+```ts
+export const stemColors = {
+  primary: 'stem', secondary: 'iron', neutral: 'muto',
+  success: 'emerald', info: 'sky', error: 'rose',
+}
+```
+
+| Palette | Role | Light (`colors-theme.css`) | Dark (`colors.css`, `.dark`) |
+|---------|------|----------------------------|-------------------------------|
+| `stem` | primary | tar, a custom oklch ramp (hue 244) | zinc |
+| `iron` | secondary, UI surfaces, borders, rings | slate | zinc |
+| `muto` | neutral, text | gray | zinc |
+| `smut` | muted text | a cool grey in 25-step increments, 50 … 950 (hue 241) | the same values |
+
+- `colors-theme.css` is an `@theme static` block: it registers the palettes with Tailwind. It is not loaded at runtime: the module prepends it to Nuxt UI's generated `ui.css`.
+- `colors.css` is runtime CSS: under `.dark` it redeclares `stem`, `iron` and `muto` 50–950, all three with the same zinc values.
+- `base.css` sets the semantic variables: `--ui-border` (iron-500 at 20%), and in light mode `--ui-text: gray-800` and `--ui-text-muted: smut-525`; in dark `--ui-text-muted: smut-400`. The two muted greys are the lightest (darkest, in dark) that keep 4.5:1 on the background and on elevated surfaces.
+
+**Light-mode primary is Tailwind `gray`, not the `stem` ramp**: `gray-800` for solid grounds, indicators and text, `gray-700` for hover. Dark mode uses `stem-100` / `stem-300` / `stem-900`. The overrides write palette classes out in full rather than Nuxt UI's semantic ones, so a button, a badge, a tab and an alert of the same colour and variant are the same.
+
+| Colour × variant | Classes (button; badge the same without hover) |
+|------------------|-----------------------------------------------|
+| primary solid | `bg-gray-800 dark:bg-stem-100`, `text-white dark:text-stem-900`, hover `gray-700` / `stem-300` |
+| secondary solid | `bg-white dark:bg-iron-800`, `text-(--ui-text) dark:text-iron-100` |
+| neutral solid | button `bg-muto-600`; badge and alert `bg-stem-600` |
+| error solid | `bg-rose-600`, dark `rose-400` (button) / `rose-600` (badge) |
+| primary / neutral / secondary soft, ghost | `bg-iron-400/20` (ghost: on hover), `text-muto-800 dark:text-muto-200` |
+| primary / neutral subtle | soft plus `ring-muto-500/30 dark:ring-muto-300/20` |
+| secondary subtle | secondary solid plus `ring-inset ring-(--ui-border)` |
+| fields | `iron-500` at 30% (border), 50% (hover), 80% (focus, placeholder, icons) |
+
+`stem-600` is kept for neutral solid and outline in badge and alert: the one place primary and neutral stay distinct in light mode, since `muto` is Tailwind gray.
+
+## Theme overrides
+
+`src/theme/index.ts` exports `stem`: `avatar`, `checkbox`, `radioGroup`, `fieldGroup`, `button`, `input`, `textarea`, `select`, `selectMenu`, `inputMenu`, `inputTags`, `slideover`, `dropdownMenu`, `contextMenu`, `formField`, `tabs`, `badge`, `alert`, `toast`, `popover`, `switch`. Each is a partial Tailwind Variants config merged over Nuxt UI's.
+
+### `button.ts`
+
+- `base`: `cursor-pointer select-none s-corner transition duration-300 font-normal`, disabled at 30% opacity, a 2px focus-visible outline.
+- `label`: `[overflow-x:clip]! [overflow-y:visible]!` — the line is as tall as the icon and shorter than the text's box at xs and sm; clipped on both axes, descenders lost their bottoms.
+- `variants.size`: `sizes`. `defaultVariants`: primary, solid, md.
+- Icon only (Nuxt UI's `square`) keeps the size's padding instead of Nuxt UI's smaller one:
+
+  ```ts
+  {square: true, class: {base: '[--s-pill-sq:min(var(--s-pill-x,0px),max(0px,calc((var(--s-px)-var(--s-py))*1000)))] px-[calc(var(--s-px)+var(--s-pill-sq))]! py-(--s-py)! mx-[calc(var(--s-pill-sq)*-1)]!'}},
+  ```
+
+  `--s-pill-sq` is `--s-pill-x` where padding-x is above padding-y, else 0: an icon-only pill wider than tall is compensated as a label is, a circle is not and stays a circle.
+- The label trim per side, from UButton's own `leading` / `trailing` variants (`stemLabelShift`). SButton draws its leading icon itself and sets that side in the wrapper.
+- Colour compounds: primary, neutral, secondary and error solid; soft and ghost for the three greys; subtle.
+
+### `badge.ts`
+
+`base: 's-corner font-normal'`, `variants.size: sizes` — a badge is a button's box. The label trim is decided by its siblings (`[[data-slot=leadingIcon]+&]:…`, `[&:has(+[data-slot=trailingIcon])]:…`). Icon only: `px-(--s-px)! py-(--s-py)! mx-0!`. Colour compounds: solid (primary, neutral, secondary, error), outline (primary, neutral), soft, subtle; no hover states. The pill is SBadge's default, not the theme's.
+
+### `input-commons.ts`
+
+Shared by input, textarea, select, selectMenu, inputMenu and (partly) inputTags.
+
+- `inputBase`: `placeholder:text-iron-500/80 placeholder:select-none s-corner transition duration-200 outline-none`. `outline-none` suppresses Nuxt UI's focus outline: Stem draws its own.
+- `singleLineHeight`: `h-[calc(var(--s-icon-size)+2*var(--s-py))]` — a browser gives an `<input>` at least the font's natural line height, taller than the scale's at xs, so the height is set outright.
+- **Border and focus never resize a field.** The border is `border-0 ring-1 ring-inset` (`outlineCommons`); focus darkens the ring and adds a halo outside, as a box-shadow:
+
+  ```ts
+  class: {base: 'focus-visible:ring-iron-500/80 focus-visible:shadow-[0_0_0_3.5px] focus-visible:shadow-iron-500/20'}
+  ```
+
+- `baseCompoundVariants`: placeholder and icon colours per colour (primary iron, error rose, success emerald), then outline, soft, subtle and ghost for each.
+- `fixedSizeOverrides`: `{fixed: false, class: {base: 'md:text-(length:--s-text)'}}` neutralizes Nuxt UI's responsive `md:text-*`.
+- `inputCompoundVariants` = base + focus ring + fixed size + `fieldIconCompounds`; `inputVariants` = `{size: fieldSizes}`.
+
+### `input.ts`, `textarea.ts`
+
+`input`: the shared slots with `singleLineHeight` on `base`, and `inputCompoundVariants` + `fieldLabelCompounds` + `singleLineFieldCompounds`. `textarea`: no fixed height and no one-line rule; its leading and trailing icons are pinned to the top (`top-(--s-py)! bottom-auto!`).
+
+### `select-commons.ts`, `select.ts`, `select-menu.ts`, `input-menu.ts`
+
+- `select` and `selectMenu` are the same config: the trigger is the root, so its sizes are `sizes` + the icon edges (`ps` / `pe` one padding from the edge) + `menuItemSizes`. `base` adds `cursor-pointer`.
+- `inputMenu` has a root around the field: `fieldSizes` + `menuItemSizes`, with the input's height and one-line rule.
+- `selectOutlineHover`: a faint ground on hover for the outline variant.
+- `selectOpenRing`: open or focused, the trigger looks like a focused input (`focus:` and `data-[state=open]:` ring and halo).
+- `selectLabelCompounds`: the trim on `value` and `placeholder` — the chevron's side always, the start by a leading icon or alone.
+- All three take `menuItemSlots` and, for `active: false`, `menuItemHighlight`.
+
+### `menu-items.ts`
+
+A menu item is a control like any other. Shared by `dropdownMenu`, `contextMenu`, `select`, `selectMenu` and `inputMenu`.
+
+```ts
+export const menuItemSlots = {
+  content: 's-floating-menu s-corner-outer',
+  group: 'p-1',
+  item: 'cursor-pointer items-center font-normal s-corner before:hidden data-disabled:opacity-50',
+  …
+}
+export const menuItemHighlight = 'data-highlighted:not-data-disabled:bg-elevated data-[state=open]:bg-elevated'
+```
+
+- The menu floats in a portal, out of the trigger's reach, so the size class goes on `content` itself (`menuItemSizes[size].content`), and the wrappers add the single-axis classes there.
+- Per size, `item`, `label` and `empty` get `text-(length:--s-text) leading-(--s-icon-size) px-(--s-px) py-(--s-py) gap-(--s-gap)`; item icons are `stemScaleIcon`.
+- The menu's corners are the item's plus the group padding (`s-corner-outer`, 4px): items and menu are concentric.
+- The highlight is the item's own background, a squircle; Nuxt UI's `::before` is hidden (it can only be plainly rounded).
+
+### `dropdown-menu.ts`, `context-menu.ts`
+
+`dropdownMenu`: `menuItemSlots`, `size: menuItemSizes`, leading icons in the default text colour whatever the state, and the arrow's classes. `contextMenu` is the same object.
+
+### `input-tags.ts`
+
+The field is an input whose focus is on the inner input, so every `focus-visible:` of `baseCompoundVariants` is remapped to `has-focus-visible:` on the container.
+
+- A tag (`item`) is a soft pill: `rounded-full ring-0 font-normal bg-iron-400/20 text-muto-800 dark:text-muto-200`, with the field's text, icon size, padding-x and gap.
+- Its padding-y is `--s-tag-py`, two steps below the size (xs 0, sm 4, md 6, lg 8, xl 10px); the field takes the same off its own (`py-[calc(var(--s-py)-var(--s-tag-py,0px))]!`), so it is as tall with tags as without. SInputTags overrides the variable from its space.
+- The delete X is a circle at the pill's round end: `--s-tag-x` is its icon (8 / 12 / 16 / 20 / 24px), `--s-tag-x-pad` its padding (2px at xs, else 4px), shrunk (`--s-tag-xp`) when the tag is too short for it.
+- The typing input is `w-0 min-w-[4ch]`: it takes the space left on the row instead of wrapping onto a new one.
+
+### `tabs.ts`
+
+```ts
+slots: {root: '[--s-inset:2px]', trigger: 's-corner cursor-pointer font-normal', label: /* trim */},
+variants: {variant: {pill: {list: 's-corner-outer p-(--s-inset)', indicator: 's-corner shadow-none'}, link: {list: 'p-0'}}, size: …}
+```
+
+- A trigger is a button's box: `text-(length:--s-text) leading-(--s-icon-size) px-[calc(var(--s-px)+var(--s-pill-x,0px))] py-(--s-py) gap-(--s-gap)`. The size class and the pill's negative margin go on `root`.
+- The pill list wraps the triggers with a 2px inset on every side; the indicator is inset by the same (`inset-y-(--s-inset)!`, `inset-x-` when vertical), so the active tab is concentric with the list.
+- Primary: indicator `bg-gray-800 dark:bg-stem-100`; the active pill's text is `white` / `stem-900`, the active link's `gray-800` / `stem-100`.
+
+### `checkbox.ts`, `radio-group.ts`, `switch.ts`
+
+The size class goes on `root`; box, dot and track are sized from `--s-icon-size`.
+
+| | Sizes | Row |
+|--|-------|-----|
+| checkbox | `base: size-(--s-icon-size)`, the check 75% of it; `s-corner-inner` with `--s-inset` half the radius | `py-(--s-py)`, no padding-x |
+| radioGroup | `base: size-(--s-icon-size)`, the dot 40% of it | each item `py-(--s-py)`; items `gap-x-(--s-px)` apart |
+| switch | track `h-(--s-icon-size) w-[calc(var(--s-icon-size)*1.75)]`, thumb the icon − 4px, travelling 0.75 of the icon | `py-(--s-py)` |
+
+The label is `--s-gap` from the box less the `alone` trim. Primary is `bg-gray-800 dark:bg-stem-100` on all three (Nuxt UI's `bg-primary` is the palette's middle grey, lighter than a solid button).
+
+### `alert-colors.ts`, `alert.ts`, `toast.ts`
+
+One source for an alert inline (UAlert) and an alert arriving as a toast (UToast).
+
+- `alertSlots.root`: `s-size-sm s-corner px-(--s-px) py-(--s-py) gap-(--s-gap)` — a bare UAlert or a toast is sm with the size's own space; SAlert sets the variables inline with its own defaults.
+- `title`: the scale's text, medium. `description`: `--s-alert-description-text` / `-leading` when set (SAlert), else the alert's text on lines of icon + 4px. `avatar`: twice the icon.
+- `actions`: bare `UButton`s (a toast's) are made pills of the alert's text with half the padding-y, through `[&>button:not([data-slot=close]):not(.s-control)]:…`; Stem controls are left alone. `close`: the same pill, iron tint.
+- `alertOrientation`: everything starts at the top (`items-start`); in `horizontal` the actions overhang the title's line (`-my-[calc(var(--s-py)/2)]`), in `vertical` they sit `mt-3` under the text.
+- `tones`: per colour (`primary`, `secondary`, `neutral`, `info`, `success`, `warning`, `error`) the icon colour, the tint, the ring, the solid ground and text, and the close pill and solid action on a solid ground.
+- `alertClasses(color, variant)` returns the slot classes:
+
+  | variant | root |
+  |---------|------|
+  | `outline` | `bg-default bg-none ring ring-inset` + the tone's ring; colour in the icon only |
+  | `soft` | `bg-default bg-linear-to-b` + the tint, no ring |
+  | `subtle` | the tint and the ring |
+  | `solid` | the tone's ground and text; description muted (primary, secondary) or at 90% |
+
+  The tint is a gradient laid over the opaque surface: a toast floats over content and must not let it through. Text stays the default colour on outline, soft and subtle.
+- `alertSolidAction(color)`: a solid action's classes on a solid alert (the ground's opposite).
+- `alert.ts`: `slots: alertSlots`, one compound variant per colour × variant, `defaultVariants: {variant: 'outline'}`.
+- `toast.ts`: the `outline` alert with `shadow-lg dark:shadow-black/40`, per colour. UToast has no `variant` prop: pass `ui: alertClasses(color, variant)` to `toast.add()` for another look.
+
+### `popover.ts`
+
+```ts
+content: 's-floating-menu s-corner [--s-radius:10px] ring-0',
+arrow: 'fill-(--ui-bg) stroke-black/10 dark:stroke-white/10',
+```
+
+### `slideover.ts`
+
+- `overlay`: `fixed inset-0 bg-neutral-800/90 backdrop-blur-sm`. `content`: `p-0 divide-y-0 s-corner [--s-radius:12px]` (SModal sets its own radius inline). `body`: `p-0 sm:p-0`.
+- Motion reads `--s-sheet-duration` (500ms) and `--s-sheet-ease` from `base.css`, so a scrim or a handover timed on the sheet can read them too. `side: 'top'` slides softly from the bottom below sm and from the top from sm; `side: 'bottom'` from the bottom at every width; the overlay fades on the same clock. Keyframes (`slide-soft-from-top`, `-to-top`, `-from-bottom`, `-to-bottom`: 30px and opacity) are in `animations.css`.
+
+### `avatar.ts`, `form-field.ts`, `field-group.ts`
+
+- `avatar`: `root: 'bg-iron-500/10'`, `fallback: 'leading-normal'`.
+- `formField`: `error: 'mt-1 text-error text-xs'`, `label: 'text-iron-600'`.
+- `fieldGroup`: `base: 's-field-group'` (see *Corners*).
+
+### `input-container.ts`
+
+Not a Nuxt UI override: a colour × variant lookup for containers that must look like a Stem input without being one, where focus is tracked in JS (SColorPicker). Exported as `inputContainerClasses[color][variant]` → `{base, hover, focus, placeholder}` and `inputIconColors[color]`; colours `primary`, `error`, `success`; variants `outline`, `soft`, `subtle`, `ghost`, `none`. The container carries an `s-size-*` class for its radius; border and focus are the same inset ring and 3.5px halo as an input's.
+
+## Floating menus and the arrow
 
 ```css
-.rounded-full { border-radius: 9999px !important; corner-shape: initial !important; }
-```
-
-### Standalone `s-corner-*` utilities
-
-Also available: `s-corner-squircle`, `s-corner-bevel`, `s-corner-scoop`, `s-corner-notch`, `s-corner-round`, `s-corner-superellipse-{2..10}`.
-
-## CSS: base.css
-
-```css
-@import "@fullbrains/vimana";       /* Font theme */
-@import "./animations.css";          /* Modal animations */
-@import "./colors.css";              /* Dark mode palette overrides */
-@import "./corner-shape.css";        /* s-corner + s-corner-* utilities */
-
-:root { --font-sans: vimana; }
-
-/* Font smoothing */
-@layer base {
-  *, *::before, *::after {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-}
-
-/* Custom border and text color variables */
-:root { --ui-border: color-mix(in oklch, var(--color-iron-500) 20%, transparent); }
-:root:not(.dark) { --ui-text: var(--color-stem-900); }
-
-/* Floating menu shadow (used by dropdowns, selects, popovers) */
-.s-floating-menu { ... }
-
-/* Outline utilities (use iron-500 for borders/shadows) */
-.s-outline { border: 1px solid color-mix(in oklch, var(--color-iron-500) 30%, transparent); ... }
-.s-outline-hover { transition: border-color 200ms, box-shadow 200ms; }
-.s-outline-focus, .s-outline-focus-within:focus-within, .s-outline-hover:hover {
-  border: 1px solid color-mix(in oklch, var(--color-iron-500) 80%, transparent);
-  box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--color-iron-500) 20%, transparent);
+.s-floating-menu {
+    border: none;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 ```
 
-## Module Internals
+In dark mode the 1px ring is white at 10% and the shadows are deeper. Used by `popover` (`s-corner`, 10px) and by every menu through `menuItemSlots.content` (`s-corner-outer`: the item's radius + 4px). The tooltip has no Stem theme.
 
-The Nuxt module (`src/module.ts`):
+**The arrow** (`src/arrow-shape.ts`, `src/arrow.ts`, `SArrow.vue`):
 
-1. Merges `stemAppConfig` into `nuxt.options.appConfig.ui` using `defu` for theme objects and `Object.assign` for colors (to override Nuxt UI defaults like `secondary: 'blue'`)
-2. Auto-registers components from `src/components/`
-3. Auto-imports composables from `src/composables/`
-4. Injects `src/css/base.css` before app CSS
-5. Writes a `stem-classes.html` template into `.nuxt/` and adds it as a Tailwind `@source` so all theme classes get generated
-6. **Injects `src/css/colors-theme.css`** (the `@theme static` block with palette definitions) into `.nuxt/ui.css` at build time, so Tailwind recognizes stem/iron/muto as valid color palettes
-7. Allows Vite to serve Stem source files (needed for linked/local installs)
+- `arrowShape({scale, baseRadius, tipRadius, foot, height})` returns `{width, height, edge, fill}`: a triangle (by default ±10 wide at the base, 12.5 high) with a rounded tip and concave fillets where the sides meet the edge, so there is no corner at the base. `fill` goes 1px past the base, into the surface, so no seam is left.
+- `STEM_ARROW_SHAPE = arrowShape({scale: 0.6, baseRadius: 10})`; `STEM_ARROW_PADDING = 16` keeps the arrow off a panel's rounded corners (Reka's `arrowPadding`).
+- `stemArrow = {as: markRaw(SArrow), width, height}` is what Nuxt UI's `arrow` prop takes: Reka keeps placing and rotating it, SArrow draws it. Imported, not async: Reka measures the element to centre it.
+- `stemArrowProps(arrow, content)` is what SPopover, STooltip and SDropdownMenu call: a falsy `arrow` is returned as is; otherwise `{arrow: {...stemArrow, ...own}, content: {arrowPadding: 16, ...content}}`.
+- The theme's `arrow` slot (popover, dropdownMenu, contextMenu) fills it with the surface and outlines it as the floating menu's ring: `fill-(--ui-bg) stroke-black/10 dark:stroke-white/10`.
+
+## `base.css`
+
+Imports `animations.css`, `colors.css`, `corner-shape.css`, `scale.css` and `scroll-fade.css`; sets font smoothing in `@layer base`, the semantic colour variables and the sheet's timing.
+
+| Class | Effect |
+|-------|--------|
+| `.s-floating-menu` | See above |
+| `.s-overlay` | `background: rgba(0, 0, 0, 0.85)` |
+| `.s-outline` | A 1px `iron-500` border at 30% (50% on hover), 6px radius (a squircle where supported), 200ms transition |
+| `.s-outline-focus` | The focused look: border at 80% and a 3.5px halo at 20% |
+| `.s-outline-focus-within` | The same on `:focus-within` |
+| `.s-outline-hover` | The same on `:hover` |
+| `.s-scroll-fade`, `.s-scroll-fade--bottom` | The painted fade of a scrolling edge; `--s-fade-color` (default `--ui-bg`), `--s-fade-size` (default 1.5rem) |
+| `.s-scroll-mask` | The same fade as a mask on the scroller; `--s-mask-top`, `--s-mask-bottom` (registered lengths, 300ms transition), `--s-mask-gutter` (default 1rem) |
+
+`fonts.css` (loaded unless `fonts: false`) imports `@fullbrains/vimana` and sets `--font-sans: vimana`.
+
+## Icons
+
+`stemIcons` maps Nuxt UI's icon tokens to Phosphor (`i-ph-*`): `close: 'i-ph-x'`, `check: 'i-ph-check-bold'`, `chevronDown: 'i-ph-caret-down'`, `loading: 'i-ph-circle-notch'`, `search: 'i-ph-magnifying-glass'`… It becomes `appConfig.ui.icons`. Icons are sized by the scale (`--s-icon-size`), in px: 12, 16, 20, 24, 28.
+
+## Module internals
+
+`src/stem-config.ts` builds what is injected: `{ui: {...stem, colors: stemColors, icons: stemIcons}}`.
+
+`src/module.ts` (`@fullbrains/stem/nuxt`, config key `stem`, options `iconsDir: 'assets/icons'` and `fonts: true`), in order:
+
+1. **Standalone sub-module.** `installModule('./standalone', {iconsDir})`: registers `SIcon` and `SSpinner` (priority 10, so the later directory scan does not warn) and writes a plugin that globs `/<iconsDir>/**/*.svg` (relative to `srcDir`) with `?raw` and provides the loader under `STEM_ICON_LOADER`.
+2. **Theme.** For each key of `stemAppConfig.ui`: `colors` is `Object.assign`ed over the current value (Stem's palettes win over Nuxt UI's defaults); objects are merged with `defu(value, current)`; anything else is assigned. The app's own `app.config.ts` is applied again at runtime and still wins.
+3. **Components and composables.** `addComponentsDir('./components')`, `addImportsDir('./composables')`.
+4. **Vite.** Stem's root is pushed to `server.fs.allow` (linked installs).
+5. **CSS.** `base.css` is unshifted into `nuxt.options.css`, then `fonts.css` if `fonts !== false`: fonts, then base, then the app's CSS, which can override both.
+6. **Tailwind sources.** The theme's classes exist only in `appConfig`, which Tailwind does not scan. Every string in `stemAppConfig.ui` is collected into `.nuxt/stem-classes.html`, and on `build:before` this is prepended, once (guarded by the `/* Stem */` marker), to Nuxt UI's generated `.nuxt/ui.css`:
+
+   ```css
+   /* Stem */
+   @source "<stem>/src/components";
+   @source "<stem>/src/theme";
+   @source "./stem-classes.html";
+   /* …the content of colors-theme.css (@theme static) */
+   ```
+
+   `src/theme` is a source too: `inputContainerClasses` is public, so its classes can appear in a consumer's component.
+
+A class built at runtime is never generated: themes and components write their classes out in full, per size where needed.
+
+`src/standalone.ts` (`@fullbrains/stem/standalone`, config key `stemStandalone`, option `iconsDir`) is step 1 alone, for projects without `@nuxt/ui`.

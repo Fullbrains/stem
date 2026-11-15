@@ -72,6 +72,11 @@ export { default as SHint } from './components/SHint.vue'
 export { default as SColorPicker } from './components/SColorPicker.vue'
 export { default as SScrollArea } from './components/SScrollArea.vue'
 export { default as SPopover } from './components/SPopover.vue'
+export { default as SArrow } from './components/SArrow.vue'
+export { default as SAlert } from './components/SAlert.vue'
+export { default as SCopyButton } from './components/SCopyButton.vue'
+export { default as SModalButton } from './components/SModalButton.vue'
+export { default as SScale } from './components/SScale.vue'
 export { default as STooltip } from './components/STooltip.vue'
 
 // Types
@@ -81,6 +86,7 @@ export type { HintColor, HintSize } from './components/SHint.vue'
 // Composables
 export { useConfirmModal } from './composables/useConfirmModal'
 export { useAlertModal } from './composables/useAlertModal'
+export { useStemScale, STEM_SCALE, stemScaleKeys } from './composables/useStemScale'
 
 // Icon loader (used by SIcon via provide/inject)
 export { STEM_ICON_LOADER, type StemIconLoader } from './icon-loader'

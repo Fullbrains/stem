@@ -10,7 +10,7 @@ const modelValue = defineModel<string>({default: ''})
 
 /**
  * The search bar on the Stem scale: at a given `size` the bar is as tall as
- * an SButton of that size, with its text, icon, padding, gap and radius. It
+ * an input of that size (md: 40px), with its text, icon, padding, gap and radius. It
  * is a pill by default (`rounded`, pass `:rounded="false"` for a squircle).
  * `compact` is the sm size, kept for the chips that tighten inside it.
  */
