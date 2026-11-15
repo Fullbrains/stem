@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleDefaults, type StemScaleProps} from '../theme/scale'
+import {stemScaleDefaults, type StemScaleProps, type StemSizeValue, type StemSpaceValue} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 type Width = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | number
@@ -21,6 +21,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
   headerWrap?: boolean
   headerSeparator?: boolean
   footerSeparator?: boolean
+  /** The footer buttons' scale (SModalFooter's `buttons`): size, spaceX, spaceY. */
+  buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
   disabled?: boolean
   open?: boolean
   defaultOpen?: boolean
@@ -46,7 +48,8 @@ defineSlots<{
   actions?: () => unknown
   'after-header'?: () => unknown
   body?: () => unknown
-  footer?: () => unknown
+  /** Gets the buttons' props: `{button, primary}` (see SModalFooter). */
+  footer?: (props: {button: Record<string, unknown>, primary: Record<string, unknown>}) => unknown
 }>()
 
 const emit = defineEmits<{
@@ -158,8 +161,8 @@ function onUpdateOpen(value: boolean) {
         v-if="footer"
         #footer
     >
-      <SModalFooter :separator="footerSeparator">
-        <slot name="footer"/>
+      <SModalFooter v-slot="params" :separator="footerSeparator" :buttons="buttons">
+        <slot name="footer" v-bind="params"/>
       </SModalFooter>
     </template>
   </USlideover>

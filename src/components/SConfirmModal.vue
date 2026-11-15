@@ -85,17 +85,18 @@ async function handleConfirm() {
         />
       </div>
     </template>
-    <template #footer>
-      <SButton
+    <template #footer="{button, primary}">
+      <SModalButton
+          v-bind="primary"
           :label="label"
           :destructive="destructive"
           :loading="loading"
           :disabled="confirmDisabled"
           @click="handleConfirm"
       />
-      <SButton
+      <SModalButton
+          v-bind="button"
           :label="cancelLabel"
-          variant="soft"
           :disabled="loading"
           @click="emit('close', false)"
       />

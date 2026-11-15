@@ -153,9 +153,9 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                 </template>
               </div>
             </template>
-            <template #footer>
-              <SButton label="Salva" @click="open[mode] = false"/>
-              <SButton label="Annulla" variant="soft" @click="open[mode] = false"/>
+            <template #footer="{button, primary}">
+              <SModalButton v-bind="primary" label="Salva" @click="open[mode] = false"/>
+              <SModalButton v-bind="button" label="Annulla" @click="open[mode] = false"/>
             </template>
           </SModal>
         </PortalScope>
@@ -198,16 +198,16 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
 
     <ShowcaseSection
         title="Footer"
-        description="SModalFooter: sotto sm i pulsanti vanno a tutta larghezza, uno sotto l'altro."
+        description="SModalFooter, sulle regole dell'alert: padding due gradini sopra la size (md: 14px), pulsanti SModalButton della size, space-y un gradino sotto, distanti un gradino meno del padding."
     >
       <ShowcaseStage body-class="grid grid-cols-1 gap-6 p-8 lg:grid-cols-2">
         <div v-for="sep in [true, false]" :key="String(sep)" class="space-y-1.5">
           <p class="font-mono text-[10px] text-(--ui-text-dimmed)">separator {{ sep ? 'sì' : 'no' }}</p>
           <div class="s-corner overflow-hidden bg-(--ui-bg) shadow-xl ring-1 ring-black/5 [--s-radius:16px] dark:ring-white/10">
             <div class="h-16"/>
-            <SModalFooter :separator="sep">
-              <SButton label="Salva"/>
-              <SButton label="Annulla" variant="soft"/>
+            <SModalFooter v-slot="{button, primary}" :separator="sep">
+              <SModalButton v-bind="primary" label="Salva"/>
+              <SModalButton v-bind="button" label="Annulla"/>
             </SModalFooter>
           </div>
         </div>
@@ -227,8 +227,8 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                 <template #body>
                   <p class="p-6 text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
                 </template>
-                <template #footer>
-                  <SButton label="Chiudi" variant="soft" @click="sizeOpen[`${mode}-${s}`] = false"/>
+                <template #footer="{button}">
+                  <SModalButton v-bind="button" label="Chiudi" @click="sizeOpen[`${mode}-${s}`] = false"/>
                 </template>
               </SModal>
             </template>
@@ -250,8 +250,8 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                 <template #body>
                   <p class="p-6 text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
                 </template>
-                <template #footer>
-                  <SButton label="Chiudi" variant="soft" @click="sideOpen[`${mode}-${s}`] = false"/>
+                <template #footer="{button}">
+                  <SModalButton v-bind="button" label="Chiudi" @click="sideOpen[`${mode}-${s}`] = false"/>
                 </template>
               </SModal>
             </template>
@@ -280,8 +280,8 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                   <template #body>
                     <p class="p-6 text-sm text-(--ui-text-muted)">Sopra la prima.</p>
                   </template>
-                  <template #footer>
-                    <SButton label="Chiudi" variant="soft" @click="innerOpen[mode] = false"/>
+                  <template #footer="{button}">
+                    <SModalButton v-bind="button" label="Chiudi" @click="innerOpen[mode] = false"/>
                   </template>
                 </SModal>
               </template>

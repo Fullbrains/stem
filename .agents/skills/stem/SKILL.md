@@ -320,18 +320,20 @@ Slide-over modal built on `USlideover` with header/footer structure.
   <template #body>
     <!-- form content -->
   </template>
-  <template #footer>
-    <SButton label="Save" :on-confirm="save" />
-    <SButton label="Cancel" variant="soft" @click="isOpen = false" />
+  <template #footer="{button, primary}">
+    <SModalButton v-bind="primary" label="Save" :on-confirm="save" />
+    <SModalButton v-bind="button" label="Cancel" @click="isOpen = false" />
   </template>
 </SModal>
 ```
 
-**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `width` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number, default xl), the scale props (`size`, `space`… passed to everything inside), `header`, `closeable`, `footer`, `headerCompact` (boolean or `'mobileOnly'` — compact header: smaller title, icon inline beside it), `headerSeparator`, `footerSeparator`, `disabled`, `open`, `defaultOpen`
+**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `width` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number, default xl), the scale props (`size`, `space`… passed to everything inside), `header`, `closeable`, `footer`, `headerCompact` (boolean or `'mobileOnly'` — compact header: smaller title, icon inline beside it), `headerSeparator`, `footerSeparator`, `buttons`, `disabled`, `open`, `defaultOpen`
 
 **Slots:** `title`, `after-header`, `body`, `footer`
 
 Header and footer are padded all around by two steps of space above the modal's size, as an alert's padding-x (sm 12px, md 14px, lg 16px); the modal's `space` props move it.
+
+The footer follows the alert's button group: its buttons are SModalButtons of the modal's size, space-x the size's own, space-y a step below (md: 36px tall), a step below the footer's padding apart. The `#footer` slot gets them as params — `<template #footer="{button, primary}">`, bind `primary` on the default action (primary, solid), `button` on the others; `buttons` (on SModal or SModalFooter) moves the group: `size`, `spaceX`, `spaceY`, each a step or a shift. Other Stem controls in the footer inherit the modal's size with their own space. SConfirmModal and SAlertModal use these.
 
 ### SConfirmModal
 

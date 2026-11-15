@@ -1,54 +1,76 @@
 <script setup lang="ts">
-import {computed} from 'vue'
-import {stemSpacePx} from '../theme/scale'
-import {useStemScale} from '../composables/useStemScale'
+import {computed, provide} from 'vue'
+import {stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue} from '../theme/scale'
+import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 
-withDefaults(defineProps<{
+/**
+ * The modal's footer, on the alert's rules: padded all around two steps of
+ * space above the modal's size (md: 14px), as an alert's padding-x.
+ *
+ * Its buttons are SModalButtons of the modal's size: space-x the size's
+ * own, space-y a step below (md: 32px tall), a step below the footer's
+ * padding apart (md: 12px). The slot gets them as params, to bind on what
+ * it renders:
+ *   <template #footer="{button, primary}">
+ *     <SModalButton v-bind="primary" label="Salva"/>
+ *     <SModalButton v-bind="button" label="Annulla"/>
+ *   </template>
+ * `button` is a plain one, `primary` the default action (primary, solid).
+ * `buttons` moves the group from there. Any other Stem control in the slot
+ * takes the modal's size, with its own space.
+ */
+const props = withDefaults(defineProps<{
   separator?: boolean
+  /**
+   * The buttons' scale, all of them at once: `size`, `spaceX`, `spaceY`,
+   * each a step or a shift from their default (size: the modal's; space-x:
+   * their size's; space-y: a step below it).
+   */
+  buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
 }>(), {
   separator: true,
 })
 
-// The padding, all around, as the header's: two steps of space above the
-// modal's size (md: 16px).
+defineSlots<{
+  default?: (props: {button: Record<string, unknown>, primary: Record<string, unknown>}) => unknown
+}>()
+
 const scale = useStemScale({}, {space: '+2'})
-const paddingStyle = computed(() => ({padding: `${stemSpacePx(scale.value.space!)}px`}))
+const size = computed(() => scale.value.size ?? 'md')
+const padding = computed(() => scale.value.space ?? stemSpaceStep(size.value, 2))
+
+function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
+  if (v == null) return base
+  const by = stemSpaceShift(v)
+  return by == null ? v as T : step(base, by)
+}
+const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, size.value, stemSizeStep))
+const buttonScale = computed(() => ({
+  size: buttonSize.value,
+  spaceX: shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep),
+  spaceY: shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep),
+}))
+const params = computed(() => ({
+  button: {...buttonScale.value},
+  primary: {...buttonScale.value, color: 'primary', variant: 'solid'},
+}))
+
+const style = computed(() => ({
+  padding: `${stemSpacePx(padding.value)}px`,
+  gap: `${stemSpacePx(stemSpaceStep(padding.value, -1))}px`,
+}))
+
+// What the controls inside inherit: the modal's size and type, not the
+// footer's space.
+provide(STEM_SCALE, computed(() => ({...scale.value, roundness: undefined, space: undefined, spaceX: undefined, spaceY: undefined})))
 </script>
 
 <template>
   <footer
-    class="s-modal-footer ring-inset text-2xl w-full flex shrink-0 flex-wrap items-center relative select-none"
-    :style="paddingStyle"
+    class="w-full flex shrink-0 flex-wrap items-center relative select-none"
+    :style="style"
     :class="{ 'border-t border-(--ui-border)': separator }"
   >
-    <slot />
+    <slot v-bind="params"/>
   </footer>
 </template>
-
-<style>
-.s-modal-footer {
-  & > button {
-    width: 100%;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-
-    @media (min-width: 640px) {
-      height: auto;
-      width: auto;
-      margin-right: 0.5rem;
-      margin-bottom: 0;
-      padding-left: 1.5em;
-      padding-right: 1.5em;
-    }
-
-    &:last-child {
-      margin-right: 0 !important;
-      margin-bottom: 0 !important;
-    }
-  }
-}
-</style>
