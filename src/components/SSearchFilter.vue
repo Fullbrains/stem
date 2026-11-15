@@ -72,9 +72,13 @@ const props = withDefaults(defineProps<StemScaleProps & {
 
 // The scale props, inherited from a parent when not given (sm and a pill
 // by default), forwarded to the chip and the menu.
-const scale = useStemScale(props, {size: 'sm', rounded: true})
+// space-x a step below the size's, as the chip's (sm: 6px): the reset reads
+// it on the root.
+const scale = useStemScale(props, {size: 'sm', rounded: true, spaceX: '-1'})
 // The reset sits outside the chip, on the root: it reads the scale there.
 const rootScale = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
+// The menu is a plain Stem menu: the chip's scale, not its pill.
+const menuScale = computed(() => ({...scale.value, rounded: false, spaceX: props.spaceX}))
 
 const emit = defineEmits<{
   'update:modelValue': [value: Set<string>]
@@ -305,16 +309,20 @@ const items = computed(() => {
       :delay-duration="0"
       :disabled="isAllSelected || (!icon && !$slots.chip)"
   >
+    <!-- The root is the pill (chip + reset): it takes the pill's spill
+         (--s-pill-x as a negative margin), the chip inside none, so chip and
+         reset sit side by side instead of overlapping; the reset closes the
+         pill on the right and gets the pill's extra padding. -->
     <div
         ref="rootEl"
         v-bind="$attrs"
-        class="flex items-stretch overflow-hidden s-corner"
+        class="flex items-stretch overflow-hidden s-corner mx-[calc(var(--s-pill-x,0px)*-1)]"
         :class="[rootScale, chipClass]"
     >
       <!-- The menu's items are controls of the same scale as the chip. -->
       <SDropdownMenu
           v-model:open="open"
-          v-bind="scale"
+          v-bind="menuScale"
           :items="(items as any)"
           :content="{align: alignEnd && !inPanel ? 'end' as const : 'start' as const, sideOffset: 3, updatePositionStrategy: 'always' as const, reference: rootEl}"
           :ui="{
@@ -332,8 +340,8 @@ const items = computed(() => {
             :selected-values="multiple ? selectedLabels : [singleLabel ?? placeholder]"
             :count="multiple && isAllSelected ? totalOptions : Infinity"
             :threshold="threshold"
-            class="flex-1 min-w-0 rounded-r-none!"
-            :class="showReset ? 'pe-(--s-gap)!' : ''"
+            class="flex-1 min-w-0 rounded-r-none! mx-0!"
+            :class="showReset ? 'pe-[calc(var(--s-px)/2)]!' : ''"
         >
           <!-- The chip slot replaces label and values together while something is
                filtered: an app that draws the selection itself (avatars,
@@ -406,13 +414,15 @@ const items = computed(() => {
       <!-- The reset button animates its width; the menu keeps up because the
            popper uses updatePositionStrategy 'always' (repositioned every
            animation frame), so an open end-aligned menu glides with the pill
-           instead of jumping. -->
+           instead of jumping. The caret is a space-x from the X, split
+           evenly: half the chip's right padding, half the reset's left; the
+           reset's right is a full space-x plus the pill's spill. -->
       <div
           class="shrink-0 overflow-hidden flex transition-all duration-150"
-          :class="showReset ? 'w-[calc(var(--s-icon-size)+var(--s-px))]' : 'w-0'"
+          :class="showReset ? 'w-[calc(var(--s-icon-size)*0.75+1.5*var(--s-px)+var(--s-pill-x,0px))]' : 'w-0'"
       >
         <button
-            class="grow w-[calc(var(--s-icon-size)+var(--s-px))] flex items-center justify-start bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
+            class="grow w-[calc(var(--s-icon-size)*0.75+1.5*var(--s-px)+var(--s-pill-x,0px))] flex items-center justify-center ps-[calc(var(--s-px)/2)] pe-[calc(var(--s-px)+var(--s-pill-x,0px))] bg-iron-400/20 cursor-pointer hover:bg-iron-400/30 transition duration-150"
             :tabindex="showReset ? 0 : -1"
             :aria-label="resetLabel"
             @click.stop.prevent="selectAll()"

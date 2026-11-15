@@ -6,9 +6,8 @@ import {useStemScale} from '../composables/useStemScale'
 
 /**
  * A filter chip: SButton soft, pill, with a caret. On the Stem scale: `size`
- * (sm by default) and the scale props are SButton's. Its one default: a
- * step more air at the sides (space-x one step above size) unless `space`
- * or `space-x` is given; inside an SSearchBar it takes the bar's size and
+ * (sm by default) and the scale props are SButton's, space-x and gap a
+ * step below its size's (sm: 6px); inside an SSearchBar it takes the bar's size and
  * tightens to space-y two steps below.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
@@ -37,8 +36,9 @@ const props = withDefaults(defineProps<StemScaleProps & {
 const inBar = inject(SEARCH_BAR_COMPACT, null) !== null && !inject(SEARCH_BAR_PANEL, false)
 
 // Scale props inherited from a parent when not given; sm and a pill by
-// default, a step more air at the sides, two steps less above and below in a bar.
-const scale = useStemScale(props, {size: 'sm', rounded: true, spaceX: '+1', spaceY: inBar ? '-2' : undefined})
+// default, space-x (and gap) a step below its size's, two steps less above
+// and below in a bar.
+const scale = useStemScale(props, {size: 'sm', rounded: true, spaceX: '-1', spaceY: inBar ? '-2' : undefined})
 
 const coversAll = computed(() => !!props.selectedValues && props.selectedValues.length === props.count)
 
@@ -71,15 +71,17 @@ const displayValue = computed(() => {
         active ? 'bg-iron-400/30!' : '',
       ]"
   >
-    <template v-if="label && displayValue !== null">
+    <!-- Label and value a word space apart (0.25em); the label icon the
+         scale's gap from the text, as a button's icon. -->
+    <span v-if="label && displayValue !== null" class="flex min-w-0 items-center gap-[0.25em]">
       <UIcon
           v-if="labelIcon"
           :name="labelIcon"
-          class="size-(--s-icon-size) shrink-0 text-(--ui-text-toned)"
+          class="size-(--s-icon-size) shrink-0 text-(--ui-text-toned) me-[calc(var(--s-gap)-0.25em)]"
       />
       <span v-if="!labelIcon || coversAll" class="text-(--ui-text-toned) shrink-0 font-normal">{{ label }}</span>
       <span class="font-semibold truncate">{{ displayValue }}</span>
-    </template>
+    </span>
     <slot v-else/>
   </SButton>
 </template>

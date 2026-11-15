@@ -276,7 +276,7 @@ const order = ref('newest')
 
     <ShowcaseSection
         title="SearchChip"
-        description="Il chip da solo: un SButton soft, sm, a pillola, space-x md, con il caret. Con label e selected-values scrive la selezione."
+        description="Il chip da solo: un SButton soft, sm, a pillola, space-x un gradino sotto la size, con il caret. Con label e selected-values scrive la selezione."
     >
       <ShowcasePlayground v-model="chipState" tag="SSearchChip" :controls="chipControls" :code-extra="chipCodeExtra">
         <template #default="{props, state: s}">

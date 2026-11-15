@@ -204,10 +204,12 @@ function clear() {
   >
     <!-- Left padding lives on the input wrapper only (the row keeps just the
          right inset for chips and the funnel button), so the border→icon
-         distance is a single readable value: the scale's padding-x. -->
+         distance is a single readable value: the scale's padding-x. On the
+         right the chips sit as far from the edge as from the top and bottom
+         (4px: the bar's padding-y less the chip's, two steps lower). -->
     <div
         ref="rowEl"
-        class="flex items-center gap-1 h-[calc(var(--s-icon-size)+2*var(--s-py))] pr-(--s-gap)"
+        class="flex items-center gap-1 h-[calc(var(--s-icon-size)+2*var(--s-py))] pr-1"
     >
       <div
           ref="inputWrapperEl"

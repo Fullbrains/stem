@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
 // by default), forwarded to the chip and the menu.
 const scale = useStemScale(props, {size: 'sm', rounded: true})
 const rootScale = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
+// The menu is a plain Stem menu: the chip's scale, not its pill.
+const menuScale = computed(() => ({...scale.value, rounded: false}))
 
 const inPanel = inject(SEARCH_BAR_PANEL, false)
 
@@ -43,14 +45,16 @@ const items = computed(() => [
 </script>
 
 <template>
+  <!-- The root takes the pill's spill, the chip inside none (it would be
+       clipped by the root's overflow). -->
   <div
-    class="inline-flex items-center overflow-hidden s-corner"
+    class="inline-flex items-center overflow-hidden s-corner mx-[calc(var(--s-pill-x,0px)*-1)]"
     :class="[rootScale, chipClass]"
   >
     <SDropdownMenu
       v-model:open="open"
       :items="items"
-      v-bind="scale"
+      v-bind="menuScale"
       :content="{align: inPanel ? 'start' as const : 'end' as const, sideOffset: 3}"
       :ui="{content: contentClass}"
     >
@@ -61,7 +65,7 @@ const items = computed(() => [
         :label="label"
         :selected-values="[sortLabel]"
         :count="options.length"
-        class="flex-1 min-w-0"
+        class="flex-1 min-w-0 mx-0!"
       />
     </SDropdownMenu>
   </div>

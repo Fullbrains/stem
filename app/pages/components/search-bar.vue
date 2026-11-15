@@ -25,6 +25,7 @@ const orderOptions = [
 ]
 
 const variants = ['outline', 'soft', 'subtle', 'ghost']
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 const icons = [
   {label: 'default (ui.icons.search)', value: undefined},
   {label: 'sparkle', value: 'i-ph-sparkle'},
@@ -44,6 +45,7 @@ const activeCount = computed(() => [status, category, owner].filter(s => s.value
 // ── Playground ─────────────────────────────────────────────────────────────
 const controls: ShowcaseControl[] = [
   {group: 'Aspetto', key: 'variant', type: 'select', options: variants, default: 'outline'},
+  {group: 'Aspetto', key: 'size', type: 'select', options: [{label: 'md (default)', value: undefined}, 'xs', 'sm', 'lg', 'xl']},
   {group: 'Aspetto', key: 'compact', type: 'boolean'},
   {group: 'Aspetto', key: 'icon', type: 'select', options: icons},
 
@@ -117,6 +119,27 @@ const resizeWidth = useShowcaseState<number>('search-bar-width', () => 720)
                   <SSearchFilter v-model="status" :options="statusOptions" label="Stato" all-label="Tutti" reset-label="Azzera"/>
                   <SSearchFilter v-model="category" :options="categoryOptions" label="Categoria" all-label="Tutte" reset-label="Azzera"/>
                   <SSearchOrder v-model="order" :options="orderOptions" label="Ordina per"/>
+                </template>
+              </SSearchBar>
+            </div>
+          </PortalScope>
+        </template>
+      </ShowcaseStage>
+    </ShowcaseSection>
+
+    <ShowcaseSection
+        title="Size"
+        description="La barra è alta come un SButton della sua size; i chip dei filtri prendono la sua size, più bassi di due gradini."
+    >
+      <ShowcaseStage body-class="grid grid-cols-1 gap-4 p-8">
+        <template #default="{mode}">
+          <PortalScope :mode="mode">
+            <div v-for="sz in sizes" :key="sz" class="flex items-center gap-4">
+              <span class="w-14 shrink-0 text-right font-mono text-[10px] text-(--ui-text-dimmed)">{{ sz }}</span>
+              <SSearchBar v-model="query" :size="sz as any" placeholder="Cerca…" class="flex-1" :active-filter-count="activeCount">
+                <template #filters>
+                  <SSearchFilter v-model="status" :options="statusOptions" label="Stato" all-label="Tutti" reset-label="Azzera"/>
+                  <SSearchFilter v-model="category" :options="categoryOptions" label="Categoria" all-label="Tutte" reset-label="Azzera"/>
                 </template>
               </SSearchBar>
             </div>
