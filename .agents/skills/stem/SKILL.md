@@ -333,7 +333,7 @@ Slide-over modal built on `USlideover` with header/footer structure.
 
 Header and footer are padded all around by two steps of space above the modal's size, as an alert's padding-x (sm 12px, md 14px, lg 16px); the modal's `space` props move it.
 
-The footer follows the alert's button group: its buttons are SModalButtons of the modal's size, space-x the size's own, space-y a step below (md: 36px tall), a step below the footer's padding apart. The `#footer` slot gets them as params — `<template #footer="{button, primary}">`, bind `primary` on the default action (primary, solid), `button` on the others; `buttons` (on SModal or SModalFooter) moves the group: `size`, `spaceX`, `spaceY`, each a step or a shift. Other Stem controls in the footer inherit the modal's size with their own space. SConfirmModal and SAlertModal use these.
+The footer follows the alert's button group: its buttons are SModalButtons of the modal's size, squircles (`rounded: false`, not pills), space-x the size's own, space-y a step below (md: 36px tall), a step below the footer's padding apart. The `#footer` slot gets them as params — `<template #footer="{button, primary}">`, bind `primary` on the default action (primary, solid), `button` on the others; `buttons` (on SModal or SModalFooter) moves the group: `size`, `spaceX`, `spaceY`, each a step or a shift. Other Stem controls in the footer inherit the modal's size with their own space. SConfirmModal and SAlertModal use these.
 
 ### SConfirmModal
 

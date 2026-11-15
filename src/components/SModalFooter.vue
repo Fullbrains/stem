@@ -7,7 +7,7 @@ import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
  * The modal's footer, on the alert's rules: padded all around two steps of
  * space above the modal's size (md: 14px), as an alert's padding-x.
  *
- * Its buttons are SModalButtons of the modal's size: space-x the size's
+ * Its buttons are SModalButtons of the modal's size, squircles (not pills): space-x the size's
  * own, space-y a step below (md: 32px tall), a step below the footer's
  * padding apart (md: 12px). The slot gets them as params, to bind on what
  * it renders:
@@ -45,7 +45,10 @@ function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
   return by == null ? v as T : step(base, by)
 }
 const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, size.value, stemSizeStep))
+// Squircles, not pills: the footer's buttons are the modal's actions, not
+// the header's round ones.
 const buttonScale = computed(() => ({
+  rounded: false,
   size: buttonSize.value,
   spaceX: shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep),
   spaceY: shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep),
