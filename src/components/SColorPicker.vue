@@ -94,7 +94,7 @@ function resetToDefault() {
 }
 
 // Scale props inherited from a parent when not given; sm by default.
-const scale = useStemScale(props, {size: 'sm', spaceY: '-1', roundness: '-1'})
+const scale = useStemScale(props, {size: 'sm'})
 const scaleClasses = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
 const resolvedIconStyle = computed(() => stemScaleStyle(props))
 const iconSizeClass = stemScaleIcon

@@ -161,3 +161,10 @@
     width: calc(100% + 2 * var(--s-pill-x, 0px));
     max-width: none;
 }
+
+/* The device pixel, in CSS px: what a position is rounded to on screen. A
+   one-line input rounds its text's offset to it (theme/sizes.ts), as a
+   button's label is. */
+:root { --s-device-px: 1px; }
+@media (min-resolution: 2dppx) { :root { --s-device-px: 0.5px; } }
+@media (min-resolution: 3dppx) { :root { --s-device-px: calc(1px / 3); } }

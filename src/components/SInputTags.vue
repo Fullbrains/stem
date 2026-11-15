@@ -16,7 +16,7 @@ defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
-const scale = useStemScale(props, {spaceY: '-1', roundness: '-1'})
+const scale = useStemScale(props)
 const scaleClasses = computed(() => {
   const from = scale.value.spaceY ?? scale.value.space ?? scale.value.size
   return [...stemScaleClasses(scale.value), from != null && tagPyClass[String(from)]]

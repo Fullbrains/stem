@@ -16,7 +16,7 @@ defineOptions({inheritAttrs: false})
 
 const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
 
-const scale = useStemScale(props, {roundness: '-1'})
+const scale = useStemScale(props, {spaceY: '+1'})
 const scaleClasses = computed(() => stemScaleClasses(scale.value))
 const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 </script>

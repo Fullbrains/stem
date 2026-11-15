@@ -62,13 +62,17 @@ export const fieldLabelCompounds = [
 ]
 
 /**
- * A one-line <input> centres its text itself, in its fixed height
- * (singleLineHeight), when the line fits; with padding-y the line (Vimana's
- * 1.29em of ascent + descent, more than the icon-size line height) does not
- * fit the content box and the browser sets it at the top: the text sits
- * lower than a button's. No padding-y, so the browser centres it, as a
- * button's label is. After the size variants, so it wins over py-(--s-py)!.
+ * A one-line <input> sets its text as a button's label does: the text's own
+ * box (line-height normal, Vimana's 1.25em) centred in the field. A button
+ * places it at (height − box) / 2 rounded DOWN to the screen's pixel; an
+ * <input> centres it itself and rounds UP, so where that half is not on a
+ * pixel (sm 7.25, lg 12.75; xs 4.5 at 1x) the input's text sat lower. So
+ * the input gets no centring to do: padding-top is that half, rounded down
+ * to the device pixel (--s-device-px: 1px, 0.5px on a 2x screen), the
+ * content box exactly the text's, and padding-bottom the rest — the
+ * field's height the same. After the size variants, so it wins over
+ * py-(--s-py)!.
  */
 export const singleLineFieldCompounds = [
-  {class: {base: 'py-0!'}},
+  {class: {base: 'leading-[normal]! pt-[round(down,calc((var(--s-icon-size)+2*var(--s-py)-1lh)/2),var(--s-device-px,1px))]! pb-[calc(var(--s-icon-size)+2*var(--s-py)-1lh-round(down,calc((var(--s-icon-size)+2*var(--s-py)-1lh)/2),var(--s-device-px,1px)))]!'}},
 ]

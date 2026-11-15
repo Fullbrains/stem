@@ -66,12 +66,13 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 
 | Instead of... | Use...       | Why |
 |---------------|--------------|-----|
-| `UButton`     | `SButton`    | Scale props, loading spinner, confirm dialogs, caret, icons on both sides. Without a label it is square; with `rounded` a circle |
+| `UButton`     | `SButton`    | Scale props, loading spinner, confirm dialogs, caret, icons on both sides. `square`: 1:1, icon only; with `rounded` a circle |
 | `UBadge`      | `SBadge`     | Scale props; a pill by default, space-y a step below the size (sm: 28px); icons on both sides |
 | `UInput`, `UTextarea` | `SInput`, `STextarea` | Scale props; border and focus never change the field's size |
 | `USelect`, `USelectMenu`, `UInputMenu` | `SSelect`, `SSelectMenu`, `SInputMenu` | Scale props, on the trigger and on the menu's items |
 | `UInputTags` | `SInputTags` | Scale props; tags one line tall, so the field keeps its height |
-| `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale |
+| `UDropdownMenu` | `SDropdownMenu` | Items are controls of the scale; `arrow` draws Stem's arrow |
+| `UPopover`, `UTooltip` | `SPopover`, `STooltip` | `arrow` draws Stem's arrow (rounded tip, sides curving into the edge) instead of Reka's V, 16px off the corners; everything else passes through |
 | `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall). A tab's badge is an SBadge a size below the tab's, with its defaults (pill, space-y -1) and space-x -1 (xs: 4px), soft (no border; in the active tab its text takes the tab's), its padding-y given back as a negative margin-y, so the tab keeps its height (an xs badge, 20px, in an sm tab) |
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
 | `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SModalButton actions and X, content slot under the text |
@@ -152,7 +153,7 @@ For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAle
 
 ### The Stem scale
 
-At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon. **Controls (button, input, select, menus, tags, color picker, tab, checkbox/switch/radio row) default to space-y a step below their size**: padding-y is the step below's, so a control is `icon + 2 × padding-y(size − 1)` tall (the height column). **Inputs (SInput, STextarea, SSelect, SSelectMenu, SInputMenu, SInputTags, SColorPicker) default to roundness a step below their size** (md: sm's 6px radius; xs stays xs).
+At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon. **Controls (button, menus, tab, checkbox/switch/radio row) default to space-y a step below their size**: padding-y is the step below's, so a control is `icon + 2 × padding-y(size − 1)` tall (the height column). **Inputs (input, select, select menu, input menu, tags, color picker) keep the size's own space-y**, a step taller (md: 40px against a button's 36); a textarea one above its size's. A one-line `<input>` places its text as a button's label: line-height normal, padding-top (height − 1lh) / 2 rounded down to the device pixel (`--s-device-px`: 1px, 0.5px at 2x), padding-bottom the rest, the height unchanged. Left to centre it, the browser rounded up and the text sat half a pixel lower where the half falls between pixels (sm, lg).
 
 | size | text | icon (= leading) | padding / gap | radius | height |
 |------|------|------------------|---------------|--------|--------|
@@ -303,6 +304,14 @@ Without a label the button keeps padding-x and padding-y, as tall as with a labe
 ### SModalButton and SCloseButton
 
 `SModalButton` is SButton soft and `rounded`, `size` sm by default, with space-x the size's own and space-y one step below (sm: 8 × 6px, 28px tall) unless `space`, `space-x` or `space-y` is given. `SCloseButton` is SModalButton with an X and an accessible name (`label`, default from Nuxt UI's locale). Everything else passes through to SButton.
+
+### Arrow
+
+`arrow` on SPopover, STooltip or SDropdownMenu draws Stem's arrow (`SArrow`): a rounded tip and sides that meet the panel's edge with a concave curve, filled with the surface and outlined as the floating menu's 1px ring, kept 16px off the corners (`arrowPadding`). An object is Reka's arrow props, laid over it. A bare Nuxt UI overlay takes it as `:arrow="stemArrow"` (exported with `stemArrowProps`, `arrowShape`, `STEM_ARROW_SHAPE`, `STEM_ARROW_PADDING`).
+
+```vue
+<SPopover arrow><SButton label="Apri"/><template #content>…</template></SPopover>
+```
 
 ### SModal
 
