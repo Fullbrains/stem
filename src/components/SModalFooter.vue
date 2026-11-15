@@ -7,9 +7,9 @@ import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
  * The modal's footer, on the alert's rules: padded all around two steps of
  * space above the modal's size (md: 14px), as an alert's padding-x.
  *
- * Its buttons are SModalButtons of the modal's size, squircles (not pills): space-x the size's
- * own, space-y a step below (md: 32px tall), a step below the footer's
- * padding apart (md: 12px). The slot gets them as params, to bind on what
+ * Its buttons are SModalButtons of the modal's size, squircles (not pills):
+ * space-x a step above the size's own, space-y a step below (md: 12 × 8px,
+ * 36px tall), two steps below the footer's padding apart (md: 10px). The slot gets them as params, to bind on what
  * it renders:
  *   <template #footer="{button, primary}">
  *     <SModalButton v-bind="primary" label="Salva"/>
@@ -50,7 +50,7 @@ const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, size.va
 const buttonScale = computed(() => ({
   rounded: false,
   size: buttonSize.value,
-  spaceX: shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep),
+  spaceX: shiftOr<StemSpace>(props.buttons?.spaceX, stemSpaceStep(buttonSize.value, 1), stemSpaceStep),
   spaceY: shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep),
 }))
 const params = computed(() => ({
@@ -60,7 +60,7 @@ const params = computed(() => ({
 
 const style = computed(() => ({
   padding: `${stemSpacePx(padding.value)}px`,
-  gap: `${stemSpacePx(stemSpaceStep(padding.value, -1))}px`,
+  gap: `${stemSpacePx(stemSpaceStep(padding.value, -2))}px`,
 }))
 
 // What the controls inside inherit: the modal's size and type, not the
