@@ -1,6 +1,6 @@
 {
   "name": "@fullbrains/stem",
-  "version": "0.39.1",
+  "version": "1.0.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
