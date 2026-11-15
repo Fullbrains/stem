@@ -8,9 +8,9 @@ import {useStemScale} from '../composables/useStemScale'
  * to open the content elsewhere). Nothing of its own about size: `size`,
  * `space`, `icon-size`, `text-size`… are SButton's, on the Stem scale.
  *
- * Its one default: a pill a step wider and a step lower than it would be —
- * space-x '+1', space-y '-1' over what it inherits, else over its size
- * (sm: 10px × 6px, 28px tall). `space`, `space-x` or `space-y` given by the
+ * Its one default: a pill a step lower than it would be — space-y '-1'
+ * over what it inherits, else over its size; space-x the size's own
+ * (sm: 8px × 6px, 28px tall). `space`, `space-x` or `space-y` given by the
  * caller win, or shift it further when relative ('-1').
  * The default `size` is sm. Icon only, pass `aria-label`.
  *
@@ -30,8 +30,8 @@ const props = withDefaults(defineProps<{
 })
 
 // Size and space inherited from a parent when not given; sm by default,
-// a step wider and a step lower than what it inherits.
-const scale = useStemScale(props, {size: 'sm', spaceX: '+1', spaceY: '-1'})
+// a step lower than what it inherits.
+const scale = useStemScale(props, {size: 'sm', spaceY: '-1'})
 </script>
 
 <template>

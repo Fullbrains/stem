@@ -204,7 +204,7 @@ const actions = [
               </template>
             </UPopover>
             <UPopover>
-              <SButton icon="i-ph-dots-three" variant="soft" rounded aria-label="Azioni"/>
+              <SButton icon="i-ph-dots-three" variant="soft" square rounded aria-label="Azioni"/>
               <template #content="{close}">
                 <div class="flex w-48 flex-col p-1">
                   <SButton v-for="a in actions" :key="a.label" :label="a.label" :icon="a.icon" variant="ghost" color="neutral" size="sm" class="justify-start" @click="close"/>

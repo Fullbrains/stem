@@ -38,7 +38,7 @@ const nestedOpen = ref(false)
       Ciao After
     </template>
     <template #body>
-      <div class="p-6 space-y-4">
+      <div class="space-y-4">
         <p>Modal body content goes here.</p>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -56,7 +56,7 @@ const nestedOpen = ref(false)
             size="sm"
         >
           <template #body>
-            <div class="p-6">
+            <div>
               <p>This is a nested modal content.</p>
             </div>
           </template>

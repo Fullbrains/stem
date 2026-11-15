@@ -122,7 +122,7 @@ const loading = ref(false)
       <ShowcaseStage>
         <SButton label="Salva" icon="i-ph-floppy-disk" :loading="loading" @click="loading = !loading"/>
         <SButton label="Salva" icon="i-ph-floppy-disk" variant="soft" loading/>
-        <SButton icon="i-ph-arrows-clockwise" rounded variant="outline" color="neutral" loading/>
+        <SButton icon="i-ph-arrows-clockwise" square rounded variant="outline" color="neutral" loading/>
         <SEmpty label="Caricamento…" loading size="sm" orientation="horizontal"/>
       </ShowcaseStage>
     </ShowcaseSection>

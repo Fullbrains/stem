@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import {computed, provide} from 'vue'
-import {stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue} from '../theme/scale'
+import {stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemSize, type StemSizeValue, type StemSpaceValue} from '../theme/scale'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 
 /**
- * The modal's footer, on the alert's rules: padded all around two steps of
- * space above the modal's size (md: 14px), as an alert's padding-x.
+ * The modal's footer, on the alert's rules: padded all around three steps of
+ * space above the modal's size (md: 16px).
  *
- * Its buttons are SModalButtons of the modal's size, squircles (not pills):
- * space-x a step above the size's own, space-y a step below (md: 12 × 8px,
- * 36px tall), two steps below the footer's padding apart (md: 10px). The slot gets them as params, to bind on what
- * it renders:
+ * Its buttons are SButtons of the modal's size, space-x a step above a
+ * button's own, space-y its own (md: 12 × 8px, 36px tall), four steps
+ * below the footer's padding apart (md: 8px). The slot gets them as params, to bind on what it renders:
  *   <template #footer="{button, primary}">
- *     <SModalButton v-bind="primary" label="Salva"/>
- *     <SModalButton v-bind="button" label="Annulla"/>
+ *     <SButton v-bind="primary" label="Salva"/>
+ *     <SButton v-bind="button" label="Annulla"/>
  *   </template>
- * `button` is a plain one, `primary` the default action (primary, solid).
+ * `button` is a plain one (soft), `primary` the default action (primary, solid).
  * `buttons` moves the group from there. Any other Stem control in the slot
  * takes the modal's size, with its own space.
  */
@@ -23,8 +22,8 @@ const props = withDefaults(defineProps<{
   separator?: boolean
   /**
    * The buttons' scale, all of them at once: `size`, `spaceX`, `spaceY`,
-   * each a step or a shift from their default (size: the modal's; space-x:
-   * their size's; space-y: a step below it).
+   * each a step or a shift (from a button's own) replacing the default
+   * (size: the modal's; space-x: '+1'; space-y: a button's own).
    */
   buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
 }>(), {
@@ -35,32 +34,28 @@ defineSlots<{
   default?: (props: {button: Record<string, unknown>, primary: Record<string, unknown>}) => unknown
 }>()
 
-const scale = useStemScale({}, {space: '+2'})
+const scale = useStemScale({}, {space: '+3'})
 const size = computed(() => scale.value.size ?? 'md')
-const padding = computed(() => scale.value.space ?? stemSpaceStep(size.value, 2))
+const padding = computed(() => scale.value.space ?? stemSpaceStep(size.value, 3))
 
-function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
-  if (v == null) return base
-  const by = stemSpaceShift(v)
-  return by == null ? v as T : step(base, by)
-}
-const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, size.value, stemSizeStep))
-// Squircles, not pills: the footer's buttons are the modal's actions, not
-// the header's round ones.
-const buttonScale = computed(() => ({
-  rounded: false,
-  size: buttonSize.value,
-  spaceX: shiftOr<StemSpace>(props.buttons?.spaceX, stemSpaceStep(buttonSize.value, 1), stemSpaceStep),
-  spaceY: shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep),
-}))
+const buttonScale = computed(() => {
+  const b = props.buttons ?? {}
+  const by = stemSpaceShift(b.size)
+  return {
+    size: b.size == null ? size.value : by == null ? b.size as StemSize : stemSizeStep(size.value, by),
+    // A step wider than a button's own (md: 12 × 8px, 36px).
+    spaceX: b.spaceX ?? '+1',
+    ...(b.spaceY != null && {spaceY: b.spaceY}),
+  }
+})
 const params = computed(() => ({
-  button: {...buttonScale.value},
+  button: {...buttonScale.value, variant: 'soft'},
   primary: {...buttonScale.value, color: 'primary', variant: 'solid'},
 }))
 
 const style = computed(() => ({
   padding: `${stemSpacePx(padding.value)}px`,
-  gap: `${stemSpacePx(stemSpaceStep(padding.value, -2))}px`,
+  gap: `${stemSpacePx(stemSpaceStep(padding.value, -4))}px`,
 }))
 
 // What the controls inside inherit: the modal's size and type, not the

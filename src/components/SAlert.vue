@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {stemScale, stemScaleVars, stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemScaleProps, type StemSize, type StemSizeValue, type StemSpace, type StemSpaceValue, stemScaleDefaults} from '../theme/scale'
+import {stemScale, stemScaleVars, stemSizeStep, stemSpacePx, stemSpaceShift, stemSpaceStep, type StemScaleProps, type StemSize, type StemSizeValue, type StemSpaceValue, stemScaleDefaults} from '../theme/scale'
 import {alertClasses, alertSolidAction, type AlertColor, type AlertVariant} from '../theme/alert-colors'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
 import {useAppConfig} from '#imports'
@@ -23,8 +23,8 @@ import {computed, provide, useAttrs, useSlots} from 'vue'
  * and the actions' columns. In `vertical` the actions are under the text
  * already, and the slot stays in the text's column.
  *
- * Its buttons are SModalButtons of its size: space-x the size's own,
- * space-y a step below (sm: 28px), centred on the title's line without
+ * Its buttons are SModalButtons of its size, with SModalButton's own
+ * defaults (sm: 28px tall), centred on the title's line without
  * making a one-line alert taller; on a solid alert, tinted to stay
  * readable. The `actions` it is given and the X get these; an `#actions`
  * slot gets them as params, to bind on what it renders:
@@ -52,8 +52,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
   /**
    * The buttons' scale, all of them at once (the X, the actions, the slot's
    * params): `size`, `spaceX`, `spaceY`, each a step or a shift from their
-   * default (size: the alert's; space-x: their size's; space-y: a step
-   * below it). `{spaceY: '+1'}`: a step taller.
+   * default (size: the alert's; space-x and space-y: SModalButton's own).
+   * `{spaceY: '+1'}`: a step taller.
    */
   buttons?: {size?: StemSizeValue, spaceX?: StemSpaceValue, spaceY?: StemSpaceValue}
   /**
@@ -79,8 +79,8 @@ const props = withDefaults(defineProps<StemScaleProps & {
 // the radius a step rounder (sm: md's, 8px).
 const scale = useStemScale(props, {size: 'sm', spaceX: '+2', spaceY: '+4', roundness: '+1'})
 
-// The buttons are SModalButtons of the alert's size, space-x the size's own
-// (no shift: sm 8px), space-y a step below it (sm: 6px, 28px tall); the
+// The buttons are SModalButtons of the alert's size, with SModalButton's
+// own defaults (sm: 8 × 6px, 28px tall), as everywhere else; the
 // `buttons` prop moves the group from there.
 function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
   if (v == null) return base
@@ -88,8 +88,6 @@ function shiftOr<T>(v: unknown, base: T, step: (from: T, by: number) => T): T {
   return by == null ? v as T : step(base, by)
 }
 const buttonSize = computed(() => shiftOr<StemSize>(props.buttons?.size, scale.value.size!, stemSizeStep))
-const buttonSpaceX = computed(() => shiftOr<StemSpace>(props.buttons?.spaceX, buttonSize.value, stemSpaceStep))
-const buttonSpaceY = computed(() => shiftOr<StemSpace>(props.buttons?.spaceY, stemSpaceStep(buttonSize.value, -1), stemSpaceStep))
 // The description a step below the alert's text: that step's text, on
 // lines of its icon plus 4px, as the alert's own description.
 const descriptionSize = computed(() => shiftOr<StemSize>(props.descriptionTextSize, (scale.value.textSize ?? scale.value.size)!, stemSizeStep))
@@ -129,7 +127,11 @@ function actionTint(action: Record<string, unknown>) {
 
 // The buttons' props: what the generated ones get, and the #actions slot's
 // params (`button`, `primary`).
-const buttonScale = computed(() => ({size: buttonSize.value, spaceX: buttonSpaceX.value, spaceY: buttonSpaceY.value}))
+const buttonScale = computed(() => ({
+  size: buttonSize.value,
+  ...(props.buttons?.spaceX != null && {spaceX: props.buttons.spaceX}),
+  ...(props.buttons?.spaceY != null && {spaceY: props.buttons.spaceY}),
+}))
 const primaryAction = {color: 'primary', variant: 'solid'} as const
 const actionParams = computed(() => ({
   button: {...buttonScale.value, class: actionTint({})},

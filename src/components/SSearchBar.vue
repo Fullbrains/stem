@@ -272,6 +272,7 @@ function clear() {
             :aria-label="filtersLabel"
             :variant="mobileExpanded ? 'solid' : 'soft'"
             size="sm"
+            square
             rounded
             class="select-none"
             @click="mobileExpanded = !mobileExpanded"

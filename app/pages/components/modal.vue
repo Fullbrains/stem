@@ -136,10 +136,10 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
               <SModalButton icon="i-ph-trash" label="Rimuovi"/>
             </template>
             <template v-if="s.afterHeader" #after-header>
-              <div class="px-6 pb-4 text-sm text-(--ui-text-muted)">Slot after-header: tab, filtri, una barra sotto il titolo.</div>
+              <div class="px-(--s-modal-p) pb-(--s-modal-p) text-sm text-(--ui-text-muted)">Slot after-header: tab, filtri, una barra sotto il titolo.</div>
             </template>
             <template v-if="s.body !== 'nessuno'" #body>
-              <div class="space-y-4 p-6">
+              <div class="space-y-4">
                 <UFormField label="Nome">
                   <SInput model-value="Stem" class="w-full"/>
                 </UFormField>
@@ -154,8 +154,8 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
               </div>
             </template>
             <template #footer="{button, primary}">
-              <SModalButton v-bind="primary" label="Salva" @click="open[mode] = false"/>
-              <SModalButton v-bind="button" label="Annulla" @click="open[mode] = false"/>
+              <SButton v-bind="primary" label="Salva" @click="open[mode] = false"/>
+              <SButton v-bind="button" label="Annulla" @click="open[mode] = false"/>
             </template>
           </SModal>
         </PortalScope>
@@ -206,8 +206,8 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
           <div class="s-corner overflow-hidden bg-(--ui-bg) shadow-xl ring-1 ring-black/5 [--s-radius:16px] dark:ring-white/10">
             <div class="h-16"/>
             <SModalFooter v-slot="{button, primary}" :separator="sep">
-              <SModalButton v-bind="primary" label="Salva"/>
-              <SModalButton v-bind="button" label="Annulla"/>
+              <SButton v-bind="primary" label="Salva"/>
+              <SButton v-bind="button" label="Annulla"/>
             </SModalFooter>
           </div>
         </div>
@@ -225,10 +225,10 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
               <SButton :label="String(s)" variant="soft" size="sm" @click="sizeOpen[`${mode}-${s}`] = true"/>
               <SModal v-model:open="sizeOpen[`${mode}-${s}`]" :width="s as any" :title="`width ${s}`" description="La larghezza cambia, header e footer restano uguali.">
                 <template #body>
-                  <p class="p-6 text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
+                  <p class="text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
                 </template>
                 <template #footer="{button}">
-                  <SModalButton v-bind="button" label="Chiudi" @click="sizeOpen[`${mode}-${s}`] = false"/>
+                  <SButton v-bind="button" label="Chiudi" @click="sizeOpen[`${mode}-${s}`] = false"/>
                 </template>
               </SModal>
             </template>
@@ -248,10 +248,10 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
               <SButton :label="s" variant="soft" size="sm" @click="sideOpen[`${mode}-${s}`] = true"/>
               <SModal v-model:open="sideOpen[`${mode}-${s}`]" :side="s as any" :title="`side ${s}`" description="Entra da questo lato.">
                 <template #body>
-                  <p class="p-6 text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
+                  <p class="text-sm text-(--ui-text-muted)">Contenuto della modale.</p>
                 </template>
                 <template #footer="{button}">
-                  <SModalButton v-bind="button" label="Chiudi" @click="sideOpen[`${mode}-${s}`] = false"/>
+                  <SButton v-bind="button" label="Chiudi" @click="sideOpen[`${mode}-${s}`] = false"/>
                 </template>
               </SModal>
             </template>
@@ -270,7 +270,7 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
             <SButton label="Apri" icon="i-ph-stack" variant="soft" @click="nestedOpen[mode] = true"/>
             <SModal v-model:open="nestedOpen[mode]" title="Prima modale" description="Da qui se ne apre un'altra." :footer="false">
               <template #body>
-                <div class="flex flex-wrap gap-3 p-6">
+                <div class="flex flex-wrap gap-3">
                   <SDropdownMenu :items="[{label: 'Modifica', icon: 'i-ph-pencil-simple'}, {label: 'Duplica', icon: 'i-ph-copy'}, {type: 'separator'}, {label: 'Elimina', icon: 'i-ph-trash'}]">
                     <SButton label="Menu" variant="soft" caret/>
                   </SDropdownMenu>
@@ -278,10 +278,10 @@ await alert({title: 'Errore', message: 'Riprova.', icon: 'i-ph-warning-circle', 
                 </div>
                 <SModal v-model:open="innerOpen[mode]" title="Seconda modale" width="sm">
                   <template #body>
-                    <p class="p-6 text-sm text-(--ui-text-muted)">Sopra la prima.</p>
+                    <p class="text-sm text-(--ui-text-muted)">Sopra la prima.</p>
                   </template>
                   <template #footer="{button}">
-                    <SModalButton v-bind="button" label="Chiudi" @click="innerOpen[mode] = false"/>
+                    <SButton v-bind="button" label="Chiudi" @click="innerOpen[mode] = false"/>
                   </template>
                 </SModal>
               </template>

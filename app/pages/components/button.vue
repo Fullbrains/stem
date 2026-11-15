@@ -27,6 +27,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Contenuto', key: 'trailingIcon', label: 'trailing-icon', type: 'select', options: icons},
 
   {group: 'Forma', key: 'caret', type: 'boolean'},
+  {group: 'Forma', key: 'square', type: 'boolean'},
   {group: 'Forma', key: 'block', type: 'boolean'},
 
   ...scaleControls(),
@@ -70,7 +71,8 @@ const shapes: Record<string, Record<string, unknown>> = {
   ...scaleShapes,
   'caret': {caret: true},
   'solo icona': {label: undefined},
-  'solo icona rounded': {label: undefined, rounded: true},
+  'square': {label: undefined, square: true},
+  'square rounded': {label: undefined, square: true, rounded: true},
 }
 
 // Lo stesso pulsante con e senza label o icona: l'altezza non deve cambiare.
@@ -79,7 +81,8 @@ const contents: Record<string, Record<string, unknown>> = {
   'solo icona': {icon: 'i-ph-floppy-disk'},
   'icona e label': {icon: 'i-ph-floppy-disk', label: 'Salva'},
   'label e caret': {label: 'Salva', caret: true},
-  'solo icona rounded': {icon: 'i-ph-floppy-disk', rounded: true},
+  'square': {icon: 'i-ph-floppy-disk', square: true},
+  'square rounded': {icon: 'i-ph-floppy-disk', square: true, rounded: true},
 }
 
 const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
@@ -89,7 +92,7 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
   <ShowcasePage
       title="Button"
       wraps="UButton"
-      description="Il pulsante di Stem, sulla scala unica: size decide testo, icona, padding, gap e raggio; text-size, icon-size, space e roundness ne spostano uno. Aggiunge spinner, conferma, caret e pillola; senza label è quadrato, con rounded un cerchio."
+      description="Il pulsante di Stem, sulla scala unica: size decide testo, icona, padding, gap e raggio; text-size, icon-size, space e roundness ne spostano uno. Space-y un gradino sotto la size (md: 36px). Aggiunge spinner, conferma, caret, pillola e square (solo icona, 1:1: padding-y su ogni lato; con rounded un cerchio)."
   >
     <ShowcasePlayground v-model="state" tag="SButton" :controls="controls">
       <template #default="{props}">
@@ -110,7 +113,7 @@ const iconSizes = ['da size', 'xs', 'sm', 'md', 'lg', 'xl']
 
     <ShowcaseSection
         title="Contenuto e altezza"
-        description="Solo label, solo icona, entrambe, caret, cerchio: a parità di size, stessa altezza."
+        description="Solo label, solo icona, entrambe, caret, square: a parità di size, stessa altezza."
     >
       <ShowcaseStage body-class="space-y-5 p-8">
         <div v-for="s in sizes" :key="s" class="flex items-start gap-6">

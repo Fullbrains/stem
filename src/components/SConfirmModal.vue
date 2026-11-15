@@ -70,11 +70,11 @@ async function handleConfirm() {
     <template v-if="headerSeparator || confirmMatch != null" #body>
       <p
           v-if="headerSeparator && message"
-          class="px-6 pt-6 text-base whitespace-normal sm:whitespace-pre-line"
-          :class="{ 'pb-6': confirmMatch == null }"
+          class="text-base whitespace-normal sm:whitespace-pre-line"
+          :class="{ 'mb-(--s-modal-p)': confirmMatch != null }"
           v-html="messageHtml"
       />
-      <div v-if="confirmMatch != null" class="p-6">
+      <div v-if="confirmMatch != null">
         <UInput
             v-model="inputValue"
             :placeholder="confirmPlaceholder"
@@ -86,15 +86,16 @@ async function handleConfirm() {
       </div>
     </template>
     <template #footer="{button, primary}">
-      <SModalButton
+      <SButton
           v-bind="primary"
           :label="label"
           :destructive="destructive"
+          :color="destructive ? 'error' : 'primary'"
           :loading="loading"
           :disabled="confirmDisabled"
           @click="handleConfirm"
       />
-      <SModalButton
+      <SButton
           v-bind="button"
           :label="cancelLabel"
           :disabled="loading"

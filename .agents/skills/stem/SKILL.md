@@ -76,7 +76,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
 | `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SModalButton actions and X, content slot under the text |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
-| header buttons | `SModalButton`, `SCloseButton` | Thin wrappers of SButton: soft, pill, space-x one step above size and space-y one below |
+| header buttons | `SModalButton`, `SCloseButton` | Thin wrappers of SButton: soft, pill, space-x the size's own, space-y one step below |
 | custom spinner | `SSpinner`  | Follows the ambient icon size; `size` takes a scale token |
 | `UIcon` (for local SVGs) | `SIcon` | Inline SVG rendering with currentColor, loader provided by the consumer app |
 | custom search/filter UI | `SSearchBar` + `SSearchFilter` + `SSearchOrder` | Responsive search with collapsible filters; chips and menus on the scale |
@@ -152,22 +152,22 @@ For components without a Stem wrapper (e.g., `UInput`, `USelect`, `UTabs`, `UAle
 
 ### The Stem scale
 
-At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon.
+At a given `size`, **every** control — button, badge, input, select, menu item, tab, checkbox row, search chip — has the same text, icon, padding, gap and radius. The line height equals the icon, so a control is exactly `icon + 2 × padding-y` tall. Padding and gap are half the icon. **Controls (button, input, select, menus, tags, color picker, tab, checkbox/switch/radio row) default to space-y a step below their size**: padding-y is the step below's, so a control is `icon + 2 × padding-y(size − 1)` tall (the height column). **Inputs (SInput, STextarea, SSelect, SSelectMenu, SInputMenu, SInputTags, SColorPicker) default to roundness a step below their size** (md: sm's 6px radius; xs stays xs).
 
 | size | text | icon (= leading) | padding / gap | radius | height |
 |------|------|------------------|---------------|--------|--------|
-| xs   | 12px (text-xs)   | 12px (size-3) | 6px (p-1.5) | 4px  | 24px |
-| sm   | 14px (text-sm)   | 16px (size-4) | 8px (p-2)   | 6px  | 32px |
-| md   | 16px (text-base) | 20px (size-5) | 10px (p-2.5)| 8px  | 40px |
-| lg   | 18px (text-lg)   | 24px (size-6) | 12px (p-3)  | 10px | 48px |
-| xl   | 20px (text-xl)   | 28px (size-7) | 14px (p-3.5)| 12px | 56px |
+| xs   | 12px (text-xs)   | 12px (size-3) | 6px (p-1.5) | 4px  | 20px |
+| sm   | 14px (text-sm)   | 16px (size-4) | 8px (p-2)   | 6px  | 28px |
+| md   | 16px (text-base) | 20px (size-5) | 10px (p-2.5)| 8px  | 36px |
+| lg   | 18px (text-lg)   | 24px (size-6) | 12px (p-3)  | 10px | 44px |
+| xl   | 20px (text-xl)   | 28px (size-7) | 14px (p-3.5)| 12px | 52px |
 
 The space scale has two more steps below xs: `2xs` (4px) and `0`.
 
 Each axis moves on its own, defaulting to `size`:
 
 ```vue
-<SButton size="sm" label="Salva" icon="i-ph-floppy-disk"/>          <!-- 32px -->
+<SButton size="sm" label="Salva" icon="i-ph-floppy-disk"/>          <!-- 28px -->
 <SButton size="sm" space-x="lg" space-y="xs" icon="i-ph-x"/>        <!-- 40 × 28 -->
 <SButton size="xs" space="2xs" label="Tag"/>                        <!-- 20px -->
 <SInput size="md" text-size="sm" icon-size="lg"/>
@@ -177,7 +177,7 @@ Each axis moves on its own, defaulting to `size`:
 Rules that hold everywhere:
 - **Optical label** (`optical-label`: `auto` default, `always`, `never`). A letter carries air inside its box (Vimana: 0.09em before a stem, `--s-label-bearing-start`; `--s-label-bearing-end` the same as the start), so the gap between a label and an icon looks wider than it is. The label is trimmed by that air **on the side of the icon only**: its left after a leading icon, its right before a trailing icon or caret (a select's chevron included), both with both. The side facing the padding stays as it is. A side without an icon gets the opposite: the air a Phosphor icon carries inside its box (3/32 of the icon size, sm 1.5px), so a label alone sits as far from the edge as an icon's drawing would. `auto` does both; `always` also trims the bare sides by the bearing; `never` none. Setting a bearing to 0 turns that side off app-wide. The old boolean still reads (true → auto, false → never).
 - **Inherited from a parent.** Every scale prop a component does not set comes from its nearest parent `SScale` (`<SScale size="sm" space="xs">…</SScale>`, a plain div by default, `as` for another tag), else from the component's own default (md, or sm for SModalButton, the search chips and SAlert…). SModal and SSearchBar pass theirs the same way (SModal's panel width is `width`; a search bar passes its size but not its space, and its chips tighten inside it). Nested SScales override prop by prop; a prop set on the component always wins. Through provide/inject (`useStemScale`, `STEM_SCALE`), so it reaches menus in portals and the defaults computed in JS. A plain HTML attribute on a div is not read: the server render cannot see an ancestor's attributes.
-- **Relative size and space.** `size` takes a shift too: `size="-1"` is a size below the one the control would have (its parent's, else its own default; md without one), so `<SScale size="-1">` makes an SButton sm and an SModalButton xs. `space`, `space-x` and `space-y` also take a shift: `space-y="-1"` (or `:space-y="-1"`) is one step tighter than the space the control would have otherwise — its parent's, else its own size's; `"+2"` two steps looser. The space scale runs 0, 2xs (4), xs … xl (6–14), and on to 2xl … 5xl (16–22) for containers, so a shift past xl keeps growing. On an `SScale` the shift reaches each child still a shift, so every control moves from its own size (`<SScale space-y="-1">` tightens an sm button 8→6 and an lg one 12→10). Shifts add up: SModalButton's default is `space-x="+1" space-y="-1"`, the search chips' `space-x="+1"` (and `space-y="-2"` inside a bar), applied over what they inherit. Only a component (SScale) can pass a scale down: a plain `<div>` with an attribute cannot, since provide/inject exists only between components — use `<SScale as="div">`, which renders just that element.
+- **Relative size and space.** `size` takes a shift too: `size="-1"` is a size below the one the control would have (its parent's, else its own default; md without one), so `<SScale size="-1">` makes an SButton sm and an SModalButton xs. `space`, `space-x` and `space-y` also take a shift: `space-y="-1"` (or `:space-y="-1"`) is one step tighter than the space the control would have otherwise — its parent's, else its own size's; `"+2"` two steps looser. The space scale runs 0, 2xs (4), xs … xl (6–14), and on to 2xl … 5xl (16–22) for containers, so a shift past xl keeps growing. On an `SScale` the shift reaches each child still a shift, so every control moves from its own size (`<SScale space-y="-1">` tightens an sm button 8→6 and an lg one 12→10). Shifts add up: SModalButton's default is `space-y="-1"`, the search chips' `space-x="+1"` (and `space-y="-2"` inside a bar), applied over what they inherit. Only a component (SScale) can pass a scale down: a plain `<div>` with an attribute cannot, since provide/inject exists only between components — use `<SScale as="div">`, which renders just that element.
 - **Squircle only.** Corners are `s-corner` (superellipse) with the size's radius. Where `corner-shape` is supported the radius is multiplied by `--s-squircle-radius` (1.6) and the corner is `superellipse(--s-squircle)` (1.5), both global on `:root`: the superellipse leaves the side later, so it needs a bigger radius to look the same size (sm: 6 × 1.6 = 9.6px); elsewhere a plain radius. `s-corner-outer` is (radius + inset) × the same factor; `rounded` makes a pill (round ends, never a squircle). A pill gets more horizontal padding (`--s-pill-x`, about 8% of its height: sm 2.6px, xl 4.5px): its round ends take more of the corners than a squircle, so the content would look closer to the edge. It takes the same back as a negative margin-x: the layout box and the content stay where a squircle's would be (icons and text line up with a squircle above or below), only the pill's ends spill over the sides. The height never changes; an icon-only circle (space-x = space-y) gets neither and stays a circle; an icon-only pill wider than tall (an SModalButton's X) gets it like a label, so the gaps between a row of pills look equal. Pill tabs put it on each trigger (the list keeps the same inset on every side, so the active pill stays concentric with it). A negative margin widens only a box whose content sets its width: a pill with a set width shifts left instead of spilling on both sides. For a full-width pill use `s-pill-full` instead of `w-full` (container width plus both spills; plain `w-full` on a squircle).
 - **Borders and focus never resize a field.** The border is a 1px inset ring; focus darkens it and adds a 3.5px halo outside (box-shadow).
 - **Icons align by their box.** Padding and gap are measured to the icon's box, with no hidden margin: an icon sits in the same place with or without a label, in every control.
@@ -298,11 +298,11 @@ Stem uses Phosphor Icons (`@iconify-json/ph`) as its icon set, mapped via `stemI
 
 **Props:** the scale props, `icon`, `label`, `trailingIcon`, `caret`, `loading`, `destructive`, `confirmTitle`, `confirmMessage`, `confirmIcon`, `confirmLabel`, `confirmCancelLabel`, `confirmMatch`, `confirmPlaceholder`, `onConfirm`.
 
-Without a label the button keeps the size's padding on every side: square, as tall as with a label (space-x / space-y still apply). There is no `disc` and no `compact` any more: `rounded` and `space` do their job.
+Without a label the button keeps padding-x and padding-y, as tall as with a label and so wider than tall (space-y is a step below by default). `square` makes it 1:1: icon only, padding-y on every side (md: 36 × 36), no label, trailing icon or caret; a squircle, a circle with `rounded`. `rounded` alone is the pill (wider than tall). Unlike UButton's `square`, it never turns on by itself. There is no `compact` any more: `space` does its job.
 
 ### SModalButton and SCloseButton
 
-`SModalButton` is SButton soft and `rounded`, `size` sm by default, with space-x one step above the size and space-y one step below (sm: 10 × 6px, 28px tall) unless `space`, `space-x` or `space-y` is given. `SCloseButton` is SModalButton with an X and an accessible name (`label`, default from Nuxt UI's locale). Everything else passes through to SButton.
+`SModalButton` is SButton soft and `rounded`, `size` sm by default, with space-x the size's own and space-y one step below (sm: 8 × 6px, 28px tall) unless `space`, `space-x` or `space-y` is given. `SCloseButton` is SModalButton with an X and an accessible name (`label`, default from Nuxt UI's locale). Everything else passes through to SButton.
 
 ### SModal
 
@@ -321,19 +321,19 @@ Slide-over modal built on `USlideover` with header/footer structure.
     <!-- form content -->
   </template>
   <template #footer="{button, primary}">
-    <SModalButton v-bind="primary" label="Save" :on-confirm="save" />
-    <SModalButton v-bind="button" label="Cancel" @click="isOpen = false" />
+    <SButton v-bind="primary" label="Save" :on-confirm="save" />
+    <SButton v-bind="button" label="Cancel" @click="isOpen = false" />
   </template>
 </SModal>
 ```
 
-**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `width` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number, default xl), the scale props (`size`, `space`… passed to everything inside), `header`, `closeable`, `footer`, `headerCompact` (boolean or `'mobileOnly'` — compact header: smaller title, icon inline beside it), `headerSeparator`, `footerSeparator`, `buttons`, `disabled`, `open`, `defaultOpen`
+**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `width` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number, default xl), the scale props (`size`, `space`… passed to everything inside), `header`, `closeable`, `footer`, `headerCompact` (boolean or `'mobileOnly'` — compact header: icon inline beside the title), `headerSeparator`, `footerSeparator`, `buttons`, `disabled`, `open`, `defaultOpen`
 
 **Slots:** `title`, `after-header`, `body`, `footer`
 
-Header and footer are padded all around by two steps of space above the modal's size, as an alert's padding-x (sm 12px, md 14px, lg 16px); the modal's `space` props move it.
+Header, body and footer are padded all around by three steps of space above the modal's size (sm 14px, md 16px, lg 18px); the modal's `space` props move it. The `#body` and `#after-header` slots get it as `--s-modal-p` (`px-(--s-modal-p)`); the body is padded already, so its content adds none. The panel's squircle is twice the size's radius (sm 12px, md 16px, before the squircle factor). The header's buttons (`#actions` and close) are a size below the modal's, never below sm (an sm or xs modal keeps its own; compact or not); `#actions` content inherits it. The close is an SModalButton (pill) of that size, with its defaults (md modal: sm, 8 × 6px, 28px tall); it and the `#actions` buttons, a step above their size's space apart (md modal: 10px), sit at the top, centred on a row as tall as the title's line (the same place with or without an icon), the modal's padding from the text, overhanging the row without making the header taller. The header's title is a text step above the modal's size (the size's own in the compact header), semibold; its description a step below, muted, right under the title with no gap (md: 18px and 14px).
 
-The footer follows the alert's button group: its buttons are SModalButtons of the modal's size, squircles (`rounded: false`, not pills), space-x a step above the size's own, space-y a step below (md: 12 × 8px, 36px tall), two steps below the footer's padding apart (md: 10px). The `#footer` slot gets them as params — `<template #footer="{button, primary}">`, bind `primary` on the default action (primary, solid), `button` on the others; `buttons` (on SModal or SModalFooter) moves the group: `size`, `spaceX`, `spaceY`, each a step or a shift. Other Stem controls in the footer inherit the modal's size with their own space. SConfirmModal and SAlertModal use these.
+The footer's buttons are SButtons of the modal's size, space-x '+1' over a button's own, space-y a button's own (md: 12 × 8px, 36px tall), four steps below the footer's padding apart (md: 8px). The `#footer` slot gets them as params — `<template #footer="{button, primary}">`, bind `primary` on the default action (primary, solid), `button` (soft) on the others; `buttons` (on SModal or SModalFooter) moves the group: `size`, `spaceX`, `spaceY`, each a step or a shift. Other Stem controls in the footer inherit the modal's size with their own space. SConfirmModal and SAlertModal use these.
 
 ### SConfirmModal
 
@@ -346,7 +346,7 @@ An alert inline (`UAlert`) and an alert arriving as a toast (`UToast`) look the 
 - **Colors:** `neutral`, `primary`, `secondary`, `info` (sky), `success`, `warning`, `error`.
 - **Variants:** `outline` (default: surface + colored ring, color in the icon only), `soft` (light tint over the surface), `subtle` (tint + ring), `solid` (color as ground).
 - **Orientation:** `horizontal` (actions beside the text) or `vertical` (actions under it). Icon, actions and X always line up with the title.
-- **Space and buttons.** SAlert's default is space-x '+2', space-y '+4', roundness '+1' (sm: 12 × 16px, 8px radius; neither passes to its children). On a solid alert the soft actions and the X take the tone's tint, a solid action (the default one, primary) the ground's opposite (`alertSolidAction`); the description is muted on solid primary and secondary. An `#actions` slot gets the same as params: `<template #actions="{button, primary}">` — bind `button` on a plain SModalButton (also one inside an SDropdownMenu, with `caret`), `primary` on the default action (primary, solid); each carries size, space and the solid tint. Actions and X are SModalButtons of the alert's size, space-x the size's own (sm: 8px), space-y a step below it (sm: 28px tall), a step below the alert's space apart, centred on the title's line at any height; the alert's space stays its own. `buttons` moves the whole group (X, actions, slot params) from those defaults: `:buttons="{spaceY: '+1'}"`, also `size` and `spaceX`, each a step or a shift. The avatar is twice the icon (sm: 32px), its initials at the text's size. The description is a text step below the title by default (`description-text-size`, a size or a shift, '-1': sm alert, 12px on 16px lines). Any Stem control in its slots inherits the alert's size. SAlert takes the scale props; toasts and bare UAlerts are sm. `roundness` takes a shift too ('+1': a step rounder than the size's own).
+- **Space and buttons.** SAlert's default is space-x '+2', space-y '+4', roundness '+1' (sm: 12 × 16px, 8px radius; neither passes to its children). On a solid alert the soft actions and the X take the tone's tint, a solid action (the default one, primary) the ground's opposite (`alertSolidAction`); the description is muted on solid primary and secondary. An `#actions` slot gets the same as params: `<template #actions="{button, primary}">` — bind `button` on a plain SModalButton (also one inside an SDropdownMenu, with `caret`), `primary` on the default action (primary, solid); each carries size, space and the solid tint. Actions and X are SModalButtons of the alert's size with SModalButton's own defaults (sm: 8 × 6px, 28px tall), as everywhere else, a step below the alert's space apart, centred on the title's line at any height; the alert's space stays its own. `buttons` moves the whole group (X, actions, slot params) from those defaults: `:buttons="{spaceY: '+1'}"`, also `size` and `spaceX`, each a step or a shift. The avatar is twice the icon (sm: 32px), its initials at the text's size. The description is a text step below the title by default (`description-text-size`, a size or a shift, '-1': sm alert, 12px on 16px lines). Any Stem control in its slots inherits the alert's size. SAlert takes the scale props; toasts and bare UAlerts are sm. `roundness` takes a shift too ('+1': a step rounder than the size's own).
 - `UToast` has no `variant` prop: pass `ui: alertClasses(color, variant)` (exported from `@fullbrains/stem`) to `toast.add()` for a soft/subtle/solid toast.
 
 `SAlert` is `UAlert` plus a default slot rendered under the description (chips, a progress bar, a short list). In `horizontal` it spans to the alert's right edge, under the actions and the X too. Every UAlert prop and slot passes through. A toast does the same through `description`, which takes a render function.

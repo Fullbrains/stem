@@ -23,7 +23,7 @@ const emit = defineEmits<{
       @close="emit('close')"
   >
     <template #footer="{primary}">
-      <SModalButton
+      <SButton
           v-bind="primary"
           :label="confirmLabel"
           :color="confirmColor"

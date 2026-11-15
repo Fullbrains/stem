@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleDefaults, type StemScaleProps, type StemSizeValue, type StemSpaceValue} from '../theme/scale'
+import {stemScale, stemScaleDefaults, stemSpacePx, type StemScaleProps, type StemSizeValue, type StemSpaceValue} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 type Width = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | number
@@ -61,6 +61,11 @@ const emit = defineEmits<{
 // body, footer. Not set, they come from a parent SScale.
 useStemScale(props, {}, {provide: true})
 
+// Header, body and footer share one padding, all around: three steps of
+// space above the modal's size (md: 16px).
+const padScale = useStemScale(props, {space: '+3'})
+const padding = computed(() => `${stemSpacePx(padScale.value.space!)}px`)
+
 const sizeClasses = computed(() => {
   if (typeof props.width === 'number') {
     return {width: `${props.width}px`}
@@ -89,16 +94,25 @@ const uiConfig = computed(() => {
     // `!` on the square corners: s-corner sets the radius outside the
     // layers, and a plain utility lost to it — a sheet on the bottom edge
     // kept its rounded lower corners.
-    content: [classes, props.side === 'bottom' && 'rounded-b-none!', 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none! shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-2rem)] s-corner [--s-radius:16px]', props.ui?.content],
+    content: [classes, props.side === 'bottom' && 'rounded-b-none!', 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none! shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-2rem)] s-corner', props.ui?.content],
     header: ['block px-0 sm:px-0 py-0 min-h-auto', props.ui?.header],
     body: ['!p-0', props.ui?.body],
     footer: ['px-0 sm:px-0 py-0', props.ui?.footer],
   }
 })
 
-const contentStyle = computed(() => {
-  return typeof sizeClasses.value === 'object' ? sizeClasses.value : undefined
-})
+// On the panel itself (USlideover's `content`; a plain style stops at the
+// overlay): a width in pixels, and the padding as a variable for what the
+// slots put inside (`p-(--s-modal-p)`). Its squircle is twice the size's
+// radius (md: 16px, before the squircle factor).
+const radius = computed(() => `${stemScale[padScale.value.roundness ?? padScale.value.size ?? 'md'].radius * 2}px`)
+const content = computed(() => ({
+  style: {
+    ...(typeof sizeClasses.value === 'object' ? sizeClasses.value : {}),
+    '--s-modal-p': padding.value,
+    '--s-radius': radius.value,
+  },
+}))
 
 function handleClose() {
   emit('close')
@@ -116,7 +130,7 @@ function onUpdateOpen(value: boolean) {
   <USlideover
       :side="side"
       :ui="uiConfig"
-      :style="contentStyle"
+      :content="content"
       :dismissible="!disabled"
       :open="open"
       :default-open="defaultOpen"
@@ -149,12 +163,16 @@ function onUpdateOpen(value: boolean) {
           <slot name="actions"/>
         </template>
       </SModalHeader>
-      <slot name="after-header"/>
+      <div v-if="$slots['after-header']">
+        <slot name="after-header"/>
+      </div>
       <div class="w-full h-px bg-border" v-if="headerSeparator"/>
     </template>
 
-    <template #body>
-      <slot name="body"/>
+    <template v-if="$slots.body" #body>
+      <div class="p-(--s-modal-p)">
+        <slot name="body"/>
+      </div>
     </template>
 
     <template

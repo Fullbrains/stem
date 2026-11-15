@@ -9,14 +9,22 @@ import {useConfirmModal} from '../composables/useConfirmModal'
  * together; `text-size`, `icon-size`, `space`, `space-x`, `space-y` and
  * `roundness` move one of them; `rounded` makes it a pill.
  *
- * Without a label it is square (padding-y on every side) and as tall as with
- * one; add `rounded` for a circle.
+ * Space-y a step below the size's own by default (md: 10 × 8px, 36px tall).
+ * Without a label it keeps padding-x and padding-y, so it is wider than
+ * tall: `square` makes it 1:1, padding-y on every side; with `rounded`, a
+ * circle.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
   icon?: string
   label?: string
   trailingIcon?: string
   caret?: boolean
+  /**
+   * 1:1, width = height: padding-y on every side. Icon only: no label,
+   * trailing icon or caret. A squircle; with `rounded`, a circle. Unlike
+   * UButton's own `square`, never on by itself.
+   */
+  square?: boolean
   loading?: boolean
   destructive?: boolean
   confirmTitle?: string
@@ -38,7 +46,7 @@ const {confirm} = useConfirmModal()
 
 const resolvedColor = computed(() => props.destructive ? 'error' : undefined)
 
-const scale = useStemScale(props)
+const scale = useStemScale(props, {spaceY: '-1'})
 const scaleClasses = computed(() => stemScaleClasses(scale.value))
 const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 
@@ -62,12 +70,15 @@ const slotLabelClass = computed(() => [
 
 const resolvedUi = computed(() => {
   const ui: Record<string, string> = {}
+  // 1:1: the vertical padding on every side, so width = height.
+  if (props.square) ui.base = 'aspect-square justify-center p-(--s-py)! mx-0!'
   if (props.caret) ui.trailingIcon = 'ml-auto'
   if (labelShift.value) ui.label = stemLabelShift.iconStart
   return Object.keys(ui).length ? ui : undefined
 })
 
 const resolvedTrailingIcon = computed(() => {
+  if (props.square) return undefined
   if (props.caret) return 'i-ph-caret-down'
   return props.trailingIcon
 })
@@ -96,7 +107,7 @@ function handleClick(e: MouseEvent) {
 <template>
   <UButton
       :size="scale.size"
-      :label="label"
+      :label="square ? undefined : label"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"
@@ -118,7 +129,7 @@ function handleClick(e: MouseEvent) {
         <UIcon v-else-if="icon" :name="icon" class="size-(--s-icon-size) shrink-0"/>
       </span>
     </template>
-    <template v-if="$slots.default" #default>
+    <template v-if="$slots.default && !square" #default>
       <span data-slot="label" :class="slotLabelClass">
         <slot/>
       </span>

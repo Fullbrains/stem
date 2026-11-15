@@ -48,7 +48,7 @@ const tabsItems = [{label: 'Uno', icon: 'i-ph-house'}, {label: 'Due'}]
             <SBadge :size="s" label="Bozza" icon="i-ph-file" variant="soft"/>
           </ShowcaseMeasure>
           <ShowcaseMeasure labels>
-            <SButton :size="s" icon="i-ph-gear" rounded variant="soft"/>
+            <SButton :size="s" icon="i-ph-gear" square rounded variant="soft"/>
           </ShowcaseMeasure>
           <ShowcaseMeasure labels>
             <STabs :size="s" :items="tabsItems" :content="false"/>
