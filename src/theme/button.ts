@@ -4,6 +4,10 @@ import {stemLabelShift} from './scale'
 export default {
   slots: {
     base: 'cursor-pointer select-none s-corner transition duration-300 font-normal disabled:cursor-not-allowed disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2',
+    // The label truncates along the line only: its line is as tall as the
+    // icon, and the text's own box is taller at xs and sm — clipped on both
+    // axes, the descenders (g, y) lost their bottoms.
+    label: '[overflow-x:clip]! [overflow-y:visible]!',
   },
   compoundVariants: [
     // Icon only (no label): Nuxt UI calls it `square` and gives it a smaller

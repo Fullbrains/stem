@@ -37,6 +37,10 @@ const props = withDefaults(defineProps<StemScaleProps & {
   footer: true,
   footerSeparator: true,
   disabled: false,
+  // Not false: absent, the slideover opens by itself (its trigger,
+  // `default-open`); a boolean prop left out would arrive as false and hold
+  // it closed.
+  open: undefined,
 })
 
 defineSlots<{
@@ -96,7 +100,9 @@ const uiConfig = computed(() => {
     // kept its rounded lower corners.
     content: [classes, props.side === 'bottom' && 'rounded-b-none!', 'overflow-hidden ring-black/5 sm:inset-x-4 max-sm:rounded-b-none! shadow-xl sm:inset-t-4 max-sm:inset-b-0 max-sm:inset-t-auto max-sm:top-auto max-sm:bottom-0 max-sm:pb-[env(safe-area-inset-bottom)] mx-auto mt-auto sm:mt-4 max-h-[calc(100dvh-4rem)] sm:max-h-[calc(100dvh-2rem)] s-corner', props.ui?.content],
     header: ['block px-0 sm:px-0 py-0 min-h-auto', props.ui?.header],
-    body: ['!p-0', props.ui?.body],
+    // Padded as header and footer; `ui.body` wins (`p-0 sm:p-0` for a body
+    // that runs edge to edge: a list, a table, a scroll area).
+    body: ['p-(--s-modal-p) sm:p-(--s-modal-p)', props.ui?.body],
     footer: ['px-0 sm:px-0 py-0', props.ui?.footer],
   }
 })
@@ -130,7 +136,7 @@ function onUpdateOpen(value: boolean) {
   <USlideover
       :side="side"
       :ui="uiConfig"
-      :content="content"
+      :content="(content as any)"
       :dismissible="!disabled"
       :open="open"
       :default-open="defaultOpen"
@@ -148,7 +154,6 @@ function onUpdateOpen(value: boolean) {
           :icon="icon"
           :compact="headerCompact"
           :wrap="headerWrap"
-          :separator="headerSeparator"
           :closeable="closeable"
           :disabled="disabled"
           @close="handleClose"
@@ -170,9 +175,7 @@ function onUpdateOpen(value: boolean) {
     </template>
 
     <template v-if="$slots.body" #body>
-      <div class="p-(--s-modal-p)">
-        <slot name="body"/>
-      </div>
+      <slot name="body"/>
     </template>
 
     <template

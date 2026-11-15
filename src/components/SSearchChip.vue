@@ -37,8 +37,15 @@ const inBar = inject(SEARCH_BAR_COMPACT, null) !== null && !inject(SEARCH_BAR_PA
 
 // Scale props inherited from a parent when not given; sm and a pill by
 // default, space-x (and gap) a step below its size's, two steps less above
-// and below in a bar.
-const scale = useStemScale(props, {size: 'sm', rounded: true, spaceX: '-1', spaceY: inBar ? '-2' : undefined})
+// and below in a bar — one at xs, where two would leave no padding-y at all
+// (a 12px chip, its descenders on the pill's edge).
+const sized = useStemScale(props, {size: 'sm'})
+const scale = useStemScale(props, {
+  size: 'sm',
+  rounded: true,
+  spaceX: '-1',
+  get spaceY() { return inBar ? (sized.value.size === 'xs' ? '-1' : '-2') : undefined },
+})
 
 const coversAll = computed(() => !!props.selectedValues && props.selectedValues.length === props.count)
 

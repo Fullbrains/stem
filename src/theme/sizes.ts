@@ -68,11 +68,20 @@ export const fieldLabelCompounds = [
  * <input> centres it itself and rounds UP, so where that half is not on a
  * pixel (sm 7.25, lg 12.75; xs 4.5 at 1x) the input's text sat lower. So
  * the input gets no centring to do: padding-top is that half, rounded down
- * to the device pixel (--s-device-px: 1px, 0.5px on a 2x screen), the
- * content box exactly the text's, and padding-bottom the rest — the
- * field's height the same. After the size variants, so it wins over
- * py-(--s-py)!.
+ * to the device pixel (--s-line-top, src/css/scale.css), the content box
+ * exactly the text's, and padding-bottom the rest (--s-line-bottom) — the
+ * field's height the same.
+ *
+ * `s-line-text` declares the two variables from the field's height
+ * (--s-line-h: icon + 2 × padding-y, unless set). They need CSS round() and
+ * the lh unit: without them the input keeps no padding-y and the browser
+ * centres its text, as before. Also on Stem's own bare inputs (the search
+ * bar's, the color picker's).
  */
+// Written out in full: Tailwind reads the classes from this source.
+export const singleLineText = 's-line-text py-0! supports-[padding:round(down,1lh,1px)]:leading-[normal]! supports-[padding:round(down,1lh,1px)]:pt-(--s-line-top)! supports-[padding:round(down,1lh,1px)]:pb-(--s-line-bottom)!'
+
+/** After the size variants, so it wins over py-(--s-py)!. */
 export const singleLineFieldCompounds = [
-  {class: {base: 'leading-[normal]! pt-[round(down,calc((var(--s-icon-size)+2*var(--s-py)-1lh)/2),var(--s-device-px,1px))]! pb-[calc(var(--s-icon-size)+2*var(--s-py)-1lh-round(down,calc((var(--s-icon-size)+2*var(--s-py)-1lh)/2),var(--s-device-px,1px)))]!'}},
+  {class: {base: singleLineText}},
 ]

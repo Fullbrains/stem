@@ -49,7 +49,7 @@ const resolvedItems = computed(() => {
 </script>
 
 <template>
-  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle" :ui="resolvedUi" :items="resolvedItems">
+  <UTabs :size="scale.size" v-bind="$attrs" :class="scaleClasses" :style="resolvedStyle" :ui="(resolvedUi as any)" :items="(resolvedItems as any)">
     <template v-for="(_, slot) in $slots" #[slot]="slotProps">
       <slot :name="slot" v-bind="slotProps ?? {}"/>
     </template>

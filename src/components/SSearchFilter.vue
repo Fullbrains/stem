@@ -309,14 +309,15 @@ const items = computed(() => {
       :delay-duration="0"
       :disabled="isAllSelected || (!icon && !$slots.chip)"
   >
-    <!-- The root is the pill (chip + reset): it takes the pill's spill
-         (--s-pill-x as a negative margin), the chip inside none, so chip and
-         reset sit side by side instead of overlapping; the reset closes the
-         pill on the right and gets the pill's extra padding. -->
+    <!-- The root is the pill (chip + reset). The chip inside does not spill
+         (no negative margin: it would overlap the reset and be clipped on
+         the left), and neither does the root: filters stand a set gap apart
+         in a search bar. The pill's extra padding stays inside, on the
+         chip's left and on the reset's right. -->
     <div
         ref="rootEl"
         v-bind="$attrs"
-        class="flex items-stretch overflow-hidden s-corner mx-[calc(var(--s-pill-x,0px)*-1)]"
+        class="flex items-stretch overflow-hidden s-corner"
         :class="[rootScale, chipClass]"
     >
       <!-- The menu's items are controls of the same scale as the chip. -->

@@ -10,7 +10,7 @@ export default {
   slots: {
     overlay: 'fixed inset-0 bg-neutral-800/90 backdrop-blur-sm',
     content: 'p-0 divide-y-0 s-corner [--s-radius:12px]',
-    body: '!p-0',
+    body: 'p-0 sm:p-0',
     header: 'flex-shrink-0',
     footer: 'flex-shrink-0',
   },

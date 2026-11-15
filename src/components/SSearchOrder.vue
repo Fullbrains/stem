@@ -45,10 +45,10 @@ const items = computed(() => [
 </script>
 
 <template>
-  <!-- The root takes the pill's spill, the chip inside none (it would be
-       clipped by the root's overflow). -->
+  <!-- The chip inside does not spill (the root's overflow would clip it),
+       and neither does the root: see SSearchFilter. -->
   <div
-    class="inline-flex items-center overflow-hidden s-corner mx-[calc(var(--s-pill-x,0px)*-1)]"
+    class="inline-flex items-center overflow-hidden s-corner"
     :class="[rootScale, chipClass]"
   >
     <SDropdownMenu

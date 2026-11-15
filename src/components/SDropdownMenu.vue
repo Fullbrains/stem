@@ -16,7 +16,11 @@ import {useStemScale} from '../composables/useStemScale'
  */
 defineOptions({inheritAttrs: false})
 
-const props = withDefaults(defineProps<StemScaleProps>(), stemScaleDefaults)
+const props = withDefaults(defineProps<StemScaleProps & {
+  /** Stem's arrow (true), or Reka's arrow props laid over it. */
+  arrow?: boolean | Record<string, unknown>
+  content?: Record<string, unknown>
+}>(), {...stemScaleDefaults, arrow: undefined, content: undefined})
 const attrs = useAttrs()
 
 const scale = useStemScale(props)
@@ -24,7 +28,7 @@ const scaleClasses = computed(() => stemScaleClasses(scale.value))
 const resolvedStyle = computed(() => stemScaleStyle(scale.value))
 
 // `arrow` (true): Stem's arrow, kept off the corners (see SPopover).
-const arrowed = computed(() => stemArrowProps(attrs.arrow, attrs.content))
+const arrowed = computed(() => stemArrowProps(props.arrow, props.content))
 
 const ui = computed(() => {
   const given = (attrs.ui ?? {}) as Record<string, unknown>

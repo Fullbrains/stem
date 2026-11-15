@@ -20,9 +20,10 @@ const props = withDefaults(defineProps<StemScaleProps & {
   trailingIcon?: string
   caret?: boolean
   /**
-   * 1:1, width = height: padding-y on every side. Icon only: no label,
-   * trailing icon or caret. A squircle; with `rounded`, a circle. Unlike
-   * UButton's own `square`, never on by itself.
+   * 1:1, width = height: padding-y on every side. Icon only: no trailing
+   * icon or caret, and the `label` is not shown — it becomes the button's
+   * accessible name (aria-label). A squircle; with `rounded`, a circle.
+   * Unlike UButton's own `square`, never on by itself.
    */
   square?: boolean
   loading?: boolean
@@ -108,6 +109,7 @@ function handleClick(e: MouseEvent) {
   <UButton
       :size="scale.size"
       :label="square ? undefined : label"
+      :aria-label="square && label ? label : undefined"
       :trailing-icon="resolvedTrailingIcon"
       :color="resolvedColor"
       :ui="resolvedUi"

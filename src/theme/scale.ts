@@ -12,15 +12,19 @@
  * `s-space-*`, `s-text-*`, `s-icon-*`, `s-roundness-*`, `s-pill`): keep the
  * two in step.
  */
+// Written out, not `keyof typeof stemScale`: Vue reads a prop's runtime
+// type from its TS type, and cannot resolve that one — with a `number`
+// beside it in a union (StemSizeValue) the prop came out as Number only, and
+// every `size="sm"` warned in development.
+export type StemSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+
 export const stemScale = {
   xs: {text: 12, icon: 12, space: 6, radius: 4},
   sm: {text: 14, icon: 16, space: 8, radius: 6},
   md: {text: 16, icon: 20, space: 10, radius: 8},
   lg: {text: 18, icon: 24, space: 12, radius: 10},
   xl: {text: 20, icon: 28, space: 14, radius: 12},
-} as const
-
-export type StemSize = keyof typeof stemScale
+} as const satisfies Record<StemSize, {text: number, icon: number, space: number, radius: number}>
 
 export const stemSizes = Object.keys(stemScale) as StemSize[]
 
@@ -37,7 +41,8 @@ const spaceSteps: StemSpace[] = ['0', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'
  * parent's, else its size's): '-1' one step tighter, '+2' two looser. A
  * signed string, or a non-zero number (0 is the absolute none).
  */
-export type StemSpaceShift = `${'+' | '-'}${1 | 2 | 3 | 4 | 5 | 6}` | number
+// Literals, not a template type: Vue's prop inference reads these.
+export type StemSpaceShift = '+1' | '+2' | '+3' | '+4' | '+5' | '+6' | '-1' | '-2' | '-3' | '-4' | '-5' | '-6' | number
 
 /** A space prop's value: a step of the scale, or a shift from the one it would have. */
 export type StemSpaceValue = StemSpace | StemSpaceShift

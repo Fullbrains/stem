@@ -4,6 +4,7 @@ import {inputContainerClasses, inputIconColors} from '../theme/input-container'
 import type {InputColor, InputVariant} from '../theme/input-container'
 import {stemScaleClasses, stemScaleIcon, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
+import {singleLineText} from '../theme/sizes'
 
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -162,8 +163,8 @@ const popoverContentStyle = computed(() => {
           v-model="inputValue"
           :placeholder="placeholder"
           :disabled="disabled"
-          :class="[placeholderColor]"
-          class="flex-1 min-w-0 bg-transparent outline-none"
+          :class="[placeholderColor, singleLineText]"
+          class="flex-1 min-w-0 bg-transparent outline-none h-[calc(var(--s-icon-size)+2*var(--s-py))] -my-(--s-py)"
           @focus="focused = true"
           @blur="focused = false; validateAndUpdate()"
           @keydown.enter="validateAndUpdate()"

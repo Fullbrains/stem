@@ -163,8 +163,17 @@
 }
 
 /* The device pixel, in CSS px: what a position is rounded to on screen. A
-   one-line input rounds its text's offset to it (theme/sizes.ts), as a
-   button's label is. */
+   one-line input rounds its text's offset to it, as a button's label is. */
 :root { --s-device-px: 1px; }
 @media (min-resolution: 2dppx) { :root { --s-device-px: 0.5px; } }
 @media (min-resolution: 3dppx) { :root { --s-device-px: calc(1px / 3); } }
+
+/* A one-line input's text, placed as a button's label (theme/sizes.ts,
+   singleLineText): the text's own box (1lh, line-height normal) at half the
+   room left in the field, rounded down to the device pixel; the rest below.
+   --s-line-h is the field's height: icon + 2 × padding-y unless set. */
+.s-line-text {
+    --s-line-room: calc(var(--s-line-h, calc(var(--s-icon-size) + 2 * var(--s-py))) - 1lh);
+    --s-line-top: round(down, calc(var(--s-line-room) / 2), var(--s-device-px, 1px));
+    --s-line-bottom: calc(var(--s-line-room) - var(--s-line-top));
+}

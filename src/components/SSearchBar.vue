@@ -4,6 +4,7 @@ import {useAppConfig} from '#imports'
 import {SEARCH_BAR_COMPACT, SEARCH_BAR_PANEL} from '../composables/searchBarContext'
 import {stemScaleClasses, stemScaleStyle, type StemScaleProps, type StemSize, type StemSizeValue, stemScaleDefaults} from '../theme/scale'
 import {STEM_SCALE, useStemScale} from '../composables/useStemScale'
+import {singleLineText} from '../theme/sizes'
 
 const modelValue = defineModel<string>({default: ''})
 
@@ -223,7 +224,8 @@ function clear() {
             v-model="modelValue"
             type="text"
             :placeholder="placeholder ?? 'Search...'"
-            class="bg-transparent border-none outline-none placeholder:text-iron-500/80 flex-1 min-w-0 text-(length:--s-text) leading-(--s-icon-size)"
+            class="bg-transparent border-none outline-none placeholder:text-iron-500/80 flex-1 min-w-0 text-(length:--s-text) leading-(--s-icon-size) h-[calc(var(--s-icon-size)+2*var(--s-py))]"
+            :class="singleLineText"
             @focus="inputFocus = true"
             @blur="inputFocus = false"
         >
