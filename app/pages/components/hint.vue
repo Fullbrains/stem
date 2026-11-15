@@ -19,6 +19,7 @@ const controls: ShowcaseControl[] = [
   {group: 'Aspetto', key: 'color', type: 'select', options: colors, default: 'muted'},
   {group: 'Aspetto', key: 'size', type: 'select', options: sizes, default: 'xs'},
   {group: 'Aspetto', key: 'icon', type: 'select', options: icons},
+  {group: 'Aspetto', key: 'iconSize', label: 'icon-size', type: 'select', options: [{label: 'da size', value: undefined}, 'xs', 'sm', 'md', 'lg', 'xl']},
 
   {group: 'Demo', key: 'text', label: 'testo (slot)', type: 'text', prop: false, initial: 'Puoi salvarlo in più cartelle insieme.'},
   {group: 'Demo', key: 'width', label: 'larghezza del contenitore', type: 'select', prop: false, default: 'auto', options: [
