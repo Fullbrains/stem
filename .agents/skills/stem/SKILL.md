@@ -327,9 +327,11 @@ Slide-over modal built on `USlideover` with header/footer structure.
 </SModal>
 ```
 
-**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `size` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number), `header`, `closeable`, `footer`, `headerCompact` (boolean, default: false — compact header: py-3, icon inline beside title at `size-6`), `headerSeparator`, `footerSeparator`, `disabled`, `open`, `defaultOpen`
+**Props:** `title`, `description`, `icon`, `side` (top/right/bottom/left, default: top), `width` (sm/md/lg/xl/2xl/3xl/4xl/5xl/6xl/7xl/full/number, default xl), the scale props (`size`, `space`… passed to everything inside), `header`, `closeable`, `footer`, `headerCompact` (boolean or `'mobileOnly'` — compact header: smaller title, icon inline beside it), `headerSeparator`, `footerSeparator`, `disabled`, `open`, `defaultOpen`
 
 **Slots:** `title`, `after-header`, `body`, `footer`
+
+Header and footer are padded all around by two steps of space above the modal's size, as an alert's padding-x (sm 12px, md 14px, lg 16px); the modal's `space` props move it.
 
 ### SConfirmModal
 

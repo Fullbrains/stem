@@ -1,14 +1,24 @@
 <script setup lang="ts">
+import {computed} from 'vue'
+import {stemSpacePx} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
+
 withDefaults(defineProps<{
   separator?: boolean
 }>(), {
   separator: true,
 })
+
+// The padding, all around, as the header's: two steps of space above the
+// modal's size (md: 16px).
+const scale = useStemScale({}, {space: '+2'})
+const paddingStyle = computed(() => ({padding: `${stemSpacePx(scale.value.space!)}px`}))
 </script>
 
 <template>
   <footer
-    class="s-modal-footer ring-inset text-2xl w-full p-2 sm:p-6 flex shrink-0 flex-wrap items-center relative select-none"
+    class="s-modal-footer ring-inset text-2xl w-full flex shrink-0 flex-wrap items-center relative select-none"
+    :style="paddingStyle"
     :class="{ 'border-t border-(--ui-border)': separator }"
   >
     <slot />

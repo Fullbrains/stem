@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {safeHtml} from '../safeHtml'
+import {stemSpacePx} from '../theme/scale'
+import {useStemScale} from '../composables/useStemScale'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -26,23 +28,27 @@ defineEmits<{
   close: []
 }>()
 
+// The padding, all around, two steps of space above the modal's size, as
+// an alert's padding-x (md: 16px). It follows the modal's scale props.
+const scale = useStemScale({}, {space: '+2'})
+const paddingStyle = computed(() => ({'--s-modal-p': `${stemSpacePx(scale.value.space!)}px`}))
+
 /** HTML, sanitized: see safeHtml. */
 const descriptionHtml = computed(() => safeHtml(props.description))
 
 /**
  * Each part of the header, compact, full, or compact below sm only.
  *
- * Compact: 18px above and below a one-line title (22.5px line). The header
- * buttons (SModalButton sm: 28px) are centred on that line — the close at
- * 18 + (22.5 − 28) / 2 ≈ 15px from the top, the actions pulled up as much.
+ * Compact: the header buttons (SModalButton sm: 28px) are centred on a
+ * one-line title (22.5px line) — the close at the padding + (22.5 − 28) / 2
+ * from the top, the actions pulled up as much.
  * Full: the close stays pinned 12px into the corner.
  */
 const compactClasses = computed(() => {
   if (props.compact === 'mobileOnly') {
     return {
-      header: 'py-6 max-sm:py-4.5',
       actions: '-my-1 max-sm:self-start max-sm:-my-[2.75px]',
-      close: 'top-3 max-sm:top-[15.25px]',
+      close: 'top-3 max-sm:top-[calc(var(--s-modal-p)-2.75px)]',
       title: 'text-2xl max-sm:text-lg',
       blockIcon: 'max-sm:hidden',
       inlineIcon: 'sm:hidden',
@@ -50,8 +56,8 @@ const compactClasses = computed(() => {
   }
 
   return props.compact
-      ? {header: 'py-4.5', title: 'text-lg', blockIcon: 'hidden', inlineIcon: '', actions: 'self-start -my-[2.75px]', close: 'top-[15.25px]'}
-      : {header: 'py-6', title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden', actions: '-my-1', close: 'top-3'}
+      ? {title: 'text-lg', blockIcon: 'hidden', inlineIcon: '', actions: 'self-start -my-[2.75px]', close: 'top-[calc(var(--s-modal-p)-2.75px)]'}
+      : {title: 'text-2xl', blockIcon: '', inlineIcon: 'hidden', actions: '-my-1', close: 'top-3'}
 })
 
 const slots = defineSlots<{
@@ -64,9 +70,9 @@ const slots = defineSlots<{
 
 <template>
   <header
-      class="px-6 flex relative shrink-0 w-full"
+      class="p-(--s-modal-p) flex relative shrink-0 w-full"
+      :style="paddingStyle"
       :class="[
-      compactClasses.header,
       (description || slots.description) ? 'items-start' : 'items-center',
     ]"
   >
