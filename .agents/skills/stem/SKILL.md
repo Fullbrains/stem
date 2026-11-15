@@ -76,6 +76,7 @@ When a Stem component exists for a given purpose, always prefer it over the raw 
 | `UTabs` | `STabs` | Each tab is a button of the same size in every way (height, padding, squircle, weight); the pill list wraps them with a 2px inset, concentric (a button plus 4px tall). A tab's badge is an SBadge a size below the tab's, with its defaults (pill, space-y -1) and space-x -1 (xs: 4px), soft (no border; in the active tab its text takes the tab's), its padding-y given back as a negative margin-y, so the tab keeps its height (an xs badge, 20px, in an sm tab) |
 | `UCheckbox`, `USwitch`, `URadioGroup` | `SCheckbox`, `SSwitch`, `SRadioGroup` | Box/track/dot as big as the size's icon, row as tall as a button |
 | `UAlert` | `SAlert` | Scale props (radius, padding and gap as a button's), SModalButton actions and X, content slot under the text |
+| — | `SHint` | One small line telling where a rule applies: `color` (muted default, primary, info, success, warning, danger) with its own icon, `icon` for another; xs by default. `icon-size` changes only the icon: the lines keep the size's icon height and the icon stays centred on the first one |
 | `UModal` / `USlideover` | `SModal` | Structured header/body/footer, responsive slide animation, close handling |
 | header buttons | `SModalButton`, `SCloseButton` | Thin wrappers of SButton: soft, pill, space-x the size's own, space-y one step below |
 | custom spinner | `SSpinner`  | Follows the ambient icon size; `size` takes a scale token |

@@ -5,7 +5,7 @@ export type HintSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 <script setup lang="ts">
 import {computed} from 'vue'
-import {stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
+import {stemScale, stemScaleClasses, stemScaleStyle, type StemScaleProps, stemScaleDefaults} from '../theme/scale'
 import {useStemScale} from '../composables/useStemScale'
 
 /**
@@ -24,6 +24,9 @@ import {useStemScale} from '../composables/useStemScale'
  *
  * No padding nor margin of its own: where it stands is its container's. The
  * icon sits on the first line, so a hint that wraps keeps it at the top.
+ * The lines are as tall as the size's icon whatever `icon-size` says: a
+ * bigger or smaller icon stays centred on the first line, overhanging it
+ * if it must, and the text keeps its spacing.
  */
 const props = withDefaults(defineProps<StemScaleProps & {
   color?: HintColor
@@ -50,15 +53,19 @@ const color = computed(() => COLORS[props.color])
 // Scale props inherited from a parent when not given; xs by default.
 const scale = useStemScale(props, {size: 'xs'})
 const scaleClasses = computed(() => [`s-size-${scale.value.size}`, ...stemScaleClasses(scale.value)])
-const scaleStyle = computed(() => stemScaleStyle(scale.value))
+// The size's own icon, the text's line height; --s-icon-size may differ.
+const scaleStyle = computed(() => ({
+  ...stemScaleStyle(scale.value),
+  '--s-hint-line': `${stemScale[scale.value.size ?? 'xs'].icon}px`,
+}))
 </script>
 
 <template>
   <p
-      :class="['flex items-start gap-(--s-gap) text-(length:--s-text) leading-(--s-icon-size)', scaleClasses, color.text]"
+      :class="['flex items-start gap-(--s-gap) text-(length:--s-text) leading-(--s-hint-line)', scaleClasses, color.text]"
       :style="scaleStyle"
   >
-    <UIcon :name="icon ?? color.icon" class="size-(--s-icon-size) shrink-0"/>
+    <UIcon :name="icon ?? color.icon" class="size-(--s-icon-size) shrink-0 my-[calc((var(--s-hint-line)-var(--s-icon-size))/2)]"/>
     <span><slot/></span>
   </p>
 </template>
