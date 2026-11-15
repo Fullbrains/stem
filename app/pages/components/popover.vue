@@ -62,13 +62,13 @@ const actions = [
 <template>
   <ShowcasePage
       title="Popover"
-      wraps="UPopover"
-      description="Il pannello flottante di Stem: la stessa ombra e lo stesso angolo superellittico dei menu a tendina."
+      wraps="UPopover · SPopover"
+      description="Il pannello flottante di Stem: la stessa ombra e lo stesso angolo superellittico dei menu a tendina. SPopover aggiunge la freccia di Stem quando serve (arrow)."
   >
-    <ShowcasePlayground v-model="state" tag="UPopover" :controls="controls" :code-extra="contentCode">
+    <ShowcasePlayground v-model="state" tag="SPopover" :controls="controls" :code-extra="contentCode">
       <template #default="{props, state: s, mode}">
         <PortalScope :mode="mode">
-          <UPopover :key="String(props.mode)" v-bind="popoverProps(props)" :content="content">
+          <SPopover :key="String(props.mode)" v-bind="popoverProps(props)" :content="content">
             <SButton :label="props.mode === 'hover' ? 'Passa sopra' : 'Apri'" variant="soft" :icon="props.mode === 'hover' ? 'i-ph-cursor' : 'i-ph-cursor-click'"/>
             <template #content="{close}">
               <div v-if="s.example === 'testo'" class="w-64 space-y-1 p-4">
@@ -88,7 +88,7 @@ const actions = [
                 <SButton v-for="a in actions" :key="a.label" :label="a.label" :icon="a.icon" variant="ghost" color="neutral" size="sm" class="justify-start" @click="close"/>
               </div>
             </template>
-          </UPopover>
+          </SPopover>
         </PortalScope>
       </template>
     </ShowcasePlayground>
@@ -114,24 +114,24 @@ const actions = [
       <ShowcaseStage>
         <template #default="{mode}">
           <PortalScope :mode="mode">
-            <UPopover>
+            <SPopover>
               <SButton label="click" icon="i-ph-cursor-click" variant="soft"/>
               <template #content>
                 <p class="w-56 p-4 text-sm text-(--ui-text-muted)">Si chiude con un click fuori o con Esc.</p>
               </template>
-            </UPopover>
-            <UPopover mode="hover">
+            </SPopover>
+            <SPopover mode="hover">
               <SButton label="hover" icon="i-ph-cursor" variant="soft"/>
               <template #content>
                 <p class="w-56 p-4 text-sm text-(--ui-text-muted)">Si apre subito e si chiude quando il puntatore esce.</p>
               </template>
-            </UPopover>
-            <UPopover mode="hover" :open-delay="500" :close-delay="300">
+            </SPopover>
+            <SPopover mode="hover" :open-delay="500" :close-delay="300">
               <SButton label="hover con delay" icon="i-ph-timer" variant="soft"/>
               <template #content>
                 <p class="w-56 p-4 text-sm text-(--ui-text-muted)">open-delay 500, close-delay 300.</p>
               </template>
-            </UPopover>
+            </SPopover>
           </PortalScope>
         </template>
       </ShowcaseStage>
@@ -139,7 +139,7 @@ const actions = [
 
     <ShowcaseSection
         title="Side × align"
-        description="Dove si apre rispetto al trigger. Con arrow la freccia punta al trigger."
+        description="Dove si apre rispetto al trigger. Con arrow la freccia di Stem, punta arrotondata e lati che si raccordano al bordo, punta al trigger."
     >
       <ShowcaseStage body-class="grid grid-cols-1 gap-6 p-8">
         <template #default="{mode}">
@@ -157,12 +157,12 @@ const actions = [
                   <tr v-for="side in sides" :key="side">
                     <th class="pr-2 text-right font-mono text-[10px] font-normal text-(--ui-text-dimmed)">{{ side }}</th>
                     <td v-for="a in aligns" :key="a" class="text-center">
-                      <UPopover :content="{side: side as any, align: a as any}" :arrow="withArrow">
+                      <SPopover :content="{side: side as any, align: a as any}" :arrow="withArrow">
                         <SButton :label="`${side} ${a}`" variant="soft" size="xs"/>
                         <template #content>
                           <p class="p-3 font-mono text-xs text-(--ui-text-muted)">{{ side }} · {{ a }}</p>
                         </template>
-                      </UPopover>
+                      </SPopover>
                     </td>
                   </tr>
                 </tbody>
@@ -180,7 +180,7 @@ const actions = [
       <ShowcaseStage>
         <template #default="{mode}">
           <PortalScope :mode="mode">
-            <UPopover>
+            <SPopover>
               <SButton label="Testo" variant="soft"/>
               <template #content>
                 <div class="w-64 space-y-1 p-4">
@@ -188,8 +188,8 @@ const actions = [
                   <p class="text-sm text-(--ui-text-muted)">L'ultima modifica è di due minuti fa.</p>
                 </div>
               </template>
-            </UPopover>
-            <UPopover>
+            </SPopover>
+            <SPopover>
               <SButton label="Form" icon="i-ph-user-plus" variant="soft"/>
               <template #content="{close}">
                 <div class="w-72 space-y-3 p-4">
@@ -202,15 +202,15 @@ const actions = [
                   <SButton label="Invia invito" size="sm" block @click="close"/>
                 </div>
               </template>
-            </UPopover>
-            <UPopover>
+            </SPopover>
+            <SPopover>
               <SButton icon="i-ph-dots-three" variant="soft" square rounded aria-label="Azioni"/>
               <template #content="{close}">
                 <div class="flex w-48 flex-col p-1">
                   <SButton v-for="a in actions" :key="a.label" :label="a.label" :icon="a.icon" variant="ghost" color="neutral" size="sm" class="justify-start" @click="close"/>
                 </div>
               </template>
-            </UPopover>
+            </SPopover>
           </PortalScope>
         </template>
       </ShowcaseStage>

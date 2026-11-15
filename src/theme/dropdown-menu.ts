@@ -4,6 +4,8 @@ export default {
   slots: {
     ...menuItemSlots,
     itemLeadingIcon: 'shrink-0 text-default',
+    // Stem's arrow, outlined as the floating menu's ring (see popover.ts).
+    arrow: 'fill-(--ui-bg) stroke-black/10 dark:stroke-white/10',
   },
   variants: {
     active: {

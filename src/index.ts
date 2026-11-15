@@ -37,6 +37,10 @@ export {
   type ContainerClasses,
 } from './theme/input-container'
 
+// Stem's arrow for floating panels: SPopover, STooltip and SDropdownMenu use
+// it for `arrow`; a bare Nuxt UI overlay takes `:arrow="stemArrow"`.
+export {stemArrow, stemArrowProps, arrowShape, STEM_ARROW_SHAPE, STEM_ARROW_PADDING} from './arrow'
+
 // Components
 export { default as SModal } from './components/SModal.vue'
 export { default as SModalHeader } from './components/SModalHeader.vue'
@@ -67,6 +71,8 @@ export { default as SEmpty } from './components/SEmpty.vue'
 export { default as SHint } from './components/SHint.vue'
 export { default as SColorPicker } from './components/SColorPicker.vue'
 export { default as SScrollArea } from './components/SScrollArea.vue'
+export { default as SPopover } from './components/SPopover.vue'
+export { default as STooltip } from './components/STooltip.vue'
 
 // Types
 export type { SSearchFilterOption, SSearchFilterGroup } from './components/SSearchFilter.vue'
