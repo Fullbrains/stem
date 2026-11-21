@@ -14,11 +14,13 @@ export default defineNuxtModule({
     // At runtime, Nuxt re-applies the user's app.config.ts via defuFn(userConfig, inlineConfig),
     // so user overrides always win.
     nuxt.options.appConfig.ui = nuxt.options.appConfig.ui || {}
+    // Chiavi lette da stemAppConfig: per i tipi l'oggetto ui è un dizionario qualsiasi.
+    const ui = nuxt.options.appConfig.ui as Record<string, unknown>
     for (const [key, value] of Object.entries(stemAppConfig.ui)) {
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        nuxt.options.appConfig.ui[key] = defu(value, nuxt.options.appConfig.ui[key] || {})
+        ui[key] = defu(value, (ui[key] as object | undefined) || {})
       } else {
-        nuxt.options.appConfig.ui[key] = value
+        ui[key] = value
       }
     }
 
